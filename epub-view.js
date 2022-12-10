@@ -5,11 +5,16 @@ let displayed = rendition.display();
 var backend;
 
 book.ready.then(() => {
-    backend.locationsReady = false
-    book.locations.generate().then((k) => {
+    if (backend.cachedLocations[book.key()]) {
         backend.locationsReady = true
-        console.log(k)
-    })
+        book.locations.load(backend.cachedLocations[book.key()])
+    } else {
+        backend.locationsReady = false
+        book.locations.generate().then((k) => {
+            backend.locationsReady = true
+            backend.cachedLocations = {...backend.cachedLocations, [book.key()]: book.locations.save()}
+        })
+    }
     rendition.start()
 })
 

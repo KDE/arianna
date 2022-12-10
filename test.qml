@@ -20,6 +20,9 @@ Kirigami.ApplicationWindow {
         WebChannel.id: "backend"
         property double progress: 0
         property bool locationsReady: false
+        property var cachedLocations: py.loadLocations()
+
+        onCachedLocationsChanged: py.saveLocations(cachedLocations)
     }
 
     WebChannel {
@@ -29,7 +32,7 @@ Kirigami.ApplicationWindow {
 
     pageStack.initialPage: Kirigami.Page {
 
-        title: "Ebook Title"
+        title: "Title goes here"
         padding: 0
 
         actions {
