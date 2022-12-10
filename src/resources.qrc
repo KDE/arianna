@@ -1,0 +1,13 @@
+<RCC>
+<!--
+SPDX-FileCopyrightText: 2022 Carl Schwan <carl@carlschwan.eu>
+SPDX-License-Identifier: LGPL-3.0-or-later
+-->
+  <qresource prefix="/">
+    <file>content/ui/main.qml</file>
+    <file>content/ui/main.html</file>
+    <file>content/ui/epub.js</file>
+    <file>content/ui/test.epub</file>
+    <file>content/ui/epub-view.js</file>
+  </qresource>
+</RCC>
