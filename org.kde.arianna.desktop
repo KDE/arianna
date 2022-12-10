@@ -1,0 +1,12 @@
+# SPDX-License-Identifier: CC0-1.0
+# SPDX-FileCopyrightText: 2020 Tobias Fella <fella@posteo.de>
+[Desktop Entry]
+Name=Arianna
+GenericName=EPub Reader
+Exec=arianna %u
+Terminal=false
+Icon=org.kde.arianna
+Type=Application
+Categories=Network;InstantMessaging;X-SocialMedia
+X-KDE-FormFactor=desktop;tablet;handset;
+SingleMainWindow=true
