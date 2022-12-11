@@ -1,10 +1,10 @@
-import QtQuick 2.6
-import QtQuick.Controls 2.0 as Controls
+import QtQuick 2.15
+import QtQuick.Controls 2.15 as QQC2
 import QtWebEngine 1.4
 import QtWebChannel 1.4
-import QtQuick.Layouts 1.2
+import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.13 as Kirigami
-import org.kde.plasma.components 3.0 as PC3
+import org.kde.arianna 1.0
 
 Kirigami.ApplicationWindow {
     id: root
@@ -20,6 +20,8 @@ Kirigami.ApplicationWindow {
         WebChannel.id: "backend"
         property double progress: 0
         property bool locationsReady: false
+        property var cachedLocations: Cache.loadLocations()
+        onCachedLocationsChanged: Cache.saveLocations(cachedLocations)
     }
 
     WebChannel {
@@ -34,15 +36,15 @@ Kirigami.ApplicationWindow {
 
         actions {
             right: Kirigami.Action {
-                text: "Next Page"
+                text: i18n("Next Page")
                 icon.name: "arrow-right"
                 shortcut: Qt.LeftArrow
                 onTriggered: view.next()
             }
             left: Kirigami.Action {
-                text: "Previous Page"
+                text: i18n("Previous Page")
                 icon.name: "arrow-left"
-                onTriggered: view.runJavaScript('test()')
+                onTriggered: view.prev()
             }
         }
 
@@ -51,15 +53,14 @@ Kirigami.ApplicationWindow {
             anchors.fill: parent
             url: "main.html"
             webChannel: channel
-            onJavaScriptConsoleMessage: {console.log(message)}
+            onJavaScriptConsoleMessage: console.error(message)
 
             function next() {view.runJavaScript('rendition.next()')}
             function prev() {view.runJavaScript('rendition.prev()')}
-
         }
 
     }
-    footer: PC3.Slider {
+    footer: QQC2.Slider {
         padding: Kirigami.Units.smallSpacing
         visible: backend.locationsReady
         value: backend.progress

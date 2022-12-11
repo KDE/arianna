@@ -23,6 +23,7 @@
 #include <qstringliteral.h>
 
 #include "arianna-version.h"
+#include "cache.h"
 
 int main(int argc, char *argv[])
 {
@@ -79,7 +80,8 @@ int main(int argc, char *argv[])
     parser.process(app);
     about.processCommandLine(&parser);
 
-    // Controller::instance().setAboutData(about);
+    Cache cache;
+    qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Cache", &cache);
 
     engine.load(QUrl(QStringLiteral("qrc:/content/ui/main.qml")));
     if (engine.rootObjects().isEmpty()) {

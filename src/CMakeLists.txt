@@ -13,6 +13,7 @@ ecm_qt_declare_logging_category(debug_files_SRCS
 )
 
 set(arianna_src
+    cache.cpp
     ${debug_files_SRCS}
 )
 
