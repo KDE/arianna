@@ -369,6 +369,15 @@ const setStyle = style => {
     rendition.themes.select(themeName)
     rendition.resize()
     redrawAnnotations()
+
+    document.getElementsByTagName("style")[0].innerHTML = `
+        body {
+            margin: 0;
+        }
+        a:hover {
+            color: ${fgColor};
+        }
+    `;
 }
 
 /*
