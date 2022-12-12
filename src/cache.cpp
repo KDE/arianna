@@ -2,7 +2,6 @@
 // SPDX-LicenseIdentifer: LGPL-2.1-or-later
 
 #include "cache.h"
-#include <QDebug>
 #include <QStandardPaths>
 #include <QJsonDocument>
 #include <KSharedConfig>
@@ -16,6 +15,9 @@ Cache::~Cache() = default;
 
 void Cache::saveLocations(const QVariantMap &locations)
 {
+    if (locations.count() == 0) {
+        return;
+    }
     auto config = KSharedConfig::openConfig(QStringLiteral("arianna"), KConfig::FullConfig, QStandardPaths::CacheLocation);
     auto epubCache = config->group("epubCache");
     epubCache.writeEntry("entries", QJsonDocument::fromVariant(locations).toJson());

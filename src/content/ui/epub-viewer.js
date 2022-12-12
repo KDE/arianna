@@ -519,7 +519,10 @@ const loadLocations = async () => {
         locationsReady()
         dispatch({
             type: 'locations-generated',
-            payload: book.locations.save()
+            payload: {
+                locations: book.locations.save(),
+                key: book.key(),
+            },
         })
     }
 }

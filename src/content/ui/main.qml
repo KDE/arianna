@@ -29,7 +29,6 @@ Kirigami.ApplicationWindow {
         property var cachedLocations: Cache.loadLocations()
         property var metadata: null
         property var top: ({})
-        onCachedLocationsChanged: Cache.saveLocations(cachedLocations)
         function get(script, callback) {
             return view.runJavaScript(`JSON.stringify(${script})`, callback)
         }
@@ -58,12 +57,12 @@ Kirigami.ApplicationWindow {
                 backend.locationsReady = true;
                 break;
             case 'locations-generated':
+                console.error(action.type)
                 backend.locationsReady = true;
-                get('book.key()', key => {
-                    const cachedLocations = backend.cachedLocations;
-                    cachedLocations[key] = action.payload;
-                    backend.cachedLocations = cachedLocations;
-                });
+                const cachedLocations = backend.cachedLocations;
+                cachedLocations[action.payload.key] = action.payload.locations;
+                backend.cachedLocations = cachedLocations;
+                Cache.saveLocations(cachedLocations)
                 break;
             case 'book-error':
                 console.error('Book error', action.payload);
@@ -84,8 +83,10 @@ Kirigami.ApplicationWindow {
 
                     searchResultModel.append({cfi: cfi, markup: markup, sectionMarkup: sectionMarkup })
                 })
+                break;
+            default:
+                console.error(action.type)
             }
-            console.error(action.type)
         }
 
         function setStyle() {
