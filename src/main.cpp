@@ -26,6 +26,7 @@
 #include "cache.h"
 #include "clipboard.h"
 #include "config.h"
+#include "format.h"
 
 int main(int argc, char *argv[])
 {
@@ -84,9 +85,11 @@ int main(int argc, char *argv[])
 
     Cache cache;
     Clipboard clipboard;
+    Format format;
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Cache", &cache);
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Config", Config::self());
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Clipboard", &clipboard);
+    qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Format", &format);
 
     engine.load(QUrl(QStringLiteral("qrc:/content/ui/main.qml")));
     if (engine.rootObjects().isEmpty()) {

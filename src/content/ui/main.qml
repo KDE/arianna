@@ -26,6 +26,7 @@ Kirigami.ApplicationWindow {
         property var findResults: ({})
         property var selection: null
         property double progress: 0
+        property var location: null
         property bool locationsReady: false
         property var cachedLocations: Cache.loadLocations()
         property var metadata: null
@@ -73,6 +74,9 @@ Kirigami.ApplicationWindow {
                 break;
             case 'selection':
                 backend.selection = action.payload;
+                break;
+            case 'relocated':
+                backend.location = action.payload;
                 break;
             case 'find-results':
                 const q  = action.payload.q;
@@ -312,6 +316,36 @@ Kirigami.ApplicationWindow {
     footer: QQC2.ToolBar {
         visible: backend.locationsReady
         contentItem: RowLayout {
+            QQC2.ToolButton {
+                id: progressButton
+                text: i18nc("Book reading progress", "%1%", Math.round(backend.progress * 100))
+                onClicked: menu.popup(progressButton, 0, - menu.height)
+
+                Component.onCompleted: if (background.hasOwnProperty("showMenuArrow")) {
+                    background.showMenuArrow = true;
+                }
+                property QQC2.Menu menu: QQC2.Menu {
+                    width: Kirigami.Units.gridUnit * 10
+                    height: Kirigami.Units.gridUnit * 15
+                    closePolicy: QQC2.Popup.CloseOnEscape | QQC2.Popup.CloseOnPressOutsideParent
+                    contentItem: ColumnLayout {
+                        Kirigami.FormLayout {
+                            Layout.fillWidth: true
+                            QQC2.Label {
+                                Kirigami.FormData.label: i18n("Time left in chapter:")
+                                text: backend.location.timeInChapter ? Format.formatDuration(backend.location.timeInChapter) : i18n("Loading")
+                            }
+                            QQC2.Label {
+                                Kirigami.FormData.label: i18n("Time left in book:")
+                                text: backend.location.timeInBook ? Format.formatDuration(backend.location.timeInBook)  : i18n("Loading")
+                            }
+                        }
+                    }
+                }
+                QQC2.ToolTip {
+                    text: parent.text
+                }
+            }
             QQC2.ToolButton {
                 text: i18n("Previous Page")
                 display: QQC2.AbstractButton.IconOnly

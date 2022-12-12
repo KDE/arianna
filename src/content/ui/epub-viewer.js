@@ -180,10 +180,10 @@ const dispatchLocation = async () => {
     // should be reasonable for English and European languages
     // will be way off for some languages
     const estimate = endPercentage =>
-        (endPercentage - percentage) * book.locations.total
+        Math.round((endPercentage - percentage) * book.locations.total
         * CHARACTERS_PER_PAGE
         / CHARACTERS_PER_WORD(book.package.metadata.language)
-        / WORDS_PER_MINUTE
+        / WORDS_PER_MINUTE * 1000 * 60)
     const nextSectionPercentage = (sectionMarks || []).find(x => x > percentage)
 
     const startSection = getSectionFromCfi(location.start.cfi)
