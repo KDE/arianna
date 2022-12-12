@@ -24,6 +24,7 @@ Kirigami.ApplicationWindow {
         id: backend
         WebChannel.id: "backend"
         property var findResults: ({})
+        property var selection: null
         property double progress: 0
         property bool locationsReady: false
         property var cachedLocations: Cache.loadLocations()
@@ -34,8 +35,9 @@ Kirigami.ApplicationWindow {
         }
         onMetadataChanged: {
             if (metadata) {
-                view.runJavaScript('loadLocations()')
-                view.runJavaScript('render()')
+                view.runJavaScript('loadLocations()', () => {
+                    view.runJavaScript('render()')
+                })
             }
         }
         function dispatch(action) {
@@ -50,8 +52,9 @@ Kirigami.ApplicationWindow {
                 })
                 break;
             case 'rendition-ready':
-                view.runJavaScript('setupRendition()');
                 setStyle();
+                view.runJavaScript('setupRendition()');
+                view.runJavaScript(`display('')`);
                 break;
             case 'locations-ready':
                 backend.locationsReady = true;
@@ -67,6 +70,9 @@ Kirigami.ApplicationWindow {
             case 'book-error':
                 console.error('Book error', action.payload);
                 view.file = '';
+                break;
+            case 'selection':
+                backend.selection = action.payload;
                 break;
             case 'find-results':
                 const q  = action.payload.q;
@@ -84,9 +90,8 @@ Kirigami.ApplicationWindow {
                     searchResultModel.append({cfi: cfi, markup: markup, sectionMarkup: sectionMarkup })
                 })
                 break;
-            default:
-                console.error(action.type)
             }
+            console.error(action.type)
         }
 
         function setStyle() {
@@ -156,7 +161,7 @@ Kirigami.ApplicationWindow {
                     view.runJavaScript(`find.clearHighlight()`)
                 } else {
                     view.runJavaScript(`find.find('${text}', true, true)`);
-                    popup.open();
+                    popup.open()
                 }
                 selectByMouse: true
                 property alias popup: popup
@@ -164,10 +169,19 @@ Kirigami.ApplicationWindow {
                 QQC2.Popup {
                     padding: 1
                     id: popup
-                    x: searchField.y
+                    x: searchField.width - width
                     y: searchField.y + searchField.height
                     width: Kirigami.Units.gridUnit * 15
                     height: Kirigami.Units.gridUnit * 20
+                    Connections {
+                        target: searchResultModel
+                        function onCountChanged() {
+                            if (searchResultModel.count > 0) {
+                                console.error('cound changed', searchResultModel.count)
+                                searchField.popup.open()
+                            }
+                        }
+                    }
 
                     contentItem: ColumnLayout {
                         width: popup.width
@@ -270,6 +284,28 @@ Kirigami.ApplicationWindow {
 
             function next() {view.runJavaScript('rendition.next()')}
             function prev() {view.runJavaScript('rendition.prev()')}
+
+            QQC2.Menu {
+                id: selectionPopup
+                Connections {
+                    target: backend
+                    function onSelectionChanged() {
+                        selectionPopup.popup()
+                    }
+                }
+
+                QQC2.MenuItem {
+                    text: i18n("Copy")
+                    icon.name: 'edit-copy'
+                    onClicked: Clipboard.saveText(backend.selection.text)
+                }
+
+                QQC2.MenuItem {
+                    text: i18n("Find")
+                    icon.name: 'search'
+                    onClicked: view.runJavaScript(`find.find('${backend.selection.text}', true, true)`);
+                }
+            }
         }
 
     }

@@ -169,6 +169,10 @@ const dispatchLocation = async () => {
         return;
     }
 
+    if (!location.start) {
+        return;
+    }
+
     const percentage = location.start.percentage
     const index = book.spine.get(location.start.cfi).index
 
@@ -345,6 +349,7 @@ const setStyle = style => {
             '-webkit-hyphens': 'none'
         },
         [`.${themeName} a:link`]: { color: linkColor },
+        [`.${themeName} a:hover`]: { color: fgColor },
         p: {
             'text-align': justify ? 'justify' : 'inherit'
         }
@@ -508,12 +513,12 @@ const loadLocations = async () => {
         dispatchLocation()
     }
 
-    if (backend.cachedLocations[book.key()]) {
-        book.locations.load(backend.cachedLocations[book.key()])
-        if (book.locations.total < 0) return dispatch({ type: 'locations-fallback' })
-        locationsReady()
-        dispatch({ type: 'locations-ready' })
-    } else {
+    //if (backend.cachedLocations[book.key()]) {
+    //    book.locations.load(backend.cachedLocations[book.key()])
+    //    if (book.locations.total < 0) return dispatch({ type: 'locations-fallback' })
+    //    locationsReady()
+    //    dispatch({ type: 'locations-ready' })
+    //} else {
         await book.locations.generate(CHARACTERS_PER_PAGE)
         if (book.locations.total < 0) return dispatch({ type: 'locations-fallback' })
         locationsReady()
@@ -524,7 +529,7 @@ const loadLocations = async () => {
                 key: book.key(),
             },
         })
-    }
+    //}
 }
 
 const display = lastLocation =>
