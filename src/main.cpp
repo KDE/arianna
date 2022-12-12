@@ -24,6 +24,7 @@
 
 #include "arianna-version.h"
 #include "cache.h"
+#include "config.h"
 
 int main(int argc, char *argv[])
 {
@@ -82,6 +83,7 @@ int main(int argc, char *argv[])
 
     Cache cache;
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Cache", &cache);
+    qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Config", Config::self());
 
     engine.load(QUrl(QStringLiteral("qrc:/content/ui/main.qml")));
     if (engine.rootObjects().isEmpty()) {

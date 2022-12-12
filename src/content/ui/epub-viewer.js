@@ -359,7 +359,7 @@ const setStyle = style => {
         bodyStyle['font-stretch'] = fontStretch
 
         // force font on everything that isn't code
-        const notCode = '*:not(code):not(pre):not(code *):not(pre *)'
+        let notCode = '*:not(code):not(pre)'
         stylesheet[`.${themeName} ${notCode}`] = {
             'font-family': `"${fontFamily}" !important`
         }

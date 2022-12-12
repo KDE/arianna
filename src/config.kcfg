@@ -11,5 +11,47 @@ SPDX-License-Identifier: CC0-1.0
   <kcfgfile name="arianna" />
   <group name="General">
   </group>
+  <group name="Appearance">
+    <entry name="defaultFont" type="Font">
+      <label>Default font</label>
+      <code>
+      QFont generalFont = QFont(QStringLiteral("serif"), 12);
+      generalFont.setStyleName(QStringLiteral("Regular"));
+      </code>
+      <default code="true">generalFont</default>
+    </entry>
+    <entry name="Skeuomorphism" type="bool">
+      <label>use skeuomorphism style</label>
+      <default>false</default>
+    </entry>
+    <entry name="UsePublisherFont" type="bool">
+      <label>use publisher font</label>
+      <default>false</default>
+    </entry>
+    <entry name="Invert" type="bool">
+      <label>Invert colors</label>
+      <default>false</default>
+    </entry>
+    <entry name="justify" type="bool">
+      <label>Justify text</label>
+      <default>true</default>
+    </entry>
+    <entry name="hyphenate" type="bool">
+      <label>hyphenate text</label>
+      <default>false</default>
+    </entry>
+    <entry name="spacing" type="double">
+      <label>Line-height</label>
+      <default>1.5</default>
+    </entry>
+    <entry name="brightness" type="double">
+      <label>brightness</label>
+      <default>1</default>
+    </entry>
+    <entry name="maxWidth" type="int">
+      <label>Margin</label>
+      <default>1400</default>
+    </entry>
+  </group>
 </kcfg>
 

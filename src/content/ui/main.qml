@@ -51,7 +51,8 @@ Kirigami.ApplicationWindow {
                 })
                 break;
             case 'rendition-ready':
-                view.runJavaScript('setupRendition()')
+                view.runJavaScript('setupRendition()');
+                setStyle();
                 break;
             case 'locations-ready':
                 backend.locationsReady = true;
@@ -85,6 +86,54 @@ Kirigami.ApplicationWindow {
                 })
             }
             console.error(action.type)
+        }
+
+        function setStyle() {
+            const getIbooksInternalTheme = bgColor => {
+                const red = bgColor.r;
+                const green = bgColor.g;
+                const blue = bgColor.b;
+                const l = 0.299 * red + 0.587 * green + 0.114 * blue;
+                if (l < 0.3) return 'Night';
+                else if (l < 0.7) return 'Gray';
+                else if (red > green && green > blue) return 'Sepia';
+                else return 'White';
+            }
+            const fontDesc = Config.defaultFont;
+            const fontFamily = fontDesc.family
+            const fontSizePt = fontDesc.pointSize
+            const fontSize = fontDesc.pixelSize
+            let fontWeight = 400
+            const fontStyle = fontDesc.styleName
+
+            // unfortunately, it appears that WebKitGTK doesn't support font-stretch
+            const fontStretch = [
+                'ultra-condensed', 'extra-condensed', 'condensed', 'semi-condensed', 'normal',
+                'semi-expanded', 'expanded', 'extra-expanded', 'ultra-expanded'
+            ][fontDesc.stretch]
+
+            const style = {
+                fontFamily: fontFamily,
+                fontSize: fontSize,
+                fontWeight: fontWeight,
+                fontStyle: fontStyle,
+                fontStretch: fontStretch,
+                spacing: Config.spacing,
+                margin: 0,
+                maxWidth: Config.maxWidth,
+                usePublisherFont: Config.usePublisherFont,
+                justify: Config.justify,
+                hyphenate: Config.hyphenate,
+                fgColor: Kirigami.Theme.textColor,
+                bgColor: Kirigami.Theme.backgroundColor,
+                linkColor: Kirigami.Theme.linkColor,
+                invert: false,
+                brightness: Config.brightness,
+                skeuomorphism: Config.skeuomorphism,
+                ibooksInternalTheme: getIbooksInternalTheme(Kirigami.Theme.backgroundColor)
+            }
+
+            view.runJavaScript(`setStyle(${JSON.stringify(style)})`)
         }
     }
 
