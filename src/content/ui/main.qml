@@ -44,7 +44,7 @@ Kirigami.ApplicationWindow {
             case 'book-ready':
                 searchResultModel.clear();
                 get('book.package.metadata', metadata => {
-                    backend.metadata = metadata;
+                    backend.metadata = JSON.parse(metadata);
                 });
                 get('book.navigation.toc', toc => {
                     backend.toc = toc;
@@ -143,70 +143,59 @@ Kirigami.ApplicationWindow {
     }
 
     pageStack.initialPage: Kirigami.Page {
-        title: "Ebook Title"
+        title: backend.metadata ? backend.metadata.title : ''
         padding: 0
-        actions {
-            right: Kirigami.Action {
-                text: i18n("Next Page")
-                icon.name: "arrow-right"
-                shortcut: Qt.LeftArrow
-                onTriggered: view.next()
-            }
-            left: Kirigami.Action {
-                text: i18n("Previous Page")
-                icon.name: "arrow-left"
-                onTriggered: view.prev()
-            }
-        }
 
-        titleDelegate: Kirigami.SearchField {
-            id: searchField
-            autoAccept: false
-            visible: view.file !== ''
-            onAccepted: if (text === '') {
-                view.runJavaScript(`find.clearHighlight()`)
-            } else {
-                view.runJavaScript(`find.find('${text}', true, true)`);
-                popup.open();
-            }
-            selectByMouse: true
-            property alias popup: popup
+        actions.main: Kirigami.Action {
+            displayComponent: Kirigami.SearchField {
+                id: searchField
+                autoAccept: false
+                visible: view.file !== ''
+                onAccepted: if (text === '') {
+                    view.runJavaScript(`find.clearHighlight()`)
+                } else {
+                    view.runJavaScript(`find.find('${text}', true, true)`);
+                    popup.open();
+                }
+                selectByMouse: true
+                property alias popup: popup
 
-            QQC2.Popup {
-                padding: 1
-                id: popup
-                x: searchField.y
-                y: searchField.y + searchField.height
-                width: Kirigami.Units.gridUnit * 15
-                height: Kirigami.Units.gridUnit * 20
+                QQC2.Popup {
+                    padding: 1
+                    id: popup
+                    x: searchField.y
+                    y: searchField.y + searchField.height
+                    width: Kirigami.Units.gridUnit * 15
+                    height: Kirigami.Units.gridUnit * 20
 
-                contentItem: ColumnLayout {
-                    width: popup.width
-                    spacing: 0
+                    contentItem: ColumnLayout {
+                        width: popup.width
+                        spacing: 0
 
-                    QQC2.ScrollView {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
+                        QQC2.ScrollView {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
 
-                        contentItem: ListView {
-                            model: searchResultModel
+                            contentItem: ListView {
+                                model: searchResultModel
 
-                            delegate: QQC2.ItemDelegate {
-                                width: ListView.view.width
-                                Kirigami.Theme.colorSet: Kirigami.Theme.Window
-                                Kirigami.Theme.inherit: false
-                                onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
-                                contentItem: ColumnLayout {
-                                    QQC2.Label {
-                                        Layout.fillWidth: true
-                                        text: model.sectionMarkup
-                                        wrapMode: Text.WordWrap
-                                        font: Kirigami.Theme.smallFont
-                                    }
-                                    QQC2.Label {
-                                        Layout.fillWidth: true
-                                        text: model.markup
-                                        wrapMode: Text.WordWrap
+                                delegate: QQC2.ItemDelegate {
+                                    width: ListView.view.width
+                                    Kirigami.Theme.colorSet: Kirigami.Theme.Window
+                                    Kirigami.Theme.inherit: false
+                                    onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
+                                    contentItem: ColumnLayout {
+                                        QQC2.Label {
+                                            Layout.fillWidth: true
+                                            text: model.sectionMarkup
+                                            wrapMode: Text.WordWrap
+                                            font: Kirigami.Theme.smallFont
+                                        }
+                                        QQC2.Label {
+                                            Layout.fillWidth: true
+                                            text: model.markup
+                                            wrapMode: Text.WordWrap
+                                        }
                                     }
                                 }
                             }
@@ -283,11 +272,34 @@ Kirigami.ApplicationWindow {
         }
 
     }
-    footer: QQC2.Slider {
-        padding: Kirigami.Units.smallSpacing
+    footer: QQC2.ToolBar {
         visible: backend.locationsReady
-        value: backend.progress
-        onValueChanged: backend.progress = value
-        live: false
+        contentItem: RowLayout {
+            QQC2.ToolButton {
+                text: i18n("Previous Page")
+                display: QQC2.AbstractButton.IconOnly
+                icon.name: "arrow-left"
+                onClicked: view.prev()
+                QQC2.ToolTip {
+                    text: parent.text
+                }
+            }
+            QQC2.Slider {
+                padding: Kirigami.Units.smallSpacing
+                value: backend.progress
+                onValueChanged: backend.progress = value
+                live: false
+                Layout.fillWidth: true
+            }
+            QQC2.ToolButton {
+                text: i18n("Next Page")
+                icon.name: "arrow-right"
+                onClicked: view.next()
+                display: QQC2.AbstractButton.IconOnly
+                QQC2.ToolTip {
+                    text: parent.text
+                }
+            }
+        }
     }
 }
