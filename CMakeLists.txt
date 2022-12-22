@@ -25,19 +25,22 @@ include(ECMQtDeclareLoggingCategory)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMAddAppIcon)
+include(KDEGitCommitHooks)
 include(ECMAddTests)
+include(ECMCheckOutboundLicense)
+include(KDEClangFormat)
 
 ecm_setup_version(${PROJECT_VERSION}
     VARIABLE_PREFIX ARIANNA
     VERSION_HEADER ${CMAKE_CURRENT_BINARY_DIR}/arianna-version.h
 )
 
-find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} NO_MODULE COMPONENTS Widgets Core Quick Gui QuickControls2 WebSockets Test Svg WebEngine)
+find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} NO_MODULE COMPONENTS Widgets Core Quick Gui QuickControls2 WebSockets Test Svg Sql WebEngine)
 set_package_properties(Qt${QT_MAJOR_VERSION} PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
 )
-find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS Kirigami2 I18n Config CoreAddons DBusAddons WindowSystem)
+find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS Kirigami2 I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Baloo)
 set_package_properties(KF5 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
@@ -68,3 +71,4 @@ feature_summary(WHAT ALL INCLUDE_QUIET_PACKAGES FATAL_ON_MISSING_REQUIRED_PACKAG
 
 file(GLOB_RECURSE ALL_CLANG_FORMAT_SOURCE_FILES src/*.cpp src/*.h)
 kde_clang_format(${ALL_CLANG_FORMAT_SOURCE_FILES})
+kde_configure_git_pre_commit_hook(CHECKS CLANG_FORMAT)

@@ -1,5 +1,5 @@
-// SPDX-FileCopyrightText: 2018-2019 Black Hat <bhat@encom.eu.org>
-// SPDX-License-Identifier: GPL-3.0-only
+// SPDX-FileCopyrightText: 2022 Carl Schwan <carl@carlschwan.eu>
+// SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accepted-LGPL
 
 #include <QCommandLineParser>
 #include <QFontDatabase>
@@ -23,9 +23,12 @@
 #include <qstringliteral.h>
 
 #include "arianna-version.h"
+#include "booklistmodel.h"
 #include "cache.h"
 #include "clipboard.h"
 #include "config.h"
+#include "contentlist/contentlist.h"
+#include "contentlist/contentquery.h"
 #include "format.h"
 
 int main(int argc, char *argv[])
@@ -90,6 +93,9 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Config", Config::self());
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Clipboard", &clipboard);
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Format", &format);
+    qmlRegisterType<BookListModel>("org.kde.arianna", 1, 0, "BookListModel");
+    qmlRegisterType<ContentList>("org.kde.arianna", 1, 0, "ContentList");
+    qmlRegisterType<ContentQuery>("org.kde.arianna", 1, 0, "ContentQuery");
 
     engine.load(QUrl(QStringLiteral("qrc:/content/ui/main.qml")));
     if (engine.rootObjects().isEmpty()) {

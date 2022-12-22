@@ -16,6 +16,16 @@ set(arianna_src
     cache.cpp
     clipboard.cpp
     format.cpp
+    bookdatabase.cpp
+    categoryentriesmodel.cpp
+    propertycontainer.cpp
+    booklistmodel.cpp
+
+    contentlist/baloocontentlister.cpp
+    contentlist/contentlist.cpp
+    contentlist/contentquery.cpp
+    contentlist/contentlisterbase.cpp
+    contentlist/filesystemcontentlister.cpp
     ${debug_files_SRCS}
 )
 
@@ -29,12 +39,15 @@ target_link_libraries(arianna_static PUBLIC
     Qt::WebEngine
     Qt::QuickControls2
     Qt::Svg
+    Qt::Sql
     KF5::I18n
     KF5::Kirigami2
     KF5::ConfigCore
     KF5::ConfigGui
     KF5::WindowSystem
     KF5::DBusAddons
+    KF5::Baloo
+    KF5::FileMetaData
     KF5::CoreAddons)
 
 if (BUILD_TESTING)

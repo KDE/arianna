@@ -9,7 +9,18 @@ SPDX-FileCopyrightText: Carl Schwan <carl@carlschwan.eu>
 SPDX-License-Identifier: CC0-1.0
 -->
   <kcfgfile name="arianna" />
+  <include>QStandardPaths</include>
   <group name="General">
+    <entry name="bookLocations" type="StringList">
+      <label>Location where to search for books</label>
+      <code>
+      QStringList defaultLocations;
+      defaultLocations = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
+      defaultLocations &lt;&lt; QStandardPaths::standardLocations(QStandardPaths::DownloadLocation);
+      defaultLocations &lt;&lt; QStringLiteral("%1/books").arg(QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation).first());
+      </code>
+      <default code="true">defaultLocations</default>
+    </entry>
   </group>
   <group name="Appearance">
     <entry name="defaultFont" type="Font">
