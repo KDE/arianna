@@ -20,6 +20,7 @@ set(arianna_src
     categoryentriesmodel.cpp
     propertycontainer.cpp
     booklistmodel.cpp
+    epubcontainer.cpp
 
     contentlist/baloocontentlister.cpp
     contentlist/contentlist.cpp
@@ -48,6 +49,7 @@ target_link_libraries(arianna_static PUBLIC
     KF5::DBusAddons
     KF5::Baloo
     KF5::FileMetaData
+    KF5::Archive
     KF5::CoreAddons)
 
 if (BUILD_TESTING)

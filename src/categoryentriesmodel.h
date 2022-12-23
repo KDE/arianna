@@ -28,6 +28,7 @@ struct BookEntry {
     QStringList seriesNumbers;
     QStringList seriesVolumes;
     QStringList author;
+    QString rights;
     QString publisher;
     QDateTime created;
     QDateTime lastOpenedTime;
@@ -37,6 +38,10 @@ struct BookEntry {
     QStringList description;
     QString comment;
     QStringList tags;
+    QString locations;
+    QString identifier;
+    QString source;
+    QString language;
     int rating;
 };
 
@@ -91,7 +96,8 @@ public:
         RatingRole, /// For getting an int with the rating of the comic. This is gotten from KFileMeta and thus goes from 1-10 with 0 being no rating.
         GenreRole, /// For getting a stringlist with genres assigned to this book.
         KeywordRole, /// For getting a stringlist with keywords assigned to this book. Where tags are user assigned, keywords come from the book itself.
-        CharacterRole /// For getting a stringlist with names of characters in this book.
+        CharacterRole, /// For getting a stringlist with names of characters in this book.
+        LocationsRole /// Epub locations cache
     };
     Q_ENUMS(Roles)
 

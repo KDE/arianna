@@ -44,6 +44,10 @@ public:
         obj->setProperty("comment", entry->comment);
         obj->setProperty("tags", entry->tags);
         obj->setProperty("rating", QString::number(entry->rating));
+        obj->setProperty("rights", entry->rights);
+        obj->setProperty("source", entry->source);
+        obj->setProperty("identifier", entry->identifier);
+        obj->setProperty("language", entry->language);
         return obj;
     }
 
@@ -69,6 +73,11 @@ public:
         entry->comment = obj->property("comment").toString();
         entry->tags = obj->property("tags").toStringList();
         entry->rating = obj->property("rating").toInt();
+        entry->rights = obj->property("rights").toInt();
+        entry->rights = obj->property("rights").toString();
+        entry->source = obj->property("source").toString();
+        entry->identifier = obj->property("identifier").toString();
+        entry->language = obj->property("language").toString();
         unwrappedBooks << entry;
         return entry;
     }
@@ -108,6 +117,7 @@ QHash<int, QByteArray> CategoryEntriesModel::roleNames() const
         {CommentRole, "comment"},
         {TagsRole, "tags"},
         {RatingRole, "rating"},
+        {LocationsRole, "locations"},
     };
 }
 
@@ -187,8 +197,9 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
 
 int CategoryEntriesModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid())
+    if (parent.isValid()) {
         return 0;
+    }
     return d->categoryModels.count() + d->entries.count();
 }
 

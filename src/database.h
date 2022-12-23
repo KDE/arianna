@@ -51,25 +51,29 @@ private:
     void checkDatabase();
     QSqlQuery createTableStatement(const QString &table, const QHash<QByteArray, QByteArray> &columns);
 
-    const QHash<QByteArray, QByteArray> bookTableColumns = {{"id", "INTEGER PRIMARY KEY AUTOINCREMENT"},
-                                                            {"Title", "TEXT"},
-                                                            {"Author", "TEXT"},
-                                                            {"Year", "INTEGER"},
-                                                            {"DateAdded", "INTEGER"},
-                                                            {"Path", "TEXT UNIQUE"},
-                                                            {"Position", "BLOB"},
-                                                            {"ISBN", "TEXT"},
-                                                            {"Tags", "TEXT"},
-                                                            {"Hash", "TEXT"},
-                                                            {"LastAccessed", "BLOB"},
-                                                            {"Bookmarks", "BLOB"},
-                                                            {"CoverImage", "BLOB"},
-                                                            {"Addition", "TEXT"},
-                                                            {"Annotations", "BLOB"}};
+    const QHash<QByteArray, QByteArray> bookTableColumns = {
+        {"id", "INTEGER PRIMARY KEY AUTOINCREMENT"},
+        {"Title", "TEXT"},
+        {"Author", "TEXT"},
+        {"Year", "INTEGER"},
+        {"DateAdded", "INTEGER"},
+        {"Path", "TEXT UNIQUE"},
+        {"Position", "BLOB"},
+        {"ISBN", "TEXT"},
+        {"Tags", "TEXT"},
+        {"Hash", "TEXT"},
+        {"LastAccessed", "BLOB"},
+        {"Bookmarks", "BLOB"},
+        {"CoverImage", "BLOB"},
+        {"Addition", "TEXT"},
+        {"Annotations", "BLOB"},
+    };
 
-    const QHash<QByteArray, QByteArray> directoryTableColumns = {{"id", "INTEGER PRIMARY KEY"},
-                                                                 {"Path", "TEXT"},
-                                                                 {"Name", "TEXT"},
-                                                                 {"Tags", "TEXT"},
-                                                                 {"CheckState", "INTEGER"}};
+    const QHash<QByteArray, QByteArray> directoryTableColumns = {
+        {"id", "INTEGER PRIMARY KEY"},
+        {"Path", "TEXT"},
+        {"Name", "TEXT"},
+        {"Tags", "TEXT"},
+        {"CheckState", "INTEGER"},
+    };
 };

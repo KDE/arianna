@@ -62,7 +62,8 @@ public:
                    << QStringLiteral("seriesVolumes varchar") << QStringLiteral("author varchar") << QStringLiteral("publisher varchar")
                    << QStringLiteral("created datetime") << QStringLiteral("lastOpenedTime datetime") << QStringLiteral("totalPages integer")
                    << QStringLiteral("currentPage integer") << QStringLiteral("thumbnail varchar") << QStringLiteral("comment varchar")
-                   << QStringLiteral("tags varchar") << QStringLiteral("rating varchar");
+                   << QStringLiteral("tags varchar") << QStringLiteral("rating varchar") << QStringLiteral("locations text") << QStringLiteral("rights varchar")
+                   << QStringLiteral("source varchar") << QStringLiteral("identifier varchar") << QStringLiteral("language varchar");
 
         if (!q.exec(QStringLiteral("create table books(") + entryNames.join(QStringLiteral(", ")) + QLatin1Char(')'))) {
             qCDebug(ARIANNA_LOG) << "Database could not create the table books";
@@ -122,6 +123,11 @@ QList<BookEntry *> BookDatabase::loadEntries()
         entry->genres = allEntries.value(d->fieldNames.indexOf(QStringLiteral("genres"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
         entry->keywords = allEntries.value(d->fieldNames.indexOf(QStringLiteral("keywords"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
         entry->characters = allEntries.value(d->fieldNames.indexOf(QStringLiteral("characters"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry->locations = allEntries.value(d->fieldNames.indexOf(QStringLiteral("locations"))).toString();
+        entry->language = allEntries.value(d->fieldNames.indexOf(QStringLiteral("language"))).toString();
+        entry->identifier = allEntries.value(d->fieldNames.indexOf(QStringLiteral("identifier"))).toString();
+        entry->rights = allEntries.value(d->fieldNames.indexOf(QStringLiteral("rights"))).toString();
+        entry->source = allEntries.value(d->fieldNames.indexOf(QStringLiteral("source"))).toString();
 
         // Since we may change the thumbnailer between updates, but retain the
         // database, this may break so we need to sanitise in case of pdf...
@@ -175,6 +181,11 @@ void BookDatabase::addEntry(BookEntry *entry)
     newEntry.bindValue(QStringLiteral(":genres"), entry->genres.join(QLatin1Char(',')));
     newEntry.bindValue(QStringLiteral(":keywords"), entry->keywords.join(QLatin1Char(',')));
     newEntry.bindValue(QStringLiteral(":characters"), entry->characters.join(QLatin1Char(',')));
+    newEntry.bindValue(QStringLiteral(":locations"), entry->locations);
+    newEntry.bindValue(QStringLiteral(":rights"), entry->rights);
+    newEntry.bindValue(QStringLiteral(":source"), entry->source);
+    newEntry.bindValue(QStringLiteral(":identifier"), entry->identifier);
+    newEntry.bindValue(QStringLiteral(":language"), entry->language);
     newEntry.exec();
 
     d->closeDb();

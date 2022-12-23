@@ -13,9 +13,12 @@
 #include <QTimer>
 #include <QUrl>
 
+#include "epubcontainer.h"
+"
 #include <arianna_debug.h>
+#include <qchar.h>
 
-class BookListModel::Private
+    class BookListModel::Private
 {
 public:
     Private()
@@ -257,7 +260,16 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
         }
         QMimeDatabase db;
         QString mimetype = db.mimeTypeForFile(entry->filename).name();
-        if (mimetype == QStringLiteral("application/epub+zip")) { }
+        if (mimetype == QStringLiteral("application/epub+zip")) {
+            EPubContainer epub(nullptr);
+            epub.openFile(entry->filename);
+            entry->title = epub.getMetadata(QStringLiteral("title"));
+            entry->author = epub.getMetadata(QStringLiteral("creator")).split(QLatin1Char(','), Qt::SkipEmptyParts);
+            entry->rights = epub.getMetadata(QStringLiteral("rights"));
+            entry->source = epub.getMetadata(QStringLiteral("source"));
+            entry->identifier = epub.getMetadata(QStringLiteral("identifier"));
+            entry->language = epub.getMetadata(QStringLiteral("language"));
+        }
 
         d->addEntry(this, entry);
         d->db->addEntry(entry);
