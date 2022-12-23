@@ -9,9 +9,24 @@
     <binary>arianna</binary>
   </provides>
   <name>Arianna</name>
+  <name xml:lang="ca">Arianna</name>
+  <name xml:lang="es">Arianna</name>
+  <name xml:lang="nl">Arianna</name>
+  <name xml:lang="uk">Arianna</name>
+  <name xml:lang="x-test">xxAriannaxx</name>
   <summary>EPub Reader</summary>
+  <summary xml:lang="ca">Lector d'EPub</summary>
+  <summary xml:lang="es">Lector de EPub</summary>
+  <summary xml:lang="nl">EPub-lezer</summary>
+  <summary xml:lang="uk">Читання EPub</summary>
+  <summary xml:lang="x-test">xxEPub Readerxx</summary>
   <description>
     <p>An EPub Reader</p>
+    <p xml:lang="ca">Un lector d'EPub</p>
+    <p xml:lang="es">Lector de EPub</p>
+    <p xml:lang="nl">Een EPub-lezer</p>
+    <p xml:lang="uk">Програма для читання EPub</p>
+    <p xml:lang="x-test">xxAn EPub Readerxx</p>
   </description>
   <url type="homepage">https://apps.kde.org/arianna/</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?product=Arianna</url>
@@ -19,6 +34,11 @@
     <category>Network</category>
   </categories>
   <developer_name>The KDE Community</developer_name>
+  <developer_name xml:lang="ca">La comunitat KDE</developer_name>
+  <developer_name xml:lang="es">La Comunidad KDE</developer_name>
+  <developer_name xml:lang="nl">De KDE gemeenschap</developer_name>
+  <developer_name xml:lang="uk">Спільнота KDE</developer_name>
+  <developer_name xml:lang="x-test">xxThe KDE Communityxx</developer_name>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
   <custom>
