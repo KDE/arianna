@@ -2,7 +2,17 @@
 # SPDX-FileCopyrightText: 2020 Tobias Fella <fella@posteo.de>
 [Desktop Entry]
 Name=Arianna
+Name[ca]=Arianna
+Name[es]=Arianna
+Name[nl]=Arianna
+Name[uk]=Arianna
+Name[x-test]=xxAriannaxx
 GenericName=EPub Reader
+GenericName[ca]=Lector d'EPub
+GenericName[es]=Lector de EPub
+GenericName[nl]=EPub-lezer
+GenericName[uk]=Читання EPub
+GenericName[x-test]=xxEPub Readerxx
 Exec=arianna %u
 Terminal=false
 Icon=org.kde.arianna
