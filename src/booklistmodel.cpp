@@ -14,7 +14,7 @@
 #include <QUrl>
 
 #include "epubcontainer.h"
-"
+
 #include <arianna_debug.h>
 #include <qchar.h>
 
