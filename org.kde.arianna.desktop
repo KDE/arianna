@@ -3,7 +3,9 @@
 [Desktop Entry]
 Name=Arianna
 Name[ca]=Arianna
+Name[ca@valencia]=Arianna
 Name[es]=Arianna
+Name[fr]=Arianna
 Name[ka]=არიანა
 Name[nl]=Arianna
 Name[sl]=Arianna
@@ -12,7 +14,9 @@ Name[uk]=Arianna
 Name[x-test]=xxAriannaxx
 GenericName=EPub Reader
 GenericName[ca]=Lector d'EPub
+GenericName[ca@valencia]=Lector d'EPub
 GenericName[es]=Lector de EPub
+GenericName[fr]=Lecteur pour fichiers « ePub »
 GenericName[ka]=EPub -ის წამკითხველი
 GenericName[nl]=EPub-lezer
 GenericName[sl]=Bralnik EPub
