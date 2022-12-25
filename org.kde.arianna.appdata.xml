@@ -10,7 +10,9 @@
   </provides>
   <name>Arianna</name>
   <name xml:lang="ca">Arianna</name>
+  <name xml:lang="ca-valencia">Arianna</name>
   <name xml:lang="es">Arianna</name>
+  <name xml:lang="fr">Arianna</name>
   <name xml:lang="ka">არიანა</name>
   <name xml:lang="nl">Arianna</name>
   <name xml:lang="sl">Arianna</name>
@@ -19,7 +21,9 @@
   <name xml:lang="x-test">xxAriannaxx</name>
   <summary>EPub Reader</summary>
   <summary xml:lang="ca">Lector d'EPub</summary>
+  <summary xml:lang="ca-valencia">Lector d'EPub</summary>
   <summary xml:lang="es">Lector de EPub</summary>
+  <summary xml:lang="fr">Lecteur de fichiers « ePub »</summary>
   <summary xml:lang="ka">EPub -ის წამკითხველი</summary>
   <summary xml:lang="nl">EPub-lezer</summary>
   <summary xml:lang="sl">Bralnik EPub</summary>
@@ -29,7 +33,9 @@
   <description>
     <p>An EPub Reader</p>
     <p xml:lang="ca">Un lector d'EPub</p>
+    <p xml:lang="ca-valencia">Un lector d'EPub</p>
     <p xml:lang="es">Lector de EPub</p>
+    <p xml:lang="fr">Un lecteur de fichiers « ePub »</p>
     <p xml:lang="ka">EPub -ის წამკითხველი</p>
     <p xml:lang="nl">Een EPub-lezer</p>
     <p xml:lang="sl">Bralnik EPub</p>
@@ -44,7 +50,9 @@
   </categories>
   <developer_name>The KDE Community</developer_name>
   <developer_name xml:lang="ca">La comunitat KDE</developer_name>
+  <developer_name xml:lang="ca-valencia">La comunitat KDE</developer_name>
   <developer_name xml:lang="es">La Comunidad KDE</developer_name>
+  <developer_name xml:lang="fr">La communauté de KDE</developer_name>
   <developer_name xml:lang="ka">KDE-ის საზოგადოება</developer_name>
   <developer_name xml:lang="nl">De KDE gemeenschap</developer_name>
   <developer_name xml:lang="sl">Skupnost KDE</developer_name>
