@@ -1,116 +1,118 @@
+# Xavier Besnard <xavier.besnard@neuf.fr>, 2022.
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2022-12-24 00:46+0000\n"
-"PO-Revision-Date: 2022-12-24 18:31+0100\n"
-"Last-Translator: KDE Francophone <kde-francophone@kde.org>\n"
-"Language-Team: KDE Francophone <kde-francophone@kde.org>\n"
+"PO-Revision-Date: 2022-12-27 10:42+0100\n"
+"Last-Translator: Xavier Besnard <xavier.besnard@neuf.fr>\n"
+"Language-Team: French <kde-francophone@kde.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 22.12.0\n"
 
 #: content/ui/EpubViewerPage.qml:125
 #, kde-format
 msgid "No book selected"
-msgstr ""
+msgstr "Aucun livre sélectionné"
 
 #: content/ui/EpubViewerPage.qml:128
 #, kde-format
 msgid "Open file"
-msgstr ""
+msgstr "Ouvrir un fichier"
 
 #: content/ui/EpubViewerPage.qml:148
 #, kde-format
 msgid "Please choose a file"
-msgstr ""
+msgstr "Veuillez sélectionner un fichier"
 
 #: content/ui/EpubViewerPage.qml:182
 #, kde-format
 msgid "Copy"
-msgstr ""
+msgstr "Copier"
 
 #: content/ui/EpubViewerPage.qml:188
 #, kde-format
 msgid "Find"
-msgstr ""
+msgstr "Trouver"
 
 #: content/ui/EpubViewerPage.qml:199
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
-msgstr ""
+msgstr "%1 %"
 
 #: content/ui/EpubViewerPage.qml:213
 #, kde-format
 msgid "Time left in chapter:"
-msgstr ""
+msgstr "Temps passé sur le chapitre :"
 
 #: content/ui/EpubViewerPage.qml:214 content/ui/EpubViewerPage.qml:218
 #, kde-format
 msgid "Loading"
-msgstr ""
+msgstr "Chargement en cours"
 
 #: content/ui/EpubViewerPage.qml:217
 #, kde-format
 msgid "Time left in book:"
-msgstr ""
+msgstr "Temps passé sur le livre :"
 
 #: content/ui/EpubViewerPage.qml:228
 #, kde-format
 msgid "Previous Page"
-msgstr ""
+msgstr "Page précédente"
 
 #: content/ui/EpubViewerPage.qml:244
 #, kde-format
 msgid "Next Page"
-msgstr ""
+msgstr "Page suivante"
 
 #: content/ui/LibraryPage.qml:13
 #, kde-format
 msgid "Library"
-msgstr ""
+msgstr "Bibliothèque"
 
 #: main.cpp:64
 #, kde-format
 msgid "arianna"
-msgstr ""
+msgstr "Arianna"
 
 #: main.cpp:66
 #, kde-format
 msgid "Mastodon client"
-msgstr ""
+msgstr "Client pour Mastodon"
 
 #: main.cpp:68
 #, kde-format
 msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
-msgstr ""
+msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 
 #: main.cpp:69
 #, kde-format
 msgid "Niccolò Venerandi"
-msgstr ""
+msgstr "Niccolò Venerandi"
 
 #: main.cpp:69
 #, kde-format
 msgid "Maintainer"
-msgstr ""
+msgstr "Mainteneur"
 
 #: main.cpp:70
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "Xavier Besnard"
 
 #: main.cpp:70
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "xavier.besnard@neuf.fr"
 
 #: main.cpp:83
 #, kde-format
 msgid "Epub reader"
-msgstr ""
+msgstr "Lecteur de fichiers « ePub »"
