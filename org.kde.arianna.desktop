@@ -4,6 +4,7 @@
 Name=Arianna
 Name[ca]=Arianna
 Name[ca@valencia]=Arianna
+Name[de]=Arianna
 Name[en_GB]=Arianna
 Name[es]=Arianna
 Name[eu]=Arianna
@@ -18,6 +19,7 @@ Name[x-test]=xxAriannaxx
 GenericName=EPub Reader
 GenericName[ca]=Lector d'EPub
 GenericName[ca@valencia]=Lector d'EPub
+GenericName[de]=EPub-Lesegerät
 GenericName[en_GB]=EPub Reader
 GenericName[es]=Lector de EPub
 GenericName[eu]=EPub irakurlea
