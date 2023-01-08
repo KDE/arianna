@@ -24,7 +24,6 @@
 
 #include "arianna-version.h"
 #include "booklistmodel.h"
-#include "cache.h"
 #include "clipboard.h"
 #include "config.h"
 #include "contentlist/contentlist.h"
@@ -86,10 +85,8 @@ int main(int argc, char *argv[])
     parser.process(app);
     about.processCommandLine(&parser);
 
-    Cache cache;
     Clipboard clipboard;
     Format format;
-    qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Cache", &cache);
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Config", Config::self());
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Clipboard", &clipboard);
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Format", &format);
