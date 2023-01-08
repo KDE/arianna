@@ -298,7 +298,7 @@ Kirigami.Page {
                 if (currentLocation) {
                     view.runJavaScript(`rendition.display('${currentLocation}')`)
                 } else {
-                    view.runJavaScript(`rendition.display('')`);
+                    view.runJavaScript(`rendition.display()`);
                 }
                 break;
             case 'locations-ready':

@@ -42,7 +42,7 @@ window.onload = () => {
         backend = channel.objects.backend;
         dispatch({ type: 'ready' })
         backend.progressChanged.connect(() => {
-            if (rendition.location.start.percentage !== backend.progress) {
+            if (!rendition.location || rendition.location.start.percentage !== backend.progress) {
                 rendition.display(book.locations.cfiFromPercentage(backend.progress))
             }
         })
@@ -514,7 +514,7 @@ const loadLocations = async () => {
         dispatchLocation()
     }
 
-    if (false && backend.locations) {
+    if (backend.locations) {
         book.locations.load(backend.locations)
         if (book.locations.total < 0) {
             return dispatch({ type: 'locations-fallback' })
