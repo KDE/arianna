@@ -19,6 +19,7 @@ Kirigami.Page {
 
     property var url: ''
     property var locations
+    property var currentLocation
     property string filename: ''
     property BookListModel bookListModel
 
@@ -261,6 +262,7 @@ Kirigami.Page {
         property var findResults: ({})
         property var selection: null
         property double progress: 0
+        property var location
         property var locations: root.locations
         property bool locationsReady: false
         property var metadata: null
@@ -289,13 +291,16 @@ Kirigami.Page {
             case 'rendition-ready':
                 setStyle();
                 view.runJavaScript('setupRendition()');
-                view.runJavaScript(`display('')`);
+                if (currentLocation) {
+                    view.runJavaScript(`rendition.display('${currentLocation}')`)
+                } else {
+                    view.runJavaScript(`display('')`);
+                }
                 break;
             case 'locations-ready':
                 backend.locationsReady = true;
                 break;
             case 'locations-generated':
-                console.error(action.type)
                 backend.locationsReady = true;
                 bookListModel.setBookData(filename, 'locations', action.payload.locations)
                 break;
@@ -308,6 +313,8 @@ Kirigami.Page {
                 break;
             case 'relocated':
                 console.error(JSON.stringify(action.payload))
+                bookListModel.setBookData(filename, 'currentLocation', action.payload.start.cfi)
+                bookListModel.setBookData(filename, 'currentProgress', action.payload.start.percentage * 100)
                 backend.location = action.payload;
                 break;
             case 'find-results':
