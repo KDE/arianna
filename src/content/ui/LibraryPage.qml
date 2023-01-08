@@ -68,8 +68,9 @@ Kirigami.ScrollablePage {
         }
 
         cellWidth: {
-            let columns = Math.max(Math.floor(contentDirectoryView.width / 170), 2);
-            return Math.floor(contentDirectoryView.width / columns);
+            const viewWidth = contentDirectoryView.width - Kirigami.Units.smallSpacing * 2;
+            let columns = Math.max(Math.floor(viewWidth / 170), 2);
+            return Math.floor(viewWidth / columns);
         }
         cellHeight: {
             if (Kirigami.Settings.isMobile) {
