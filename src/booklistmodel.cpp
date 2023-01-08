@@ -19,6 +19,7 @@
 
 #include <arianna_debug.h>
 #include <qchar.h>
+#include <qloggingcategory.h>
 
 class BookListModel::Private
 {
@@ -160,15 +161,28 @@ public:
     }
 };
 
-void saveCover(const QString &identifier, const QImage &image)
+QString saveCover(const QString &identifier, const QImage &image)
 {
-    if (image.isNull()) {
+    if (!image.isNull()) {
         const auto cacheLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-        image.save(cacheLocation + QLatin1Char('/') + identifier);
-        qCDebug(ARIANNA_LOG) << "saving cover to" << (cacheLocation + QLatin1Char('/') + identifier);
+        QString id = identifier;
+        id.replace(QLatin1Char('/'), QLatin1Char('_'));
+        QString fileName = cacheLocation + QLatin1String("/covers/") + id + QLatin1String(".jpg");
+        fileName.replace(QLatin1Char(':'), QLatin1Char('_'));
+        QDir dir(cacheLocation);
+        if (!dir.exists(QLatin1String("covers"))) {
+            dir.mkdir(QLatin1String("covers"));
+        }
+        if (!image.save(fileName)) {
+            qCWarning(ARIANNA_LOG) << "Error saving image" << fileName;
+        } else {
+            qCDebug(ARIANNA_LOG) << "saving cover to" << fileName;
+        }
+        return fileName;
     } else {
         qCDebug(ARIANNA_LOG) << "cover is empty";
         // TODO generate generic cover
+        return {};
     }
 }
 
@@ -285,7 +299,7 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
             entry->language = epub.getMetadata(QStringLiteral("language"));
 
             auto image = epub.getImage(epub.getMetadata(QStringLiteral("cover")));
-            saveCover(epub.getMetadata(QStringLiteral("identifier")), image);
+            entry->thumbnail = saveCover(epub.getMetadata(QStringLiteral("identifier")), image);
         }
 
         d->addEntry(this, entry);

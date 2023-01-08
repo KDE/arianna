@@ -514,7 +514,7 @@ const loadLocations = async () => {
         dispatchLocation()
     }
 
-    if (backend.locations) {
+    if (false && backend.locations) {
         book.locations.load(backend.locations)
         if (book.locations.total < 0) {
             return dispatch({ type: 'locations-fallback' })

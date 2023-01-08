@@ -37,7 +37,14 @@ Kirigami.ScrollablePage {
         }
     }
 
-    ListView {
+    GridView {
+        id: contentDirectoryView
+
+        leftMargin: Kirigami.Units.smallSpacing
+        rightMargin: Kirigami.Units.smallSpacing
+        topMargin: Kirigami.Units.smallSpacing
+        bottomMargin: Kirigami.Units.smallSpacing
+
         model: BookListModel {
             id: contentList;
             contentModel: ContentList {
@@ -60,10 +67,32 @@ Kirigami.ScrollablePage {
             }
         }
 
-        delegate: Kirigami.BasicListItem {
-            text: model.title
-            subtitle: model.author.join(', ')
-            onClicked: {
+        cellWidth: {
+            let columns = Math.max(Math.floor(contentDirectoryView.width / 170), 2);
+            return Math.floor(contentDirectoryView.width / columns);
+        }
+        cellHeight: {
+            if (Kirigami.Settings.isMobile) {
+                return cellWidth + Kirigami.Units.gridUnit * 2 + Kirigami.Units.largeSpacing;
+            } else {
+                return 170 + Kirigami.Units.gridUnit * 2 + Kirigami.Units.largeSpacing;
+            }
+        }
+        currentIndex: Kirigami.Settings.isMobile ? 0 : -1
+        reuseItems: true
+        activeFocusOnTab: true
+        keyNavigationEnabled: true
+
+        delegate: GridBrowserDelegate {
+            width: Kirigami.Settings.isMobile ? contentDirectoryView.cellWidth : 170
+            height: contentDirectoryView.cellHeight
+            focus: true
+
+            imageUrl: 'file://' + model.thumbnail
+            mainText: model.title
+            secondaryText: model.author.join(', ')
+
+            onOpen: {
                 applicationWindow().pageStack.layers.push('./EpubViewerPage.qml', {
                     url: 'file://' + model.filename,
                     filename: model.filename,

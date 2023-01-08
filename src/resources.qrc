@@ -7,6 +7,7 @@ SPDX-License-Identifier: LGPL-3.0-or-later
     <file>content/ui/main.qml</file>
     <file>content/ui/LibraryPage.qml</file>
     <file>content/ui/EpubViewerPage.qml</file>
+    <file>content/ui/GridBrowserDelegate.qml</file>
     <file>content/ui/main.html</file>
     <file>content/ui/epub.js</file>
     <file>content/ui/epub-viewer.js</file>

@@ -337,20 +337,6 @@ BookEntry *CategoryEntriesModel::bookFromFile(const QString &filename)
                 entry->comment = data.userComment();
             }
             entry->filename = filename;
-
-            QString thumbnail;
-            if (filename.toLower().endsWith(QStringLiteral("cbr")) || filename.toLower().endsWith(QStringLiteral("cbz"))) {
-                thumbnail = QStringLiteral("image://comiccover/").append(filename);
-            }
-#ifdef USE_PERUSE_PDFTHUMBNAILER
-            else if (filename.toLower().endsWith(QStringLiteral("pdf"))) {
-                thumbnail = QStringLiteral("image://pdfcover/").append(filename);
-            }
-#endif
-            else {
-                thumbnail = QStringLiteral("image://preview/").append(filename);
-            }
-            entry->thumbnail = thumbnail;
         }
     }
     return entry;
