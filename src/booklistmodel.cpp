@@ -18,7 +18,7 @@
 #include <arianna_debug.h>
 #include <qchar.h>
 
-    class BookListModel::Private
+class BookListModel::Private
 {
 public:
     Private()
@@ -200,7 +200,7 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
     d->initializeSubModels(this);
     int newRow = d->entries.count();
     beginInsertRows({}, newRow, newRow + (last - first));
-    int role = d->contentModel->roleNames().key("filePath");
+    int role = ContentList::FilePathRole;
     for (int i = first; i < last + 1; ++i) {
         QVariant filePath = d->contentModel->data(d->contentModel->index(first, 0, index), role);
         auto entry = new BookEntry();

@@ -27,6 +27,7 @@ set(arianna_src
     contentlist/contentquery.cpp
     contentlist/contentlisterbase.cpp
     contentlist/filesystemcontentlister.cpp
+    contentlist/manualcontentlister.cpp
     ${debug_files_SRCS}
 )
 

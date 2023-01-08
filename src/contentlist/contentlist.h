@@ -41,7 +41,11 @@ public:
     /**
      * Extra roles for the different kinds of data that can be searched.
      */
-    enum Roles { FilenameRole = Qt::UserRole + 1, FilePathRole, MetadataRole };
+    enum Roles {
+        FilenameRole = Qt::UserRole + 1,
+        FilePathRole,
+        MetadataRole,
+    };
 
     /**
      * @returns the list of search parameters as a list of content queries.
@@ -129,6 +133,8 @@ public:
     Q_SIGNAL void searchCompleted();
 
     Q_INVOKABLE static QString getMimetype(QString filePath);
+
+    Q_INVOKABLE void addFile(const QUrl &filePath);
 
 private:
     bool isComplete() const;

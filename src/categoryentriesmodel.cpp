@@ -12,75 +12,11 @@ class CategoryEntriesModel::Private
 public:
     Private(CategoryEntriesModel *qq)
         : q(qq){};
-    ~Private()
-    {
-        // No deleting the entries - this is done by the master BookListModel already, so do that at your own risk
-        // If we have manually unwrapped any books, though, those need removing
-        qDeleteAll(unwrappedBooks);
-    }
+    ~Private() = default;
     CategoryEntriesModel *q;
     QString name;
     QList<BookEntry *> entries;
     QList<CategoryEntriesModel *> categoryModels;
-
-    QObject *wrapBookEntry(const BookEntry *entry)
-    {
-        PropertyContainer *obj = new PropertyContainer(QStringLiteral("book"), q);
-        obj->setProperty("author", entry->author);
-        obj->setProperty("currentPage", QString::number(entry->currentPage));
-        obj->setProperty("filename", entry->filename);
-        obj->setProperty("filetitle", entry->filetitle);
-        obj->setProperty("genres", entry->genres);
-        obj->setProperty("keywords", entry->keywords);
-        obj->setProperty("characters", entry->characters);
-        obj->setProperty("created", entry->created);
-        obj->setProperty("lastOpenedTime", entry->lastOpenedTime);
-        obj->setProperty("publisher", entry->publisher);
-        obj->setProperty("series", entry->series);
-        obj->setProperty("title", entry->title);
-        obj->setProperty("totalPages", entry->totalPages);
-        obj->setProperty("thumbnail", entry->thumbnail);
-        obj->setProperty("description", entry->description);
-        obj->setProperty("comment", entry->comment);
-        obj->setProperty("tags", entry->tags);
-        obj->setProperty("rating", QString::number(entry->rating));
-        obj->setProperty("rights", entry->rights);
-        obj->setProperty("source", entry->source);
-        obj->setProperty("identifier", entry->identifier);
-        obj->setProperty("language", entry->language);
-        return obj;
-    }
-
-    QList<BookEntry *> unwrappedBooks;
-    BookEntry *unwrapBookEntry(const QObject *obj)
-    {
-        BookEntry *entry = new BookEntry;
-        entry->author = obj->property("author").toStringList();
-        entry->currentPage = obj->property("currentPage").toInt();
-        entry->filename = obj->property("filename").toString();
-        entry->filetitle = obj->property("filetitle").toString();
-        entry->genres = obj->property("genres").toStringList();
-        entry->keywords = obj->property("keywords").toStringList();
-        entry->characters = obj->property("characters").toStringList();
-        entry->created = obj->property("created").toDateTime();
-        entry->lastOpenedTime = obj->property("lastOpenedTime").toDateTime();
-        entry->publisher = obj->property("publisher").toString();
-        entry->series = obj->property("series").toStringList();
-        entry->title = obj->property("title").toString();
-        entry->totalPages = obj->property("totalPages").toInt();
-        entry->thumbnail = obj->property("thumbnail").toString();
-        entry->description = obj->property("description").toStringList();
-        entry->comment = obj->property("comment").toString();
-        entry->tags = obj->property("tags").toStringList();
-        entry->rating = obj->property("rating").toInt();
-        entry->rights = obj->property("rights").toInt();
-        entry->rights = obj->property("rights").toString();
-        entry->source = obj->property("source").toString();
-        entry->identifier = obj->property("identifier").toString();
-        entry->language = obj->property("language").toString();
-        unwrappedBooks << entry;
-        return entry;
-    }
 };
 
 CategoryEntriesModel::CategoryEntriesModel(QObject *parent)
@@ -266,16 +202,9 @@ void CategoryEntriesModel::append(BookEntry *entry, Roles compareRole)
     endInsertRows();
 }
 
-void CategoryEntriesModel::appendFakeBook(QObject *book, CategoryEntriesModel::Roles compareRole)
-{
-    append(d->unwrapBookEntry(book), compareRole);
-}
-
 void CategoryEntriesModel::clear()
 {
     beginResetModel();
-    qDeleteAll(d->unwrappedBooks);
-    d->unwrappedBooks.clear();
     d->entries.clear();
     endResetModel();
 }
@@ -348,21 +277,6 @@ void CategoryEntriesModel::addCategoryEntry(const QString &categoryName, BookEnt
     }
 }
 
-QObject *CategoryEntriesModel::get(int index)
-{
-    BookEntry *entry = new BookEntry();
-    bool deleteEntry = true;
-    if (index > -1 && index < d->entries.count()) {
-        entry = d->entries.at(index);
-        deleteEntry = false;
-    }
-    QObject *obj = d->wrapBookEntry(entry);
-    if (deleteEntry) {
-        delete entry;
-    }
-    return obj;
-}
-
 BookEntry *CategoryEntriesModel::getBookEntry(int index)
 {
     BookEntry *entry{nullptr};
@@ -400,47 +314,32 @@ int CategoryEntriesModel::bookCount() const
     return d->entries.count();
 }
 
-QObject *CategoryEntriesModel::getEntry(int index)
+BookEntry *CategoryEntriesModel::bookFromFile(const QString &filename)
 {
-    PropertyContainer *obj = new PropertyContainer(QStringLiteral("book"), this);
-    if (index > d->categoryModels.count() - 1 && index < rowCount()) {
-        // This is a book - get a book!
-        obj = qobject_cast<PropertyContainer *>(get(index - d->categoryModels.count()));
-    } else if (index >= 0 && index < d->categoryModels.count()) {
-        CategoryEntriesModel *catEntry = d->categoryModels.at(index);
-        obj->setProperty("title", catEntry->name());
-        obj->setProperty("categoryEntriesCount", catEntry->bookCount());
-        obj->setProperty("entriesModel", QVariant::fromValue(catEntry));
-    }
-    return obj;
-}
-
-QObject *CategoryEntriesModel::bookFromFile(const QString &filename)
-{
-    PropertyContainer *obj = qobject_cast<PropertyContainer *>(get(indexOfFile(filename)));
-    if (obj->property("filename").toString().isEmpty()) {
+    BookEntry *entry = getBookEntry(indexOfFile(filename));
+    if (entry->filename.isEmpty()) {
         if (QFileInfo::exists(filename)) {
             QFileInfo info(filename);
-            obj->setProperty("title", info.completeBaseName());
-            obj->setProperty("created", info.birthTime());
+            entry->title = info.completeBaseName();
+            entry->created = info.birthTime();
 
             KFileMetaData::UserMetaData data(filename);
             if (data.hasAttribute(QStringLiteral("peruse.currentPage"))) {
                 int currentPage = data.attribute(QStringLiteral("peruse.currentPage")).toInt();
-                obj->setProperty("currentPage", QVariant::fromValue<int>(currentPage));
+                entry->currentPage = currentPage;
             }
             if (data.hasAttribute(QStringLiteral("peruse.totalPages"))) {
                 int totalPages = data.attribute(QStringLiteral("peruse.totalPages")).toInt();
-                obj->setProperty("totalPages", QVariant::fromValue<int>(totalPages));
+                entry->totalPages = totalPages;
             }
-            obj->setProperty("rating", QVariant::fromValue<int>(data.rating()));
+            entry->rating = data.rating();
             if (!data.tags().isEmpty()) {
-                obj->setProperty("tags", QVariant::fromValue<QStringList>(data.tags()));
+                entry->tags = data.tags();
             }
             if (!data.userComment().isEmpty()) {
-                obj->setProperty("comment", QVariant::fromValue<QString>(data.userComment()));
+                entry->comment = data.userComment();
             }
-            obj->setProperty("filename", filename);
+            entry->filename = filename;
 
             QString thumbnail;
             if (filename.toLower().endsWith(QStringLiteral("cbr")) || filename.toLower().endsWith(QStringLiteral("cbz"))) {
@@ -454,10 +353,10 @@ QObject *CategoryEntriesModel::bookFromFile(const QString &filename)
             else {
                 thumbnail = QStringLiteral("image://preview/").append(filename);
             }
-            obj->setProperty("thumbnail", thumbnail);
+            entry->thumbnail = thumbnail;
         }
     }
-    return obj;
+    return entry;
 }
 
 void CategoryEntriesModel::entryDataChanged(BookEntry *entry)

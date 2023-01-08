@@ -4,6 +4,7 @@
 #include "contentlist.h"
 #include "baloocontentlister.h"
 #include "filesystemcontentlister.h"
+#include "manualcontentlister.h"
 
 #include <QDebug>
 #include <QMimeDatabase>
@@ -24,10 +25,12 @@ public:
 
     Private()
         : actualContentList(nullptr)
+        , manualContentLister(new ManualContentLister())
     {
     }
     QList<ContentEntry *> entries;
     ContentListerBase *actualContentList;
+    ManualContentLister *manualContentLister;
 
     QList<ContentQuery *> queries;
     QueryListProperty listProperty;
@@ -61,6 +64,9 @@ ContentList::ContentList(QObject *parent)
     //}
     connect(d->actualContentList, &ContentListerBase::fileFound, this, &ContentList::fileFound);
     connect(d->actualContentList, &ContentListerBase::searchCompleted, this, &ContentList::searchCompleted);
+
+    connect(d->manualContentLister, &ContentListerBase::fileFound, this, &ContentList::fileFound);
+    connect(d->manualContentLister, &ContentListerBase::searchCompleted, this, &ContentList::searchCompleted);
 
     d->listProperty = QQmlListProperty<ContentQuery>{this,
                                                      &d->queries,
@@ -100,7 +106,8 @@ void ContentList::startSearch()
         Q_EMIT searchStarted();
         qWarning() << "search started";
         d->actualContentList->knownFiles = d->knownFiles;
-        d->actualContentList->startSearch(d->queries);
+        // d->actualContentList->startSearch(d->queries);
+        d->manualContentLister->startSearch(d->queries);
     });
 }
 
@@ -117,7 +124,7 @@ void ContentList::fileFound(const QString &filePath, const QVariantMap &metaData
     entry->metadata = metaData;
 
     int newRow = d->entries.count();
-    beginInsertRows(QModelIndex(), newRow, newRow);
+    beginInsertRows({}, newRow, newRow);
     d->entries.append(entry);
     endInsertRows();
 
@@ -169,29 +176,29 @@ void ContentList::setKnownFiles(const QStringList &results)
 
 QHash<int, QByteArray> ContentList::roleNames() const
 {
-    return {{FilenameRole, "filename"}, {FilePathRole, "filePath"}, {MetadataRole, "metadata"}};
+    return {
+        {FilenameRole, "filename"},
+        {FilePathRole, "filePath"},
+        {MetadataRole, "metadata"},
+    };
 }
 
 QVariant ContentList::data(const QModelIndex &index, int role) const
 {
-    QVariant result;
-    if (index.isValid() && index.row() > -1 && index.row() < d->entries.count()) {
-        const ContentEntry *entry = d->entries[index.row()];
-        switch (role) {
-        case FilenameRole:
-            result.setValue(entry->filename);
-            break;
-        case FilePathRole:
-            result.setValue(entry->filePath);
-            break;
-        case MetadataRole:
-            result.setValue(entry->metadata);
-            break;
-        default:
-            break;
-        }
+    if (!index.isValid() || index.row() <= -1 || index.row() >= d->entries.count()) {
+        return {};
     }
-    return result;
+
+    const ContentEntry *entry = d->entries[index.row()];
+    switch (role) {
+    case FilenameRole:
+        return entry->filename;
+    case FilePathRole:
+        return entry->filePath;
+    case MetadataRole:
+        return entry->metadata;
+    }
+    return {};
 }
 
 int ContentList::rowCount(const QModelIndex &parent) const
@@ -247,4 +254,9 @@ void ContentList::Private::clearList(Private::QueryListProperty *property)
     model->beginResetModel();
     list->clear();
     model->endResetModel();
+}
+
+void ContentList::addFile(const QUrl &filePath)
+{
+    d->manualContentLister->addFile(filePath);
 }
