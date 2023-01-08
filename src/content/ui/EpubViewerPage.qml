@@ -63,7 +63,7 @@ Kirigami.Page {
             onAccepted: if (text === '') {
                 view.runJavaScript(`find.clearHighlight()`)
             } else {
-                view.rutrnJavaScript(`find.find('${text}', true, true)`);
+                view.runJavaScript(`find.find('${text}', true, true)`);
                 popup.open()
             }
             selectByMouse: true
