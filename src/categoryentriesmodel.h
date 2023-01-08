@@ -27,8 +27,8 @@ struct BookEntry {
     Q_PROPERTY(QString publisher MEMBER publisher CONSTANT)
     Q_PROPERTY(QDateTime created MEMBER created CONSTANT)
     Q_PROPERTY(QDateTime lastOpenedTime MEMBER lastOpenedTime CONSTANT)
-    Q_PROPERTY(int totalPages MEMBER totalPages CONSTANT)
-    Q_PROPERTY(int currentPage MEMBER currentPage CONSTANT)
+    Q_PROPERTY(QString currentLocation MEMBER currentLocation CONSTANT)
+    Q_PROPERTY(int currentProgress MEMBER currentProgress CONSTANT)
     Q_PROPERTY(QString thumbnail MEMBER thumbnail CONSTANT)
     Q_PROPERTY(QStringList description MEMBER description CONSTANT)
     Q_PROPERTY(QString comment MEMBER comment CONSTANT)
@@ -41,8 +41,7 @@ struct BookEntry {
 
 public:
     explicit BookEntry()
-        : totalPages(0)
-        , currentPage(0)
+        : currentProgress(0)
         , rating(0)
     {
     }
@@ -60,8 +59,8 @@ public:
     QString publisher;
     QDateTime created;
     QDateTime lastOpenedTime;
-    int totalPages;
-    int currentPage;
+    QString currentLocation;
+    int currentProgress;
     QString thumbnail;
     QStringList description;
     QString comment;
@@ -113,8 +112,8 @@ public:
         PublisherRole, /// For getting a string with the publisher name.
         CreatedRole, /// For getting the creation date of the book as a QDateTime.
         LastOpenedTimeRole, /// For getting the last time the book was opened as a QDateTime.
-        TotalPagesRole, /// For getting the total amount of pages in this book.
-        CurrentPageRole, /// For getting the current page as an int.
+        CurrentLocationRole, /// For getting the current page as an epubjs location.
+        CurrentProgressRole, /// For getting the current progress as an int (percentage).
         CategoryEntriesModelRole, /// For getting the model of this category.
         CategoryEntryCountRole, /// For getting the an int with the number of books within this category.
         ThumbnailRole, /// For getting a thumbnail url for this book.

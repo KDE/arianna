@@ -246,10 +246,10 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
                 entry->publisher = it.value().toString().trimmed();
             } else if (it.key() == QLatin1String("created")) {
                 entry->created = it.value().toDateTime();
-            } else if (it.key() == QLatin1String("currentPage")) {
-                entry->currentPage = it.value().toInt();
-            } else if (it.key() == QLatin1String("totalPages")) {
-                entry->totalPages = it.value().toInt();
+            } else if (it.key() == QLatin1String("currentLocation")) {
+                entry->currentLocation = it.value().toString();
+            } else if (it.key() == QLatin1String("currentProgress")) {
+                entry->currentProgress = it.value().toInt();
             } else if (it.key() == QLatin1String("comments")) {
                 entry->comment = it.value().toString();
             } else if (it.key() == QLatin1Literal("tags")) {
@@ -333,12 +333,15 @@ void BookListModel::setBookData(const QString &fileName, const QString &property
 {
     for (BookEntry *entry : d->entries) {
         if (entry->filename == fileName) {
-            if (property == QStringLiteral("totalPages")) {
-                entry->totalPages = value.toInt();
+            if (property == QStringLiteral("currentLocation")) {
+                entry->currentLocation = value;
+                d->db->updateEntry(entry->filename, property, {value});
+            } else if (property == QStringLiteral("currentProgress")) {
+                entry->currentProgress = value.toInt();
                 d->db->updateEntry(entry->filename, property, QVariant(value.toInt()));
-            } else if (property == QStringLiteral("currentPage")) {
-                entry->currentPage = value.toInt();
-                d->db->updateEntry(entry->filename, property, QVariant(value.toInt()));
+            } else if (property == QStringLiteral("locations")) {
+                entry->locations = value;
+                d->db->updateEntry(entry->filename, property, {value});
             } else if (property == QStringLiteral("rating")) {
                 entry->rating = value.toInt();
                 d->db->updateEntry(entry->filename, property, QVariant(value.toInt()));

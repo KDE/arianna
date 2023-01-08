@@ -43,7 +43,6 @@ bool ManualContentLister::addFile(const QUrl &filePath)
         }
     }
     if (!mimeTypeAccepted) {
-        qWarning() << "wrong mimetype" << mimeType;
         return false;
     }
 

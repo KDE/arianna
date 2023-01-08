@@ -66,6 +66,10 @@ Kirigami.ScrollablePage {
             onClicked: {
                 applicationWindow().pageStack.layers.push('./EpubViewerPage.qml', {
                     url: 'file://' + model.filename,
+                    filename: model.filename,
+                    bookListModel: contentList,
+                    locations: model.locations,
+                    currentLocation: model.currentLocation,
                 })
             }
         }

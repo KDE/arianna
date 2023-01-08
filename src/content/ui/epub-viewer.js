@@ -513,14 +513,18 @@ const loadLocations = async () => {
         dispatchLocation()
     }
 
-    //if (backend.cachedLocations[book.key()]) {
-    //    book.locations.load(backend.cachedLocations[book.key()])
-    //    if (book.locations.total < 0) return dispatch({ type: 'locations-fallback' })
-    //    locationsReady()
-    //    dispatch({ type: 'locations-ready' })
-    //} else {
+    if (backend.locations) {
+        book.locations.load(backend.locations)
+        if (book.locations.total < 0) {
+            return dispatch({ type: 'locations-fallback' })
+        }
+        locationsReady()
+        dispatch({ type: 'locations-ready' })
+    } else {
         await book.locations.generate(CHARACTERS_PER_PAGE)
-        if (book.locations.total < 0) return dispatch({ type: 'locations-fallback' })
+        if (book.locations.total < 0) {
+            return dispatch({ type: 'locations-fallback' })
+        }
         locationsReady()
         dispatch({
             type: 'locations-generated',
@@ -529,7 +533,7 @@ const loadLocations = async () => {
                 key: book.key(),
             },
         })
-    //}
+    }
 }
 
 const display = lastLocation =>

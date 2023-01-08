@@ -56,17 +56,36 @@ public:
 
         QSqlQuery q;
         QStringList entryNames;
-        entryNames << QStringLiteral("fileName varchar primary key") << QStringLiteral("fileTitle varchar") << QStringLiteral("title varchar")
-                   << QStringLiteral("genres varchar") << QStringLiteral("keywords varchar") << QStringLiteral("characters varchar")
-                   << QStringLiteral("description varchar") << QStringLiteral("series varchar") << QStringLiteral("seriesNumbers varchar")
-                   << QStringLiteral("seriesVolumes varchar") << QStringLiteral("author varchar") << QStringLiteral("publisher varchar")
-                   << QStringLiteral("created datetime") << QStringLiteral("lastOpenedTime datetime") << QStringLiteral("totalPages integer")
-                   << QStringLiteral("currentPage integer") << QStringLiteral("thumbnail varchar") << QStringLiteral("comment varchar")
-                   << QStringLiteral("tags varchar") << QStringLiteral("rating varchar") << QStringLiteral("locations text") << QStringLiteral("rights varchar")
-                   << QStringLiteral("source varchar") << QStringLiteral("identifier varchar") << QStringLiteral("language varchar");
+        // clang-format off
+        entryNames << QStringLiteral("fileName varchar primary key")
+                   << QStringLiteral("fileTitle varchar")
+                   << QStringLiteral("title varchar")
+                   << QStringLiteral("genres varchar")
+                   << QStringLiteral("keywords varchar")
+                   << QStringLiteral("characters varchar")
+                   << QStringLiteral("description varchar")
+                   << QStringLiteral("series varchar")
+                   << QStringLiteral("seriesNumbers varchar")
+                   << QStringLiteral("seriesVolumes varchar")
+                   << QStringLiteral("author varchar")
+                   << QStringLiteral("publisher varchar")
+                   << QStringLiteral("created datetime")
+                   << QStringLiteral("lastOpenedTime datetime")
+                   << QStringLiteral("thumbnail varchar")
+                   << QStringLiteral("comment varchar")
+                   << QStringLiteral("tags varchar")
+                   << QStringLiteral("rating varchar")
+                   << QStringLiteral("locations text")
+                   << QStringLiteral("currentLocation varchar")
+                   << QStringLiteral("currentProgress int")
+                   << QStringLiteral("rights varchar")
+                   << QStringLiteral("source varchar")
+                   << QStringLiteral("identifier varchar")
+                   << QStringLiteral("language varchar");
+        // clang-format on
 
         if (!q.exec(QStringLiteral("create table books(") + entryNames.join(QStringLiteral(", ")) + QLatin1Char(')'))) {
-            qCDebug(ARIANNA_LOG) << "Database could not create the table books";
+            qCDebug(ARIANNA_LOG) << "Database could not create the table books" << q.lastError();
             return false;
         }
         for (int i = 0; i < entryNames.size(); i++) {
@@ -111,8 +130,8 @@ QList<BookEntry *> BookDatabase::loadEntries()
         entry->publisher = allEntries.value(d->fieldNames.indexOf(QStringLiteral("publisher"))).toString();
         entry->created = allEntries.value(d->fieldNames.indexOf(QStringLiteral("created"))).toDateTime();
         entry->lastOpenedTime = allEntries.value(d->fieldNames.indexOf(QStringLiteral("lastOpenedTime"))).toDateTime();
-        entry->totalPages = allEntries.value(d->fieldNames.indexOf(QStringLiteral("totalPages"))).toInt();
-        entry->currentPage = allEntries.value(d->fieldNames.indexOf(QStringLiteral("currentPage"))).toInt();
+        entry->currentLocation = allEntries.value(d->fieldNames.indexOf(QStringLiteral("currentLocation"))).toString();
+        entry->currentProgress = allEntries.value(d->fieldNames.indexOf(QStringLiteral("currentProgress"))).toInt();
         entry->thumbnail = allEntries.value(d->fieldNames.indexOf(QStringLiteral("thumbnail"))).toString();
         entry->description = allEntries.value(d->fieldNames.indexOf(QStringLiteral("description"))).toString().split(QLatin1Char('\n'), Qt::SkipEmptyParts);
         entry->comment = allEntries.value(d->fieldNames.indexOf(QStringLiteral("comment"))).toString();
@@ -169,8 +188,8 @@ void BookDatabase::addEntry(BookEntry *entry)
     newEntry.bindValue(QStringLiteral(":publisher"), entry->publisher);
     newEntry.bindValue(QStringLiteral(":created"), entry->created);
     newEntry.bindValue(QStringLiteral(":lastOpenedTime"), entry->lastOpenedTime);
-    newEntry.bindValue(QStringLiteral(":totalPages"), entry->totalPages);
-    newEntry.bindValue(QStringLiteral(":currentPage"), entry->currentPage);
+    newEntry.bindValue(QStringLiteral(":currentLocation"), entry->currentLocation);
+    newEntry.bindValue(QStringLiteral(":currentProgress"), entry->currentProgress);
     newEntry.bindValue(QStringLiteral(":thumbnail"), entry->thumbnail);
     newEntry.bindValue(QStringLiteral(":description"), entry->description.join(QLatin1Char('\n')));
     newEntry.bindValue(QStringLiteral(":comment"), entry->comment);
@@ -217,8 +236,14 @@ void BookDatabase::updateEntry(QString fileName, QString property, QVariant valu
     }
 
     QStringList stringListValues;
-    stringListValues << QStringLiteral("series") << QStringLiteral("author") << QStringLiteral("characters") << QStringLiteral("genres")
-                     << QStringLiteral("keywords") << QStringLiteral("tags");
+    // clang-format off
+    stringListValues << QStringLiteral("series")
+                     << QStringLiteral("author")
+                     << QStringLiteral("characters")
+                     << QStringLiteral("genres")
+                     << QStringLiteral("keywords")
+                     << QStringLiteral("tags");
+    // clang-format on
     QString val;
     if (stringListValues.contains(property)) {
         val = value.toStringList().join(QLatin1Char(','));

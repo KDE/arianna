@@ -18,6 +18,9 @@ Kirigami.Page {
     padding: 0
 
     property var url: ''
+    property var locations
+    property string filename: ''
+    property BookListModel bookListModel
 
     onUrlChanged: {
         if (!url || view.loading) {
@@ -258,9 +261,8 @@ Kirigami.Page {
         property var findResults: ({})
         property var selection: null
         property double progress: 0
-        property var location: null
+        property var locations: root.locations
         property bool locationsReady: false
-        property var cachedLocations: Cache.loadLocations()
         property var metadata: null
         property var top: ({})
         property string file: root.url
@@ -295,10 +297,7 @@ Kirigami.Page {
             case 'locations-generated':
                 console.error(action.type)
                 backend.locationsReady = true;
-                const cachedLocations = backend.cachedLocations;
-                cachedLocations[action.payload.key] = action.payload.locations;
-                backend.cachedLocations = cachedLocations;
-                Cache.saveLocations(cachedLocations)
+                bookListModel.setBookData(filename, 'locations', action.payload.locations)
                 break;
             case 'book-error':
                 console.error('Book error', action.payload);
@@ -308,6 +307,7 @@ Kirigami.Page {
                 backend.selection = action.payload;
                 break;
             case 'relocated':
+                console.error(JSON.stringify(action.payload))
                 backend.location = action.payload;
                 break;
             case 'find-results':

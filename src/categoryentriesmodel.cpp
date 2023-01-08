@@ -44,8 +44,8 @@ QHash<int, QByteArray> CategoryEntriesModel::roleNames() const
         {PublisherRole, "publisher"},
         {CreatedRole, "created"},
         {LastOpenedTimeRole, "lastOpenedTime"},
-        {TotalPagesRole, "totalPages"},
-        {CurrentPageRole, "currentPage"},
+        {CurrentProgressRole, "currentProgress"},
+        {CurrentLocationRole, "currentLocation"},
         {CategoryEntriesModelRole, "categoryEntriesModel"},
         {CategoryEntryCountRole, "categoryEntriesCount"},
         {ThumbnailRole, "thumbnail"},
@@ -106,10 +106,10 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
             return entry->created;
         case LastOpenedTimeRole:
             return entry->lastOpenedTime;
-        case TotalPagesRole:
-            return entry->totalPages;
-        case CurrentPageRole:
-            return entry->currentPage;
+        case CurrentProgressRole:
+            return entry->currentProgress;
+        case CurrentLocationRole:
+            return entry->currentLocation;
         case CategoryEntriesModelRole:
             // Nothing, if we're not equipped with one such...
             return {};
@@ -125,6 +125,8 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
             return entry->tags;
         case RatingRole:
             return entry->rating;
+        case LocationsRole:
+            return entry->locations;
         default:
             return QStringLiteral("Unknown role");
         }
@@ -324,13 +326,8 @@ BookEntry *CategoryEntriesModel::bookFromFile(const QString &filename)
             entry->created = info.birthTime();
 
             KFileMetaData::UserMetaData data(filename);
-            if (data.hasAttribute(QStringLiteral("peruse.currentPage"))) {
-                int currentPage = data.attribute(QStringLiteral("peruse.currentPage")).toInt();
-                entry->currentPage = currentPage;
-            }
-            if (data.hasAttribute(QStringLiteral("peruse.totalPages"))) {
-                int totalPages = data.attribute(QStringLiteral("peruse.totalPages")).toInt();
-                entry->totalPages = totalPages;
+            if (data.hasAttribute(QStringLiteral("arianna.currentLocation"))) {
+                entry->currentLocation = data.attribute(QStringLiteral("arianna.currentLocation"));
             }
             entry->rating = data.rating();
             if (!data.tags().isEmpty()) {
