@@ -63,7 +63,7 @@ Kirigami.Page {
             onAccepted: if (text === '') {
                 view.runJavaScript(`find.clearHighlight()`)
             } else {
-                view.runJavaScript(`find.find('${text}', true, true)`);
+                view.rutrnJavaScript(`find.find('${text}', true, true)`);
                 popup.open()
             }
             selectByMouse: true
@@ -161,8 +161,12 @@ Kirigami.Page {
         webChannel: channel
         onJavaScriptConsoleMessage: console.error('WEB:', message, lineNumber, sourceID)
 
-        function next() {view.runJavaScript('rendition.next()')}
-        function prev() {view.runJavaScript('rendition.prev()')}
+        function next() {
+            view.runJavaScript('rendition.next()');
+        }
+        function prev() {
+            view.runJavaScript('rendition.prev()');
+        }
 
         onLoadingChanged: {
             if (!root.url || view.loading) {
@@ -312,7 +316,6 @@ Kirigami.Page {
                 backend.selection = action.payload;
                 break;
             case 'relocated':
-                console.error(JSON.stringify(action.payload))
                 bookListModel.setBookData(filename, 'currentLocation', action.payload.start.cfi)
                 bookListModel.setBookData(filename, 'currentProgress', action.payload.start.percentage * 100)
                 backend.location = action.payload;
@@ -368,7 +371,7 @@ Kirigami.Page {
                 fontStyle: fontStyle,
                 fontStretch: fontStretch,
                 spacing: Config.spacing,
-                margin: 0,
+                margin: Config.margin,
                 maxWidth: Config.maxWidth,
                 usePublisherFont: Config.usePublisherFont,
                 justify: Config.justify,

@@ -31,10 +31,6 @@ SPDX-License-Identifier: CC0-1.0
       </code>
       <default code="true">generalFont</default>
     </entry>
-    <entry name="Skeuomorphism" type="bool">
-      <label>use skeuomorphism style</label>
-      <default>false</default>
-    </entry>
     <entry name="UsePublisherFont" type="bool">
       <label>use publisher font</label>
       <default>false</default>
@@ -60,8 +56,12 @@ SPDX-License-Identifier: CC0-1.0
       <default>1</default>
     </entry>
     <entry name="maxWidth" type="int">
-      <label>Margin</label>
+      <label>May width</label>
       <default>1400</default>
+    </entry>
+    <entry name="margin" type="int">
+      <label>Margin</label>
+      <default>40</default>
     </entry>
   </group>
 </kcfg>

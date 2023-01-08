@@ -292,7 +292,6 @@ const setStyle = style => {
         fontFamily, fontSize, fontWeight, fontStyle, fontStretch,
         spacing, margin, maxWidth,
         usePublisherFont, hyphenate, justify,
-        skeuomorphism
     } = style
     const paginated = rendition.settings.flow !== 'paginated'
 
@@ -306,15 +305,17 @@ const setStyle = style => {
     if (rendition.settings.layout === 'pre-paginated') {
         document.documentElement.style.padding = 0
     } else {
-        const gap = skeuomorphism ? margin * 2 : margin
+        console.error("margin", margin, maxWidth)
+        const gap = margin;
         rendition.layout({
             ...rendition.settings.globalLayoutProperties,
             gap,
         })
         const padding = paginated ? margin
-            : skeuomorphism ? 0 : margin / 2
-        document.documentElement.style.padding = `0 ${padding}px`
-        document.body.style.maxWidth = `${maxWidth + gap}px`
+            : margin / 2
+        document.documentElement.style.padding = `0 ${padding}px`;
+        document.body.style.maxWidth = `${maxWidth + gap}px`;
+        document.body.style.margin = '0 auto';
     }
 
     document.documentElement.style.filter =
@@ -377,10 +378,10 @@ const setStyle = style => {
 
     document.getElementsByTagName("style")[0].innerHTML = `
         body {
-            margin: 0;
+          margin: 0;
         }
         a:hover {
-            color: ${fgColor};
+          color: ${fgColor};
         }
     `;
 }

@@ -9,7 +9,9 @@
 
 #include <QCoreApplication>
 #include <QDir>
+#include <QImage>
 #include <QMimeDatabase>
+#include <QStandardPaths>
 #include <QTimer>
 #include <QUrl>
 
@@ -158,6 +160,18 @@ public:
     }
 };
 
+void saveCover(const QString &identifier, const QImage &image)
+{
+    if (image.isNull()) {
+        const auto cacheLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+        image.save(cacheLocation + QLatin1Char('/') + identifier);
+        qCDebug(ARIANNA_LOG) << "saving cover to" << (cacheLocation + QLatin1Char('/') + identifier);
+    } else {
+        qCDebug(ARIANNA_LOG) << "cover is empty";
+        // TODO generate generic cover
+    }
+}
+
 BookListModel::BookListModel(QObject *parent)
     : CategoryEntriesModel(parent)
     , d(std::make_unique<Private>())
@@ -269,6 +283,9 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
             entry->source = epub.getMetadata(QStringLiteral("source"));
             entry->identifier = epub.getMetadata(QStringLiteral("identifier"));
             entry->language = epub.getMetadata(QStringLiteral("language"));
+
+            auto image = epub.getImage(epub.getMetadata(QStringLiteral("cover")));
+            saveCover(epub.getMetadata(QStringLiteral("identifier")), image);
         }
 
         d->addEntry(this, entry);

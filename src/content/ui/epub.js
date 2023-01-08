@@ -3798,9 +3798,9 @@ class stage_Stage {
       bottom: parseFloat(bodyStyles["padding-bottom"]) || 0
     };
 
-    if (!_width) {
-      width = _windowBounds.width - bodyPadding.left - bodyPadding.right;
-    }
+    //if (!_width) {
+    //  width = _windowBounds.width - bodyPadding.left - bodyPadding.right;
+    //}
 
     if (this.settings.fullsize && !_height || !_height) {
       height = _windowBounds.height - bodyPadding.top - bodyPadding.bottom;

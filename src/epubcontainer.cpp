@@ -57,6 +57,7 @@ QSharedPointer<QIODevice> EPubContainer::getIoDevice(const QString &path)
 {
     const KArchiveFile *file = getFile(path);
     if (!file) {
+        qWarning() << QStringLiteral("Unable to open file %1").arg(path.left(100));
         Q_EMIT errorOccured(tr("Unable to open file %1").arg(path.left(100)));
         return QSharedPointer<QIODevice>();
     }
@@ -67,21 +68,21 @@ QSharedPointer<QIODevice> EPubContainer::getIoDevice(const QString &path)
 QImage EPubContainer::getImage(const QString &id)
 {
     if (!m_items.contains(id)) {
-        qWarning() << "Asked for unknown item" << id;
-        return QImage();
+        qWarning() << "Asked for unknown item" << id << m_items.keys();
+        return {};
     }
 
     const EpubItem &item = m_items.value(id);
 
     if (!QImageReader::supportedMimeTypes().contains(item.mimetype)) {
         qWarning() << "Asked for unsupported type" << item.mimetype;
-        return QImage();
+        return {};
     }
 
     QSharedPointer<QIODevice> ioDevice = getIoDevice(item.path);
 
     if (!ioDevice) {
-        return QImage();
+        return {};
     }
 
     return QImage::fromData(ioDevice->readAll());
