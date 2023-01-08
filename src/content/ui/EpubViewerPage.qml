@@ -316,6 +316,7 @@ Kirigami.Page {
                 backend.selection = action.payload;
                 break;
             case 'relocated':
+                console.error(JSON.stringify(action.payload))
                 bookListModel.setBookData(filename, 'currentLocation', action.payload.start.cfi)
                 bookListModel.setBookData(filename, 'currentProgress', action.payload.start.percentage * 100)
                 backend.location = action.payload;
@@ -381,7 +382,6 @@ Kirigami.Page {
                 linkColor: Kirigami.Theme.linkColor.toString(),
                 invert: false,
                 brightness: Config.brightness,
-                skeuomorphism: Config.skeuomorphism,
                 ibooksInternalTheme: getIbooksInternalTheme(Kirigami.Theme.backgroundColor)
             }
 
