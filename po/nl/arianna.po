@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the arianna package.
 #
-# Freek de Kruijf <freekdekruijf@kde.nl>, 2022.
+# Freek de Kruijf <freekdekruijf@kde.nl>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-09 00:53+0000\n"
-"PO-Revision-Date: 2022-12-24 15:11+0100\n"
+"PO-Revision-Date: 2023-01-09 10:58+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -82,7 +82,7 @@ msgstr "Bibliotheek"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book"
-msgstr ""
+msgstr "Boek toevoegen"
 
 #: main.cpp:63
 #, kde-format

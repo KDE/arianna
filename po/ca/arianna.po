@@ -1,16 +1,16 @@
 # Translation of arianna.po to Catalan
-# Copyright (C) 2022 This_file_is_part_of_KDE
+# Copyright (C) 2022-2023 This_file_is_part_of_KDE
 # This file is distributed under the license LGPL version 2.1 or
 # version 3 or later versions approved by the membership of KDE e.V.
 # or the same license as the source of its messages in English.
 #
-# Josep M. Ferrer <txemaq@gmail.com>, 2022.
+# Josep M. Ferrer <txemaq@gmail.com>, 2022, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-09 00:53+0000\n"
-"PO-Revision-Date: 2022-12-24 11:07+0100\n"
+"PO-Revision-Date: 2023-01-09 10:10+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -85,7 +85,7 @@ msgstr "Biblioteca"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book"
-msgstr ""
+msgstr "Afegeix un llibre"
 
 #: main.cpp:63
 #, kde-format
