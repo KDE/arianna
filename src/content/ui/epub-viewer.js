@@ -331,7 +331,7 @@ const setStyle = style => {
         [`.${themeName}`]: {
             'color': fgColor,
             'background': bgColor,
-            //'font-size': `${fontSize}px !important`,
+            'font-size': `${fontSize}px !important`,
             'line-height': `${spacing} !important`,
             '-webkit-hyphens': hyphenate ? 'auto' : 'manual',
             '-webkit-hyphenate-limit-before': 3,
@@ -340,7 +340,6 @@ const setStyle = style => {
             'overflow-wrap': 'break-word'
         },
         [`.${themeName} p`]: {
-            //'font-size': `${fontSize}px !important`,
             'line-height': `${spacing} !important`
         },
         [`.${themeName} pre`]: {
