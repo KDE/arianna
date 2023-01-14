@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-09 00:53+0000\n"
+"POT-Creation-Date: 2023-01-14 16:31+0000\n"
 "PO-Revision-Date: 2023-01-09 11:32+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
@@ -29,7 +29,7 @@ msgstr "No se ha seleccionado ningún libro"
 msgid "Open file"
 msgstr "Abrir archivo"
 
-#: content/ui/EpubViewerPage.qml:152 content/ui/LibraryPage.qml:36
+#: content/ui/EpubViewerPage.qml:152 content/ui/LibraryPage.qml:37
 #, kde-format
 msgid "Please choose a file"
 msgstr "Escoja un archivo"
