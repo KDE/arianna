@@ -26,9 +26,13 @@ FocusScope {
 
     signal open()
 
+    SystemPalette {
+        id: myPalette
+    }
+
     property color stateIndicatorColor: {
         if (gridEntry.activeFocus || hoverHandle.pressed || hoverHandle.containsMouse) {
-            return Kirigami.Theme.highlightTextColor;
+            return Kirigami.Theme.highlightColor;
         } else if (gridEntry.isSelected && !Kirigami.Settings.isMobile) {
             return myPalette.mid;
         } else {

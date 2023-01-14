@@ -15,6 +15,7 @@ Kirigami.ScrollablePage {
 
     actions.main: Kirigami.Action {
         text: i18nc("@action:button", "Add Book")
+        icon.name: "list-add"
         onTriggered: {
             const fileDialog = openFileDialog.createObject(QQC2.ApplicationWindow.overlay)
             fileDialog.accepted.connect(() => {
@@ -76,7 +77,7 @@ Kirigami.ScrollablePage {
             if (Kirigami.Settings.isMobile) {
                 return cellWidth + Kirigami.Units.gridUnit * 2 + Kirigami.Units.largeSpacing;
             } else {
-                return 170 + Kirigami.Units.gridUnit * 2 + Kirigami.Units.largeSpacing;
+                return 170 + Kirigami.Units.gridUnit * 2 + Kirigami.Units.largeSpacing
             }
         }
         currentIndex: Kirigami.Settings.isMobile ? 0 : -1
