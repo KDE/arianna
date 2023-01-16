@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the arianna package.
-# Vincenzo Reale <smart2128vr@gmail.com>, 2022.
+# Vincenzo Reale <smart2128vr@gmail.com>, 2022, 2023.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-14 16:31+0000\n"
-"PO-Revision-Date: 2022-12-25 10:51+0100\n"
+"PO-Revision-Date: 2023-01-09 19:17+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.0\n"
+"X-Generator: Lokalize 22.12.1\n"
 
 #: content/ui/EpubViewerPage.qml:129
 #, kde-format
@@ -82,7 +82,7 @@ msgstr "Biblioteca"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book"
-msgstr ""
+msgstr "Aggiungi libro"
 
 #: main.cpp:63
 #, kde-format
