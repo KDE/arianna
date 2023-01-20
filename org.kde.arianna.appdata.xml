@@ -18,6 +18,7 @@
   <name xml:lang="it">Arianna</name>
   <name xml:lang="ka">არიანა</name>
   <name xml:lang="nl">Arianna</name>
+  <name xml:lang="pt">Arianna</name>
   <name xml:lang="sl">Arianna</name>
   <name xml:lang="tr">Arianna</name>
   <name xml:lang="uk">Arianna</name>
@@ -32,6 +33,7 @@
   <summary xml:lang="it">Lettore EPub</summary>
   <summary xml:lang="ka">EPub -ის წამკითხველი</summary>
   <summary xml:lang="nl">EPub-lezer</summary>
+  <summary xml:lang="pt">Leitor de EPub</summary>
   <summary xml:lang="sl">Bralnik EPub</summary>
   <summary xml:lang="tr">EPub Okuyucu</summary>
   <summary xml:lang="uk">Читання EPub</summary>
@@ -47,6 +49,7 @@
     <p xml:lang="it">Un lettore EPub</p>
     <p xml:lang="ka">EPub -ის წამკითხველი</p>
     <p xml:lang="nl">Een EPub-lezer</p>
+    <p xml:lang="pt">Um Leitor de EPub's</p>
     <p xml:lang="sl">Bralnik EPub</p>
     <p xml:lang="tr">Bir EPub Okuyucusu</p>
     <p xml:lang="uk">Програма для читання EPub</p>
@@ -67,6 +70,7 @@
   <developer_name xml:lang="it">La comunità KDE</developer_name>
   <developer_name xml:lang="ka">KDE-ის საზოგადოება</developer_name>
   <developer_name xml:lang="nl">De KDE gemeenschap</developer_name>
+  <developer_name xml:lang="pt">A Comunidade do KDE</developer_name>
   <developer_name xml:lang="sl">Skupnost KDE</developer_name>
   <developer_name xml:lang="tr">KDE Topluluğu</developer_name>
   <developer_name xml:lang="uk">Спільнота KDE</developer_name>
