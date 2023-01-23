@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-14 16:31+0000\n"
-"PO-Revision-Date: 2022-12-24 07:18+0000\n"
+"PO-Revision-Date: 2023-01-22 22:26+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -78,7 +78,7 @@ msgstr "Biblioteca"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book"
-msgstr ""
+msgstr "Adicionar um Livro"
 
 #: main.cpp:63
 #, kde-format
