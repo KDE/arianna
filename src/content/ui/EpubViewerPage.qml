@@ -6,7 +6,8 @@ import QtQuick.Controls 2.15 as QQC2
 import QtWebEngine 1.4
 import QtWebChannel 1.4
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.13 as Kirigami
+import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigamiaddons.labs.components 1.0 as KirigamiComponents
 import org.kde.arianna 1.0
 import Qt.labs.platform 1.1
 
@@ -59,71 +60,70 @@ Kirigami.Page {
 
     ListModel {
         id: searchResultModel
+        property bool loading: false
     }
 
     actions.main: Kirigami.Action {
-        displayComponent: Kirigami.SearchField {
-            id: searchField
-            autoAccept: false
+        displayComponent: KirigamiComponents.SearchPopupField {
             visible: view.file !== ''
+
+            implicitWidth: Kirigami.Units.gridUnit * 14
+
+            spaceAvailableRight: false
+
+            autoAccept: false
             onAccepted: if (text === '') {
                 view.runJavaScript(`find.clearHighlight()`)
             } else {
                 view.runJavaScript(`find.find('${text}', true, true)`);
-                popup.open()
+                searchResultModel.loading = true;
             }
-            selectByMouse: true
-            property alias popup: popup
 
-            QQC2.Popup {
-                padding: 1
-                id: popup
-                x: searchField.width - width
-                y: searchField.y + searchField.height
-                width: Kirigami.Units.gridUnit * 15
-                height: Kirigami.Units.gridUnit * 20
-                Connections {
-                    target: searchResultModel
-                    function onCountChanged() {
-                        if (searchResultModel.count > 0) {
-                            console.error('count changed', searchResultModel.count)
-                            searchField.popup.open()
+            popupContentItem: ListView {
+                id: search
+                model: searchResultModel
+
+                delegate: QQC2.ItemDelegate {
+                    width: ListView.view.width
+                    Kirigami.Theme.colorSet: Kirigami.Theme.Window
+                    Kirigami.Theme.inherit: false
+                    onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
+                    contentItem: ColumnLayout {
+                        QQC2.Label {
+                            Layout.fillWidth: true
+                            text: model.sectionMarkup
+                            wrapMode: Text.WordWrap
+                            font: Kirigami.Theme.smallFont
+                        }
+                        QQC2.Label {
+                            Layout.fillWidth: true
+                            text: model.markup
+                            wrapMode: Text.WordWrap
                         }
                     }
                 }
 
-                contentItem: ColumnLayout {
-                    width: popup.width
-                    spacing: 0
+                Kirigami.PlaceholderMessage {
+                    text: i18n("No search results")
+                    visible: search.count === 0 && searchField.text.length > 2
+                    icon.name: "system-search"
+                    anchors.centerIn: parent
+                    width: parent.width - Kirigami.Units.gridUnit * 4
+                }
 
-                    QQC2.ScrollView {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
+                Kirigami.PlaceholderMessage {
+                    text: i18n("Loading")
+                    visible: searchResultModel.loading
+                    anchors.centerIn: parent
+                    width: parent.width - Kirigami.Units.gridUnit * 4
+                }
 
-                        contentItem: ListView {
-                            model: searchResultModel
-
-                            delegate: QQC2.ItemDelegate {
-                                width: ListView.view.width
-                                Kirigami.Theme.colorSet: Kirigami.Theme.Window
-                                Kirigami.Theme.inherit: false
-                                onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
-                                contentItem: ColumnLayout {
-                                    QQC2.Label {
-                                        Layout.fillWidth: true
-                                        text: model.sectionMarkup
-                                        wrapMode: Text.WordWrap
-                                        font: Kirigami.Theme.smallFont
-                                    }
-                                    QQC2.Label {
-                                        Layout.fillWidth: true
-                                        text: model.markup
-                                        wrapMode: Text.WordWrap
-                                    }
-                                }
-                            }
-                        }
-                    }
+                Kirigami.PlaceholderMessage {
+                    text: i18n("Search inside this book")
+                    visible: searchView.count === 0 && searchField.text.length <= 2
+                    icon.name: "system-search"
+                    anchors.centerIn: parent
+                    width: parent.width - Kirigami.Units.gridUnit * 4
                 }
             }
         }
@@ -294,6 +294,7 @@ Kirigami.Page {
             switch (action.type) {
             case 'book-ready':
                 searchResultModel.clear();
+                searchResultModel.loading = false;
                 get('book.package.metadata', metadata => {
                     backend.metadata = JSON.parse(metadata);
                     root.bookReady(backend.metadata.title);
@@ -334,6 +335,7 @@ Kirigami.Page {
                 const q  = action.payload.q;
                 const results  = action.payload.results;
                 searchResultModel.clear();
+                searchResultModel.loading = false;
                 var markupEscape = text => text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;") : ''
                 var regexEscape = str => str ? str.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&') : ''
                 const regex = new RegExp(regexEscape(q), 'ig')
