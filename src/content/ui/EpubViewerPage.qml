@@ -13,15 +13,17 @@ import Qt.labs.platform 1.1
 Kirigami.Page {
     id: root
 
+    property var url
+    property string filename
+    property var locations
+    property var currentLocation
+
+    signal relocated(newLocation: var, newProgress: int)
+    signal locationsLoaded(locations: var)
+
     title: backend.metadata ? backend.metadata.title : ''
 
     padding: 0
-
-    property var url: ''
-    property var locations
-    property var currentLocation
-    property string filename: ''
-    property BookListModel bookListModel
 
     onUrlChanged: {
         if (!url || view.loading) {
@@ -306,7 +308,7 @@ Kirigami.Page {
                 break;
             case 'locations-generated':
                 backend.locationsReady = true;
-                bookListModel.setBookData(filename, 'locations', action.payload.locations)
+                root.locationsLoaded(action.payload.locations)
                 break;
             case 'book-error':
                 console.error('Book error', action.payload);
@@ -316,9 +318,7 @@ Kirigami.Page {
                 backend.selection = action.payload;
                 break;
             case 'relocated':
-                console.error(JSON.stringify(action.payload))
-                bookListModel.setBookData(filename, 'currentLocation', action.payload.start.cfi)
-                bookListModel.setBookData(filename, 'currentProgress', action.payload.start.percentage * 100)
+                root.relocated(action.payload.start.cfi, action.payload.start.percentage * 100)
                 backend.location = action.payload;
                 break;
             case 'find-results':
@@ -338,7 +338,6 @@ Kirigami.Page {
                 })
                 break;
             }
-            console.error(action.type)
         }
 
         function setStyle() {

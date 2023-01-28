@@ -198,7 +198,7 @@ void CategoryEntriesModel::append(BookEntry *entry, Roles compareRole)
             }
         }
     }
-    beginInsertRows(QModelIndex(), insertionIndex, insertionIndex);
+    beginInsertRows({}, insertionIndex, insertionIndex);
     d->entries.insert(insertionIndex, entry);
     Q_EMIT countChanged();
     endInsertRows();

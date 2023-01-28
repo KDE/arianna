@@ -29,6 +29,7 @@
 #include "contentlist/contentlist.h"
 #include "contentlist/contentquery.h"
 #include "format.h"
+#include "navigation.h"
 
 int main(int argc, char *argv[])
 {
@@ -87,9 +88,11 @@ int main(int argc, char *argv[])
 
     Clipboard clipboard;
     Format format;
+    Navigation navigation;
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Config", Config::self());
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Clipboard", &clipboard);
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Format", &format);
+    qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Navigation", &navigation);
     qmlRegisterType<BookListModel>("org.kde.arianna", 1, 0, "BookListModel");
     qmlRegisterType<ContentList>("org.kde.arianna", 1, 0, "ContentList");
     qmlRegisterType<ContentQuery>("org.kde.arianna", 1, 0, "ContentQuery");

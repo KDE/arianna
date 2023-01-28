@@ -36,9 +36,6 @@ class BookListModel : public CategoryEntriesModel, public QQmlParserStatus
     /// \brief The "newly added" category entries model manages the newly added entries.
     Q_PROPERTY(CategoryEntriesModel *newlyAddedCategoryModel READ newlyAddedCategoryModel NOTIFY newlyAddedCategoryModelChanged)
 
-    /// \brief The "title" category entries model manages the sorting of entries by title.
-    Q_PROPERTY(CategoryEntriesModel *titleCategoryModel READ titleCategoryModel NOTIFY titleCategoryModelChanged)
-
     /// \brief The "author" category entries model manages the sorting of entries by author.
     Q_PROPERTY(CategoryEntriesModel *authorCategoryModel READ authorCategoryModel NOTIFY authorCategoryModelChanged)
 
@@ -85,9 +82,6 @@ public:
 
     /// @returns how many entries there are in the catalogue.
     int count() const;
-
-    /// @return The categoryEntriesModel that manages the sorting of entries by title.
-    CategoryEntriesModel *titleCategoryModel() const;
 
     /// @return The categoryEntriesModel that manages the recently added entries.
     CategoryEntriesModel *newlyAddedCategoryModel() const;
@@ -140,8 +134,6 @@ public:
     Q_INVOKABLE QStringList knownBookFiles() const;
 
 Q_SIGNALS:
-    /// \brief Fires when the titleCategoryModel has changed or finished initializing.
-    void titleCategoryModelChanged();
     /// \brief Fires when the seriesCategoryModel has changed or finished initializing.
     void seriesCategoryModelChanged();
     /// \brief Fires when the publisherCategoryModel has changed or finished initializing.

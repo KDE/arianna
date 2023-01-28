@@ -21,6 +21,9 @@ set(arianna_src
     booklistmodel.cpp
     epubcontainer.cpp
 
+    navigation.h
+    navigation.cpp
+
     contentlist/baloocontentlister.cpp
     contentlist/contentlist.cpp
     contentlist/contentquery.cpp

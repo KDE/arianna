@@ -1,0 +1,17 @@
+// SPDX-FileCopyrightText: 2022 Carl Schwan <carl@carlschwan.eu>
+// SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accepted-LGPL
+
+#pragma once
+
+#include <QObject>
+
+class Navigation : public QObject
+{
+    Q_OBJECT
+
+public:
+    Navigation(QObject *parent = nullptr);
+
+Q_SIGNALS:
+    void openBook(const QString &fileName, const QString &locations, const QString &currentLocation);
+};

@@ -10,7 +10,8 @@ import org.kde.arianna 1.0
 Kirigami.ApplicationWindow {
     id: root
 
-    title: "Arianna"
+    title: i18n("Arianna")
+
     width: Kirigami.Units.gridUnit * 30
     height: Kirigami.Units.gridUnit * 40
     minimumWidth: Kirigami.Units.gridUnit * 20
@@ -18,6 +19,51 @@ Kirigami.ApplicationWindow {
 
     property bool isLoading: true;
 
+    readonly property BookListModel bookListModel: BookListModel {
+        contentModel: ContentList {
+            id: contentList
+            autoSearch: false
+
+            onSearchStarted: root.isLoading = true
+            onSearchCompleted: root.isLoading = false
+
+            ContentQuery {
+                type: ContentQuery.Epub
+                locations: Config.bookLocations
+            }
+        }
+        onCacheLoadedChanged: {
+            if(!cacheLoaded) {
+                return;
+            }
+            contentModel.setKnownFiles(knownBookFiles());
+            contentModel.startSearch()
+        }
+    }
+
     pageStack.initialPage: LibraryPage {
+        bookListModel: root.bookListModel
+    }
+
+    Connections {
+        target: Navigation
+
+        function onOpenBook(filename, locations, currentLocation) {
+            const epubViewer = root.pageStack.layers.push('./EpubViewerPage.qml', {
+                url: 'file://' + filename,
+                filename: filename,
+                locations: locations,
+                currentLocation: currentLocation,
+            });
+
+            epubViewer.relocated.connect((newLocation, newProgress) => {
+                bookListModel.setBookData(filename, 'currentLocation', newLocation);
+                bookListModel.setBookData(filename, 'currentProgress', newProgress);
+            });
+
+            epubViewer.locationsLoaded.connect((locations) => {
+                bookListModel.setBookData(filename, 'locations', locations);
+            });
+        }
     }
 }

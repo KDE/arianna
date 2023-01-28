@@ -11,6 +11,10 @@ import org.kde.kirigami 2.13 as Kirigami
 import org.kde.arianna 1.0
 
 Kirigami.ScrollablePage {
+    id: root
+
+    property BookListModel bookListModel
+
     title: i18n("Library")
 
     actions.main: Kirigami.Action {
@@ -23,7 +27,7 @@ Kirigami.ScrollablePage {
                 if (!file) {
                     return;
                 }
-                contentList.contentModel.addFile(file)
+                contentList.addFile(file)
             })
             fileDialog.open();
         }
@@ -46,27 +50,7 @@ Kirigami.ScrollablePage {
         topMargin: Kirigami.Units.smallSpacing
         bottomMargin: Kirigami.Units.smallSpacing
 
-        model: BookListModel {
-            id: contentList;
-            contentModel: ContentList {
-                autoSearch: false
-
-                onSearchStarted: applicationWindow().isLoading = true
-                onSearchCompleted: applicationWindow().isLoading = false
-
-                ContentQuery {
-                    type: ContentQuery.Epub
-                    locations: Config.bookLocations
-                }
-            }
-            onCacheLoadedChanged: {
-                if(!cacheLoaded) {
-                    return;
-                }
-                contentList.contentModel.setKnownFiles(contentList.knownBookFiles());
-                contentList.contentModel.startSearch()
-            }
-        }
+        model: root.bookListModel
 
         cellWidth: {
             const viewWidth = contentDirectoryView.width - Kirigami.Units.smallSpacing * 2;
@@ -86,23 +70,23 @@ Kirigami.ScrollablePage {
         keyNavigationEnabled: true
 
         delegate: GridBrowserDelegate {
+            id: bookDelegate
+
+            required property string thumbnail
+            required property string title
+            required property string filename
+            required property var author
+            required property var currentLocation
+
             width: Kirigami.Settings.isMobile ? contentDirectoryView.cellWidth : 170
             height: contentDirectoryView.cellHeight
             focus: true
 
-            imageUrl: 'file://' + model.thumbnail
-            mainText: model.title
-            secondaryText: model.author.join(', ')
+            imageUrl: 'file://' + bookDelegate.thumbnail
+            mainText: bookDelegate.title
+            secondaryText: bookDelegate.author.join(', ')
 
-            onOpen: {
-                applicationWindow().pageStack.layers.push('./EpubViewerPage.qml', {
-                    url: 'file://' + model.filename,
-                    filename: model.filename,
-                    bookListModel: contentList,
-                    locations: model.locations,
-                    currentLocation: model.currentLocation,
-                })
-            }
+            onOpen: Navigation.openBook(bookDelegate.filename, bookDelegate.locations, bookDelegate.currentLocation)
         }
     }
 }

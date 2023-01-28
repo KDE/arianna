@@ -26,7 +26,6 @@ class BookListModel::Private
 public:
     Private()
         : contentModel(nullptr)
-        , titleCategoryModel(nullptr)
         , newlyAddedCategoryModel(nullptr)
         , authorCategoryModel(nullptr)
         , seriesCategoryModel(nullptr)
@@ -45,7 +44,6 @@ public:
     QList<BookEntry *> entries;
 
     ContentList *contentModel;
-    CategoryEntriesModel *titleCategoryModel;
     CategoryEntriesModel *newlyAddedCategoryModel;
     CategoryEntriesModel *authorCategoryModel;
     CategoryEntriesModel *seriesCategoryModel;
@@ -58,12 +56,6 @@ public:
 
     void initializeSubModels(BookListModel *q)
     {
-        if (!titleCategoryModel) {
-            titleCategoryModel = new CategoryEntriesModel(q);
-            connect(q, &CategoryEntriesModel::entryDataUpdated, titleCategoryModel, &CategoryEntriesModel::entryDataUpdated);
-            connect(q, &CategoryEntriesModel::entryRemoved, titleCategoryModel, &CategoryEntriesModel::entryRemoved);
-            Q_EMIT q->titleCategoryModelChanged();
-        }
         if (!newlyAddedCategoryModel) {
             newlyAddedCategoryModel = new CategoryEntriesModel(q);
             connect(q, &CategoryEntriesModel::entryDataUpdated, newlyAddedCategoryModel, &CategoryEntriesModel::entryDataUpdated);
@@ -106,7 +98,6 @@ public:
     {
         entries.append(entry);
         q->append(entry);
-        titleCategoryModel->addCategoryEntry(entry->title.left(1).toUpper(), entry);
         for (int i = 0; i < entry->author.size(); i++) {
             authorCategoryModel->addCategoryEntry(entry->author.at(i), entry);
         }
@@ -226,8 +217,6 @@ ContentList *BookListModel::contentModel() const
 void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int last)
 {
     d->initializeSubModels(this);
-    int newRow = d->entries.count();
-    beginInsertRows({}, newRow, newRow + (last - first));
     int role = ContentList::FilePathRole;
     for (int i = first; i < last + 1; ++i) {
         QVariant filePath = d->contentModel->data(d->contentModel->index(first, 0, index), role);
@@ -280,7 +269,7 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
                 entry->currentProgress = it.value().toInt();
             } else if (it.key() == QLatin1String("comments")) {
                 entry->comment = it.value().toString();
-            } else if (it.key() == QLatin1Literal("tags")) {
+            } else if (it.key() == QLatin1String("tags")) {
                 entry->tags = it.value().toStringList();
             } else if (it.key() == QLatin1String("rating")) {
                 entry->rating = it.value().toInt();
@@ -305,14 +294,8 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
         d->addEntry(this, entry);
         d->db->addEntry(entry);
     }
-    endInsertRows();
     Q_EMIT countChanged();
     qApp->processEvents();
-}
-
-CategoryEntriesModel *BookListModel::titleCategoryModel() const
-{
-    return d->titleCategoryModel;
 }
 
 CategoryEntriesModel *BookListModel::newlyAddedCategoryModel() const
