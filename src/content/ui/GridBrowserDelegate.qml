@@ -35,6 +35,7 @@ FocusScope {
             return "transparent";
         }
     }
+
     property real stateIndicatorOpacity: {
         if ((!Kirigami.Settings.isMobile && gridEntry.activeFocus) ||
             !Kirigami.Settings.isMobile || hoverHandle.pressed || hoverHandle.containsMouse) {
@@ -43,7 +44,6 @@ FocusScope {
             return 0;
         }
     }
-
 
     // open mobile context menu
     function openContextMenu() {
