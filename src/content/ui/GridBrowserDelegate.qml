@@ -17,13 +17,9 @@ import org.kde.quickcharts 1.0 as Charts
 FocusScope {
     id: gridEntry
 
-    property url imageUrl
-    property url fileUrl
-    property string mainText
-    property string secondaryText
-    property bool delegateDisplaySecondaryText: true
-    property bool isPartial
-    property bool isSelected
+    required property url imageUrl
+    required property string mainText
+    required property string secondaryText
     required property int currentProgress
 
     signal open()
@@ -35,7 +31,7 @@ FocusScope {
     property color stateIndicatorColor: {
         if (gridEntry.activeFocus || hoverHandle.pressed || hoverHandle.containsMouse) {
             return Kirigami.Theme.highlightColor;
-        } else if (gridEntry.isSelected && !Kirigami.Settings.isMobile) {
+        } else if (!Kirigami.Settings.isMobile) {
             return myPalette.mid;
         } else {
             return "transparent";
@@ -43,17 +39,13 @@ FocusScope {
     }
     property real stateIndicatorOpacity: {
         if ((!Kirigami.Settings.isMobile && gridEntry.activeFocus) ||
-            (!Kirigami.Settings.isMobile && gridEntry.isSelected) || hoverHandle.pressed || hoverHandle.containsMouse) {
+            !Kirigami.Settings.isMobile || hoverHandle.pressed || hoverHandle.containsMouse) {
             return 0.3;
         } else {
             return 0;
         }
     }
 
-    property bool delegateLoaded: true
-
-    ListView.onPooled: delegateLoaded = false
-    ListView.onReused: delegateLoaded = true
 
     // open mobile context menu
     function openContextMenu() {
@@ -213,21 +205,20 @@ FocusScope {
                         horizontalAlignment: Kirigami.Settings.isMobile ? Text.AlignLeft : Text.AlignHCenter
 
                         Layout.fillWidth: true
-                        Layout.maximumHeight: delegateDisplaySecondaryText ? mainLabelSize.boundingRect.height : mainLabelSize.boundingRect.height * 2
+                        Layout.maximumHeight: mainLabelSize.boundingRect.height
                         Layout.alignment: Kirigami.Settings.isMobile ? Qt.AlignLeft : Qt.AlignVCenter
                         Layout.leftMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
                         Layout.rightMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
 
-                        wrapMode: !Kirigami.Settings.isMobile && delegateDisplaySecondaryText ? QQC2.Label.NoWrap : QQC2.Label.Wrap
+                        wrapMode: !Kirigami.Settings.isMobile && QQC2.Label.NoWrap
                         maximumLineCount: Kirigami.Settings.isMobile ? 1 : 2
                         elide: Text.ElideRight
                     }
 
                     QQC2.Label {
                         id: secondaryLabel
-                        visible: delegateDisplaySecondaryText
-                        text: gridEntry.secondaryText
 
+                        text: gridEntry.secondaryText
                         opacity: 0.6
 
                         // FIXME: Center-aligned text looks better overall, but
