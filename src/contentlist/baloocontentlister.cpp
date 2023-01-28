@@ -114,11 +114,6 @@ void BalooContentLister::queryResult(const ContentQuery *query, const QString &l
         return;
     }
 
-    // wow, this isn't nice... why is baloo not limiting searches like it's supposed to?
-    if (!file.startsWith(location)) {
-        return;
-    }
-
     // Like the one above, this is also not nice: apparently Baloo can return results to
     // files that no longer exist on the file system. So we have to check manually whether
     // the results provided are actually sensible results...
@@ -144,6 +139,7 @@ void BalooContentLister::queryResult(const ContentQuery *query, const QString &l
         metadata[propInfo.name()] = it.value();
     }
 
+    knownFiles << file;
     Q_EMIT fileFound(file, metadata);
 }
 
