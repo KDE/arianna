@@ -6,12 +6,13 @@
  */
 
 import QtQuick 2.15
-import QtQuick.Controls 2.2
+import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Window 2.2
 import QtQml.Models 2.1
 import QtQuick.Layouts 1.2
-import org.kde.kirigami 2.19 as Kirigami
 import QtGraphicalEffects 1.15
+import org.kde.kirigami 2.19 as Kirigami
+import org.kde.quickcharts 1.0 as Charts
 
 FocusScope {
     id: gridEntry
@@ -23,6 +24,7 @@ FocusScope {
     property bool delegateDisplaySecondaryText: true
     property bool isPartial
     property bool isSelected
+    required property int currentProgress
 
     signal open()
 
@@ -138,6 +140,54 @@ FocusScope {
                 }
             }
 
+            Charts.PieChart {
+                id: chart
+
+                width: Kirigami.Units.gridUnit
+                height: Kirigami.Units.gridUnit
+
+                filled: true
+
+                visible: gridEntry.currentProgress !== 0 && gridEntry.currentProgress !== 100
+
+                anchors {
+                    right: coverImage.right
+                    top: coverImage.top
+                }
+
+                range {
+                    from: 0
+                    to: 100
+                    automatic: false
+                }
+
+                valueSources: Charts.SingleValueSource {
+                    value: gridEntry.currentProgress
+                }
+
+                colorSource: Charts.SingleValueSource {
+                    value: Kirigami.Theme.highlightColor
+                }
+            }
+
+            QQC2.Label {
+                visible: gridEntry.currentProgress === 0
+
+                text: i18nc("should be keep short, inside a label. Will be in uppercase", "New")
+                color: "white"
+                padding: 3
+
+                background: Rectangle {
+                    color: Kirigami.Theme.highlightColor
+                    radius: height
+                }
+
+                anchors {
+                    right: coverImage.right
+                    top: coverImage.top
+                }
+            }
+
             // labels
             RowLayout {
                 id: labels
@@ -168,12 +218,12 @@ FocusScope {
                         Layout.leftMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
                         Layout.rightMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
 
-                        wrapMode: !Kirigami.Settings.isMobile && delegateDisplaySecondaryText ? Label.NoWrap : Label.Wrap
+                        wrapMode: !Kirigami.Settings.isMobile && delegateDisplaySecondaryText ? QQC2.Label.NoWrap : QQC2.Label.Wrap
                         maximumLineCount: Kirigami.Settings.isMobile ? 1 : 2
                         elide: Text.ElideRight
                     }
 
-                    Label {
+                    QQC2.Label {
                         id: secondaryLabel
                         visible: delegateDisplaySecondaryText
                         text: gridEntry.secondaryText

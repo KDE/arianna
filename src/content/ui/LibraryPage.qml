@@ -8,6 +8,7 @@ import QtWebChannel 1.4
 import QtQuick.Layouts 1.15
 import Qt.labs.platform 1.1
 import org.kde.kirigami 2.13 as Kirigami
+import org.kde.quickcharts 1.0 as Charts
 import org.kde.arianna 1.0
 
 Kirigami.ScrollablePage {
@@ -87,6 +88,8 @@ Kirigami.ScrollablePage {
             secondaryText: bookDelegate.author.join(', ')
 
             onOpen: Navigation.openBook(bookDelegate.filename, bookDelegate.locations, bookDelegate.currentLocation)
+
+
         }
     }
 }
