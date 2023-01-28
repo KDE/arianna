@@ -150,9 +150,6 @@ void BalooContentLister::queryResult(const ContentQuery *query, const QString &l
 Baloo::QueryRunnable *BalooContentLister::Private::createQuery(ContentQuery *contentQuery, const QString &location)
 {
     auto balooQuery = Baloo::Query{};
-    if (!location.isEmpty()) {
-        balooQuery.setIncludeFolder(location);
-    }
 
     switch (contentQuery->type()) {
     case ContentQuery::Audio:
@@ -173,9 +170,7 @@ Baloo::QueryRunnable *BalooContentLister::Private::createQuery(ContentQuery *con
         break;
     }
 
-    if (!contentQuery->searchString().isEmpty()) {
-        balooQuery.setSearchString(contentQuery->searchString());
-    }
+    balooQuery.setSearchString(QStringLiteral("epub"));
 
     auto runnable = new Baloo::QueryRunnable{balooQuery};
     connect(runnable, &Baloo::QueryRunnable::queryResult, q, [this, contentQuery, location](QRunnable *, const QString &file) {
