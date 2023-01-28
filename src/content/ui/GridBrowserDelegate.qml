@@ -31,8 +31,6 @@ FocusScope {
     property color stateIndicatorColor: {
         if (gridEntry.activeFocus || hoverHandle.pressed || hoverHandle.containsMouse) {
             return Kirigami.Theme.highlightColor;
-        } else if (!Kirigami.Settings.isMobile) {
-            return myPalette.mid;
         } else {
             return "transparent";
         }
@@ -71,14 +69,18 @@ FocusScope {
 
             z: Kirigami.Settings.isMobile ? 1 : 0 // on desktop, we want hover actions to be above highlight
 
-            anchors.fill: parent
-            // expand margins of highlight box on mobile, so that it doesn't look like it's clipping the text
-            anchors.leftMargin: Kirigami.Settings.isMobile ? -Kirigami.Units.smallSpacing : 0
-            anchors.rightMargin: Kirigami.Settings.isMobile ? -Kirigami.Units.smallSpacing : 0
-            anchors.bottomMargin: Kirigami.Settings.isMobile ? -Kirigami.Units.smallSpacing : 0
             color: stateIndicatorColor
             opacity: stateIndicatorOpacity
             radius: Kirigami.Settings.isMobile ? Kirigami.Units.smallSpacing : 3
+
+            // expand margins of highlight box on mobile, so that it doesn't look like
+            // it's clipping the text
+            anchors {
+                fill: parent
+                leftMargin: Kirigami.Settings.isMobile ? -Kirigami.Units.smallSpacing : 0
+                rightMargin: Kirigami.Settings.isMobile ? -Kirigami.Units.smallSpacing : 0
+                bottomMargin: Kirigami.Settings.isMobile ? -Kirigami.Units.smallSpacing : 0
+            }
         }
 
         // click handler
@@ -107,28 +109,35 @@ FocusScope {
 
             Image {
                 id: coverImage
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.margins: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
+
                 width: gridEntry.width - 2 * Kirigami.Units.largeSpacing
                 height: gridEntry.width - 2 * Kirigami.Units.largeSpacing
 
-                sourceSize.width: width
-                sourceSize.height: height
                 fillMode: Image.PreserveAspectFit
-
                 source: imageUrl ? imageUrl : ""
-
                 asynchronous: true
 
-                layer.enabled: !Kirigami.Settings.isMobile // don't use drop shadow on mobile
-                layer.effect: DropShadow {
-                    source: coverImage
-                    radius: 16
-                    samples: (radius * 2) + 1
-                    cached: true
-                    color: myPalette.shadow
+                sourceSize {
+                    width: width
+                    height: height
+                }
+
+                anchors {
+                    top: parent.top
+                    left: parent.left
+                    right: parent.right
+                    margins: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
+                }
+
+                layer {
+                    enabled: !Kirigami.Settings.isMobile // don't use drop shadow on mobile
+                    effect: DropShadow {
+                        source: coverImage
+                        radius: 16
+                        samples: (radius * 2) + 1
+                        cached: true
+                        color: myPalette.shadow
+                    }
                 }
             }
 
