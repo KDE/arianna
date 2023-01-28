@@ -159,6 +159,7 @@ Baloo::QueryRunnable *BalooContentLister::Private::createQuery(ContentQuery *con
         balooQuery.setType(QStringLiteral("Audio"));
         break;
     case ContentQuery::Documents:
+    case ContentQuery::Epub:
         balooQuery.setType(QStringLiteral("Document"));
         break;
     case ContentQuery::Images:
@@ -167,8 +168,6 @@ Baloo::QueryRunnable *BalooContentLister::Private::createQuery(ContentQuery *con
     case ContentQuery::Video:
         balooQuery.setType(QStringLiteral("Video"));
         break;
-    case ContentQuery::Epub:
-        balooQuery.setType(QStringLiteral("Archive"));
         break;
     default:
         break;

@@ -55,13 +55,13 @@ ContentList::ContentList(QObject *parent)
     : QAbstractListModel(parent)
     , d(new Private)
 {
-    // BalooContentLister *baloo = new BalooContentLister(this);
-    // if (baloo->balooEnabled()) {
-    //     d->actualContentList = baloo;
-    // } else {
-    //     baloo->deleteLater();
-    d->actualContentList = new FilesystemContentLister(this);
-    //}
+    auto baloo = new BalooContentLister(this);
+    if (baloo->balooEnabled()) {
+        d->actualContentList = baloo;
+    } else {
+        baloo->deleteLater();
+        d->actualContentList = new FilesystemContentLister(this);
+    }
     connect(d->actualContentList, &ContentListerBase::fileFound, this, &ContentList::fileFound);
     connect(d->actualContentList, &ContentListerBase::searchCompleted, this, &ContentList::searchCompleted);
 
@@ -106,7 +106,7 @@ void ContentList::startSearch()
         Q_EMIT searchStarted();
         qWarning() << "search started";
         d->actualContentList->knownFiles = d->knownFiles;
-        // d->actualContentList->startSearch(d->queries);
+        d->actualContentList->startSearch(d->queries);
         d->manualContentLister->startSearch(d->queries);
     });
 }
