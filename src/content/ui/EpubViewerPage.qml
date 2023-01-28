@@ -230,18 +230,18 @@ Kirigami.Page {
                         }
                     }
                 }
-                QQC2.ToolTip {
-                    text: parent.text
-                }
+                QQC2.ToolTip.text: text
+                QQC2.ToolTip.visible: hovered
+                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
             }
             QQC2.ToolButton {
                 text: i18n("Previous Page")
                 display: QQC2.AbstractButton.IconOnly
                 icon.name: "arrow-left"
                 onClicked: view.prev()
-                QQC2.ToolTip {
-                    text: parent.text
-                }
+                QQC2.ToolTip.text: text
+                QQC2.ToolTip.visible: hovered
+                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
             }
             QQC2.Slider {
                 padding: Kirigami.Units.smallSpacing
@@ -255,9 +255,9 @@ Kirigami.Page {
                 icon.name: "arrow-right"
                 onClicked: view.next()
                 display: QQC2.AbstractButton.IconOnly
-                QQC2.ToolTip {
-                    text: parent.text
-                }
+                QQC2.ToolTip.text: text
+                QQC2.ToolTip.visible: hovered
+                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
             }
         }
     }
