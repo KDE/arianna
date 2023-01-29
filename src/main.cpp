@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
     KAboutData about(QStringLiteral("arianna"),
                      i18n("arianna"),
                      QStringLiteral(ARIANNA_VERSION_STRING),
-                     i18n("Mastodon client"),
+                     i18n("EPub Reader"),
                      KAboutLicense::GPL_V3,
                      i18n("2022 Niccolò Venerandi <niccolo@venerandi.com>"));
     about.addAuthor(i18n("Niccolò Venerandi"), i18n("Maintainer"), QStringLiteral("niccolo@venerandi.com"));
