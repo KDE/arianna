@@ -60,6 +60,7 @@ ki18n_install(po)
 
 install(FILES org.kde.arianna.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES org.kde.arianna.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+install(FILES org.kde.arianna.svg DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/scalable/apps)
 
 ecm_qt_install_logging_categories(
     EXPORT ARIANNA

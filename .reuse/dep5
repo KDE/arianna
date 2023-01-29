@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: Arianna
+Upstream-Contact: Carl Schwan <carl@carlschwan.eu>
+Source: https://invent.kde.org/graphics/arianna
+
+Files: org.kde.arianna.svg logo.png
+Copyright: Áron Kovács
+License: CC-BY-SA-4.0
