@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:55+0000\n"
-"PO-Revision-Date: 2023-01-09 06:44+0100\n"
+"POT-Creation-Date: 2023-01-30 00:55+0000\n"
+"PO-Revision-Date: 2023-01-29 19:54+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -80,7 +80,7 @@ msgstr "Hurrengo orrialdea"
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
-msgstr ""
+msgstr "Berria"
 
 #: content/ui/LibraryPage.qml:19
 #, kde-format
@@ -94,10 +94,9 @@ msgid "Add Book"
 msgstr "Gehitu liburua"
 
 #: content/ui/main.qml:13
-#, fuzzy, kde-format
-#| msgid "arianna"
+#, kde-format
 msgid "Arianna"
-msgstr "arianna"
+msgstr "Arianna"
 
 #: main.cpp:64
 #, kde-format
@@ -105,9 +104,10 @@ msgid "arianna"
 msgstr "arianna"
 
 #: main.cpp:66
-#, kde-format
-msgid "Mastodon client"
-msgstr "Mastodon bezeroa"
+#, fuzzy, kde-format
+#| msgid "Epub reader"
+msgid "EPub Reader"
+msgstr "Epub irakurlea"
 
 #: main.cpp:68
 #, kde-format
@@ -140,3 +140,6 @@ msgstr "xalba@ni.eus"
 #, kde-format
 msgid "Epub reader"
 msgstr "Epub irakurlea"
+
+#~ msgid "Mastodon client"
+#~ msgstr "Mastodon bezeroa"

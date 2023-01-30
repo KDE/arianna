@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:55+0000\n"
-"PO-Revision-Date: 2023-01-09 09:43+0200\n"
+"POT-Creation-Date: 2023-01-30 00:55+0000\n"
+"PO-Revision-Date: 2023-01-29 08:59+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -78,7 +78,7 @@ msgstr "Наступна сторінка"
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
-msgstr ""
+msgstr "Нове"
 
 #: content/ui/LibraryPage.qml:19
 #, kde-format
@@ -92,10 +92,9 @@ msgid "Add Book"
 msgstr "Додати книгу"
 
 #: content/ui/main.qml:13
-#, fuzzy, kde-format
-#| msgid "arianna"
+#, kde-format
 msgid "Arianna"
-msgstr "arianna"
+msgstr "Arianna"
 
 #: main.cpp:64
 #, kde-format
@@ -103,9 +102,10 @@ msgid "arianna"
 msgstr "arianna"
 
 #: main.cpp:66
-#, kde-format
-msgid "Mastodon client"
-msgstr "Клієнт Mastodon"
+#, fuzzy, kde-format
+#| msgid "Epub reader"
+msgid "EPub Reader"
+msgstr "Засіб для читання EPub"
 
 #: main.cpp:68
 #, kde-format
@@ -138,3 +138,6 @@ msgstr "yurchor@ukr.net"
 #, kde-format
 msgid "Epub reader"
 msgstr "Засіб для читання EPub"
+
+#~ msgid "Mastodon client"
+#~ msgstr "Клієнт Mastodon"

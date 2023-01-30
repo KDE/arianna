@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:55+0000\n"
+"POT-Creation-Date: 2023-01-30 00:55+0000\n"
 "PO-Revision-Date: 2023-01-10 07:13+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -103,9 +103,10 @@ msgid "arianna"
 msgstr "არიანა"
 
 #: main.cpp:66
-#, kde-format
-msgid "Mastodon client"
-msgstr "Mastodon-ის კლიენტი"
+#, fuzzy, kde-format
+#| msgid "Epub reader"
+msgid "EPub Reader"
+msgstr "EPub -ის წამკითხველი"
 
 #: main.cpp:68
 #, kde-format
@@ -138,3 +139,6 @@ msgstr "Temuri.doghonadze@gmail.com"
 #, kde-format
 msgid "Epub reader"
 msgstr "EPub -ის წამკითხველი"
+
+#~ msgid "Mastodon client"
+#~ msgstr "Mastodon-ის კლიენტი"

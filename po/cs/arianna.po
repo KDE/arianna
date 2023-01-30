@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-29 00:55+0000\n"
+"POT-Creation-Date: 2023-01-30 00:55+0000\n"
 "PO-Revision-Date: 2023-01-24 15:33+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -102,9 +102,10 @@ msgid "arianna"
 msgstr "arianna"
 
 #: main.cpp:66
-#, kde-format
-msgid "Mastodon client"
-msgstr "Klient pro Mastodon"
+#, fuzzy, kde-format
+#| msgid "Epub reader"
+msgid "EPub Reader"
+msgstr "Čtečka Epub"
 
 #: main.cpp:68
 #, kde-format
@@ -137,3 +138,6 @@ msgstr "vit@pelcak.org"
 #, kde-format
 msgid "Epub reader"
 msgstr "Čtečka Epub"
+
+#~ msgid "Mastodon client"
+#~ msgstr "Klient pro Mastodon"
