@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-30 00:55+0000\n"
-"PO-Revision-Date: 2023-01-29 09:58+0100\n"
+"PO-Revision-Date: 2023-01-30 10:10+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -104,8 +104,7 @@ msgid "arianna"
 msgstr "arianna"
 
 #: main.cpp:66
-#, fuzzy, kde-format
-#| msgid "Epub reader"
+#, kde-format
 msgid "EPub Reader"
 msgstr "Lector d'EPub"
 
@@ -140,6 +139,3 @@ msgstr "txemaq@gmail.com"
 #, kde-format
 msgid "Epub reader"
 msgstr "Lector d'EPub"
-
-#~ msgid "Mastodon client"
-#~ msgstr "Client del Mastodon"

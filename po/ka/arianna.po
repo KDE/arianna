@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-30 00:55+0000\n"
-"PO-Revision-Date: 2023-01-10 07:13+0100\n"
+"PO-Revision-Date: 2023-01-30 10:36+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -78,7 +78,7 @@ msgstr "შემდეგი გვერდი"
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
-msgstr ""
+msgstr "ახალი"
 
 #: content/ui/LibraryPage.qml:19
 #, kde-format
@@ -92,8 +92,7 @@ msgid "Add Book"
 msgstr "წიგნის დამატება"
 
 #: content/ui/main.qml:13
-#, fuzzy, kde-format
-#| msgid "arianna"
+#, kde-format
 msgid "Arianna"
 msgstr "არიანა"
 
@@ -103,8 +102,7 @@ msgid "arianna"
 msgstr "არიანა"
 
 #: main.cpp:66
-#, fuzzy, kde-format
-#| msgid "Epub reader"
+#, kde-format
 msgid "EPub Reader"
 msgstr "EPub -ის წამკითხველი"
 

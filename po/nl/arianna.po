@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-30 00:55+0000\n"
-"PO-Revision-Date: 2023-01-29 22:43+0100\n"
+"PO-Revision-Date: 2023-01-30 10:00+0100\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -101,10 +101,9 @@ msgid "arianna"
 msgstr "arianna"
 
 #: main.cpp:66
-#, fuzzy, kde-format
-#| msgid "Epub reader"
+#, kde-format
 msgid "EPub Reader"
-msgstr "Epub-lezer"
+msgstr "EPub-lezer"
 
 #: main.cpp:68
 #, kde-format

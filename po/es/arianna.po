@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-01-30 00:55+0000\n"
-"PO-Revision-Date: 2023-01-09 11:32+0100\n"
+"PO-Revision-Date: 2023-01-30 20:35+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -79,7 +79,7 @@ msgstr "Página siguiente"
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
-msgstr ""
+msgstr "Nuevo"
 
 #: content/ui/LibraryPage.qml:19
 #, kde-format
@@ -93,10 +93,9 @@ msgid "Add Book"
 msgstr "Añadir libro"
 
 #: content/ui/main.qml:13
-#, fuzzy, kde-format
-#| msgid "arianna"
+#, kde-format
 msgid "Arianna"
-msgstr "arianna"
+msgstr "Arianna"
 
 #: main.cpp:64
 #, kde-format
@@ -104,8 +103,7 @@ msgid "arianna"
 msgstr "arianna"
 
 #: main.cpp:66
-#, fuzzy, kde-format
-#| msgid "Epub reader"
+#, kde-format
 msgid "EPub Reader"
 msgstr "Lector de EPub"
 
