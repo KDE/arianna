@@ -173,8 +173,9 @@ Kirigami.Page {
         }
 
         onVisibleChanged: {
-            if(!visible)
+            if (!visible) {
                 root.bookClosed();
+            }
         }
 
         onLoadingChanged: {

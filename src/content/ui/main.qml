@@ -33,7 +33,7 @@ Kirigami.ApplicationWindow {
             }
         }
         onCacheLoadedChanged: {
-            if(!cacheLoaded) {
+            if (!cacheLoaded) {
                 return;
             }
             contentModel.setKnownFiles(knownBookFiles());
