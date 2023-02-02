@@ -2,11 +2,11 @@
     "id": "org.kde.arianna",
     "branch": "master",
     "runtime": "org.kde.Platform",
-    "runtime-version": "5.15-21.08",
+    "runtime-version": "5.15-22.08",
     "sdk": "org.kde.Sdk",
     "base": "io.qt.qtwebengine.BaseApp",
-    "base-version": "5.15-21.08",
-    "command": "neochat",
+    "base-version": "5.15-22.08",
+    "command": "arianna",
     "tags": [
         "nightly"
     ],
@@ -16,9 +16,61 @@
         "--share=ipc",
         "--socket=x11",
         "--socket=wayland",
-        "--device=dri"
+        "--device=dri",
+        "--filesystem=host:ro",
+        "--env=BALOO_DB_PATH=.local/share/baloo",
+        "--talk-name=org.kde.baloo"
     ],
     "modules": [
+        {
+            "name": "kirigamiaddons",
+            "config-opts": [ "-DBUILD_TESTING=OFF" ],
+            "buildsystem": "cmake-ninja",
+            "sources": [ { "type": "git", "url": "https://invent.kde.org/libraries/kirigami-addons.git" } ]
+        },
+        {
+            "name": "lmdb",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/LMDB/lmdb/archive/refs/tags/LMDB_0.9.29.tar.gz",
+                    "sha256": "22054926b426c66d8f2bc22071365df6e35f3aacf19ad943bc6167d4cae3bebb",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 6974,
+                        "stable-only": true,
+                        "url-template": "https://github.com/LMDB/lmdb/archive/refs/tags/LMDB_$version.tar.gz"
+                    }
+                }
+            ],
+            "no-autogen": true,
+            "make-install-args": [
+                "prefix=/app"
+            ],
+            "subdir": "libraries/liblmdb"
+        },
+                {
+            "config-opts": [
+                "-DBUILD_TESTING=OFF",
+                "-DCMAKE_INSTALL_LIBDIR=lib"
+            ],
+            "name": "baloo",
+            "buildsystem": "cmake-ninja",
+            "builddir": true,
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://download.kde.org/stable/frameworks/5.102/baloo-5.102.0.tar.xz",
+                    "sha256": "ddac3964c3a05e50c996bfe5682802e14f31900102dd72d6ad2c7f18db61dd78",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 8762,
+                        "stable-only": true,
+                        "url-template": "https://download.kde.org/stable/frameworks/$major.$minor/baloo-$version.tar.xz"
+                    }
+                }
+            ]
+        },
         {
             "name": "arianna",
             "buildsystem": "cmake-ninja",
@@ -27,9 +79,6 @@
                     "type": "dir",
                     "path": "."
                 }
-            ],
-            "config-opts": [
-                "-DNEOCHAT_FLATPAK=ON"
             ]
         }
     ]
