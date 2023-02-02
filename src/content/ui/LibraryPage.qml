@@ -19,7 +19,7 @@ Kirigami.ScrollablePage {
     title: i18n("Library")
 
     actions.main: Kirigami.Action {
-        text: i18nc("@action:button", "Add Book")
+        text: i18nc("@action:button", "Add Book…")
         icon.name: "list-add"
         onTriggered: {
             const fileDialog = openFileDialog.createObject(QQC2.ApplicationWindow.overlay)
@@ -40,6 +40,7 @@ Kirigami.ScrollablePage {
         FileDialog {
             id: root
             title: i18n("Please choose a file")
+            nameFilters: [i18nc("Name filter for EPUB files", "eBook files (*.epub *.cb* *.fb2 *.fb2zip)")]
         }
     }
 
@@ -88,8 +89,15 @@ Kirigami.ScrollablePage {
             secondaryText: bookDelegate.author.join(', ')
 
             onOpen: Navigation.openBook(bookDelegate.filename, bookDelegate.locations, bookDelegate.currentLocation)
+        }
 
-
+        Kirigami.PlaceholderMessage {
+            anchors.centerIn: parent
+            width: parent.width - (Kirigami.Units.largeSpacing * 4)
+            visible: contentDirectoryView.count === 0
+            icon.name: "application-epub+zip"
+            text: i18nc("@info placeholder", "Add some books")
+            helpfulAction: actions.main
         }
     }
 }
