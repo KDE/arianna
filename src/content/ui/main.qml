@@ -64,6 +64,14 @@ Kirigami.ApplicationWindow {
             epubViewer.locationsLoaded.connect((locations) => {
                 bookListModel.setBookData(filename, 'locations', locations);
             });
+
+            epubViewer.bookReady.connect((title) => {
+                root.title = title;
+            });
+
+            epubViewer.bookClosed.connect(() => {
+               root.title = i18n("Arianna");
+            });
         }
     }
 }

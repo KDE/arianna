@@ -20,6 +20,8 @@ Kirigami.Page {
 
     signal relocated(newLocation: var, newProgress: int)
     signal locationsLoaded(locations: var)
+    signal bookReady(title: var)
+    signal bookClosed()
 
     title: backend.metadata ? backend.metadata.title : ''
 
@@ -82,7 +84,7 @@ Kirigami.Page {
                     target: searchResultModel
                     function onCountChanged() {
                         if (searchResultModel.count > 0) {
-                            console.error('cound changed', searchResultModel.count)
+                            console.error('count changed', searchResultModel.count)
                             searchField.popup.open()
                         }
                     }
@@ -168,6 +170,11 @@ Kirigami.Page {
         }
         function prev() {
             view.runJavaScript('rendition.prev()');
+        }
+
+        onVisibleChanged: {
+            if(!visible)
+                root.bookClosed();
         }
 
         onLoadingChanged: {
@@ -288,11 +295,12 @@ Kirigami.Page {
                 searchResultModel.clear();
                 get('book.package.metadata', metadata => {
                     backend.metadata = JSON.parse(metadata);
+                    root.bookReady(backend.metadata.title);
                     Database.addBook(backend.file, metadata);
                 });
                 get('book.navigation.toc', toc => {
                     backend.toc = toc;
-                })
+                });
                 break;
             case 'rendition-ready':
                 setStyle();
