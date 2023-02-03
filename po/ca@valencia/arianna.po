@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-30 00:55+0000\n"
-"PO-Revision-Date: 2023-01-09 10:10+0100\n"
+"POT-Creation-Date: 2023-02-03 00:56+0000\n"
+"PO-Revision-Date: 2023-01-30 10:10+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca@valencia\n"
@@ -80,7 +80,7 @@ msgstr "Pàgina següent"
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
-msgstr ""
+msgstr "Nou"
 
 #: content/ui/LibraryPage.qml:19
 #, kde-format
@@ -88,16 +88,31 @@ msgid "Library"
 msgstr "Biblioteca"
 
 #: content/ui/LibraryPage.qml:22
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Add Book"
 msgctxt "@action:button"
-msgid "Add Book"
+msgid "Add Book…"
+msgstr "Afig un llibre"
+
+#: content/ui/LibraryPage.qml:43
+#, kde-format
+msgctxt "Name filter for EPUB files"
+msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
+msgstr ""
+
+#: content/ui/LibraryPage.qml:99
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Add Book"
+msgctxt "@info placeholder"
+msgid "Add some books"
 msgstr "Afig un llibre"
 
 #: content/ui/main.qml:13
-#, fuzzy, kde-format
-#| msgid "arianna"
+#, kde-format
 msgid "Arianna"
-msgstr "arianna"
+msgstr "Arianna"
 
 #: main.cpp:64
 #, kde-format
@@ -105,8 +120,7 @@ msgid "arianna"
 msgstr "arianna"
 
 #: main.cpp:66
-#, fuzzy, kde-format
-#| msgid "Epub reader"
+#, kde-format
 msgid "EPub Reader"
 msgstr "Lector d'EPub"
 
@@ -141,6 +155,3 @@ msgstr "txemaq@gmail.com"
 #, kde-format
 msgid "Epub reader"
 msgstr "Lector d'EPub"
-
-#~ msgid "Mastodon client"
-#~ msgstr "Client de Mastodon"

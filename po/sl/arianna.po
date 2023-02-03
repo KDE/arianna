@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-30 00:55+0000\n"
+"POT-Creation-Date: 2023-02-03 00:56+0000\n"
 "PO-Revision-Date: 2023-01-30 09:01+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
@@ -86,9 +86,25 @@ msgid "Library"
 msgstr "Knjižnica"
 
 #: content/ui/LibraryPage.qml:22
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Add Book"
 msgctxt "@action:button"
-msgid "Add Book"
+msgid "Add Book…"
+msgstr "Dodaj knjigo"
+
+#: content/ui/LibraryPage.qml:43
+#, kde-format
+msgctxt "Name filter for EPUB files"
+msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
+msgstr ""
+
+#: content/ui/LibraryPage.qml:99
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Add Book"
+msgctxt "@info placeholder"
+msgid "Add some books"
 msgstr "Dodaj knjigo"
 
 #: content/ui/main.qml:13

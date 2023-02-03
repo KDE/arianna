@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-01-30 00:55+0000\n"
+"POT-Creation-Date: 2023-02-03 00:56+0000\n"
 "PO-Revision-Date: 2023-01-30 19:18+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -85,9 +85,25 @@ msgid "Library"
 msgstr "Kitaplık"
 
 #: content/ui/LibraryPage.qml:22
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Add Book"
 msgctxt "@action:button"
-msgid "Add Book"
+msgid "Add Book…"
+msgstr "Kitap Ekle"
+
+#: content/ui/LibraryPage.qml:43
+#, kde-format
+msgctxt "Name filter for EPUB files"
+msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
+msgstr ""
+
+#: content/ui/LibraryPage.qml:99
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Add Book"
+msgctxt "@info placeholder"
+msgid "Add some books"
 msgstr "Kitap Ekle"
 
 #: content/ui/main.qml:13
