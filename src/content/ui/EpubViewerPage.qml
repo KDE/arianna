@@ -172,10 +172,8 @@ Kirigami.Page {
             view.runJavaScript('rendition.prev()');
         }
 
-        onVisibleChanged: {
-            if (!visible) {
-                root.bookClosed();
-            }
+        onVisibleChanged: if (!visible) {
+            root.bookClosed();
         }
 
         onLoadingChanged: {
