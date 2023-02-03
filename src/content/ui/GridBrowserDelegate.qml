@@ -18,6 +18,7 @@ FocusScope {
     id: gridEntry
 
     required property url imageUrl
+    required property string iconName
     required property string mainText
     required property string secondaryText
     required property int currentProgress
@@ -59,9 +60,11 @@ FocusScope {
 
     Item {
         id: parentItem
-        anchors.fill: parent
-        // mobile uses more spacing between delegates
-        anchors.margins: Kirigami.Settings.isMobile ? Kirigami.Units.largeSpacing : 0
+        anchors {
+            fill: parent
+            // mobile uses more spacing between delegates
+            margins: Kirigami.Settings.isMobile ? Kirigami.Units.largeSpacing : 0
+        }
 
         // highlight colour
         Rectangle {
@@ -141,6 +144,16 @@ FocusScope {
                 }
             }
 
+            Kirigami.Icon {
+                id: fallBackIcon
+
+                width: gridEntry.width - 2 * Kirigami.Units.largeSpacing
+                height: gridEntry.width - 2 * Kirigami.Units.largeSpacing
+
+                source: gridEntry.iconName
+                visible: source !== undefined
+            }
+
             Charts.PieChart {
                 id: chart
 
@@ -149,7 +162,7 @@ FocusScope {
 
                 filled: true
 
-                visible: gridEntry.currentProgress !== 0 && gridEntry.currentProgress !== 100
+                visible: gridEntry.currentProgress !== 0 && gridEntry.currentProgress !== 100 && gridEntry.iconName === ''
 
                 anchors {
                     right: coverImage.right
@@ -172,7 +185,7 @@ FocusScope {
             }
 
             QQC2.Label {
-                visible: gridEntry.currentProgress === 0
+                visible: gridEntry.currentProgress === 0 && gridEntry.iconName === ''
 
                 text: i18nc("should be keep short, inside a label. Will be in uppercase", "New")
                 color: "white"
@@ -192,10 +205,13 @@ FocusScope {
             // labels
             RowLayout {
                 id: labels
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.bottom: parent.bottom
-                anchors.top: coverImage.bottom
+
+                anchors {
+                    left: parent.left
+                    right: parent.right
+                    bottom: parent.bottom
+                    top: coverImage.bottom
+                }
 
                 ColumnLayout {
                     Layout.alignment: Qt.AlignVCenter

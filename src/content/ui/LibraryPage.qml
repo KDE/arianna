@@ -6,7 +6,6 @@ import QtQuick.Controls 2.15 as QQC2
 import QtWebEngine 1.4
 import QtWebChannel 1.4
 import QtQuick.Layouts 1.15
-import Qt.labs.platform 1.1
 import org.kde.kirigami 2.13 as Kirigami
 import org.kde.quickcharts 1.0 as Charts
 import org.kde.arianna 1.0
@@ -14,35 +13,9 @@ import org.kde.arianna 1.0
 Kirigami.ScrollablePage {
     id: root
 
-    property BookListModel bookListModel
+    property CategoryEntriesModel bookListModel
 
     title: i18n("Library")
-
-    actions.main: Kirigami.Action {
-        text: i18nc("@action:button", "Add Book…")
-        icon.name: "list-add"
-        onTriggered: {
-            const fileDialog = openFileDialog.createObject(QQC2.ApplicationWindow.overlay)
-            fileDialog.accepted.connect(() => {
-                const file = fileDialog.file;
-                if (!file) {
-                    return;
-                }
-                contentList.addFile(file)
-            })
-            fileDialog.open();
-        }
-    }
-
-    Component {
-        id: openFileDialog
-
-        FileDialog {
-            id: root
-            title: i18n("Please choose a file")
-            nameFilters: [i18nc("Name filter for EPUB files", "eBook files (*.epub *.cb* *.fb2 *.fb2zip)")]
-        }
-    }
 
     GridView {
         id: contentDirectoryView
@@ -78,17 +51,25 @@ Kirigami.ScrollablePage {
             required property string title
             required property string filename
             required property var author
+            required property var locations
             required property var currentLocation
+            required property int categoryEntriesCount
+            required property var categoryEntriesModel
 
             width: Kirigami.Settings.isMobile ? contentDirectoryView.cellWidth : 170
             height: contentDirectoryView.cellHeight
             focus: true
 
-            imageUrl: 'file://' + bookDelegate.thumbnail
+            imageUrl: categoryEntriesModel === '' ? ('file://' + thumbnail) : ''
+            iconName: categoryEntriesModel !== '' ? thumbnail : ''
             mainText: bookDelegate.title
-            secondaryText: bookDelegate.author.join(', ')
+            secondaryText: author ? bookDelegate.author.join(', ') : ''
 
-            onOpen: Navigation.openBook(bookDelegate.filename, bookDelegate.locations, bookDelegate.currentLocation)
+            onOpen: if (categoryEntriesModel) {
+                Navigation.openLibrary(title, categoryEntriesModel, false);
+            } else {
+                Navigation.openBook(filename, locations, currentLocation);
+            }
         }
 
         Kirigami.PlaceholderMessage {

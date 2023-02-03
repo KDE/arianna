@@ -18,6 +18,8 @@ Kirigami.Page {
     property var locations
     property var currentLocation
 
+    readonly property bool hideSidebar: true
+
     signal relocated(newLocation: var, newProgress: int)
     signal locationsLoaded(locations: var)
     signal bookReady(title: var)
