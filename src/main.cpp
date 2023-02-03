@@ -96,6 +96,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<BookListModel>("org.kde.arianna", 1, 0, "BookListModel");
     qmlRegisterType<ContentList>("org.kde.arianna", 1, 0, "ContentList");
     qmlRegisterType<ContentQuery>("org.kde.arianna", 1, 0, "ContentQuery");
+    qmlRegisterType<CategoryEntriesModel>("org.kde.arianna", 1, 0, "CategoryEntriesModel");
 
     engine.load(QUrl(QStringLiteral("qrc:/content/ui/main.qml")));
     if (engine.rootObjects().isEmpty()) {

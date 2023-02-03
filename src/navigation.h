@@ -5,6 +5,8 @@
 
 #include <QObject>
 
+#include "categoryentriesmodel.h"
+
 class Navigation : public QObject
 {
     Q_OBJECT
@@ -14,4 +16,6 @@ public:
 
 Q_SIGNALS:
     void openBook(const QString &fileName, const QString &locations, const QString &currentLocation);
+
+    void openLibrary(const QString &title, CategoryEntriesModel *model, bool replace);
 };

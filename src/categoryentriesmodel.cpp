@@ -73,8 +73,10 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
             return model->bookCount();
         case CategoryEntriesModelRole:
             return QVariant::fromValue<CategoryEntriesModel *>(model);
+        case ThumbnailRole:
+            return QStringLiteral("actor");
         default:
-            return QStringLiteral("Unknown role");
+            return QString();
         }
     } else {
         const BookEntry *entry = d->entries[index.row() - d->categoryModels.count()];
@@ -112,7 +114,7 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
             return entry->currentLocation;
         case CategoryEntriesModelRole:
             // Nothing, if we're not equipped with one such...
-            return {};
+            return QString{};
         case CategoryEntryCountRole:
             return QVariant::fromValue<int>(0);
         case ThumbnailRole:
@@ -128,7 +130,7 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
         case LocationsRole:
             return entry->locations;
         default:
-            return QStringLiteral("Unknown role");
+            return QString();
         }
     }
 }

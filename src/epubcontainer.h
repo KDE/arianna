@@ -65,7 +65,7 @@ public:
 
     QSharedPointer<QIODevice> getIoDevice(const QString &path);
     QImage getImage(const QString &id);
-    QString getMetadata(const QString &key);
+    QStringList getMetadata(const QString &key);
     QStringList getItems()
     {
         return m_orderedItems;
@@ -93,7 +93,7 @@ private:
     std::unique_ptr<KZip> m_archive;
     const KArchiveDirectory *m_rootFolder;
 
-    QHash<QString, QString> m_metadata;
+    QHash<QString, QStringList> m_metadata;
 
     QHash<QString, EpubItem> m_items;
     QStringList m_orderedItems;

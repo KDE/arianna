@@ -226,7 +226,7 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
         if (!splitName.isEmpty())
             entry->filetitle = splitName.takeLast();
         if (!splitName.isEmpty()) {
-            entry->series = QStringList(splitName.takeLast()); // hahahaheuristics (dumb assumptions about filesystems, go!)
+            entry->series = QStringList();
             entry->seriesNumbers = QStringList() << QStringLiteral("0");
             entry->seriesVolumes = QStringList() << QStringLiteral("0");
         }
@@ -280,15 +280,17 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
         if (mimetype == QStringLiteral("application/epub+zip")) {
             EPubContainer epub(nullptr);
             epub.openFile(entry->filename);
-            entry->title = epub.getMetadata(QStringLiteral("title"));
-            entry->author = epub.getMetadata(QStringLiteral("creator")).split(QLatin1Char(','), Qt::SkipEmptyParts);
-            entry->rights = epub.getMetadata(QStringLiteral("rights"));
-            entry->source = epub.getMetadata(QStringLiteral("source"));
-            entry->identifier = epub.getMetadata(QStringLiteral("identifier"));
-            entry->language = epub.getMetadata(QStringLiteral("language"));
+            entry->title = epub.getMetadata(QStringLiteral("title"))[0];
+            entry->author = epub.getMetadata(QStringLiteral("creator"));
+            entry->rights = epub.getMetadata(QStringLiteral("rights")).join(QStringLiteral(", "));
+            entry->source = epub.getMetadata(QStringLiteral("source")).join(QStringLiteral(", "));
+            entry->identifier = epub.getMetadata(QStringLiteral("identifier")).join(QStringLiteral(", "));
+            entry->language = epub.getMetadata(QStringLiteral("language")).join(QStringLiteral(", "));
+            entry->genres = epub.getMetadata(QStringLiteral("subject"));
+            entry->publisher = epub.getMetadata(QStringLiteral("publisher")).join(QStringLiteral(", "));
 
-            auto image = epub.getImage(epub.getMetadata(QStringLiteral("cover")));
-            entry->thumbnail = saveCover(epub.getMetadata(QStringLiteral("identifier")), image);
+            auto image = epub.getImage(epub.getMetadata(QStringLiteral("cover")).join(QChar()));
+            entry->thumbnail = saveCover(epub.getMetadata(QStringLiteral("identifier")).join(QChar()), image);
         }
 
         d->addEntry(this, entry);

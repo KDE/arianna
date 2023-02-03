@@ -88,7 +88,7 @@ QImage EPubContainer::getImage(const QString &id)
     return QImage::fromData(ioDevice->readAll());
 }
 
-QString EPubContainer::getMetadata(const QString &key)
+QStringList EPubContainer::getMetadata(const QString &key)
 {
     return m_metadata.value(key);
 }
@@ -251,7 +251,10 @@ bool EPubContainer::parseMetadataItem(const QDomNode &metadataNode)
         return false;
     }
     qWarning() << metaName << metaValue;
-    m_metadata[metaName] = metaValue;
+    if (!m_metadata.contains(metaName)) {
+        m_metadata[metaName] = QStringList{};
+    }
+    m_metadata[metaName].append(metaValue);
 
     return true;
 }
