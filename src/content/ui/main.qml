@@ -7,6 +7,7 @@ import QtQuick.Layouts 1.15
 import Qt.labs.platform 1.1
 import org.kde.kirigami 2.13 as Kirigami
 import org.kde.arianna 1.0
+import org.kde.kirigamiaddons.labs.components 1.0 as KirigamiComponents
 
 Kirigami.ApplicationWindow {
     id: root
@@ -97,11 +98,71 @@ Kirigami.ApplicationWindow {
                 topPadding: Kirigami.Units.smallSpacing
                 bottomPadding: Kirigami.Units.smallSpacing
 
-                contentItem: RowLayout {
-                    // TODO replace by search field
-                    Kirigami.Heading {
-                        text: i18n("Arianna")
-                        Layout.fillWidth: true
+                contentItem: KirigamiComponents.SearchPopupField {
+                    id: searchField
+
+                    spaceAvailableLeft: false
+                    autoAccept: false
+
+                    onTextChanged: searchFilterProxyModel.setFilterFixedString(text)
+
+                    popupContentItem: ListView {
+                        id: search
+
+                        currentIndex: 0
+
+                        Kirigami.Theme.colorSet: Kirigami.Theme.View
+                        Kirigami.Theme.inherit: false
+
+                        model: SortFilterProxyModel {
+                            id: searchFilterProxyModel
+                            sourceModel: root.bookListModel
+                            filterRole: CategoryEntriesModel.TitleRole
+                            filterCaseSensitivity: Qt.CaseInsensitive
+                        }
+
+                        delegate: QQC2.ItemDelegate {
+                            id: searchDelegate
+
+                            required property string title
+                            required property string author
+                            required property string filename
+                            required property string locations
+                            required property string currentLocation
+
+                            leftInset: 1
+                            rightInset: 1
+
+                            highlighted: activeFocus
+
+                            width: ListView.view.width
+                            onClicked: {
+                                Navigation.openBook(filename, locations, currentLocation);
+                                searchField.popup.close();
+                            }
+
+                            contentItem: ColumnLayout {
+                                QQC2.Label {
+                                    Layout.fillWidth: true
+                                    text: searchDelegate.title
+                                    wrapMode: Text.WordWrap
+                                }
+                                QQC2.Label {
+                                    Layout.fillWidth: true
+                                    text: searchDelegate.author
+                                    wrapMode: Text.WordWrap
+                                    font: Kirigami.Theme.smallFont
+                                }
+                            }
+                        }
+
+                        Kirigami.PlaceholderMessage {
+                            text: i18n("No search results")
+                            visible: search.count === 0
+                            icon.name: "system-search"
+                            anchors.centerIn: parent
+                            width: parent.width - Kirigami.Units.gridUnit * 4
+                        }
                     }
                 }
             }

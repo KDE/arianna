@@ -80,24 +80,39 @@ Kirigami.Page {
             }
 
             popupContentItem: ListView {
-                id: search
+                id: searchView
+
                 model: searchResultModel
 
                 delegate: QQC2.ItemDelegate {
+                    id: searchDelegate
+
+                    required property string sectionMarkup
+                    required property string markup
+                    required property string cfi
+
                     width: ListView.view.width
+
+                    leftInset: 1
+                    rightInset: 1
+
+                    highlighted: activeFocus
+
+                    onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
+
                     Kirigami.Theme.colorSet: Kirigami.Theme.Window
                     Kirigami.Theme.inherit: false
-                    onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
+
                     contentItem: ColumnLayout {
                         QQC2.Label {
                             Layout.fillWidth: true
-                            text: model.sectionMarkup
+                            text: searchDelegate.sectionMarkup
                             wrapMode: Text.WordWrap
                             font: Kirigami.Theme.smallFont
                         }
                         QQC2.Label {
                             Layout.fillWidth: true
-                            text: model.markup
+                            text: searchDelegate.markup
                             wrapMode: Text.WordWrap
                         }
                     }
@@ -105,7 +120,7 @@ Kirigami.Page {
 
                 Kirigami.PlaceholderMessage {
                     text: i18n("No search results")
-                    visible: search.count === 0 && searchField.text.length > 2
+                    visible: searchView.count === 0 && searchField.text.length > 2
                     icon.name: "system-search"
                     anchors.centerIn: parent
                     width: parent.width - Kirigami.Units.gridUnit * 4
@@ -114,14 +129,6 @@ Kirigami.Page {
                 Kirigami.PlaceholderMessage {
                     text: i18n("Loading")
                     visible: searchResultModel.loading
-                    anchors.centerIn: parent
-                    width: parent.width - Kirigami.Units.gridUnit * 4
-                }
-
-                Kirigami.PlaceholderMessage {
-                    text: i18n("Search inside this book")
-                    visible: searchView.count === 0 && searchField.text.length <= 2
-                    icon.name: "system-search"
                     anchors.centerIn: parent
                     width: parent.width - Kirigami.Units.gridUnit * 4
                 }

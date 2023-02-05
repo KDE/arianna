@@ -95,6 +95,7 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Navigation", &navigation);
     qmlRegisterType<BookListModel>("org.kde.arianna", 1, 0, "BookListModel");
     qmlRegisterType<ContentList>("org.kde.arianna", 1, 0, "ContentList");
+    qmlRegisterType<QSortFilterProxyModel>("org.kde.arianna", 1, 0, "SortFilterProxyModel");
     qmlRegisterType<ContentQuery>("org.kde.arianna", 1, 0, "ContentQuery");
     qmlRegisterType<CategoryEntriesModel>("org.kde.arianna", 1, 0, "CategoryEntriesModel");
 
