@@ -90,7 +90,7 @@ Kirigami.ApplicationWindow {
 
             QQC2.ToolBar {
                 Layout.fillWidth: true
-                Layout.preferredHeight: mainWindow.pageStack.globalToolBar.preferredHeight
+                Layout.preferredHeight: root.pageStack.globalToolBar.preferredHeight
 
                 leftPadding: Kirigami.Units.largeSpacing
                 rightPadding: Kirigami.Units.smallSpacing
@@ -152,7 +152,7 @@ Kirigami.ApplicationWindow {
                         text: i18nc("Open a book from somewhere on disk (uses the open dialog, or a drilldown on touch devices)", "Open Other...");
                         icon: "document-open";
                         action: addBookAction
-                        QQC2.ButtonGroup.group: undefined
+                        QQC2.ButtonGroup.group: null
                         checkable: false
                     }
                     Kirigami.ListSectionHeader {

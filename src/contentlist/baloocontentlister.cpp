@@ -109,7 +109,6 @@ void BalooContentLister::queryCompleted(Baloo::QueryRunnable *query)
 
 void BalooContentLister::queryResult(const ContentQuery *query, const QString &location, const QString &file)
 {
-    qWarning() << "result" << query << location << file;
     if (knownFiles.contains(file)) {
         return;
     }
