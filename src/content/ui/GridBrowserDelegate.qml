@@ -64,6 +64,7 @@ FocusScope {
             fill: parent
             // mobile uses more spacing between delegates
             margins: Kirigami.Settings.isMobile ? Kirigami.Units.largeSpacing : 0
+            bottomMargin: Kirigami.Settings.isMobile ? Kirigami.Units.largeSpacing : Kirigami.Units.smallSpacing
         }
 
         // highlight colour
