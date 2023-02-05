@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-04 00:55+0000\n"
-"PO-Revision-Date: 2023-01-29 19:54+0100\n"
+"PO-Revision-Date: 2023-02-04 09:16+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: content/ui/EpubViewerPage.qml:135
 #, kde-format
 msgid "No book selected"
-msgstr "Hautatutako libururik ez"
+msgstr "Ez da libururik hautatu"
 
 #: content/ui/EpubViewerPage.qml:138
 #, kde-format
@@ -88,12 +88,10 @@ msgid "Library"
 msgstr "Liburutegia"
 
 #: content/ui/LibraryPage.qml:80
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book"
+#, kde-format
 msgctxt "@info placeholder"
 msgid "Add some books"
-msgstr "Gehitu liburua"
+msgstr "Gehitu liburu batzuk"
 
 #: content/ui/main.qml:16 content/ui/main.qml:103 content/ui/main.qml:226
 #: main.cpp:64
@@ -105,18 +103,18 @@ msgstr "Arianna"
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
-msgstr ""
+msgstr "Etxea"
 
 #: content/ui/main.qml:143
 #, kde-format
 msgid "Home"
-msgstr ""
+msgstr "Etxea"
 
 #: content/ui/main.qml:146
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
-msgstr ""
+msgstr "Azkenaldian gehitutako liburuak"
 
 #: content/ui/main.qml:152
 #, kde-format
@@ -124,7 +122,7 @@ msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
 "touch devices)"
 msgid "Open Other..."
-msgstr ""
+msgstr "Ireki beste..."
 
 #: content/ui/main.qml:159
 #, kde-format
@@ -132,31 +130,31 @@ msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
 "properties"
 msgid "Group By"
-msgstr ""
+msgstr "Taldekatu honen arabera"
 
 #: content/ui/main.qml:162
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
-msgstr ""
+msgstr "Egilea"
 
 #: content/ui/main.qml:168
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
-msgstr ""
+msgstr "Sailak"
 
 #: content/ui/main.qml:170
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
-msgstr ""
+msgstr "Taldekatu sailen arabera"
 
 #: content/ui/main.qml:174
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
-msgstr ""
+msgstr "Argitaratzailea"
 
 #: content/ui/main.qml:180
 #, kde-format
@@ -164,39 +162,36 @@ msgctxt ""
 "Switch to the listing page showing items grouped by keywords, characters or "
 "genres"
 msgid "Keywords"
-msgstr ""
+msgstr "Gako-hitzak"
 
 #: content/ui/main.qml:182
 #, kde-format
 msgctxt "Title of the page with books grouped by keywords, character or genres"
 msgid "Group by Keywords, Characters and Genres"
-msgstr ""
+msgstr "Taldekatu Gako-hitzen, Pertsonaien eta Generoen arabera"
 
 #: content/ui/main.qml:193
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
-msgstr ""
+msgstr "Ezarpenak"
 
 #: content/ui/main.qml:246
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
-msgstr "Gehitu liburua"
+msgstr "Gehitu liburua…"
 
 #: content/ui/main.qml:267
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
-msgstr ""
+msgstr "eLiburuki fitxategiak (*.epub *.cb* *.fb2 *.fb2zip)"
 
 #: main.cpp:66
-#, fuzzy, kde-format
-#| msgid "Epub reader"
+#, kde-format
 msgid "EPub Reader"
-msgstr "Epub irakurlea"
+msgstr "EPub irakurlea"
 
 #: main.cpp:68
 #, kde-format

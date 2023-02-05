@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-04 00:55+0000\n"
-"PO-Revision-Date: 2023-02-03 13:54+0100\n"
+"PO-Revision-Date: 2023-02-04 10:45+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -103,18 +103,18 @@ msgstr "Arianna"
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
-msgstr ""
+msgstr "Inici"
 
 #: content/ui/main.qml:143
 #, kde-format
 msgid "Home"
-msgstr ""
+msgstr "Inici"
 
 #: content/ui/main.qml:146
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
-msgstr ""
+msgstr "Llibres afegits recentment"
 
 #: content/ui/main.qml:152
 #, kde-format
@@ -122,7 +122,7 @@ msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
 "touch devices)"
 msgid "Open Other..."
-msgstr ""
+msgstr "Obre altres..."
 
 #: content/ui/main.qml:159
 #, kde-format
@@ -130,31 +130,31 @@ msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
 "properties"
 msgid "Group By"
-msgstr ""
+msgstr "Agrupa per"
 
 #: content/ui/main.qml:162
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
-msgstr ""
+msgstr "Autor"
 
 #: content/ui/main.qml:168
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
-msgstr ""
+msgstr "Sèries"
 
 #: content/ui/main.qml:170
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
-msgstr ""
+msgstr "Agrupa per sèries"
 
 #: content/ui/main.qml:174
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
-msgstr ""
+msgstr "Editorial"
 
 #: content/ui/main.qml:180
 #, kde-format
@@ -162,19 +162,19 @@ msgctxt ""
 "Switch to the listing page showing items grouped by keywords, characters or "
 "genres"
 msgid "Keywords"
-msgstr ""
+msgstr "Paraules clau"
 
 #: content/ui/main.qml:182
 #, kde-format
 msgctxt "Title of the page with books grouped by keywords, character or genres"
 msgid "Group by Keywords, Characters and Genres"
-msgstr ""
+msgstr "Agrupa per paraules clau, personatges i gèneres"
 
 #: content/ui/main.qml:193
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
-msgstr ""
+msgstr "Configuració"
 
 #: content/ui/main.qml:246
 #, kde-format
@@ -224,6 +224,3 @@ msgstr "txemaq@gmail.com"
 #, kde-format
 msgid "Epub reader"
 msgstr "Lector d'EPub"
-
-#~ msgid "arianna"
-#~ msgstr "arianna"

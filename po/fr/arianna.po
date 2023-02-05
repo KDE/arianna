@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-04 00:55+0000\n"
-"PO-Revision-Date: 2023-01-31 19:07+0100\n"
+"PO-Revision-Date: 2023-02-03 19:31+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -83,12 +83,10 @@ msgid "Library"
 msgstr "Bibliothèque"
 
 #: content/ui/LibraryPage.qml:80
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book"
+#, kde-format
 msgctxt "@info placeholder"
 msgid "Add some books"
-msgstr "Ajouter un livre"
+msgstr "Ajouter quelques livres"
 
 #: content/ui/main.qml:16 content/ui/main.qml:103 content/ui/main.qml:226
 #: main.cpp:64
@@ -174,18 +172,16 @@ msgid "Settings"
 msgstr ""
 
 #: content/ui/main.qml:246
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
-msgstr "Ajouter un livre"
+msgstr "Ajouter un livre..."
 
 #: content/ui/main.qml:267
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
-msgstr ""
+msgstr "Fichiers « eBook »  (*.epub *.cb* *.fb2 *.fb2zip)"
 
 #: main.cpp:66
 #, kde-format
