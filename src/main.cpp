@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
 
     KLocalizedString::setApplicationDomain("arianna");
 
-    KAboutData about(QStringLiteral("Arianna"),
+    KAboutData about(QStringLiteral("arianna"),
                      i18n("Arianna"),
                      QStringLiteral(ARIANNA_VERSION_STRING),
                      i18n("EPub Reader"),
