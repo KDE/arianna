@@ -177,9 +177,9 @@ Kirigami.ApplicationWindow {
                         QQC2.ButtonGroup.group: placeGroup
                     }
                     PlaceItem {
-                        text: i18nc("Switch to the listing page showing items grouped by keywords, characters or genres", "Keywords");
+                        text: i18nc("Switch to the listing page showing items grouped by genres", "Keywords");
                         icon: "tag";
-                        onTriggered: Navigation.openLibrary(i18nc("Title of the page with books grouped by keywords, character or genres", "Group by Keywords, Characters and Genres"), bookListModel.keywordCategoryModel, true)
+                        onTriggered: Navigation.openLibrary(i18nc("Title of the page with books grouped by genres", "Group by Genres"), bookListModel.keywordCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                 }

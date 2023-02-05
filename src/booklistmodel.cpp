@@ -114,13 +114,7 @@ public:
             folderCategoryModel->append(entry);
         }
         for (int i = 0; i < entry->genres.size(); i++) {
-            keywordCategoryModel->addCategoryEntry(QStringLiteral("Genre/").append(entry->genres.at(i)), entry, GenreRole);
-        }
-        for (int i = 0; i < entry->characters.size(); i++) {
-            keywordCategoryModel->addCategoryEntry(QStringLiteral("Characters/").append(entry->characters.at(i)), entry, GenreRole);
-        }
-        for (int i = 0; i < entry->keywords.size(); i++) {
-            keywordCategoryModel->addCategoryEntry(QStringLiteral("Keywords/").append(entry->keywords.at(i)), entry, GenreRole);
+            keywordCategoryModel->addCategoryEntry(entry->genres.at(i), entry, GenreRole);
         }
     }
 
