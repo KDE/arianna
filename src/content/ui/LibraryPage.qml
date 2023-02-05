@@ -61,7 +61,14 @@ Kirigami.ScrollablePage {
             focus: true
 
             imageUrl: categoryEntriesModel === '' ? ('file://' + thumbnail) : ''
-            iconName: categoryEntriesModel !== '' ? thumbnail : ''
+            iconName: if (categoryEntriesModel !== '') {
+                return thumbnail;
+            } else if (thumbnail === '') {
+                return 'application-epub+zip';
+            } else {
+                return '';
+            }
+
             mainText: bookDelegate.title
             secondaryText: author ? bookDelegate.author.join(', ') : ''
 

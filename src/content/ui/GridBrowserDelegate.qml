@@ -118,7 +118,7 @@ FocusScope {
                 height: gridEntry.width - 2 * Kirigami.Units.largeSpacing
 
                 fillMode: Image.PreserveAspectFit
-                source: imageUrl ? imageUrl : ""
+                source: gridEntry.imageUrl
                 asynchronous: true
 
                 sourceSize {
@@ -148,8 +148,10 @@ FocusScope {
             Kirigami.Icon {
                 id: fallBackIcon
 
-                width: gridEntry.width - 2 * Kirigami.Units.largeSpacing
-                height: gridEntry.width - 2 * Kirigami.Units.largeSpacing
+                anchors {
+                    fill: coverImage
+                    margins: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
+                }
 
                 source: gridEntry.iconName
                 visible: source !== undefined
