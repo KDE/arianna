@@ -291,6 +291,12 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
 
             auto image = epub.getImage(epub.getMetadata(QStringLiteral("cover")).join(QChar()));
             entry->thumbnail = saveCover(epub.getMetadata(QStringLiteral("identifier")).join(QChar()), image);
+
+            const auto collections = epub.collections();
+            for (const auto &collection : collections) {
+                entry->series.append(collection.name);
+                entry->seriesVolumes.append(QString::number(collection.position));
+            }
         }
 
         d->addEntry(this, entry);

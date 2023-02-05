@@ -170,7 +170,7 @@ bool EPubContainer::parseContentFile(const QString filepath)
     for (int i = 0; i < metadataNodeList.count(); i++) {
         QDomNodeList metadataChildList = metadataNodeList.at(i).childNodes();
         for (int j = 0; j < metadataChildList.count(); j++) {
-            parseMetadataItem(metadataChildList.at(j));
+            parseMetadataItem(metadataChildList.at(j), metadataChildList);
         }
     }
 
@@ -225,7 +225,54 @@ bool EPubContainer::parseContentFile(const QString filepath)
     return true;
 }
 
-bool EPubContainer::parseMetadataItem(const QDomNode &metadataNode)
+bool EPubContainer::parseMetadataPropertyItem(const QDomElement &metadataElement, const QDomNodeList &nodeList)
+{
+    if (metadataElement.attribute(QStringLiteral("property")) == QStringLiteral("belongs-to-collection")) {
+        const QString id = QStringLiteral("#") + metadataElement.attribute(QStringLiteral("id"));
+        const QString name = metadataElement.text();
+        Collection::Type type = Collection::Type::Unknow;
+        size_t position = 0;
+
+        if (id.length() == 1) {
+            m_collections.append(Collection{name, type, position});
+            return true;
+        }
+
+        for (int i = 0; i < nodeList.size(); i++) {
+            const auto node = nodeList.at(i);
+            const auto element = node.toElement();
+            if (element.tagName() != QStringLiteral("meta")) {
+                continue;
+            }
+
+            if (element.attribute(QStringLiteral("refines")) != id) {
+                continue;
+            }
+
+            if (element.attribute(QStringLiteral("property")) == QStringLiteral("collection-type")) {
+                const auto typeString = element.text();
+                if (typeString == QStringLiteral("set")) {
+                    type = Collection::Type::Set;
+                } else if (typeString == QStringLiteral("series")) {
+                    type = Collection::Type::Series;
+                }
+                continue;
+            }
+
+            if (element.attribute(QStringLiteral("property")) == QStringLiteral("group-position")) {
+                position = element.text().toInt();
+                continue;
+            }
+        }
+
+        m_collections.append(Collection{name, type, position});
+        return true;
+    }
+
+    return false;
+}
+
+bool EPubContainer::parseMetadataItem(const QDomNode &metadataNode, const QDomNodeList &nodeList)
 {
     QDomElement metadataElement = metadataNode.toElement();
     QString tagName = metadataElement.tagName();
@@ -234,6 +281,10 @@ bool EPubContainer::parseMetadataItem(const QDomNode &metadataNode)
     QString metaValue;
 
     if (tagName == QStringLiteral("meta")) {
+        bool foundProperty = parseMetadataPropertyItem(metadataElement, nodeList);
+        if (foundProperty) {
+            return true;
+        }
         metaName = metadataElement.attribute(QStringLiteral("name"));
         metaValue = metadataElement.attribute(QStringLiteral("content"));
     } else if (metadataElement.prefix() != QStringLiteral("dc")) {
@@ -250,13 +301,30 @@ bool EPubContainer::parseMetadataItem(const QDomNode &metadataNode)
     if (metaName.isEmpty() || metaValue.isEmpty()) {
         return false;
     }
-    qWarning() << metaName << metaValue;
     if (!m_metadata.contains(metaName)) {
         m_metadata[metaName] = QStringList{};
     }
-    m_metadata[metaName].append(metaValue);
 
-    return true;
+    if (metaName != QStringLiteral("subject")) {
+        m_metadata[metaName].append(metaValue);
+        return true;
+    }
+
+    if (metaValue.contains(QStringLiteral("--"))) {
+        const auto metaValues = metaValue.split(QStringLiteral("--"));
+        if (metaValues.count() <= 1) {
+            return false;
+        }
+
+        metaValue = metaValues[metaValues.count() - 1].trimmed();
+    }
+
+    if (!m_metadata[metaName].contains(metaValue)) {
+        m_metadata[metaName].append(metaValue);
+        return true;
+    }
+
+    return false;
 }
 
 bool EPubContainer::parseManifestItem(const QDomNode &manifestNode, const QString currentFolder)
@@ -444,4 +512,9 @@ EpubPageReference::StandardType EpubPageReference::typeFromString(const QString 
     } else {
         return Other;
     }
+}
+
+QList<Collection> EPubContainer::collections() const
+{
+    return m_collections;
 }

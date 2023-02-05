@@ -92,7 +92,7 @@ Kirigami.ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredHeight: mainWindow.pageStack.globalToolBar.preferredHeight
 
-                leftPadding: Kirigami.Units.smallSpacing
+                leftPadding: Kirigami.Units.largeSpacing
                 rightPadding: Kirigami.Units.smallSpacing
                 topPadding: Kirigami.Units.smallSpacing
                 bottomPadding: Kirigami.Units.smallSpacing

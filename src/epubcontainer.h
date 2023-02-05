@@ -49,6 +49,18 @@ struct EpubPageReference {
     QString title;
 };
 
+struct Collection {
+    enum Type {
+        Set,
+        Series,
+        Unknow,
+    };
+
+    QString name;
+    Type type;
+    size_t position;
+};
+
 class EPubContainer : public QObject
 {
     Q_OBJECT
@@ -65,6 +77,7 @@ public:
 
     QSharedPointer<QIODevice> getIoDevice(const QString &path);
     QImage getImage(const QString &id);
+    QList<Collection> collections() const;
     QStringList getMetadata(const QString &key);
     QStringList getItems()
     {
@@ -83,7 +96,8 @@ private:
     bool parseMimetype();
     bool parseContainer();
     bool parseContentFile(const QString filepath);
-    bool parseMetadataItem(const QDomNode &metadataNode);
+    bool parseMetadataItem(const QDomNode &metadataNode, const QDomNodeList &nodeList);
+    bool parseMetadataPropertyItem(const QDomElement &metadataElemenent, const QDomNodeList &nodeList);
     bool parseManifestItem(const QDomNode &manifestNodes, const QString currentFolder);
     bool parseSpineItem(const QDomNode &spineNode);
     bool parseGuideItem(const QDomNode &guideItem);
@@ -94,6 +108,7 @@ private:
     const KArchiveDirectory *m_rootFolder;
 
     QHash<QString, QStringList> m_metadata;
+    QList<Collection> m_collections;
 
     QHash<QString, EpubItem> m_items;
     QStringList m_orderedItems;
