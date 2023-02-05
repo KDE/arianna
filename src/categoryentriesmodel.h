@@ -232,6 +232,9 @@ public:
     // This will iterate over all sub-models and find the model which contains the entry, or null if not found
     CategoryEntriesModel *leafModelForEntry(BookEntry *entry);
 
+    Roles role() const;
+    void setRole(Roles role);
+
 protected:
     /**
      * @return the name of the model.

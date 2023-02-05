@@ -15,6 +15,7 @@ public:
     ~Private() = default;
     CategoryEntriesModel *q;
     QString name;
+    Roles role;
     QList<BookEntry *> entries;
     QList<CategoryEntriesModel *> categoryModels;
 };
@@ -74,7 +75,16 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
         case CategoryEntriesModelRole:
             return QVariant::fromValue<CategoryEntriesModel *>(model);
         case ThumbnailRole:
-            return QStringLiteral("actor");
+            switch (model->role()) {
+            case SeriesRole:
+                return QStringLiteral("edit-group");
+            case PublisherRole:
+                return QStringLiteral("view-media-publisher");
+            case GenreRole:
+                return name() == QStringLiteral("Characters") ? QStringLiteral("actor") : QStringLiteral("tag-symbolic");
+            default:
+                return QStringLiteral("actor");
+            }
         default:
             return QString();
         }
@@ -259,6 +269,7 @@ void CategoryEntriesModel::addCategoryEntry(const QString &categoryName, BookEnt
         }
         if (!categoryModel) {
             categoryModel = new CategoryEntriesModel(this);
+            categoryModel->setRole(compareRole);
             connect(this, &CategoryEntriesModel::entryDataUpdated, categoryModel, &CategoryEntriesModel::entryDataUpdated);
             connect(this, &CategoryEntriesModel::entryRemoved, categoryModel, &CategoryEntriesModel::entryRemoved);
             categoryModel->setName(desiredCategory);
@@ -274,7 +285,7 @@ void CategoryEntriesModel::addCategoryEntry(const QString &categoryName, BookEnt
             endInsertRows();
         }
         if (splitPos > -1) {
-            categoryModel->addCategoryEntry(categoryName.mid(splitPos + 1), entry);
+            categoryModel->addCategoryEntry(categoryName.mid(splitPos + 1), entry, compareRole);
         } else if (categoryModel->indexOfFile(entry->filename) == -1) {
             categoryModel->append(entry, compareRole);
         }
@@ -360,4 +371,14 @@ void CategoryEntriesModel::entryRemove(BookEntry *entry)
         d->entries.removeAll(entry);
         endRemoveRows();
     }
+}
+
+CategoryEntriesModel::Roles CategoryEntriesModel::role() const
+{
+    return d->role;
+}
+
+void CategoryEntriesModel::setRole(Roles role)
+{
+    d->role = role;
 }
