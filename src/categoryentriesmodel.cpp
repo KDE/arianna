@@ -273,11 +273,11 @@ void CategoryEntriesModel::addCategoryEntry(const QString &categoryName, BookEnt
             d->categoryModels.insert(insertionIndex, categoryModel);
             endInsertRows();
         }
-        if (categoryModel->indexOfFile(entry->filename) == -1) {
+        if (splitPos > -1) {
+            categoryModel->addCategoryEntry(categoryName.mid(splitPos + 1), entry);
+        } else if (categoryModel->indexOfFile(entry->filename) == -1) {
             categoryModel->append(entry, compareRole);
         }
-        if (splitPos > -1)
-            categoryModel->addCategoryEntry(categoryName.mid(splitPos + 1), entry);
     }
 }
 
