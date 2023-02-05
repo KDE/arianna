@@ -44,3 +44,4 @@ Type=Application
 Categories=Network;InstantMessaging;X-SocialMedia
 X-KDE-FormFactor=desktop;tablet;handset;
 SingleMainWindow=true
+MimeType=application/epub+zip
