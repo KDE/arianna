@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-04 00:55+0000\n"
+"POT-Creation-Date: 2023-02-06 00:57+0000\n"
 "PO-Revision-Date: 2023-01-22 22:26+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -13,63 +13,69 @@ msgstr ""
 "X-POFile-SpellExtra: arianna Mastodon Niccolò Venerandi Epub\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: content/ui/EpubViewerPage.qml:135
+#: content/ui/EpubViewerPage.qml:122 content/ui/main.qml:160
+#, kde-format
+msgid "No search results"
+msgstr ""
+
+#: content/ui/EpubViewerPage.qml:130 content/ui/EpubViewerPage.qml:239
+#: content/ui/EpubViewerPage.qml:243
+#, kde-format
+msgid "Loading"
+msgstr "A carregar"
+
+#: content/ui/EpubViewerPage.qml:142
 #, kde-format
 msgid "No book selected"
 msgstr "Nenhum livro seleccionado"
 
-#: content/ui/EpubViewerPage.qml:138
+#: content/ui/EpubViewerPage.qml:145
 #, kde-format
 msgid "Open file"
 msgstr "Abrir um ficheiro"
 
-#: content/ui/EpubViewerPage.qml:158 content/ui/main.qml:266
+#: content/ui/EpubViewerPage.qml:165 content/ui/main.qml:327
 #, kde-format
 msgid "Please choose a file"
 msgstr "Escolha por favor um ficheiro"
 
-#: content/ui/EpubViewerPage.qml:200
+#: content/ui/EpubViewerPage.qml:207
 #, kde-format
 msgid "Copy"
 msgstr "Copiar"
 
-#: content/ui/EpubViewerPage.qml:206
+#: content/ui/EpubViewerPage.qml:213
 #, kde-format
 msgid "Find"
 msgstr "Procurar"
 
-#: content/ui/EpubViewerPage.qml:217
+#: content/ui/EpubViewerPage.qml:224
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1%"
 
-#: content/ui/EpubViewerPage.qml:231
+#: content/ui/EpubViewerPage.qml:238
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "Tempo restante no capítulo:"
 
-#: content/ui/EpubViewerPage.qml:232 content/ui/EpubViewerPage.qml:236
-#, kde-format
-msgid "Loading"
-msgstr "A carregar"
-
-#: content/ui/EpubViewerPage.qml:235
+#: content/ui/EpubViewerPage.qml:242
 #, kde-format
 msgid "Time left in book:"
 msgstr "Tempo restante no livro:"
 
-#: content/ui/EpubViewerPage.qml:246
+#: content/ui/EpubViewerPage.qml:253
 #, kde-format
 msgid "Previous Page"
 msgstr "Página Anterior"
 
-#: content/ui/EpubViewerPage.qml:262
+#: content/ui/EpubViewerPage.qml:269
 #, kde-format
 msgid "Next Page"
 msgstr "Página Seguinte"
 
-#: content/ui/GridBrowserDelegate.qml:190
+#: content/ui/GridBrowserDelegate.qml:193
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
@@ -80,7 +86,7 @@ msgstr ""
 msgid "Library"
 msgstr "Biblioteca"
 
-#: content/ui/LibraryPage.qml:80
+#: content/ui/LibraryPage.qml:87
 #, fuzzy, kde-format
 #| msgctxt "@action:button"
 #| msgid "Add Book"
@@ -88,31 +94,30 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Adicionar um Livro"
 
-#: content/ui/main.qml:16 content/ui/main.qml:103 content/ui/main.qml:226
-#: main.cpp:64
+#: content/ui/main.qml:17 content/ui/main.qml:287 main.cpp:64
 #, fuzzy, kde-format
 #| msgid "arianna"
 msgid "Arianna"
 msgstr "arianna"
 
-#: content/ui/main.qml:139
+#: content/ui/main.qml:200
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
 msgstr ""
 
-#: content/ui/main.qml:143
+#: content/ui/main.qml:204
 #, kde-format
 msgid "Home"
 msgstr ""
 
-#: content/ui/main.qml:146
+#: content/ui/main.qml:207
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
 msgstr ""
 
-#: content/ui/main.qml:152
+#: content/ui/main.qml:213
 #, kde-format
 msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
@@ -120,7 +125,7 @@ msgctxt ""
 msgid "Open Other..."
 msgstr ""
 
-#: content/ui/main.qml:159
+#: content/ui/main.qml:220
 #, kde-format
 msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
@@ -128,51 +133,49 @@ msgctxt ""
 msgid "Group By"
 msgstr ""
 
-#: content/ui/main.qml:162
+#: content/ui/main.qml:223
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
 msgstr ""
 
-#: content/ui/main.qml:168
+#: content/ui/main.qml:229
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
 msgstr ""
 
-#: content/ui/main.qml:170
+#: content/ui/main.qml:231
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
 msgstr ""
 
-#: content/ui/main.qml:174
+#: content/ui/main.qml:235
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
 msgstr ""
 
-#: content/ui/main.qml:180
+#: content/ui/main.qml:241
 #, kde-format
-msgctxt ""
-"Switch to the listing page showing items grouped by keywords, characters or "
-"genres"
+msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr ""
 
-#: content/ui/main.qml:182
+#: content/ui/main.qml:243
 #, kde-format
-msgctxt "Title of the page with books grouped by keywords, character or genres"
-msgid "Group by Keywords, Characters and Genres"
+msgctxt "Title of the page with books grouped by genres"
+msgid "Group by Genres"
 msgstr ""
 
-#: content/ui/main.qml:193
+#: content/ui/main.qml:254
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
 msgstr ""
 
-#: content/ui/main.qml:246
+#: content/ui/main.qml:307
 #, fuzzy, kde-format
 #| msgctxt "@action:button"
 #| msgid "Add Book"
@@ -180,7 +183,7 @@ msgctxt "@action:button"
 msgid "Add Book…"
 msgstr "Adicionar um Livro"
 
-#: content/ui/main.qml:267
+#: content/ui/main.qml:328
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
