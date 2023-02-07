@@ -95,10 +95,9 @@ msgid "Add some books"
 msgstr "Adicionar um Livro"
 
 #: content/ui/main.qml:17 content/ui/main.qml:287 main.cpp:64
-#, fuzzy, kde-format
-#| msgid "arianna"
+#, kde-format
 msgid "Arianna"
-msgstr "arianna"
+msgstr "Arianna"
 
 #: content/ui/main.qml:200
 #, kde-format
@@ -115,7 +114,7 @@ msgstr ""
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
-msgstr ""
+msgstr "Livros Adicionados Recentemente"
 
 #: content/ui/main.qml:213
 #, kde-format
@@ -123,7 +122,7 @@ msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
 "touch devices)"
 msgid "Open Other..."
-msgstr ""
+msgstr "Abrir Outro..."
 
 #: content/ui/main.qml:220
 #, kde-format
@@ -149,7 +148,7 @@ msgstr ""
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
-msgstr ""
+msgstr "Agrupar pela Série"
 
 #: content/ui/main.qml:235
 #, kde-format
@@ -173,7 +172,7 @@ msgstr ""
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
-msgstr ""
+msgstr "Configuração"
 
 #: content/ui/main.qml:307
 #, fuzzy, kde-format
@@ -190,10 +189,9 @@ msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
 msgstr ""
 
 #: main.cpp:66
-#, fuzzy, kde-format
-#| msgid "Epub reader"
+#, kde-format
 msgid "EPub Reader"
-msgstr "Leitor de Epub's"
+msgstr "Leitor de EPub"
 
 #: main.cpp:68
 #, kde-format

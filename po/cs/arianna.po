@@ -110,13 +110,13 @@ msgstr ""
 #: content/ui/main.qml:204
 #, kde-format
 msgid "Home"
-msgstr ""
+msgstr "Domů"
 
 #: content/ui/main.qml:207
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
-msgstr ""
+msgstr "Nedávno přidané knihy"
 
 #: content/ui/main.qml:213
 #, kde-format
@@ -124,7 +124,7 @@ msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
 "touch devices)"
 msgid "Open Other..."
-msgstr ""
+msgstr "Otevřít jinou..."
 
 #: content/ui/main.qml:220
 #, kde-format
@@ -150,7 +150,7 @@ msgstr ""
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
-msgstr ""
+msgstr "Seskupit podle seriálu"
 
 #: content/ui/main.qml:235
 #, kde-format
@@ -174,7 +174,7 @@ msgstr ""
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
-msgstr ""
+msgstr "Nastavení"
 
 #: content/ui/main.qml:307
 #, kde-format
@@ -224,6 +224,3 @@ msgstr "vit@pelcak.org"
 #, kde-format
 msgid "Epub reader"
 msgstr "Čtečka Epub"
-
-#~ msgid "arianna"
-#~ msgstr "arianna"

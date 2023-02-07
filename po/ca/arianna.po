@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 00:57+0000\n"
-"PO-Revision-Date: 2023-02-04 10:45+0100\n"
+"PO-Revision-Date: 2023-02-06 13:01+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: content/ui/EpubViewerPage.qml:122 content/ui/main.qml:160
 #, kde-format
 msgid "No search results"
-msgstr ""
+msgstr "Cerca sense cap resultat"
 
 #: content/ui/EpubViewerPage.qml:130 content/ui/EpubViewerPage.qml:239
 #: content/ui/EpubViewerPage.qml:243
@@ -162,22 +162,16 @@ msgid "Publisher"
 msgstr "Editorial"
 
 #: content/ui/main.qml:241
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Switch to the listing page showing items grouped by keywords, characters "
-#| "or genres"
-#| msgid "Keywords"
+#, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Paraules clau"
 
 #: content/ui/main.qml:243
-#, fuzzy, kde-format
-#| msgctxt "Title of the page with books grouped by what series they are in"
-#| msgid "Group by Series"
+#, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
-msgstr "Agrupa per sèries"
+msgstr "Agrupa per gèneres"
 
 #: content/ui/main.qml:254
 #, kde-format
@@ -233,8 +227,3 @@ msgstr "txemaq@gmail.com"
 #, kde-format
 msgid "Epub reader"
 msgstr "Lector d'EPub"
-
-#~ msgctxt ""
-#~ "Title of the page with books grouped by keywords, character or genres"
-#~ msgid "Group by Keywords, Characters and Genres"
-#~ msgstr "Agrupa per paraules clau, personatges i gèneres"
