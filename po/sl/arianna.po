@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 00:57+0000\n"
-"PO-Revision-Date: 2023-02-04 08:32+0100\n"
+"PO-Revision-Date: 2023-02-07 08:24+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -16,12 +16,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: content/ui/EpubViewerPage.qml:122 content/ui/main.qml:160
 #, kde-format
 msgid "No search results"
-msgstr ""
+msgstr "Ni zadetkov iskanja"
 
 #: content/ui/EpubViewerPage.qml:130 content/ui/EpubViewerPage.qml:239
 #: content/ui/EpubViewerPage.qml:243
@@ -160,22 +160,16 @@ msgid "Publisher"
 msgstr "Izdajatelj"
 
 #: content/ui/main.qml:241
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Switch to the listing page showing items grouped by keywords, characters "
-#| "or genres"
-#| msgid "Keywords"
+#, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Ključne besede"
 
 #: content/ui/main.qml:243
-#, fuzzy, kde-format
-#| msgctxt "Title of the page with books grouped by what series they are in"
-#| msgid "Group by Series"
+#, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
-msgstr "Grupiraj po serijah"
+msgstr "Grupiraj po žanrih"
 
 #: content/ui/main.qml:254
 #, kde-format

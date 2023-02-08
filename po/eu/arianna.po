@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 00:57+0000\n"
-"PO-Revision-Date: 2023-02-04 09:16+0100\n"
+"PO-Revision-Date: 2023-02-07 20:12+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: content/ui/EpubViewerPage.qml:122 content/ui/main.qml:160
 #, kde-format
 msgid "No search results"
-msgstr ""
+msgstr "Ez dago bilaketaren emaitzarik"
 
 #: content/ui/EpubViewerPage.qml:130 content/ui/EpubViewerPage.qml:239
 #: content/ui/EpubViewerPage.qml:243
@@ -162,22 +162,16 @@ msgid "Publisher"
 msgstr "Argitaratzailea"
 
 #: content/ui/main.qml:241
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Switch to the listing page showing items grouped by keywords, characters "
-#| "or genres"
-#| msgid "Keywords"
+#, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Gako-hitzak"
 
 #: content/ui/main.qml:243
-#, fuzzy, kde-format
-#| msgctxt "Title of the page with books grouped by what series they are in"
-#| msgid "Group by Series"
+#, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
-msgstr "Taldekatu sailen arabera"
+msgstr "Taldekatu generoen arabera"
 
 #: content/ui/main.qml:254
 #, kde-format
