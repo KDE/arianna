@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 00:57+0000\n"
-"PO-Revision-Date: 2023-02-04 19:54+0100\n"
+"PO-Revision-Date: 2023-02-07 20:20+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -18,7 +18,7 @@ msgstr ""
 #: content/ui/EpubViewerPage.qml:122 content/ui/main.qml:160
 #, kde-format
 msgid "No search results"
-msgstr ""
+msgstr "Aucun résultat de recherche"
 
 #: content/ui/EpubViewerPage.qml:130 content/ui/EpubViewerPage.qml:239
 #: content/ui/EpubViewerPage.qml:243
@@ -157,22 +157,16 @@ msgid "Publisher"
 msgstr "Éditeur"
 
 #: content/ui/main.qml:241
-#, fuzzy, kde-format
-#| msgctxt ""
-#| "Switch to the listing page showing items grouped by keywords, characters "
-#| "or genres"
-#| msgid "Keywords"
+#, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Mots clés"
 
 #: content/ui/main.qml:243
-#, fuzzy, kde-format
-#| msgctxt "Title of the page with books grouped by what series they are in"
-#| msgid "Group by Series"
+#, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
-msgstr "Regrouper par séries"
+msgstr "Regrouper par genres"
 
 #: content/ui/main.qml:254
 #, kde-format
