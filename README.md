@@ -19,4 +19,4 @@ This project is licensed under the GNU General Public License 3.
 
 - Thanks to the epub.js developers for providing the heavy lifting for viewing epubs
 - Thanks to the Foliate developers for the very large inspiration in how to integrate epub.js
-- Thanks to Leinir for his work on Peruse from whom the library handling is largely copied
+- Thanks to Leinir for their work on Peruse from whom the library handling is largely copied
