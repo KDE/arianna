@@ -24,6 +24,7 @@
   <name xml:lang="tr">Arianna</name>
   <name xml:lang="uk">Arianna</name>
   <name xml:lang="x-test">xxAriannaxx</name>
+  <name xml:lang="zh-CN">Arianna</name>
   <summary>EPub Reader</summary>
   <summary xml:lang="ca">Lector d'EPub</summary>
   <summary xml:lang="ca-valencia">Lector d'EPub</summary>
@@ -40,6 +41,7 @@
   <summary xml:lang="tr">EPub Okuyucu</summary>
   <summary xml:lang="uk">Читання EPub</summary>
   <summary xml:lang="x-test">xxEPub Readerxx</summary>
+  <summary xml:lang="zh-CN">EPub 阅读器</summary>
   <description>
     <p>An EPub Reader</p>
     <p xml:lang="ca">Un lector d'EPub</p>
@@ -57,6 +59,7 @@
     <p xml:lang="tr">Bir EPub Okuyucusu</p>
     <p xml:lang="uk">Програма для читання EPub</p>
     <p xml:lang="x-test">xxAn EPub Readerxx</p>
+    <p xml:lang="zh-CN">EPub 阅读器</p>
   </description>
   <url type="homepage">https://apps.kde.org/arianna/</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?product=Arianna</url>
@@ -79,6 +82,7 @@
   <developer_name xml:lang="tr">KDE Topluluğu</developer_name>
   <developer_name xml:lang="uk">Спільнота KDE</developer_name>
   <developer_name xml:lang="x-test">xxThe KDE Communityxx</developer_name>
+  <developer_name xml:lang="zh-CN">KDE 社区</developer_name>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
   <custom>
