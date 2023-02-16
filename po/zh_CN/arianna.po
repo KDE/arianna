@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-06 00:57+0000\n"
-"PO-Revision-Date: 2023-02-07 11:03\n"
+"PO-Revision-Date: 2023-02-15 11:05\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -20,103 +20,103 @@ msgstr ""
 #: content/ui/EpubViewerPage.qml:122 content/ui/main.qml:160
 #, kde-format
 msgid "No search results"
-msgstr ""
+msgstr "无搜索结果"
 
 #: content/ui/EpubViewerPage.qml:130 content/ui/EpubViewerPage.qml:239
 #: content/ui/EpubViewerPage.qml:243
 #, kde-format
 msgid "Loading"
-msgstr ""
+msgstr "正在加载"
 
 #: content/ui/EpubViewerPage.qml:142
 #, kde-format
 msgid "No book selected"
-msgstr ""
+msgstr "未选择书籍"
 
 #: content/ui/EpubViewerPage.qml:145
 #, kde-format
 msgid "Open file"
-msgstr ""
+msgstr "打开文件"
 
 #: content/ui/EpubViewerPage.qml:165 content/ui/main.qml:327
 #, kde-format
 msgid "Please choose a file"
-msgstr ""
+msgstr "请选择一个文件"
 
 #: content/ui/EpubViewerPage.qml:207
 #, kde-format
 msgid "Copy"
-msgstr ""
+msgstr "复制"
 
 #: content/ui/EpubViewerPage.qml:213
 #, kde-format
 msgid "Find"
-msgstr ""
+msgstr "查找"
 
 #: content/ui/EpubViewerPage.qml:224
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
-msgstr ""
+msgstr "%1%"
 
 #: content/ui/EpubViewerPage.qml:238
 #, kde-format
 msgid "Time left in chapter:"
-msgstr ""
+msgstr "章节剩余时间："
 
 #: content/ui/EpubViewerPage.qml:242
 #, kde-format
 msgid "Time left in book:"
-msgstr ""
+msgstr "全书剩余时间："
 
 #: content/ui/EpubViewerPage.qml:253
 #, kde-format
 msgid "Previous Page"
-msgstr ""
+msgstr "上一页"
 
 #: content/ui/EpubViewerPage.qml:269
 #, kde-format
 msgid "Next Page"
-msgstr ""
+msgstr "下一页"
 
 #: content/ui/GridBrowserDelegate.qml:193
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
-msgstr ""
+msgstr "新建"
 
 #: content/ui/LibraryPage.qml:18
 #, kde-format
 msgid "Library"
-msgstr ""
+msgstr "图书馆"
 
 #: content/ui/LibraryPage.qml:87
 #, kde-format
 msgctxt "@info placeholder"
 msgid "Add some books"
-msgstr ""
+msgstr "添加图书"
 
 #: content/ui/main.qml:17 content/ui/main.qml:287 main.cpp:64
 #, kde-format
 msgid "Arianna"
-msgstr ""
+msgstr "Arianna"
 
 #: content/ui/main.qml:200
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
-msgstr ""
+msgstr "首页"
 
 #: content/ui/main.qml:204
 #, kde-format
 msgid "Home"
-msgstr ""
+msgstr "首页"
 
 #: content/ui/main.qml:207
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
-msgstr ""
+msgstr "最近添加的图书"
 
 #: content/ui/main.qml:213
 #, kde-format
@@ -124,7 +124,7 @@ msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
 "touch devices)"
 msgid "Open Other..."
-msgstr ""
+msgstr "打开其他"
 
 #: content/ui/main.qml:220
 #, kde-format
@@ -132,81 +132,81 @@ msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
 "properties"
 msgid "Group By"
-msgstr ""
+msgstr "分组依据"
 
 #: content/ui/main.qml:223
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
-msgstr ""
+msgstr "作者"
 
 #: content/ui/main.qml:229
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
-msgstr ""
+msgstr "系列"
 
 #: content/ui/main.qml:231
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
-msgstr ""
+msgstr "按系列分组"
 
 #: content/ui/main.qml:235
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
-msgstr ""
+msgstr "出版社"
 
 #: content/ui/main.qml:241
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
-msgstr ""
+msgstr "关键词"
 
 #: content/ui/main.qml:243
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
-msgstr ""
+msgstr "按流派分组"
 
 #: content/ui/main.qml:254
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 #: content/ui/main.qml:307
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
-msgstr ""
+msgstr "添加图书"
 
 #: content/ui/main.qml:328
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
-msgstr ""
+msgstr "eBook 文件 (*.epub *.cb* *.fb2 *.fb2zip)"
 
 #: main.cpp:66
 #, kde-format
 msgid "EPub Reader"
-msgstr ""
+msgstr "EPub 阅读器"
 
 #: main.cpp:68
 #, kde-format
 msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
-msgstr ""
+msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 
 #: main.cpp:69
 #, kde-format
 msgid "Niccolò Venerandi"
-msgstr ""
+msgstr "Niccolò Venerandi"
 
 #: main.cpp:69
 #, kde-format
 msgid "Maintainer"
-msgstr ""
+msgstr "维护人员"
 
 #: main.cpp:70
 #, kde-format
@@ -223,4 +223,4 @@ msgstr ""
 #: main.cpp:83
 #, kde-format
 msgid "Epub reader"
-msgstr ""
+msgstr "EPub 阅读器"
