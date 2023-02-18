@@ -293,7 +293,6 @@ Kirigami.Page {
         property bool locationsReady: false
         property var metadata: null
         property var top: ({})
-
         property string file: root.url
         function get(script, callback) {
             return view.runJavaScript(`JSON.stringify(${script})`, callback)
