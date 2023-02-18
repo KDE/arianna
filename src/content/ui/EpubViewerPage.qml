@@ -250,7 +250,7 @@ Kirigami.Page {
                 QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
             }
             QQC2.ToolButton {
-                text: i18n("Previous Page")
+                text: i18n("Previous aaaaaaaaaaa")
                 display: QQC2.AbstractButton.IconOnly
                 icon.name: "arrow-left"
                 onClicked: view.prev()
@@ -288,6 +288,12 @@ Kirigami.Page {
         property bool locationsReady: false
         property var metadata: null
         property var top: ({})
+
+        property var readerTheme
+        readerTheme: Kirigami.Theme.backgroundColor
+
+        onReaderThemeChanged: setStyle()
+
         property string file: root.url
         function get(script, callback) {
             return view.runJavaScript(`JSON.stringify(${script})`, callback)
