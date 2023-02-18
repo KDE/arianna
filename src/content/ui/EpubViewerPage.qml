@@ -18,6 +18,11 @@ Kirigami.Page {
     property string filename
     property var locations
     property var currentLocation
+    property var readerTheme
+    readerTheme: Kirigami.Theme.backgroundColor
+
+    onReaderThemeChanged: backend.setStyle()
+
 
     readonly property bool hideSidebar: true
 
@@ -288,11 +293,6 @@ Kirigami.Page {
         property bool locationsReady: false
         property var metadata: null
         property var top: ({})
-
-        property var readerTheme
-        readerTheme: Kirigami.Theme.backgroundColor
-
-        onReaderThemeChanged: setStyle()
 
         property string file: root.url
         function get(script, callback) {
