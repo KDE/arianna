@@ -255,7 +255,7 @@ Kirigami.Page {
                 QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
             }
             QQC2.ToolButton {
-                text: i18n("Previous aaaaaaaaaaa")
+                text: i18n("Previous Page")
                 display: QQC2.AbstractButton.IconOnly
                 icon.name: "arrow-left"
                 onClicked: view.prev()
