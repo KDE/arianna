@@ -18,8 +18,7 @@ Kirigami.Page {
     property string filename
     property var locations
     property var currentLocation
-    property var readerTheme
-    readerTheme: Kirigami.Theme.backgroundColor
+    readonly property color readerTheme: Kirigami.Theme.backgroundColor
 
     onReaderThemeChanged: backend.setStyle()
 
