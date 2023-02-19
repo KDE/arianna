@@ -22,7 +22,6 @@ Kirigami.Page {
 
     onReaderThemeChanged: backend.setStyle()
 
-
     readonly property bool hideSidebar: true
 
     signal relocated(newLocation: var, newProgress: int)
