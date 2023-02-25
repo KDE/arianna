@@ -2,8 +2,7 @@
 # SPDX-License-Identifier: CC0-1.0
 
 include:
-# Not happy enough yet
-#  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/reuse-lint.yml
+  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/reuse-lint.yml
   - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux.yml
 # Disabled because Qt6WebEngine isn't on the CI yet
 #  - https://invent.kde.org/sysadmin/ci-utilities/raw/master/gitlab-templates/linux-qt6.yml
