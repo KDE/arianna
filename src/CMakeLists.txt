@@ -39,7 +39,6 @@ target_link_libraries(arianna_static PUBLIC
     Qt::Gui
     Qt::Network
     Qt::WebSockets
-    Qt::WebEngine
     Qt::QuickControls2
     Qt::Svg
     Qt::Sql
@@ -52,6 +51,12 @@ target_link_libraries(arianna_static PUBLIC
     KF5::FileMetaData
     KF5::Archive
     KF5::CoreAddons)
+
+if (${QT_MAJOR_VERSION} STREQUAL 5)
+    target_link_libraries(arianna_static PUBLIC Qt::WebEngine)
+else()
+    target_link_libraries(arianna_static PUBLIC Qt::WebEngineQuick)
+endif()
 
 if (NOT WIN32)
     target_link_libraries(arianna_static PUBLIC KF5::Baloo)

@@ -35,7 +35,7 @@ ecm_setup_version(${PROJECT_VERSION}
     VERSION_HEADER ${CMAKE_CURRENT_BINARY_DIR}/arianna-version.h
 )
 
-find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} NO_MODULE COMPONENTS Widgets Core Quick Gui QuickControls2 WebSockets Test Svg Sql WebEngine)
+find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} NO_MODULE COMPONENTS Widgets Core Quick Gui QuickControls2 WebSockets Test Svg Sql)
 set_package_properties(Qt${QT_MAJOR_VERSION} PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
@@ -51,6 +51,12 @@ set_package_properties(KF5Kirigami2 PROPERTIES
 )
 find_package(KF5KirigamiAddons 0.6 REQUIRED)
 find_package(KF5QQC2DesktopStyle REQUIRED)
+
+if (${QT_MAJOR_VERSION} STREQUAL 5)
+    find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} NO_MODULE COMPONENTS WebEngine)
+else()
+    find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} NO_MODULE COMPONENTS WebEngineQuick)
+endif()
 
 if (NOT WIN32)
     find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS Baloo)
