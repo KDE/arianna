@@ -2,7 +2,9 @@
 // SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accepted-LGPL
 
 #include "contentlist.h"
+#ifdef HAVE_BALOO
 #include "baloocontentlister.h"
+#endif
 #include "filesystemcontentlister.h"
 #include "manualcontentlister.h"
 
@@ -55,6 +57,7 @@ ContentList::ContentList(QObject *parent)
     : QAbstractListModel(parent)
     , d(new Private)
 {
+#ifdef HAVE_BALOO
     auto baloo = new BalooContentLister(this);
     if (baloo->balooEnabled()) {
         d->actualContentList = baloo;
@@ -62,6 +65,10 @@ ContentList::ContentList(QObject *parent)
         baloo->deleteLater();
         d->actualContentList = new FilesystemContentLister(this);
     }
+#else
+    d->actualContentList = new FilesystemContentLister(this);
+#endif
+
     connect(d->actualContentList, &ContentListerBase::fileFound, this, &ContentList::fileFound);
     connect(d->actualContentList, &ContentListerBase::searchCompleted, this, &ContentList::searchCompleted);
 

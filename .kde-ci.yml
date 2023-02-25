@@ -12,9 +12,12 @@ Dependencies:
     'libraries/kirigami-addons': '@latest'
     'frameworks/qqc2-desktop-style': '@latest'
     'frameworks/kwindowsystem': '@latest'
-    'frameworks/baloo': '@latest'
     'frameworks/kfilemetadata': '@latest'
     'frameworks/kdbusaddons': '@latest'
+
+- 'on': ['Linux', 'FreeBSD']
+  'require':
+    'frameworks/baloo': '@latest'
 
 Options:
   require-passing-tests-on: [ 'Linux', 'FreeBSD', 'Windows' ]

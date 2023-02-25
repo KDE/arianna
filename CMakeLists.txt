@@ -40,7 +40,7 @@ set_package_properties(Qt${QT_MAJOR_VERSION} PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
 )
-find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS Kirigami2 I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Baloo Archive)
+find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS Kirigami2 I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Archive)
 set_package_properties(KF5 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
@@ -51,6 +51,10 @@ set_package_properties(KF5Kirigami2 PROPERTIES
 )
 find_package(KF5KirigamiAddons 0.6 REQUIRED)
 find_package(KF5QQC2DesktopStyle REQUIRED)
+
+if (NOT WIN32)
+    find_package(KF5 ${KF5_MIN_VERSION} COMPONENTS Baloo)
+endif()
 
 add_definitions(-DQT_NO_FOREACH -DQT_NO_KEYWORDS)
 

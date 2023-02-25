@@ -24,7 +24,6 @@ set(arianna_src
     navigation.h
     navigation.cpp
 
-    contentlist/baloocontentlister.cpp
     contentlist/contentlist.cpp
     contentlist/contentquery.cpp
     contentlist/contentlisterbase.cpp
@@ -50,10 +49,15 @@ target_link_libraries(arianna_static PUBLIC
     KF5::ConfigGui
     KF5::WindowSystem
     KF5::DBusAddons
-    KF5::Baloo
     KF5::FileMetaData
     KF5::Archive
     KF5::CoreAddons)
+
+if (NOT WIN32)
+    target_link_libraries(arianna_static PUBLIC KF5::Baloo)
+    target_sources(arianna_static PRIVATE contentlist/baloocontentlister.cpp)
+    target_compile_definitions(arianna_static PUBLIC -DHAVE_BALOO)
+endif()
 
 if (BUILD_TESTING)
     add_subdirectory(autotests)
