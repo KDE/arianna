@@ -255,6 +255,7 @@ Kirigami.ApplicationWindow {
                 icon: "configure"
                 onTriggered: changeCategory(settingsPage);
                 QQC2.ButtonGroup.group: placeGroup
+                visible: false
             }
         }
     }
