@@ -79,7 +79,7 @@ public Q_SLOTS:
      *
      * \param type The new type.
      */
-    void setType(Type type);
+    void setType(ContentQuery::Type type);
     /**
      * Set the searchString property.
      *

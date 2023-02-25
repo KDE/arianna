@@ -126,7 +126,7 @@ public:
         CharacterRole, /// For getting a stringlist with names of characters in this book.
         LocationsRole /// Epub locations cache
     };
-    Q_ENUMS(Roles)
+    Q_ENUM(Roles)
 
     /**
      * @returns names for the extra roles defined.
@@ -165,7 +165,7 @@ public:
      * @param compareRole The role that determines the data to sort the entry into.
      * Defaults to the Book title.
      */
-    Q_INVOKABLE void append(BookEntry *entry, Roles compareRole = TitleRole);
+    Q_INVOKABLE void append(BookEntry *entry, CategoryEntriesModel::Roles compareRole = TitleRole);
 
     /**
      * \brief Remove all entries from the model
@@ -177,7 +177,7 @@ public:
      *
      * This also adds it to the model's list of entries.
      */
-    void addCategoryEntry(const QString &categoryName, BookEntry *entry, Roles compareRole = TitleRole);
+    void addCategoryEntry(const QString &categoryName, BookEntry *entry, CategoryEntriesModel::Roles compareRole = TitleRole);
 
     /**
      * @param index an integer index pointing at the desired book.

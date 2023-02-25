@@ -85,7 +85,7 @@ public:
             folderCategoryModel = new CategoryEntriesModel(q);
             connect(q, &CategoryEntriesModel::entryDataUpdated, folderCategoryModel, &CategoryEntriesModel::entryDataUpdated);
             connect(q, &CategoryEntriesModel::entryRemoved, folderCategoryModel, &CategoryEntriesModel::entryRemoved);
-            Q_EMIT q->folderCategoryModel();
+            q->folderCategoryModel();
         }
     }
 
@@ -224,18 +224,6 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
         QFileInfo fileinfo(entry->filename);
         entry->title = fileinfo.completeBaseName();
 
-        if (entry->filename.toLower().endsWith(QStringLiteral("cbr")) || entry->filename.toLower().endsWith(QStringLiteral("cbz"))) {
-            entry->thumbnail = QStringLiteral("image://comiccover/").append(entry->filename);
-        }
-#ifdef USE_PERUSE_PDFTHUMBNAILER
-        else if (entry->filename.toLower().endsWith(QStringLiteral("pdf"))) {
-            entry->thumbnail = QStringLiteral("image://pdfcover/").append(entry->filename);
-        }
-#endif
-        else {
-            entry->thumbnail = QStringLiteral("image://preview/").append(entry->filename);
-        }
-
         KFileMetaData::UserMetaData data(entry->filename);
         entry->rating = data.rating();
         entry->comment = data.userComment();
@@ -269,7 +257,8 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
         if (mimetype == QStringLiteral("application/epub+zip")) {
             EPubContainer epub(nullptr);
             epub.openFile(entry->filename);
-            entry->title = epub.getMetadata(QStringLiteral("title"))[0];
+            const auto titles = epub.getMetadata(QStringLiteral("title"));
+            entry->title = titles[0];
             entry->author = epub.getMetadata(QStringLiteral("creator"));
             entry->rights = epub.getMetadata(QStringLiteral("rights")).join(QStringLiteral(", "));
             entry->source = epub.getMetadata(QStringLiteral("source")).join(QStringLiteral(", "));
@@ -312,7 +301,7 @@ CategoryEntriesModel *BookListModel::seriesCategoryModel() const
 
 CategoryEntriesModel *BookListModel::seriesModelForEntry(const QString &fileName)
 {
-    for (BookEntry *entry : d->entries) {
+    for (BookEntry *entry : std::as_const(d->entries)) {
         if (entry->filename == fileName) {
             return d->seriesCategoryModel->leafModelForEntry(entry);
         }
@@ -342,7 +331,7 @@ int BookListModel::count() const
 
 void BookListModel::setBookData(const QString &fileName, const QString &property, const QString &value)
 {
-    for (BookEntry *entry : d->entries) {
+    for (BookEntry *entry : std::as_const(d->entries)) {
         if (entry->filename == fileName) {
             if (property == QStringLiteral("currentLocation")) {
                 entry->currentLocation = value;
@@ -376,7 +365,7 @@ void BookListModel::removeBook(const QString &fileName, bool deleteFile)
         // job->start();
     }
 
-    for (BookEntry *entry : d->entries) {
+    for (BookEntry *entry : std::as_const(d->entries)) {
         if (entry->filename == fileName) {
             Q_EMIT entryRemoved(entry);
             BookDatabase::self().removeEntry(entry);
@@ -389,7 +378,7 @@ void BookListModel::removeBook(const QString &fileName, bool deleteFile)
 QStringList BookListModel::knownBookFiles() const
 {
     QStringList files;
-    for (BookEntry *entry : d->entries) {
+    for (BookEntry *entry : std::as_const(d->entries)) {
         files.append(entry->filename);
     }
     return files;

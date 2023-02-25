@@ -120,9 +120,9 @@ int main(int argc, char *argv[])
                                  if (arguments.count() > 1) {
                                      BookEntry *entry = BookDatabase::self().loadEntry(arguments[1]);
                                      if (entry) {
-                                         navigation.openBook(arguments[1], entry->locations, entry->currentLocation);
+                                         Q_EMIT navigation.openBook(arguments[1], entry->locations, entry->currentLocation);
                                      } else {
-                                         navigation.openBook(arguments[1], {}, {});
+                                         Q_EMIT navigation.openBook(arguments[1], {}, {});
                                      }
                                  }
                                  return;
@@ -145,9 +145,9 @@ int main(int argc, char *argv[])
     if (args.count() > 0) {
         BookEntry *entry = BookDatabase::self().loadEntry(args[0]);
         if (entry) {
-            navigation.openBook(args[0], entry->locations, entry->currentLocation);
+            Q_EMIT navigation.openBook(args[0], entry->locations, entry->currentLocation);
         } else {
-            navigation.openBook(args[0], {}, {});
+            Q_EMIT navigation.openBook(args[0], {}, {});
         }
     }
 

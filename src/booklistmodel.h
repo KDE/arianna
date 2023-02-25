@@ -70,8 +70,15 @@ public:
     void componentComplete() override;
 
     /// \brief Enum holding the different categories implemented.
-    enum Grouping { GroupByNone = 0, GroupByRecentlyAdded, GroupByRecentlyRead, GroupByTitle, GroupByAuthor, GroupByPublisher };
-    Q_ENUMS(Grouping)
+    enum Grouping {
+        GroupByNone = 0,
+        GroupByRecentlyAdded,
+        GroupByRecentlyRead,
+        GroupByTitle,
+        GroupByAuthor,
+        GroupByPublisher,
+    };
+    Q_ENUM(Grouping)
 
     /// @return the contentModel. Used for searching.
     ContentList *contentModel() const;
@@ -149,8 +156,6 @@ Q_SIGNALS:
     void contentModelChanged();
     /// \brief Fires when the keywordCategoryModel has changed or finished initializing.
     void keywordCategoryModelChanged();
-    /// \brief Fires when the count has changed.
-    void countChanged();
     /// \brief Fires when the authorCategoryModel has changed or finished initializing.
     void authorCategoryModelChanged();
 

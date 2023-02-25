@@ -68,7 +68,6 @@ bool BalooContentLister::balooEnabled() const
             QProcess statuscheck;
             statuscheck.start(QStringLiteral("balooctl"), QStringList() << QStringLiteral("status"));
             statuscheck.waitForFinished();
-            QString output = QString::fromUtf8(statuscheck.readAll());
             if (statuscheck.exitStatus() == QProcess::CrashExit || statuscheck.exitCode() != 0) {
                 result = false;
             }
@@ -81,7 +80,8 @@ bool BalooContentLister::balooEnabled() const
 void BalooContentLister::startSearch(const QList<ContentQuery *> &queries)
 {
     for (const auto &query : queries) {
-        for (const auto &location : query->locations()) {
+        const auto locations = query->locations();
+        for (const auto &location : locations) {
             d->queries.append(d->createQuery(query, location));
         }
 
@@ -109,6 +109,7 @@ void BalooContentLister::queryCompleted(Baloo::QueryRunnable *query)
 
 void BalooContentLister::queryResult(const ContentQuery *query, const QString &location, const QString &file)
 {
+    Q_UNUSED(location)
     if (knownFiles.contains(file)) {
         return;
     }

@@ -198,7 +198,7 @@ bool EPubContainer::parseContentFile(const QString filepath)
         QDomElement spineElement = spineNodeList.at(i).toElement();
 
         QString tocId = spineElement.attribute(QStringLiteral("toc"));
-        if (!tocId.isEmpty() && m_items.keys().contains(tocId)) {
+        if (!tocId.isEmpty() && m_items.contains(tocId)) {
             EpubPageReference tocReference;
             tocReference.title = tr("Table of Contents");
             tocReference.target = tocId;
@@ -372,7 +372,7 @@ bool EPubContainer::parseSpineItem(const QDomNode &spineNode)
         return false;
     }
 
-    if (!m_items.keys().contains(referenceName)) {
+    if (!m_items.contains(referenceName)) {
         qWarning() << "Unable to find" << referenceName << "in items";
         return false;
     }

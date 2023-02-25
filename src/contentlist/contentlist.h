@@ -25,7 +25,7 @@ class ContentList : public QAbstractListModel, public QQmlParserStatus
     /**
      * \brief The list of query parameters that make up this search.
      */
-    Q_PROPERTY(QQmlListProperty<ContentQuery> queries READ queries)
+    Q_PROPERTY(QQmlListProperty<ContentQuery> queries READ queries CONSTANT)
     /**
      * TODO: No idea.
      */

@@ -17,7 +17,7 @@ SPDX-License-Identifier: CC0-1.0
       QStringList defaultLocations;
       defaultLocations = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation);
       defaultLocations &lt;&lt; QStandardPaths::standardLocations(QStandardPaths::DownloadLocation);
-      defaultLocations &lt;&lt; QStringLiteral("%1/books").arg(QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation).first());
+      defaultLocations &lt;&lt; QStringLiteral("%1/books").arg(QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation).constFirst());
       </code>
       <default code="true">defaultLocations</default>
     </entry>

@@ -144,7 +144,8 @@ QStringList contentQueryImages()
     // only popylate once.
     static QStringList result;
     if (result.isEmpty()) {
-        for (const auto &item : QImageReader::supportedMimeTypes()) {
+        const auto mimeTypes = QImageReader::supportedMimeTypes();
+        for (const auto &item : mimeTypes) {
             result << QString::fromUtf8(item);
         }
     }

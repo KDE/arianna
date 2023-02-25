@@ -241,7 +241,7 @@ CategoryEntriesModel *CategoryEntriesModel::leafModelForEntry(BookEntry *entry)
             model = this;
         }
     } else {
-        for (CategoryEntriesModel *testModel : d->categoryModels) {
+        for (CategoryEntriesModel *testModel : std::as_const(d->categoryModels)) {
             model = testModel->leafModelForEntry(entry);
             if (model) {
                 break;
@@ -305,7 +305,7 @@ int CategoryEntriesModel::indexOfFile(const QString &filename)
 {
     int index = -1, i = 0;
     if (QFile::exists(filename)) {
-        for (BookEntry *entry : d->entries) {
+        for (BookEntry *entry : std::as_const(d->entries)) {
             if (entry->filename == filename) {
                 index = i;
                 break;
@@ -359,7 +359,7 @@ void CategoryEntriesModel::entryDataChanged(BookEntry *entry)
 {
     int entryIndex = d->entries.indexOf(entry) + d->categoryModels.count();
     QModelIndex changed = index(entryIndex);
-    dataChanged(changed, changed);
+    Q_EMIT dataChanged(changed, changed);
 }
 
 void CategoryEntriesModel::entryRemove(BookEntry *entry)
