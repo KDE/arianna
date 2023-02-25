@@ -32,14 +32,10 @@ public:
         , publisherCategoryModel(nullptr)
         , keywordCategoryModel(nullptr)
         , folderCategoryModel(nullptr)
-        , cacheLoaded(false)
-    {
-        db = new BookDatabase();
-    };
+        , cacheLoaded(false){};
     ~Private()
     {
         qDeleteAll(entries);
-        db->deleteLater();
     }
     QList<BookEntry *> entries;
 
@@ -51,7 +47,6 @@ public:
     CategoryEntriesModel *keywordCategoryModel;
     CategoryEntriesModel *folderCategoryModel;
 
-    BookDatabase *db;
     bool cacheLoaded;
 
     void initializeSubModels(BookListModel *q)
@@ -120,7 +115,7 @@ public:
 
     void loadCache(BookListModel *q)
     {
-        QList<BookEntry *> entries = db->loadEntries();
+        QList<BookEntry *> entries = BookDatabase::self().loadEntries();
         if (entries.count() > 0) {
             initializeSubModels(q);
         }
@@ -138,7 +133,7 @@ public:
                     qApp->processEvents();
                 }
             } else {
-                db->removeEntry(entry);
+                BookDatabase::self().removeEntry(entry);
             }
         }
         cacheLoaded = true;
@@ -294,7 +289,7 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
         }
 
         d->addEntry(this, entry);
-        d->db->addEntry(entry);
+        BookDatabase::self().addEntry(entry);
     }
     Q_EMIT countChanged();
     qApp->processEvents();
@@ -351,22 +346,22 @@ void BookListModel::setBookData(const QString &fileName, const QString &property
         if (entry->filename == fileName) {
             if (property == QStringLiteral("currentLocation")) {
                 entry->currentLocation = value;
-                d->db->updateEntry(entry->filename, property, {value});
+                BookDatabase::self().updateEntry(entry->filename, property, {value});
             } else if (property == QStringLiteral("currentProgress")) {
                 entry->currentProgress = value.toInt();
-                d->db->updateEntry(entry->filename, property, QVariant(value.toInt()));
+                BookDatabase::self().updateEntry(entry->filename, property, QVariant(value.toInt()));
             } else if (property == QStringLiteral("locations")) {
                 entry->locations = value;
-                d->db->updateEntry(entry->filename, property, {value});
+                BookDatabase::self().updateEntry(entry->filename, property, {value});
             } else if (property == QStringLiteral("rating")) {
                 entry->rating = value.toInt();
-                d->db->updateEntry(entry->filename, property, QVariant(value.toInt()));
+                BookDatabase::self().updateEntry(entry->filename, property, QVariant(value.toInt()));
             } else if (property == QStringLiteral("tags")) {
                 entry->tags = value.split(QLatin1Char(','));
-                d->db->updateEntry(entry->filename, property, QVariant(value.split(QLatin1Char(','))));
+                BookDatabase::self().updateEntry(entry->filename, property, QVariant(value.split(QLatin1Char(','))));
             } else if (property == QStringLiteral("comment")) {
                 entry->comment = value;
-                d->db->updateEntry(entry->filename, property, QVariant(value));
+                BookDatabase::self().updateEntry(entry->filename, property, QVariant(value));
             }
             Q_EMIT entryDataUpdated(entry);
             break;
@@ -384,7 +379,7 @@ void BookListModel::removeBook(const QString &fileName, bool deleteFile)
     for (BookEntry *entry : d->entries) {
         if (entry->filename == fileName) {
             Q_EMIT entryRemoved(entry);
-            d->db->removeEntry(entry);
+            BookDatabase::self().removeEntry(entry);
             delete entry;
             break;
         }

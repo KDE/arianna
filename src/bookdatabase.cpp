@@ -101,6 +101,37 @@ public:
     {
         db.close();
     }
+
+    BookEntry *fromSqlQuery(const QSqlQuery &query)
+    {
+        auto entry = new BookEntry();
+        entry->filename = query.value(fieldNames.indexOf(QStringLiteral("fileName"))).toString();
+        entry->filetitle = query.value(fieldNames.indexOf(QStringLiteral("fileTitle"))).toString();
+        entry->title = query.value(fieldNames.indexOf(QStringLiteral("title"))).toString();
+        entry->series = query.value(fieldNames.indexOf(QStringLiteral("series"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry->author = query.value(fieldNames.indexOf(QStringLiteral("author"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry->publisher = query.value(fieldNames.indexOf(QStringLiteral("publisher"))).toString();
+        entry->created = query.value(fieldNames.indexOf(QStringLiteral("created"))).toDateTime();
+        entry->lastOpenedTime = query.value(fieldNames.indexOf(QStringLiteral("lastOpenedTime"))).toDateTime();
+        entry->currentLocation = query.value(fieldNames.indexOf(QStringLiteral("currentLocation"))).toString();
+        entry->currentProgress = query.value(fieldNames.indexOf(QStringLiteral("currentProgress"))).toInt();
+        entry->thumbnail = query.value(fieldNames.indexOf(QStringLiteral("thumbnail"))).toString();
+        entry->description = query.value(fieldNames.indexOf(QStringLiteral("description"))).toString().split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+        entry->comment = query.value(fieldNames.indexOf(QStringLiteral("comment"))).toString();
+        entry->tags = query.value(fieldNames.indexOf(QStringLiteral("tags"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry->rating = query.value(fieldNames.indexOf(QStringLiteral("rating"))).toInt();
+        entry->seriesNumbers = query.value(fieldNames.indexOf(QStringLiteral("seriesNumbers"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry->seriesVolumes = query.value(fieldNames.indexOf(QStringLiteral("seriesVolumes"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry->genres = query.value(fieldNames.indexOf(QStringLiteral("genres"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry->keywords = query.value(fieldNames.indexOf(QStringLiteral("keywords"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry->characters = query.value(fieldNames.indexOf(QStringLiteral("characters"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry->locations = query.value(fieldNames.indexOf(QStringLiteral("locations"))).toString();
+        entry->language = query.value(fieldNames.indexOf(QStringLiteral("language"))).toString();
+        entry->identifier = query.value(fieldNames.indexOf(QStringLiteral("identifier"))).toString();
+        entry->rights = query.value(fieldNames.indexOf(QStringLiteral("rights"))).toString();
+        entry->source = query.value(fieldNames.indexOf(QStringLiteral("source"))).toString();
+        return entry;
+    }
 };
 
 BookDatabase::BookDatabase(QObject *parent)
@@ -120,49 +151,28 @@ QList<BookEntry *> BookDatabase::loadEntries()
     QList<BookEntry *> entries;
     QStringList entryNames = d->fieldNames;
     QSqlQuery allEntries(QStringLiteral("SELECT ") + d->fieldNames.join(QStringLiteral(", ")) + QStringLiteral(" FROM books"));
+
     while (allEntries.next()) {
-        BookEntry *entry = new BookEntry();
-        entry->filename = allEntries.value(d->fieldNames.indexOf(QStringLiteral("fileName"))).toString();
-        entry->filetitle = allEntries.value(d->fieldNames.indexOf(QStringLiteral("fileTitle"))).toString();
-        entry->title = allEntries.value(d->fieldNames.indexOf(QStringLiteral("title"))).toString();
-        entry->series = allEntries.value(d->fieldNames.indexOf(QStringLiteral("series"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->author = allEntries.value(d->fieldNames.indexOf(QStringLiteral("author"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->publisher = allEntries.value(d->fieldNames.indexOf(QStringLiteral("publisher"))).toString();
-        entry->created = allEntries.value(d->fieldNames.indexOf(QStringLiteral("created"))).toDateTime();
-        entry->lastOpenedTime = allEntries.value(d->fieldNames.indexOf(QStringLiteral("lastOpenedTime"))).toDateTime();
-        entry->currentLocation = allEntries.value(d->fieldNames.indexOf(QStringLiteral("currentLocation"))).toString();
-        entry->currentProgress = allEntries.value(d->fieldNames.indexOf(QStringLiteral("currentProgress"))).toInt();
-        entry->thumbnail = allEntries.value(d->fieldNames.indexOf(QStringLiteral("thumbnail"))).toString();
-        entry->description = allEntries.value(d->fieldNames.indexOf(QStringLiteral("description"))).toString().split(QLatin1Char('\n'), Qt::SkipEmptyParts);
-        entry->comment = allEntries.value(d->fieldNames.indexOf(QStringLiteral("comment"))).toString();
-        entry->tags = allEntries.value(d->fieldNames.indexOf(QStringLiteral("tags"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->rating = allEntries.value(d->fieldNames.indexOf(QStringLiteral("rating"))).toInt();
-        entry->seriesNumbers = allEntries.value(d->fieldNames.indexOf(QStringLiteral("seriesNumbers"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->seriesVolumes = allEntries.value(d->fieldNames.indexOf(QStringLiteral("seriesVolumes"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->genres = allEntries.value(d->fieldNames.indexOf(QStringLiteral("genres"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->keywords = allEntries.value(d->fieldNames.indexOf(QStringLiteral("keywords"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->characters = allEntries.value(d->fieldNames.indexOf(QStringLiteral("characters"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->locations = allEntries.value(d->fieldNames.indexOf(QStringLiteral("locations"))).toString();
-        entry->language = allEntries.value(d->fieldNames.indexOf(QStringLiteral("language"))).toString();
-        entry->identifier = allEntries.value(d->fieldNames.indexOf(QStringLiteral("identifier"))).toString();
-        entry->rights = allEntries.value(d->fieldNames.indexOf(QStringLiteral("rights"))).toString();
-        entry->source = allEntries.value(d->fieldNames.indexOf(QStringLiteral("source"))).toString();
-
-        // Since we may change the thumbnailer between updates, but retain the
-        // database, this may break so we need to sanitise in case of pdf...
-        if (entry->filename.toLower().endsWith(QStringLiteral("pdf"))) {
-#ifdef USE_PERUSE_PDFTHUMBNAILER
-            entry->thumbnail = QStringLiteral("image://pdfcover/").append(entry->filename);
-#else
-            entry->thumbnail = QStringLiteral("image://preview/").append(entry->filename);
-#endif
-        }
-
-        entries.append(entry);
+        entries.append(d->fromSqlQuery(allEntries));
     }
 
     d->closeDb();
     return entries;
+}
+
+BookEntry *BookDatabase::loadEntry(const QString &fileName)
+{
+    if (!d->prepareDb()) {
+        return nullptr;
+    }
+    QSqlQuery entry;
+    entry.prepare(QStringLiteral("SELECT ") + d->fieldNames.join(QStringLiteral(", ")) + QStringLiteral(" FROM books WHERE fileName = :fileName LIMIT 1"));
+    entry.bindValue(QLatin1String(":fileName"), fileName);
+    if (entry.exec()) {
+        entry.first();
+        return d->fromSqlQuery(entry);
+    }
+    return nullptr;
 }
 
 void BookDatabase::addEntry(BookEntry *entry)

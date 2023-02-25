@@ -19,32 +19,36 @@ class BookDatabase : public QObject
 {
     Q_OBJECT
 public:
-    explicit BookDatabase(QObject *parent = nullptr);
-    ~BookDatabase() override;
+    static BookDatabase &self()
+    {
+        static BookDatabase instance;
+        return instance;
+    }
 
-    /**
-     * @return a list of all known books in the database.
-     */
+    /// @return a list of all known books in the database.
     QList<BookEntry *> loadEntries();
-    /**
-     * \brief Add a new book to the cache.
-     * @param entry The entry to add.
-     */
+
+    /// @return an entry matching the file name if it exists.
+    BookEntry *loadEntry(const QString &fileName);
+
+    /// \brief Add a new book to the cache.
+    /// \param entry The entry to add.
     void addEntry(BookEntry *entry);
-    /**
-     * @brief remove an entry by filename from the cache.
-     * @param entry the entry to remove.
-     */
+
+    /// \brief remove an entry by filename from the cache.
+    /// \param entry the entry to remove.
     void removeEntry(BookEntry *entry);
-    /**
-     * @brief updateEntry update an entry by filename.
-     * @param fileName the filename of the entry to update.
-     * @param property the property/fieldname you wish to update.
-     * @param value a QVariant with the value.
-     */
+
+    /// \brief updateEntry update an entry by filename.
+    /// \param fileName the filename of the entry to update.
+    /// \param property the property/fieldname you wish to update.
+    /// \param value a QVariant with the value.
     void updateEntry(QString fileName, QString property, QVariant value);
 
 private:
+    explicit BookDatabase(QObject *parent = nullptr);
+    ~BookDatabase() override;
+
     class Private;
     std::unique_ptr<Private> d;
 };

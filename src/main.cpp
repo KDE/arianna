@@ -23,6 +23,7 @@
 #include <qstringliteral.h>
 
 #include "arianna-version.h"
+#include "bookdatabase.h"
 #include "booklistmodel.h"
 #include "clipboard.h"
 #include "config.h"
@@ -81,6 +82,7 @@ int main(int argc, char *argv[])
 
     QCommandLineParser parser;
     parser.setApplicationDescription(i18n("Epub reader"));
+    parser.addPositionalArgument(QLatin1String("file"), i18n("Epub file to open"));
 
     about.setupCommandLine(&parser);
     parser.process(app);
@@ -104,17 +106,29 @@ int main(int argc, char *argv[])
         return -1;
     }
 
-    QObject::connect(&service, &KDBusService::activateRequested, &engine, [&engine](const QStringList & /*arguments*/, const QString & /*workingDirectory*/) {
-        const auto rootObjects = engine.rootObjects();
-        for (auto obj : rootObjects) {
-            auto view = qobject_cast<QQuickWindow *>(obj);
-            if (view) {
-                KWindowSystem::updateStartupId(view);
-                KWindowSystem::activateWindow(view);
-                return;
-            }
-        }
-    });
+    QObject::connect(&service,
+                     &KDBusService::activateRequested,
+                     &engine,
+                     [&engine, &navigation](const QStringList &arguments, const QString & /*workingDirectory*/) {
+                         const auto rootObjects = engine.rootObjects();
+                         for (auto obj : rootObjects) {
+                             auto view = qobject_cast<QQuickWindow *>(obj);
+                             if (view) {
+                                 KWindowSystem::updateStartupId(view);
+                                 KWindowSystem::activateWindow(view);
+
+                                 if (arguments.count() > 1) {
+                                     BookEntry *entry = BookDatabase::self().loadEntry(arguments[1]);
+                                     if (entry) {
+                                         navigation.openBook(arguments[1], entry->locations, entry->currentLocation);
+                                     } else {
+                                         navigation.openBook(arguments[1], {}, {});
+                                     }
+                                 }
+                                 return;
+                             }
+                         }
+                     });
     const auto rootObjects = engine.rootObjects();
     for (auto obj : rootObjects) {
         auto view = qobject_cast<QQuickWindow *>(obj);
@@ -126,5 +140,16 @@ int main(int argc, char *argv[])
             break;
         }
     }
+
+    const QStringList args = parser.positionalArguments();
+    if (args.count() > 0) {
+        BookEntry *entry = BookDatabase::self().loadEntry(args[0]);
+        if (entry) {
+            navigation.openBook(args[0], entry->locations, entry->currentLocation);
+        } else {
+            navigation.openBook(args[0], {}, {});
+        }
+    }
+
     return QCoreApplication::exec();
 }
