@@ -126,9 +126,9 @@ int main(int argc, char *argv[])
                                  KWindowSystem::activateWindow(view);
 
                                  if (arguments.count() > 1) {
-                                     BookEntry *entry = BookDatabase::self().loadEntry(arguments[1]);
-                                     if (entry) {
-                                         Q_EMIT navigation.openBook(arguments[1], entry->locations, entry->currentLocation);
+                                     const auto entry = BookDatabase::self().loadEntry(arguments[1]);
+                                     if (auto book = entry) {
+                                         Q_EMIT navigation.openBook(arguments[1], book->locations, book->currentLocation);
                                      } else {
                                          Q_EMIT navigation.openBook(arguments[1], {}, {});
                                      }
@@ -151,9 +151,9 @@ int main(int argc, char *argv[])
 
     const QStringList args = parser.positionalArguments();
     if (args.count() > 0) {
-        BookEntry *entry = BookDatabase::self().loadEntry(args[0]);
-        if (entry) {
-            Q_EMIT navigation.openBook(args[0], entry->locations, entry->currentLocation);
+        const auto entry = BookDatabase::self().loadEntry(args[0]);
+        if (const auto book = entry) {
+            Q_EMIT navigation.openBook(args[0], book->locations, book->currentLocation);
         } else {
             Q_EMIT navigation.openBook(args[0], {}, {});
         }

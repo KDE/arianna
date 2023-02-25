@@ -6,6 +6,7 @@
 #include <QAbstractListModel>
 #include <QDateTime>
 #include <memory>
+#include <optional>
 
 class CategoryEntriesModel;
 /**
@@ -71,6 +72,8 @@ public:
     QString language;
     int rating;
 };
+
+inline bool operator==(const BookEntry &a1, const BookEntry &a2) noexcept;
 
 /**
  * \brief Model to handle the filter categories.
@@ -165,7 +168,7 @@ public:
      * @param compareRole The role that determines the data to sort the entry into.
      * Defaults to the Book title.
      */
-    Q_INVOKABLE void append(BookEntry *entry, CategoryEntriesModel::Roles compareRole = TitleRole);
+    Q_INVOKABLE void append(const BookEntry &entry, CategoryEntriesModel::Roles compareRole = TitleRole);
 
     /**
      * \brief Remove all entries from the model
@@ -177,20 +180,20 @@ public:
      *
      * This also adds it to the model's list of entries.
      */
-    void addCategoryEntry(const QString &categoryName, BookEntry *entry, CategoryEntriesModel::Roles compareRole = TitleRole);
+    void addCategoryEntry(const QString &categoryName, const BookEntry &entry, CategoryEntriesModel::Roles compareRole = TitleRole);
 
     /**
      * @param index an integer index pointing at the desired book.
      * @returns the BookEntry struct for the given index (owned by this model, do not delete)
      */
-    Q_INVOKABLE BookEntry *getBookEntry(int index);
+    Q_INVOKABLE std::optional<BookEntry> getBookEntry(int index);
 
     /**
      * @return an entry object for the given filename. Used to get the recently
      * read books.
      * @param filename the filename associated with an entry object.
      */
-    Q_INVOKABLE BookEntry *bookFromFile(const QString &filename);
+    Q_INVOKABLE std::optional<BookEntry> bookFromFile(const QString &filename);
     /**
      * @return an entry index for the given filename.
      * @param filename the filename associated with an entry object.
@@ -212,25 +215,26 @@ public:
      *
      * Used in the BookListModel::setBookData()
      */
-    Q_SIGNAL void entryDataUpdated(BookEntry *entry);
+    Q_SIGNAL void entryDataUpdated(const BookEntry &entry);
     /**
      * \brief set a book entry as changed.
      * @param entry The changed entry.
      */
-    Q_SLOT void entryDataChanged(BookEntry *entry);
+    Q_SLOT void entryDataChanged(const BookEntry &entry);
     /**
      * \brief Fires when a book entry is removed.
      * @param entry The removed entry
      */
-    Q_SIGNAL void entryRemoved(BookEntry *entry);
+    Q_SIGNAL void entryRemoved(const BookEntry &entry);
     /**
      * \brief Remove a book entry.
      * @param entry The entry to remove.
      */
-    Q_SLOT void entryRemove(BookEntry *entry);
+    Q_SLOT void entryRemove(const BookEntry &entry);
 
-    // This will iterate over all sub-models and find the model which contains the entry, or null if not found
-    CategoryEntriesModel *leafModelForEntry(BookEntry *entry);
+    // This will iterate over all sub-models and find the model which contains
+    // the entry, or null if not found
+    CategoryEntriesModel *leafModelForEntry(const BookEntry &entry);
 
     Roles role() const;
     void setRole(Roles role);

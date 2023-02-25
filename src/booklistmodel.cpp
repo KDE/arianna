@@ -33,11 +33,8 @@ public:
         , keywordCategoryModel(nullptr)
         , folderCategoryModel(nullptr)
         , cacheLoaded(false){};
-    ~Private()
-    {
-        qDeleteAll(entries);
-    }
-    QList<BookEntry *> entries;
+
+    QList<BookEntry> entries;
 
     ContentList *contentModel;
     CategoryEntriesModel *newlyAddedCategoryModel;
@@ -89,44 +86,44 @@ public:
         }
     }
 
-    void addEntry(BookListModel *q, BookEntry *entry)
+    void addEntry(BookListModel *q, const BookEntry &entry)
     {
         entries.append(entry);
         q->append(entry);
-        for (int i = 0; i < entry->author.size(); i++) {
-            authorCategoryModel->addCategoryEntry(entry->author.at(i), entry);
+        for (int i = 0; i < entry.author.size(); i++) {
+            authorCategoryModel->addCategoryEntry(entry.author.at(i), entry);
         }
-        for (int i = 0; i < entry->series.size(); i++) {
-            seriesCategoryModel->addCategoryEntry(entry->series.at(i), entry, SeriesRole);
+        for (int i = 0; i < entry.series.size(); i++) {
+            seriesCategoryModel->addCategoryEntry(entry.series.at(i), entry, SeriesRole);
         }
-        if (newlyAddedCategoryModel->indexOfFile(entry->filename) == -1) {
+        if (newlyAddedCategoryModel->indexOfFile(entry.filename) == -1) {
             newlyAddedCategoryModel->append(entry, CreatedRole);
         }
-        publisherCategoryModel->addCategoryEntry(entry->publisher, entry);
-        QUrl url(entry->filename.left(entry->filename.lastIndexOf(QLatin1Char('/'))));
+        publisherCategoryModel->addCategoryEntry(entry.publisher, entry);
+        QUrl url(entry.filename.left(entry.filename.lastIndexOf(QLatin1Char('/'))));
         folderCategoryModel->addCategoryEntry(url.path().mid(1), entry);
-        if (folderCategoryModel->indexOfFile(entry->filename) == -1) {
+        if (folderCategoryModel->indexOfFile(entry.filename) == -1) {
             folderCategoryModel->append(entry);
         }
-        for (int i = 0; i < entry->genres.size(); i++) {
-            keywordCategoryModel->addCategoryEntry(entry->genres.at(i), entry, GenreRole);
+        for (int i = 0; i < entry.genres.size(); i++) {
+            keywordCategoryModel->addCategoryEntry(entry.genres.at(i), entry, GenreRole);
         }
     }
 
     void loadCache(BookListModel *q)
     {
-        QList<BookEntry *> entries = BookDatabase::self().loadEntries();
+        QList<BookEntry> entries = BookDatabase::self().loadEntries();
         if (entries.count() > 0) {
             initializeSubModels(q);
         }
         int i = 0;
-        for (BookEntry *entry : entries) {
+        for (const BookEntry &entry : std::as_const(entries)) {
             /*
              * This might turn out a little slow, but we should avoid having entries
              * that do not exist. If we end up with slowdown issues when loading the
              * cache this would be a good place to start investigating.
              */
-            if (QFileInfo::exists(entry->filename)) {
+            if (QFileInfo::exists(entry.filename)) {
                 addEntry(q, entry);
                 if (++i % 100 == 0) {
                     Q_EMIT q->countChanged();
@@ -209,71 +206,71 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
     int role = ContentList::FilePathRole;
     for (int i = first; i < last + 1; ++i) {
         QVariant filePath = d->contentModel->data(d->contentModel->index(first, 0, index), role);
-        auto entry = new BookEntry();
-        entry->filename = filePath.toUrl().toLocalFile();
-        QStringList splitName = entry->filename.split(QLatin1Char('/'));
+        BookEntry entry;
+        entry.filename = filePath.toUrl().toLocalFile();
+        QStringList splitName = entry.filename.split(QLatin1Char('/'));
         if (!splitName.isEmpty())
-            entry->filetitle = splitName.takeLast();
+            entry.filetitle = splitName.takeLast();
         if (!splitName.isEmpty()) {
-            entry->series = QStringList();
-            entry->seriesNumbers = QStringList() << QStringLiteral("0");
-            entry->seriesVolumes = QStringList() << QStringLiteral("0");
+            entry.series = QStringList{};
+            entry.seriesNumbers = QStringList{QStringLiteral("0")};
+            entry.seriesVolumes = QStringList{QStringLiteral("0")};
         }
         // just in case we end up without a title... using complete basename here,
         // as we would rather have "book one. part two" and the odd "book one - part two.tar"
-        QFileInfo fileinfo(entry->filename);
-        entry->title = fileinfo.completeBaseName();
+        QFileInfo fileinfo(entry.filename);
+        entry.title = fileinfo.completeBaseName();
 
-        KFileMetaData::UserMetaData data(entry->filename);
-        entry->rating = data.rating();
-        entry->comment = data.userComment();
-        entry->tags = data.tags();
+        KFileMetaData::UserMetaData data(entry.filename);
+        entry.rating = data.rating();
+        entry.comment = data.userComment();
+        entry.tags = data.tags();
 
         QVariantHash metadata = d->contentModel->data(d->contentModel->index(first, 0, index), Qt::UserRole + 2).toHash();
         QVariantHash::const_iterator it = metadata.constBegin();
         for (; it != metadata.constEnd(); it++) {
             if (it.key() == QLatin1String("author")) {
-                entry->author = it.value().toStringList();
+                entry.author = it.value().toStringList();
             } else if (it.key() == QLatin1String("title")) {
-                entry->title = it.value().toString().trimmed();
+                entry.title = it.value().toString().trimmed();
             } else if (it.key() == QLatin1String("publisher")) {
-                entry->publisher = it.value().toString().trimmed();
+                entry.publisher = it.value().toString().trimmed();
             } else if (it.key() == QLatin1String("created")) {
-                entry->created = it.value().toDateTime();
+                entry.created = it.value().toDateTime();
             } else if (it.key() == QLatin1String("currentLocation")) {
-                entry->currentLocation = it.value().toString();
+                entry.currentLocation = it.value().toString();
             } else if (it.key() == QLatin1String("currentProgress")) {
-                entry->currentProgress = it.value().toInt();
+                entry.currentProgress = it.value().toInt();
             } else if (it.key() == QLatin1String("comments")) {
-                entry->comment = it.value().toString();
+                entry.comment = it.value().toString();
             } else if (it.key() == QLatin1String("tags")) {
-                entry->tags = it.value().toStringList();
+                entry.tags = it.value().toStringList();
             } else if (it.key() == QLatin1String("rating")) {
-                entry->rating = it.value().toInt();
+                entry.rating = it.value().toInt();
             }
         }
         QMimeDatabase db;
-        QString mimetype = db.mimeTypeForFile(entry->filename).name();
+        QString mimetype = db.mimeTypeForFile(entry.filename).name();
         if (mimetype == QStringLiteral("application/epub+zip")) {
             EPubContainer epub(nullptr);
-            epub.openFile(entry->filename);
+            epub.openFile(entry.filename);
             const auto titles = epub.getMetadata(QStringLiteral("title"));
-            entry->title = titles[0];
-            entry->author = epub.getMetadata(QStringLiteral("creator"));
-            entry->rights = epub.getMetadata(QStringLiteral("rights")).join(QStringLiteral(", "));
-            entry->source = epub.getMetadata(QStringLiteral("source")).join(QStringLiteral(", "));
-            entry->identifier = epub.getMetadata(QStringLiteral("identifier")).join(QStringLiteral(", "));
-            entry->language = epub.getMetadata(QStringLiteral("language")).join(QStringLiteral(", "));
-            entry->genres = epub.getMetadata(QStringLiteral("subject"));
-            entry->publisher = epub.getMetadata(QStringLiteral("publisher")).join(QStringLiteral(", "));
+            entry.title = titles[0];
+            entry.author = epub.getMetadata(QStringLiteral("creator"));
+            entry.rights = epub.getMetadata(QStringLiteral("rights")).join(QStringLiteral(", "));
+            entry.source = epub.getMetadata(QStringLiteral("source")).join(QStringLiteral(", "));
+            entry.identifier = epub.getMetadata(QStringLiteral("identifier")).join(QStringLiteral(", "));
+            entry.language = epub.getMetadata(QStringLiteral("language")).join(QStringLiteral(", "));
+            entry.genres = epub.getMetadata(QStringLiteral("subject"));
+            entry.publisher = epub.getMetadata(QStringLiteral("publisher")).join(QStringLiteral(", "));
 
             auto image = epub.getImage(epub.getMetadata(QStringLiteral("cover")).join(QChar()));
-            entry->thumbnail = saveCover(epub.getMetadata(QStringLiteral("identifier")).join(QChar()), image);
+            entry.thumbnail = saveCover(epub.getMetadata(QStringLiteral("identifier")).join(QChar()), image);
 
             const auto collections = epub.collections();
             for (const auto &collection : collections) {
-                entry->series.append(collection.name);
-                entry->seriesVolumes.append(QString::number(collection.position));
+                entry.series.append(collection.name);
+                entry.seriesVolumes.append(QString::number(collection.position));
             }
         }
 
@@ -301,8 +298,8 @@ CategoryEntriesModel *BookListModel::seriesCategoryModel() const
 
 CategoryEntriesModel *BookListModel::seriesModelForEntry(const QString &fileName)
 {
-    for (BookEntry *entry : std::as_const(d->entries)) {
-        if (entry->filename == fileName) {
+    for (const BookEntry &entry : std::as_const(d->entries)) {
+        if (entry.filename == fileName) {
             return d->seriesCategoryModel->leafModelForEntry(entry);
         }
     }
@@ -331,26 +328,26 @@ int BookListModel::count() const
 
 void BookListModel::setBookData(const QString &fileName, const QString &property, const QString &value)
 {
-    for (BookEntry *entry : std::as_const(d->entries)) {
-        if (entry->filename == fileName) {
+    for (BookEntry &entry : d->entries) {
+        if (entry.filename == fileName) {
             if (property == QStringLiteral("currentLocation")) {
-                entry->currentLocation = value;
-                BookDatabase::self().updateEntry(entry->filename, property, {value});
+                entry.currentLocation = value;
+                BookDatabase::self().updateEntry(entry.filename, property, {value});
             } else if (property == QStringLiteral("currentProgress")) {
-                entry->currentProgress = value.toInt();
-                BookDatabase::self().updateEntry(entry->filename, property, QVariant(value.toInt()));
+                entry.currentProgress = value.toInt();
+                BookDatabase::self().updateEntry(entry.filename, property, QVariant(value.toInt()));
             } else if (property == QStringLiteral("locations")) {
-                entry->locations = value;
-                BookDatabase::self().updateEntry(entry->filename, property, {value});
+                entry.locations = value;
+                BookDatabase::self().updateEntry(entry.filename, property, {value});
             } else if (property == QStringLiteral("rating")) {
-                entry->rating = value.toInt();
-                BookDatabase::self().updateEntry(entry->filename, property, QVariant(value.toInt()));
+                entry.rating = value.toInt();
+                BookDatabase::self().updateEntry(entry.filename, property, QVariant(value.toInt()));
             } else if (property == QStringLiteral("tags")) {
-                entry->tags = value.split(QLatin1Char(','));
-                BookDatabase::self().updateEntry(entry->filename, property, QVariant(value.split(QLatin1Char(','))));
+                entry.tags = value.split(QLatin1Char(','));
+                BookDatabase::self().updateEntry(entry.filename, property, QVariant(value.split(QLatin1Char(','))));
             } else if (property == QStringLiteral("comment")) {
-                entry->comment = value;
-                BookDatabase::self().updateEntry(entry->filename, property, QVariant(value));
+                entry.comment = value;
+                BookDatabase::self().updateEntry(entry.filename, property, QVariant(value));
             }
             Q_EMIT entryDataUpdated(entry);
             break;
@@ -365,11 +362,10 @@ void BookListModel::removeBook(const QString &fileName, bool deleteFile)
         // job->start();
     }
 
-    for (BookEntry *entry : std::as_const(d->entries)) {
-        if (entry->filename == fileName) {
+    for (const BookEntry &entry : std::as_const(d->entries)) {
+        if (entry.filename == fileName) {
             Q_EMIT entryRemoved(entry);
             BookDatabase::self().removeEntry(entry);
-            delete entry;
             break;
         }
     }
@@ -378,8 +374,8 @@ void BookListModel::removeBook(const QString &fileName, bool deleteFile)
 QStringList BookListModel::knownBookFiles() const
 {
     QStringList files;
-    for (BookEntry *entry : std::as_const(d->entries)) {
-        files.append(entry->filename);
+    for (const auto &entry : std::as_const(d->entries)) {
+        files.append(entry.filename);
     }
     return files;
 }

@@ -102,34 +102,34 @@ public:
         db.close();
     }
 
-    BookEntry *fromSqlQuery(const QSqlQuery &query)
+    BookEntry fromSqlQuery(const QSqlQuery &query)
     {
-        auto entry = new BookEntry();
-        entry->filename = query.value(fieldNames.indexOf(QStringLiteral("fileName"))).toString();
-        entry->filetitle = query.value(fieldNames.indexOf(QStringLiteral("fileTitle"))).toString();
-        entry->title = query.value(fieldNames.indexOf(QStringLiteral("title"))).toString();
-        entry->series = query.value(fieldNames.indexOf(QStringLiteral("series"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->author = query.value(fieldNames.indexOf(QStringLiteral("author"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->publisher = query.value(fieldNames.indexOf(QStringLiteral("publisher"))).toString();
-        entry->created = query.value(fieldNames.indexOf(QStringLiteral("created"))).toDateTime();
-        entry->lastOpenedTime = query.value(fieldNames.indexOf(QStringLiteral("lastOpenedTime"))).toDateTime();
-        entry->currentLocation = query.value(fieldNames.indexOf(QStringLiteral("currentLocation"))).toString();
-        entry->currentProgress = query.value(fieldNames.indexOf(QStringLiteral("currentProgress"))).toInt();
-        entry->thumbnail = query.value(fieldNames.indexOf(QStringLiteral("thumbnail"))).toString();
-        entry->description = query.value(fieldNames.indexOf(QStringLiteral("description"))).toString().split(QLatin1Char('\n'), Qt::SkipEmptyParts);
-        entry->comment = query.value(fieldNames.indexOf(QStringLiteral("comment"))).toString();
-        entry->tags = query.value(fieldNames.indexOf(QStringLiteral("tags"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->rating = query.value(fieldNames.indexOf(QStringLiteral("rating"))).toInt();
-        entry->seriesNumbers = query.value(fieldNames.indexOf(QStringLiteral("seriesNumbers"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->seriesVolumes = query.value(fieldNames.indexOf(QStringLiteral("seriesVolumes"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->genres = query.value(fieldNames.indexOf(QStringLiteral("genres"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->keywords = query.value(fieldNames.indexOf(QStringLiteral("keywords"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->characters = query.value(fieldNames.indexOf(QStringLiteral("characters"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
-        entry->locations = query.value(fieldNames.indexOf(QStringLiteral("locations"))).toString();
-        entry->language = query.value(fieldNames.indexOf(QStringLiteral("language"))).toString();
-        entry->identifier = query.value(fieldNames.indexOf(QStringLiteral("identifier"))).toString();
-        entry->rights = query.value(fieldNames.indexOf(QStringLiteral("rights"))).toString();
-        entry->source = query.value(fieldNames.indexOf(QStringLiteral("source"))).toString();
+        BookEntry entry;
+        entry.filename = query.value(fieldNames.indexOf(QStringLiteral("fileName"))).toString();
+        entry.filetitle = query.value(fieldNames.indexOf(QStringLiteral("fileTitle"))).toString();
+        entry.title = query.value(fieldNames.indexOf(QStringLiteral("title"))).toString();
+        entry.series = query.value(fieldNames.indexOf(QStringLiteral("series"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry.author = query.value(fieldNames.indexOf(QStringLiteral("author"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry.publisher = query.value(fieldNames.indexOf(QStringLiteral("publisher"))).toString();
+        entry.created = query.value(fieldNames.indexOf(QStringLiteral("created"))).toDateTime();
+        entry.lastOpenedTime = query.value(fieldNames.indexOf(QStringLiteral("lastOpenedTime"))).toDateTime();
+        entry.currentLocation = query.value(fieldNames.indexOf(QStringLiteral("currentLocation"))).toString();
+        entry.currentProgress = query.value(fieldNames.indexOf(QStringLiteral("currentProgress"))).toInt();
+        entry.thumbnail = query.value(fieldNames.indexOf(QStringLiteral("thumbnail"))).toString();
+        entry.description = query.value(fieldNames.indexOf(QStringLiteral("description"))).toString().split(QLatin1Char('\n'), Qt::SkipEmptyParts);
+        entry.comment = query.value(fieldNames.indexOf(QStringLiteral("comment"))).toString();
+        entry.tags = query.value(fieldNames.indexOf(QStringLiteral("tags"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry.rating = query.value(fieldNames.indexOf(QStringLiteral("rating"))).toInt();
+        entry.seriesNumbers = query.value(fieldNames.indexOf(QStringLiteral("seriesNumbers"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry.seriesVolumes = query.value(fieldNames.indexOf(QStringLiteral("seriesVolumes"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry.genres = query.value(fieldNames.indexOf(QStringLiteral("genres"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry.keywords = query.value(fieldNames.indexOf(QStringLiteral("keywords"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry.characters = query.value(fieldNames.indexOf(QStringLiteral("characters"))).toString().split(QLatin1Char(','), Qt::SkipEmptyParts);
+        entry.locations = query.value(fieldNames.indexOf(QStringLiteral("locations"))).toString();
+        entry.language = query.value(fieldNames.indexOf(QStringLiteral("language"))).toString();
+        entry.identifier = query.value(fieldNames.indexOf(QStringLiteral("identifier"))).toString();
+        entry.rights = query.value(fieldNames.indexOf(QStringLiteral("rights"))).toString();
+        entry.source = query.value(fieldNames.indexOf(QStringLiteral("source"))).toString();
         return entry;
     }
 };
@@ -142,13 +142,13 @@ BookDatabase::BookDatabase(QObject *parent)
 
 BookDatabase::~BookDatabase() = default;
 
-QList<BookEntry *> BookDatabase::loadEntries()
+QList<BookEntry> BookDatabase::loadEntries()
 {
     if (!d->prepareDb()) {
-        return QList<BookEntry *>();
+        return {};
     }
 
-    QList<BookEntry *> entries;
+    QList<BookEntry> entries;
     QStringList entryNames = d->fieldNames;
     QSqlQuery allEntries(QStringLiteral("SELECT ") + d->fieldNames.join(QStringLiteral(", ")) + QStringLiteral(" FROM books"));
 
@@ -160,10 +160,10 @@ QList<BookEntry *> BookDatabase::loadEntries()
     return entries;
 }
 
-BookEntry *BookDatabase::loadEntry(const QString &fileName)
+std::optional<BookEntry> BookDatabase::loadEntry(const QString &fileName)
 {
     if (!d->prepareDb()) {
-        return nullptr;
+        return std::nullopt;
     }
     QSqlQuery entry;
     entry.prepare(QStringLiteral("SELECT ") + d->fieldNames.join(QStringLiteral(", ")) + QStringLiteral(" FROM books WHERE fileName = :fileName LIMIT 1"));
@@ -172,15 +172,15 @@ BookEntry *BookDatabase::loadEntry(const QString &fileName)
         entry.first();
         return d->fromSqlQuery(entry);
     }
-    return nullptr;
+    return std::nullopt;
 }
 
-void BookDatabase::addEntry(BookEntry *entry)
+void BookDatabase::addEntry(const BookEntry &entry)
 {
     if (!d->prepareDb()) {
         return;
     }
-    qCDebug(ARIANNA_LOG) << "Adding newly discovered book to the database" << entry->filename;
+    qCDebug(ARIANNA_LOG) << "Adding newly discovered book to the database" << entry.filename;
 
     QStringList valueNames;
     for (int i = 0; i < d->fieldNames.size(); i++) {
@@ -189,52 +189,52 @@ void BookDatabase::addEntry(BookEntry *entry)
     QSqlQuery newEntry;
     newEntry.prepare(QStringLiteral("INSERT INTO books (") + d->fieldNames.join(QStringLiteral(", ")) + QStringLiteral(") ") + QStringLiteral("VALUES (")
                      + valueNames.join(QStringLiteral(", ")) + QLatin1Char(')'));
-    newEntry.bindValue(QStringLiteral(":fileName"), entry->filename);
-    newEntry.bindValue(QStringLiteral(":fileTitle"), entry->filetitle);
-    newEntry.bindValue(QStringLiteral(":title"), entry->title);
-    newEntry.bindValue(QStringLiteral(":series"), entry->series.join(QLatin1Char(',')));
-    newEntry.bindValue(QStringLiteral(":author"), entry->author.join(QLatin1Char(',')));
-    newEntry.bindValue(QStringLiteral(":publisher"), entry->publisher);
-    newEntry.bindValue(QStringLiteral(":publisher"), entry->publisher);
-    newEntry.bindValue(QStringLiteral(":created"), entry->created);
-    newEntry.bindValue(QStringLiteral(":lastOpenedTime"), entry->lastOpenedTime);
-    newEntry.bindValue(QStringLiteral(":currentLocation"), entry->currentLocation);
-    newEntry.bindValue(QStringLiteral(":currentProgress"), entry->currentProgress);
-    newEntry.bindValue(QStringLiteral(":thumbnail"), entry->thumbnail);
-    newEntry.bindValue(QStringLiteral(":description"), entry->description.join(QLatin1Char('\n')));
-    newEntry.bindValue(QStringLiteral(":comment"), entry->comment);
-    newEntry.bindValue(QStringLiteral(":tags"), entry->tags.join(QLatin1Char(',')));
-    newEntry.bindValue(QStringLiteral(":rating"), entry->rating);
-    newEntry.bindValue(QStringLiteral(":seriesNumbers"), entry->seriesNumbers.join(QLatin1Char(',')));
-    newEntry.bindValue(QStringLiteral(":seriesVolumes"), entry->seriesVolumes.join(QLatin1Char(',')));
-    newEntry.bindValue(QStringLiteral(":genres"), entry->genres.join(QLatin1Char(',')));
-    newEntry.bindValue(QStringLiteral(":keywords"), entry->keywords.join(QLatin1Char(',')));
-    newEntry.bindValue(QStringLiteral(":characters"), entry->characters.join(QLatin1Char(',')));
-    newEntry.bindValue(QStringLiteral(":locations"), entry->locations);
-    newEntry.bindValue(QStringLiteral(":rights"), entry->rights);
-    newEntry.bindValue(QStringLiteral(":source"), entry->source);
-    newEntry.bindValue(QStringLiteral(":identifier"), entry->identifier);
-    newEntry.bindValue(QStringLiteral(":language"), entry->language);
+    newEntry.bindValue(QStringLiteral(":fileName"), entry.filename);
+    newEntry.bindValue(QStringLiteral(":fileTitle"), entry.filetitle);
+    newEntry.bindValue(QStringLiteral(":title"), entry.title);
+    newEntry.bindValue(QStringLiteral(":series"), entry.series.join(QLatin1Char(',')));
+    newEntry.bindValue(QStringLiteral(":author"), entry.author.join(QLatin1Char(',')));
+    newEntry.bindValue(QStringLiteral(":publisher"), entry.publisher);
+    newEntry.bindValue(QStringLiteral(":publisher"), entry.publisher);
+    newEntry.bindValue(QStringLiteral(":created"), entry.created);
+    newEntry.bindValue(QStringLiteral(":lastOpenedTime"), entry.lastOpenedTime);
+    newEntry.bindValue(QStringLiteral(":currentLocation"), entry.currentLocation);
+    newEntry.bindValue(QStringLiteral(":currentProgress"), entry.currentProgress);
+    newEntry.bindValue(QStringLiteral(":thumbnail"), entry.thumbnail);
+    newEntry.bindValue(QStringLiteral(":description"), entry.description.join(QLatin1Char('\n')));
+    newEntry.bindValue(QStringLiteral(":comment"), entry.comment);
+    newEntry.bindValue(QStringLiteral(":tags"), entry.tags.join(QLatin1Char(',')));
+    newEntry.bindValue(QStringLiteral(":rating"), entry.rating);
+    newEntry.bindValue(QStringLiteral(":seriesNumbers"), entry.seriesNumbers.join(QLatin1Char(',')));
+    newEntry.bindValue(QStringLiteral(":seriesVolumes"), entry.seriesVolumes.join(QLatin1Char(',')));
+    newEntry.bindValue(QStringLiteral(":genres"), entry.genres.join(QLatin1Char(',')));
+    newEntry.bindValue(QStringLiteral(":keywords"), entry.keywords.join(QLatin1Char(',')));
+    newEntry.bindValue(QStringLiteral(":characters"), entry.characters.join(QLatin1Char(',')));
+    newEntry.bindValue(QStringLiteral(":locations"), entry.locations);
+    newEntry.bindValue(QStringLiteral(":rights"), entry.rights);
+    newEntry.bindValue(QStringLiteral(":source"), entry.source);
+    newEntry.bindValue(QStringLiteral(":identifier"), entry.identifier);
+    newEntry.bindValue(QStringLiteral(":language"), entry.language);
     newEntry.exec();
 
     d->closeDb();
 }
 
-void BookDatabase::removeEntry(BookEntry *entry)
+void BookDatabase::removeEntry(const BookEntry &entry)
 {
     if (!d->prepareDb()) {
         return;
     }
-    qCDebug(ARIANNA_LOG) << "Removing book from the database" << entry->filename;
+    qCDebug(ARIANNA_LOG) << "Removing book from the database" << entry.filename;
 
     QSqlQuery removeEntry;
-    removeEntry.prepare(QStringLiteral("DELETE FROM books WHERE fileName='") + entry->filename + QStringLiteral("';"));
+    removeEntry.prepare(QStringLiteral("DELETE FROM books WHERE fileName='") + entry.filename + QStringLiteral("';"));
     removeEntry.exec();
 
     d->closeDb();
 }
 
-void BookDatabase::updateEntry(QString fileName, QString property, QVariant value)
+void BookDatabase::updateEntry(const QString &fileName, const QString &property, const QVariant &value)
 {
     if (!d->prepareDb()) {
         return;
