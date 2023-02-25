@@ -72,4 +72,4 @@ target_include_directories(arianna PRIVATE ${CMAKE_BINARY_DIR})
 target_link_libraries(arianna PRIVATE arianna_static)
 kconfig_add_kcfg_files(arianna GENERATE_MOC config.kcfgc)
 
-install(TARGETS arianna ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS arianna ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
