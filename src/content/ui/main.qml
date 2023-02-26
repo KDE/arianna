@@ -325,6 +325,7 @@ Kirigami.ApplicationWindow {
 
         FileDialog {
             id: root
+            parentWindow: applicationWindow()
             title: i18n("Please choose a file")
             nameFilters: [i18nc("Name filter for EPUB files", "eBook files (*.epub *.cb* *.fb2 *.fb2zip)")]
         }
