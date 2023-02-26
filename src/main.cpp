@@ -9,7 +9,11 @@
 #include <QQmlContext>
 #include <QQuickStyle>
 #include <QQuickWindow>
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
 #include <QtWebEngine>
+#else
+#include <QtWebEngineQuick>
+#endif
 
 #include <QApplication>
 
@@ -39,7 +43,11 @@ int main(int argc, char *argv[])
 #endif
 
     QNetworkProxyFactory::setUseSystemConfiguration(true);
+#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
     QtWebEngine::initialize();
+#else
+    QtWebEngineQuick::initialize();
+#endif
 
     QApplication app(argc, argv);
     // Default to org.kde.desktop style unless the user forces another style
