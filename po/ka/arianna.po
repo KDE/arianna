@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-20 00:54+0000\n"
+"POT-Creation-Date: 2023-02-26 00:56+0000\n"
 "PO-Revision-Date: 2023-02-09 14:32+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
@@ -39,7 +39,7 @@ msgstr "წიგნი არჩეული არაა"
 msgid "Open file"
 msgstr "ფაილის გახსნა"
 
-#: content/ui/EpubViewerPage.qml:168 content/ui/main.qml:327
+#: content/ui/EpubViewerPage.qml:168 content/ui/main.qml:328
 #, kde-format
 msgid "Please choose a file"
 msgstr "გთხოვთ, აირჩიოთ ფაილი"
@@ -97,7 +97,7 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "მეტი წიგნის დამატება"
 
-#: content/ui/main.qml:17 content/ui/main.qml:287 main.cpp:64
+#: content/ui/main.qml:17 content/ui/main.qml:288 main.cpp:65
 #, kde-format
 msgid "Arianna"
 msgstr "არიანა"
@@ -177,54 +177,59 @@ msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "&მორგება"
 
-#: content/ui/main.qml:307
+#: content/ui/main.qml:308
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
 msgstr "წიგნის დამატება…"
 
-#: content/ui/main.qml:328
+#: content/ui/main.qml:329
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
 msgstr "eBook ფაილები (*.epub *.cb* *.fb2 *.fb2zip)"
 
-#: main.cpp:66
+#: main.cpp:67
 #, kde-format
 msgid "EPub Reader"
 msgstr "EPub -ის წამკითხველი"
 
-#: main.cpp:68
+#: main.cpp:69
 #, kde-format
 msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 
-#: main.cpp:69
+#: main.cpp:70
 #, kde-format
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:69
+#: main.cpp:70
 #, kde-format
 msgid "Maintainer"
 msgstr "წამყვანი პროგრამისტი"
 
-#: main.cpp:70
+#: main.cpp:71
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Temuri Doghonadze"
 
-#: main.cpp:70
+#: main.cpp:71
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Temuri.doghonadze@gmail.com"
 
-#: main.cpp:83
+#: main.cpp:84
 #, kde-format
 msgid "Epub reader"
 msgstr "EPub -ის წამკითხველი"
+
+#: main.cpp:85
+#, kde-format
+msgid "Epub file to open"
+msgstr ""
 
 #~ msgid "arianna"
 #~ msgstr "არიანა"

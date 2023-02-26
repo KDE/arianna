@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-02-20 00:54+0000\n"
+"POT-Creation-Date: 2023-02-26 00:56+0000\n"
 "PO-Revision-Date: 2023-02-07 20:12+0100\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -41,7 +41,7 @@ msgstr "Ez da libururik hautatu"
 msgid "Open file"
 msgstr "Ireki fitxategia"
 
-#: content/ui/EpubViewerPage.qml:168 content/ui/main.qml:327
+#: content/ui/EpubViewerPage.qml:168 content/ui/main.qml:328
 #, kde-format
 msgid "Please choose a file"
 msgstr "Mesedez aukeratu fitxategi bat"
@@ -99,7 +99,7 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Gehitu liburu batzuk"
 
-#: content/ui/main.qml:17 content/ui/main.qml:287 main.cpp:64
+#: content/ui/main.qml:17 content/ui/main.qml:288 main.cpp:65
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
@@ -179,54 +179,59 @@ msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "Ezarpenak"
 
-#: content/ui/main.qml:307
+#: content/ui/main.qml:308
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
 msgstr "Gehitu liburua…"
 
-#: content/ui/main.qml:328
+#: content/ui/main.qml:329
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
 msgstr "eLiburuki fitxategiak (*.epub *.cb* *.fb2 *.fb2zip)"
 
-#: main.cpp:66
+#: main.cpp:67
 #, kde-format
 msgid "EPub Reader"
 msgstr "EPub irakurlea"
 
-#: main.cpp:68
+#: main.cpp:69
 #, kde-format
 msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 
-#: main.cpp:69
+#: main.cpp:70
 #, kde-format
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:69
+#: main.cpp:70
 #, kde-format
 msgid "Maintainer"
 msgstr "Arduraduna"
 
-#: main.cpp:70
+#: main.cpp:71
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Iñigo Salvador Azurmendi"
 
-#: main.cpp:70
+#: main.cpp:71
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "xalba@ni.eus"
 
-#: main.cpp:83
+#: main.cpp:84
 #, kde-format
 msgid "Epub reader"
 msgstr "Epub irakurlea"
+
+#: main.cpp:85
+#, kde-format
+msgid "Epub file to open"
+msgstr ""
 
 #~ msgctxt ""
 #~ "Title of the page with books grouped by keywords, character or genres"
