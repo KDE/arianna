@@ -89,7 +89,5 @@
     <value key="KDE::matrix">#arianna:kde.org</value>
   </custom>
   <launchable type="desktop-id">org.kde.arianna.desktop</launchable>
-  <content_rating type="oars-1.1">
-    <content_attribute id="social-chat">intense</content_attribute>
-  </content_rating>
+  <content_rating type="oars-1.1"/>
 </component>
