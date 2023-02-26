@@ -25,7 +25,7 @@
   <name xml:lang="uk">Arianna</name>
   <name xml:lang="x-test">xxAriannaxx</name>
   <name xml:lang="zh-CN">Arianna</name>
-  <summary>EPub Reader</summary>
+  <summary>EBook Reader</summary>
   <summary xml:lang="ca">Lector d'EPub</summary>
   <summary xml:lang="ca-valencia">Lector d'EPub</summary>
   <summary xml:lang="cs">Čtečka Epub</summary>
@@ -43,7 +43,7 @@
   <summary xml:lang="x-test">xxEPub Readerxx</summary>
   <summary xml:lang="zh-CN">EPub 阅读器</summary>
   <description>
-    <p>An EPub Reader</p>
+    <p>An ebook reader and library management app supporting ".epub" files. Arianny discovers your books automatically, and sort them by categories, genres and authors.</p>
     <p xml:lang="ca">Un lector d'EPub</p>
     <p xml:lang="ca-valencia">Un lector d'EPub</p>
     <p xml:lang="cs">Čtečka Epub</p>
