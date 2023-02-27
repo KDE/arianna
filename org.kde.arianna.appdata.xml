@@ -26,40 +26,8 @@
   <name xml:lang="x-test">xxAriannaxx</name>
   <name xml:lang="zh-CN">Arianna</name>
   <summary>EBook Reader</summary>
-  <summary xml:lang="ca">Lector d'EPub</summary>
-  <summary xml:lang="ca-valencia">Lector d'EPub</summary>
-  <summary xml:lang="cs">Čtečka Epub</summary>
-  <summary xml:lang="de">EPub-Lesegerät</summary>
-  <summary xml:lang="es">Lector de EPub</summary>
-  <summary xml:lang="eu">EPub irakurlea</summary>
-  <summary xml:lang="fr">Lecteur de fichiers « ePub »</summary>
-  <summary xml:lang="it">Lettore EPub</summary>
-  <summary xml:lang="ka">EPub -ის წამკითხველი</summary>
-  <summary xml:lang="nl">EPub-lezer</summary>
-  <summary xml:lang="pt">Leitor de EPub</summary>
-  <summary xml:lang="sl">Bralnik EPub</summary>
-  <summary xml:lang="tr">EPub Okuyucu</summary>
-  <summary xml:lang="uk">Читання EPub</summary>
-  <summary xml:lang="x-test">xxEPub Readerxx</summary>
-  <summary xml:lang="zh-CN">EPub 阅读器</summary>
   <description>
     <p>An ebook reader and library management app supporting ".epub" files. Arianny discovers your books automatically, and sort them by categories, genres and authors.</p>
-    <p xml:lang="ca">Un lector d'EPub</p>
-    <p xml:lang="ca-valencia">Un lector d'EPub</p>
-    <p xml:lang="cs">Čtečka Epub</p>
-    <p xml:lang="de">Ein EPub-Lesegerät</p>
-    <p xml:lang="es">Lector de EPub</p>
-    <p xml:lang="eu">EPub irakurle bat</p>
-    <p xml:lang="fr">Un lecteur de fichiers « ePub »</p>
-    <p xml:lang="it">Un lettore EPub</p>
-    <p xml:lang="ka">EPub -ის წამკითხველი</p>
-    <p xml:lang="nl">Een EPub-lezer</p>
-    <p xml:lang="pt">Um Leitor de EPub's</p>
-    <p xml:lang="sl">Bralnik EPub</p>
-    <p xml:lang="tr">Bir EPub Okuyucusu</p>
-    <p xml:lang="uk">Програма для читання EPub</p>
-    <p xml:lang="x-test">xxAn EPub Readerxx</p>
-    <p xml:lang="zh-CN">EPub 阅读器</p>
   </description>
   <url type="homepage">https://apps.kde.org/arianna/</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?product=Arianna</url>
