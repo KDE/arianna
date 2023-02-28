@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-27 00:57+0000\n"
-"PO-Revision-Date: 2023-02-07 20:20+0100\n"
+"PO-Revision-Date: 2023-02-27 07:20+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.1\n"
+"X-Generator: Lokalize 22.12.2\n"
 
 #: content/ui/EpubViewerPage.qml:125 content/ui/main.qml:160
 #, kde-format
@@ -226,7 +226,7 @@ msgstr "Lecteur de fichiers « ePub »"
 #: main.cpp:93
 #, kde-format
 msgid "Epub file to open"
-msgstr ""
+msgstr "Fichier au format » ePub » à ouvrir"
 
 #~ msgctxt ""
 #~ "Title of the page with books grouped by keywords, character or genres"

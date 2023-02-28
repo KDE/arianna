@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-02-27 00:57+0000\n"
-"PO-Revision-Date: 2023-02-26 09:11+0100\n"
+"PO-Revision-Date: 2023-02-27 08:07+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -187,7 +187,7 @@ msgstr "Nastavitve"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
-msgstr "Dodaj knjigo..."
+msgstr "Dodaj knjigo…"
 
 #: main.cpp:75
 #, kde-format
