@@ -285,12 +285,15 @@ Kirigami.ApplicationWindow {
             });
 
             epubViewer.bookClosed.connect(() => {
-               root.title = i18n("Arianna");
+                root.title = i18n("Arianna");
             });
         }
 
         function onOpenLibrary(title, model, replace) {
             if (replace) {
+                while (root.pageStack.depth > 1) {
+                    root.pageStack.pop();
+                };
                 root.pageStack.currentItem.title = title;
                 root.pageStack.currentItem.bookListModel = model;
                 return;
