@@ -143,10 +143,12 @@ void ContentList::fileFound(const QString &filePath, const QVariantMap &metaData
     int newRow = d->entries.count();
     beginInsertRows({}, newRow, newRow);
     d->entries.append(entry);
+    d->knownFiles.insert(filePath);
     endInsertRows();
 
-    if (d->cacheResults)
+    if (d->cacheResults) {
         Private::cachedFiles.append(filePath);
+    }
 }
 
 void ContentList::setAutoSearch(bool autoSearch)
@@ -180,6 +182,7 @@ void ContentList::setKnownFiles(const QStringList &results)
     for (const auto &result : results) {
         auto entry = new ContentEntry{};
         auto url = QUrl::fromLocalFile(result);
+        qDebug() << url;
 
         entry->filename = url.fileName();
         entry->filePath = url;
