@@ -182,7 +182,6 @@ void ContentList::setKnownFiles(const QStringList &results)
     for (const auto &result : results) {
         auto entry = new ContentEntry{};
         auto url = QUrl::fromLocalFile(result);
-        qDebug() << url;
 
         entry->filename = url.fileName();
         entry->filePath = url;
