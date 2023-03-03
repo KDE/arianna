@@ -118,7 +118,7 @@ FocusScope {
                 height: gridEntry.width - 2 * Kirigami.Units.largeSpacing
 
                 fillMode: Image.PreserveAspectFit
-                source: gridEntry.imageUrl
+                source: gridEntry.imageUrl != 'file://' ? gridEntry.imageUrl : ''
                 asynchronous: true
 
                 sourceSize {
