@@ -14,33 +14,12 @@ import Qt.labs.platform 1.1
 Kirigami.Page {
     id: root
 
-    property var url
+    property string url
     property string filename
-    property var locations
-    property var currentLocation
+    property string locations
+    property string currentLocation
     readonly property color readerTheme: Kirigami.Theme.backgroundColor
-
-    onReaderThemeChanged: backend.setStyle()
-
     readonly property bool hideSidebar: true
-
-    signal relocated(newLocation: var, newProgress: int)
-    signal locationsLoaded(locations: var)
-    signal bookReady(title: var)
-    signal bookClosed()
-
-    title: backend.metadata ? backend.metadata.title : ''
-
-    padding: 0
-
-    onUrlChanged: {
-        if (!url || view.loading) {
-            return;
-        }
-        const renderTo = layouts['auto'].renderTo;
-        const options = JSON.stringify(layouts['auto'].options);
-        view.runJavaScript(`open('${root.url}', "filename.epub", "epub", ${renderTo}, '${options}')`);
-    }
 
     property var layouts: {
         'auto': {
@@ -61,10 +40,26 @@ Kirigami.Page {
         }
     }
 
-    ListModel {
-        id: searchResultModel
-        property bool loading: false
+    signal relocated(newLocation: var, newProgress: int)
+    signal locationsLoaded(locations: var)
+    signal bookReady(title: var)
+    signal bookClosed()
+
+    function reLoadBook() {
+        if (!root.url || view.loading) {
+            return;
+        }
+        const renderTo = layouts['auto'].renderTo;
+        const options = JSON.stringify(layouts['auto'].options);
+        const urlNormalized = JSON.stringify(root.url);
+        view.runJavaScript(`open(${urlNormalized}, "filename.epub", "epub", ${renderTo}, '${options}')`);
     }
+
+    title: backend.metadata ? backend.metadata.title : ''
+    padding: 0
+
+    onUrlChanged: reLoadBook()
+    onReaderThemeChanged: backend.setStyle()
 
     actions.main: Kirigami.Action {
         displayComponent: KirigamiComponents.SearchPopupField {
@@ -139,6 +134,11 @@ Kirigami.Page {
         }
     }
 
+    ListModel {
+        id: searchResultModel
+        property bool loading: false
+    }
+
     Kirigami.PlaceholderMessage {
         anchors.centerIn: parent
         width: parent.width - Kirigami.Units.gridUnit * 4
@@ -177,26 +177,20 @@ Kirigami.Page {
         url: "main.html"
         visible: root.url !== ''
         webChannel: channel
-        onJavaScriptConsoleMessage: console.error('WEB:', message, lineNumber, sourceID)
-
-        function next() {
-            view.runJavaScript('rendition.next()');
-        }
-        function prev() {
-            view.runJavaScript('rendition.prev()');
-        }
 
         onVisibleChanged: if (!visible) {
             root.bookClosed();
         }
 
-        onLoadingChanged: {
-            if (!root.url || view.loading) {
-                return;
-            }
-            const renderTo = root.layouts['auto'].renderTo;
-            const options = JSON.stringify(root.layouts['auto'].options);
-            view.runJavaScript(`open('${root.url}', "filename.epub", "epub", ${renderTo}, '${options}')`);
+        onJavaScriptConsoleMessage: console.error('WEB:', message, lineNumber, sourceID)
+        onLoadingChanged: reLoadBook()
+
+        function next() {
+            view.runJavaScript('rendition.next()');
+        }
+
+        function prev() {
+            view.runJavaScript('rendition.prev()');
         }
 
         QQC2.Menu {
