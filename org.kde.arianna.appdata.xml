@@ -41,6 +41,11 @@
   <summary xml:lang="x-test">xxEBook Readerxx</summary>
   <description>
     <p>An ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sort them by categories, genres and authors.</p>
+    <p xml:lang="ca">Una aplicació de lectura de llibres electrònics i gestió de biblioteques que permet fitxers «.epub». L'Arianna descobreix automàticament els vostres llibres, i els ordena per categories, gèneres i autors.</p>
+    <p xml:lang="en-GB">An ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sort them by categories, genres and authors.</p>
+    <p xml:lang="es">Un lector de eBook y aplicación de gestión de biblioteca compatible con archivos «.epub». Arianna descubre sus libros automáticamente y los ordena por categorías, géneros y autores.</p>
+    <p xml:lang="uk">Програма для читання та керування бібліотекою з підтримкою файлів «.epub». Arianna автоматично виявить ваші книги і упорядкує їх за категоріями, жанрами та авторами.</p>
+    <p xml:lang="x-test">xxAn ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sort them by categories, genres and authors.xx</p>
   </description>
   <url type="homepage">https://apps.kde.org/arianna/</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?product=Arianna</url>
