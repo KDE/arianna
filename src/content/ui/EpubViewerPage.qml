@@ -45,7 +45,7 @@ Kirigami.Page {
     signal bookReady(title: var)
     signal bookClosed()
 
-    function reLoadBook() {
+    function reloadBook() {
         if (!root.url || view.loading) {
             return;
         }
@@ -58,7 +58,7 @@ Kirigami.Page {
     title: backend.metadata ? backend.metadata.title : ''
     padding: 0
 
-    onUrlChanged: reLoadBook()
+    onUrlChanged: reloadBook()
     onReaderThemeChanged: backend.setStyle()
 
     actions.main: Kirigami.Action {
@@ -186,7 +186,7 @@ Kirigami.Page {
         }
 
         onJavaScriptConsoleMessage: console.error('WEB:', message, lineNumber, sourceID)
-        onLoadingChanged: reLoadBook()
+        onLoadingChanged: reloadBook()
 
         function next() {
             view.runJavaScript('rendition.next()');
