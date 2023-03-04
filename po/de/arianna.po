@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-03 00:45+0000\n"
+"POT-Creation-Date: 2023-03-04 00:44+0000\n"
 "PO-Revision-Date: 2023-01-14 23:45+0100\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: English <kde-i18n-de@kde.org>\n"
@@ -19,13 +19,13 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 22.12.1\n"
 
-#: content/ui/EpubViewerPage.qml:125 content/ui/main.qml:160
+#: content/ui/EpubViewerPage.qml:120 content/ui/main.qml:160
 #, kde-format
 msgid "No search results"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:133 content/ui/EpubViewerPage.qml:244
-#: content/ui/EpubViewerPage.qml:248
+#: content/ui/EpubViewerPage.qml:128 content/ui/EpubViewerPage.qml:238
+#: content/ui/EpubViewerPage.qml:242
 #, kde-format
 msgid "Loading"
 msgstr "Wird geladen"
@@ -51,38 +51,38 @@ msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:212
+#: content/ui/EpubViewerPage.qml:206
 #, kde-format
 msgid "Copy"
 msgstr "Kopieren"
 
-#: content/ui/EpubViewerPage.qml:218
+#: content/ui/EpubViewerPage.qml:212
 #, kde-format
 msgid "Find"
 msgstr "Suchen"
 
-#: content/ui/EpubViewerPage.qml:229
+#: content/ui/EpubViewerPage.qml:223
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1 %"
 
-#: content/ui/EpubViewerPage.qml:243
+#: content/ui/EpubViewerPage.qml:237
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "Verbleibende Zeit im Kapitel:"
 
-#: content/ui/EpubViewerPage.qml:247
+#: content/ui/EpubViewerPage.qml:241
 #, kde-format
 msgid "Time left in book:"
 msgstr "Verbleibende Zeit im Buch:"
 
-#: content/ui/EpubViewerPage.qml:258
+#: content/ui/EpubViewerPage.qml:252
 #, kde-format
 msgid "Previous Page"
 msgstr "Vorherige Seite"
 
-#: content/ui/EpubViewerPage.qml:274
+#: content/ui/EpubViewerPage.qml:268
 #, kde-format
 msgid "Next Page"
 msgstr "Nächste Seite"
