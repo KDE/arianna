@@ -73,7 +73,7 @@ Kirigami.Page {
             onAccepted: if (text === '') {
                 view.runJavaScript(`find.clearHighlight()`)
             } else {
-                view.runJavaScript(`find.find('${text}', true, true)`);
+                searchResultModel.search(text);
                 searchResultModel.loading = true;
             }
 
@@ -134,9 +134,12 @@ Kirigami.Page {
         }
     }
 
-    ListModel {
+    SearchModel {
         id: searchResultModel
-        property bool loading: false
+
+        onSearchTriggered: (text) => {
+            view.runJavaScript(`find.find('${text}', true, true)`)
+        }
     }
 
     Kirigami.PlaceholderMessage {
@@ -279,7 +282,6 @@ Kirigami.Page {
     QtObject {
         id: backend
         WebChannel.id: "backend"
-        property var findResults: ({})
         property var selection: null
         property double progress: 0
         property var location
@@ -338,21 +340,7 @@ Kirigami.Page {
                 backend.location = action.payload;
                 break;
             case 'find-results':
-                const q  = action.payload.q;
-                const results  = action.payload.results;
-                searchResultModel.clear();
-                searchResultModel.loading = false;
-                var markupEscape = text => text ? text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;") : ''
-                var regexEscape = str => str ? str.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&') : ''
-                const regex = new RegExp(regexEscape(q), 'ig')
-                results.forEach(({ cfi, excerpt, section }) => {
-                    const text = markupEscape(excerpt.trim().replace(/\n/g, ' '))
-                    const markup = text.replace(regex, `<b>${regex.exec(text)[0]}</b>`)
-                    const sectionMarkup = `<span alpha="50%" size="smaller">${
-                        markupEscape(section)}</span>`
-
-                    searchResultModel.append({cfi: cfi, markup: markup, sectionMarkup: sectionMarkup })
-                })
+                searchResultModel.resultFound(action.payload.q, action.payload.results);
                 break;
             }
         }
