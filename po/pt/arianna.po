@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-04 00:44+0000\n"
-"PO-Revision-Date: 2023-02-15 12:42+0000\n"
+"PO-Revision-Date: 2023-03-06 15:00+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-POFile-SpellExtra: arianna Mastodon Niccolò Venerandi Epub Arianna EPub\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-POFile-SpellExtra: eBook epub cb fb\n"
+"X-POFile-SpellExtra: eBook epub cb fb ePub\n"
 
 #: content/ui/EpubViewerPage.qml:120 content/ui/main.qml:160
 #, kde-format
@@ -225,4 +225,4 @@ msgstr "Leitor de Epub's"
 #: main.cpp:93
 #, kde-format
 msgid "Epub file to open"
-msgstr ""
+msgstr "O ficheiro ePub a abrir"
