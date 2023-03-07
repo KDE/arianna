@@ -36,6 +36,7 @@
   <summary xml:lang="it">Lettore EBook</summary>
   <summary xml:lang="ka">ელწიგნების მკითხველი</summary>
   <summary xml:lang="nl">E-book-lezer</summary>
+  <summary xml:lang="pt">Leitor de E-Books</summary>
   <summary xml:lang="sl">Bralnik elektronskih knjig</summary>
   <summary xml:lang="tr">E-kitap Okuyucu</summary>
   <summary xml:lang="uk">Читання електронних книг</summary>
@@ -49,6 +50,7 @@
     <p xml:lang="fr">Un lecteur de fichier au format « eBook » et une application de gestion de bibliothèque prenant en charge les fichiers au format « epub ». Arianna identifie automatiquement vos livres et les trie par catégories, genres et auteurs.</p>
     <p xml:lang="it">Un lettore di ebook e gestore di libreria che supporta file «.epub». Arianna individua automaticamente i libri e li ordina per categorie, generi e autori.</p>
     <p xml:lang="nl">Een e-booklezer en toepassing voor bibliotheekbeheer die ".epub"-bestanden ondersteunt. Arianna ontdekt uw boeken automatisch en sorteert ze op categorieën, genres en auteurs.</p>
+    <p xml:lang="pt">Um leitor de e-books e de gestão de bibliotecas de ficheiros ".epub". O Arianna descobre automaticamente os seus livros, ordenando-os por categorias, géneros e autores.</p>
     <p xml:lang="sl">Bralnik elektronskih knjig in upravljalnik knjižnice datotek ".epub". Arianna samodejno odkriva vaše knjige in jih razvrsti po kategorijah, žanrih in avtorjih.</p>
     <p xml:lang="tr">'.epub' dosyalarını destekleyen bir e-kitap okuyucu ve kitaplık yönetim uygulaması. Arianna kitaplarınızı kendiliğinden bulur ve onları kategoriye, türe ve yazarlara göre sıralar.</p>
     <p xml:lang="uk">Програма для читання та керування бібліотекою з підтримкою файлів «.epub». Arianna автоматично виявить ваші книги і упорядкує їх за категоріями, жанрами та авторами.</p>
