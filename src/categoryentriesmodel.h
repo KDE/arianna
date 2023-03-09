@@ -73,7 +73,7 @@ public:
     int rating;
 };
 
-inline bool operator==(const BookEntry &a1, const BookEntry &a2) noexcept;
+bool operator==(const BookEntry &a1, const BookEntry &a2) noexcept;
 
 /**
  * \brief Model to handle the filter categories.

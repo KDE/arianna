@@ -42,15 +42,17 @@ target_link_libraries(arianna_static PUBLIC
     Qt::QuickControls2
     Qt::Svg
     Qt::Sql
-    KF5::I18n
-    KF5::Kirigami2
-    KF5::ConfigCore
-    KF5::ConfigGui
-    KF5::WindowSystem
-    KF5::DBusAddons
-    KF5::FileMetaData
-    KF5::Archive
-    KF5::CoreAddons)
+    Qt::Xml
+    Qt::Widgets
+    KF${QT_MAJOR_VERSION}::I18n
+    KF${QT_MAJOR_VERSION}::Kirigami2
+    KF${QT_MAJOR_VERSION}::ConfigCore
+    KF${QT_MAJOR_VERSION}::ConfigGui
+    KF${QT_MAJOR_VERSION}::WindowSystem
+    KF${QT_MAJOR_VERSION}::DBusAddons
+    KF${QT_MAJOR_VERSION}::FileMetaData
+    KF${QT_MAJOR_VERSION}::Archive
+    KF${QT_MAJOR_VERSION}::CoreAddons)
 
 if (${QT_MAJOR_VERSION} STREQUAL 5)
     target_link_libraries(arianna_static PUBLIC Qt::WebEngine)
@@ -59,7 +61,7 @@ else()
 endif()
 
 if (NOT WIN32)
-    target_link_libraries(arianna_static PUBLIC KF5::Baloo)
+    target_link_libraries(arianna_static PUBLIC KF${QT_MAJOR_VERSION}::Baloo)
     target_sources(arianna_static PRIVATE contentlist/baloocontentlister.cpp)
     target_compile_definitions(arianna_static PUBLIC -DHAVE_BALOO)
 endif()
