@@ -16,6 +16,7 @@
   <name xml:lang="en-GB">Arianna</name>
   <name xml:lang="es">Arianna</name>
   <name xml:lang="eu">Arianna</name>
+  <name xml:lang="fi">Arianna</name>
   <name xml:lang="fr">Arianna</name>
   <name xml:lang="it">Arianna</name>
   <name xml:lang="ka">არიანა</name>
@@ -32,6 +33,7 @@
   <summary xml:lang="cs">Čtečka e-knih</summary>
   <summary xml:lang="en-GB">EBook Reader</summary>
   <summary xml:lang="es">Lector de eBook</summary>
+  <summary xml:lang="fi">EPub-lukija</summary>
   <summary xml:lang="fr">Lecteur de fichiers « eBook »</summary>
   <summary xml:lang="it">Lettore EBook</summary>
   <summary xml:lang="ka">ელწიგნების მკითხველი</summary>
@@ -47,6 +49,7 @@
     <p xml:lang="ca-valencia">Una aplicació de lectura de llibres electrònics i gestió de biblioteques que permet fitxers «.epub». Arianna descobrix automàticament els vostres llibres, i els ordena per categories, gèneres i autors.</p>
     <p xml:lang="en-GB">An ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sort them by categories, genres and authors.</p>
     <p xml:lang="es">Un lector de eBook y aplicación de gestión de biblioteca compatible con archivos «.epub». Arianna descubre sus libros automáticamente y los ordena por categorías, géneros y autores.</p>
+    <p xml:lang="fi">E-kirjalukija- ja kirjastonhallintasovellus, joka tukee ”.epub”-tiedostoja. Arianna löytää kirjat automaattisesti ja lajittelee ne luokittain, tyylilajeittain ja tekijöittäin.</p>
     <p xml:lang="fr">Un lecteur de fichier au format « eBook » et une application de gestion de bibliothèque prenant en charge les fichiers au format « epub ». Arianna identifie automatiquement vos livres et les trie par catégories, genres et auteurs.</p>
     <p xml:lang="it">Un lettore di ebook e gestore di libreria che supporta file «.epub». Arianna individua automaticamente i libri e li ordina per categorie, generi e autori.</p>
     <p xml:lang="ka">ელწიგნების წასაკითხი და ბიბლიოთეკების მმართველი აპლიკაცია ".epub" ფაილების მხარდაჭერით. Arianny ავტომატურად აღმოაჩენს თქვენს წიგნებს და მათ კატეგორიების, ჟანრების და ავტორების მიხედვით დაალაგებს.</p>
@@ -70,6 +73,7 @@
   <developer_name xml:lang="en-GB">The KDE Community</developer_name>
   <developer_name xml:lang="es">La Comunidad KDE</developer_name>
   <developer_name xml:lang="eu">KDE komunitatea</developer_name>
+  <developer_name xml:lang="fi">KDE-yhteisö</developer_name>
   <developer_name xml:lang="fr">La communauté de KDE</developer_name>
   <developer_name xml:lang="it">La comunità KDE</developer_name>
   <developer_name xml:lang="ka">KDE-ის საზოგადოება</developer_name>
