@@ -18,4 +18,6 @@ Q_SIGNALS:
     void openBook(const QString &fileName, const QString &locations, const QString &currentLocation);
 
     void openLibrary(const QString &title, CategoryEntriesModel *model, bool replace);
+
+    void openSettings();
 };

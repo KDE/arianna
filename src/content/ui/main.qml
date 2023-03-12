@@ -253,9 +253,8 @@ Kirigami.ApplicationWindow {
             PlaceItem {
                 text: i18nc("Open the settings page", "Settings");
                 icon: "configure"
-                onTriggered: changeCategory(settingsPage);
+                onTriggered: Navigation.openSettings()
                 QQC2.ButtonGroup.group: placeGroup
-                visible: false
             }
         }
     }
@@ -290,6 +289,15 @@ Kirigami.ApplicationWindow {
         }
 
         function onOpenLibrary(title, model, replace) {
+            if (!root.pageStack.currentItem.bookListModel) {
+                root.pageStack.replace(Qt.resolvedUrl('./LibraryPage.qml'), {
+                    title: title,
+                    bookListModel: model,
+                });
+                root.pageStack.currentItem.title = title;
+                root.pageStack.currentItem.bookListModel = model;
+                return;
+            };
             if (replace) {
                 while (root.pageStack.depth > 1) {
                     root.pageStack.pop();
@@ -299,10 +307,14 @@ Kirigami.ApplicationWindow {
                 return;
             }
 
-            const epubViewer = root.pageStack.push(Qt.resolvedUrl('./LibraryPage.qml'), {
+            root.pageStack.push(Qt.resolvedUrl('./LibraryPage.qml'), {
                 title: title,
                 bookListModel: model,
             });
+        }
+
+        function onOpenSettings() {
+            root.pageStack.replace(Qt.resolvedUrl('./SettingsPage.qml'));
         }
     }
 

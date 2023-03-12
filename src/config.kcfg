@@ -31,11 +31,11 @@ SPDX-License-Identifier: CC0-1.0
       </code>
       <default code="true">generalFont</default>
     </entry>
-    <entry name="UsePublisherFont" type="bool">
-      <label>use publisher font</label>
+    <entry name="usePublisherFont" type="bool">
+      <label>Use publisher font</label>
       <default>false</default>
     </entry>
-    <entry name="Invert" type="bool">
+    <entry name="invert" type="bool">
       <label>Invert colors</label>
       <default>false</default>
     </entry>
@@ -44,7 +44,7 @@ SPDX-License-Identifier: CC0-1.0
       <default>true</default>
     </entry>
     <entry name="hyphenate" type="bool">
-      <label>hyphenate text</label>
+      <label>Hyphenate text</label>
       <default>false</default>
     </entry>
     <entry name="spacing" type="double">
@@ -52,11 +52,11 @@ SPDX-License-Identifier: CC0-1.0
       <default>1.5</default>
     </entry>
     <entry name="brightness" type="double">
-      <label>brightness</label>
+      <label>Brightness</label>
       <default>1</default>
     </entry>
     <entry name="maxWidth" type="int">
-      <label>May width</label>
+      <label>Max width</label>
       <default>1400</default>
     </entry>
     <entry name="margin" type="int">
