@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: Šimon Rataj <ratajs@ratajs.cz>
+// SPDX-License-Identifier: CC0-1.0
+
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15 as QQC2
