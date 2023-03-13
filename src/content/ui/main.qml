@@ -314,6 +314,9 @@ Kirigami.ApplicationWindow {
         }
 
         function onOpenSettings() {
+            while (root.pageStack.depth > 1) {
+                root.pageStack.pop();
+            };
             root.pageStack.replace(Qt.resolvedUrl('./SettingsPage.qml'));
         }
     }
