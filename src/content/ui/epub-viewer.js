@@ -277,7 +277,7 @@ const redrawAnnotations = () =>
 
 const setStyle = style => {
     const {
-        brightness, fgColor, bgColor, linkColor, invert,
+        brightness, fgColor, bgColor, linkColor, selectionFgColor, selectionBgColor, invert,
         fontFamily, fontSize, fontWeight, fontStyle, fontStretch,
         spacing, margin, maxWidth,
         usePublisherFont, hyphenate, justify,
@@ -341,6 +341,10 @@ const setStyle = style => {
         [`.${themeName} a:hover`]: { color: fgColor },
         p: {
             'text-align': justify ? 'justify' : 'inherit'
+        },
+        '::selection': {
+            'color': selectionFgColor,
+            'background-color': selectionBgColor
         }
     }
 

@@ -396,6 +396,8 @@ Kirigami.Page {
                 fgColor: Kirigami.Theme.textColor.toString(),
                 bgColor: Kirigami.Theme.backgroundColor.toString(),
                 linkColor: Kirigami.Theme.linkColor.toString(),
+                selectionFgColor: Kirigami.Theme.highlightedTextColor.toString(),
+                selectionBgColor: Kirigami.Theme.highlightColor.toString(),
                 invert: Config.invert,
                 brightness: Config.brightness,
                 ibooksInternalTheme: getIbooksInternalTheme(Kirigami.Theme.backgroundColor)
