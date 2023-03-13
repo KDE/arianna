@@ -22,6 +22,7 @@
   <name xml:lang="ka">არიანა</name>
   <name xml:lang="nl">Arianna</name>
   <name xml:lang="pt">Arianna</name>
+  <name xml:lang="sk">Arianna</name>
   <name xml:lang="sl">Arianna</name>
   <name xml:lang="tr">Arianna</name>
   <name xml:lang="uk">Arianna</name>
@@ -39,6 +40,7 @@
   <summary xml:lang="ka">ელწიგნების მკითხველი</summary>
   <summary xml:lang="nl">E-book-lezer</summary>
   <summary xml:lang="pt">Leitor de E-Books</summary>
+  <summary xml:lang="sk">Čítačka elektronických kníh</summary>
   <summary xml:lang="sl">Bralnik elektronskih knjig</summary>
   <summary xml:lang="tr">E-kitap Okuyucu</summary>
   <summary xml:lang="uk">Читання електронних книг</summary>
@@ -79,6 +81,7 @@
   <developer_name xml:lang="ka">KDE-ის საზოგადოება</developer_name>
   <developer_name xml:lang="nl">De KDE gemeenschap</developer_name>
   <developer_name xml:lang="pt">A Comunidade do KDE</developer_name>
+  <developer_name xml:lang="sk">KDE Komunita</developer_name>
   <developer_name xml:lang="sl">Skupnost KDE</developer_name>
   <developer_name xml:lang="tr">KDE Topluluğu</developer_name>
   <developer_name xml:lang="uk">Спільнота KDE</developer_name>
