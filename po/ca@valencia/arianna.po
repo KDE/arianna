@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-04 00:44+0000\n"
+"POT-Creation-Date: 2023-03-14 00:44+0000\n"
 "PO-Revision-Date: 2023-02-26 10:50+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -41,12 +41,12 @@ msgstr "No hi ha cap llibre seleccionat"
 msgid "Open file"
 msgstr "Obri un fitxer"
 
-#: content/ui/EpubViewerPage.qml:169 content/ui/main.qml:332
+#: content/ui/EpubViewerPage.qml:169 content/ui/main.qml:347
 #, kde-format
 msgid "Please choose a file"
 msgstr "Seleccioneu un fitxer"
 
-#: content/ui/EpubViewerPage.qml:170 content/ui/main.qml:333
+#: content/ui/EpubViewerPage.qml:170 content/ui/main.qml:348
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -105,7 +105,7 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Afig diversos llibres"
 
-#: content/ui/main.qml:17 content/ui/main.qml:288 main.cpp:73
+#: content/ui/main.qml:17 content/ui/main.qml:287 main.cpp:73
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
@@ -185,11 +185,83 @@ msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "Configuració"
 
-#: content/ui/main.qml:311
+#: content/ui/main.qml:326
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
 msgstr "Afig un llibre…"
+
+#: content/ui/SettingsPage.qml:15
+#, fuzzy, kde-format
+#| msgctxt "Open the settings page"
+#| msgid "Settings"
+msgid "Settings"
+msgstr "Configuració"
+
+#: content/ui/SettingsPage.qml:23
+#, kde-format
+msgid "Appearance"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:30
+#, kde-format
+msgid "Maximum width:"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:40
+#, kde-format
+msgid "Margin:"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:47 content/ui/SettingsPage.qml:111
+#, kde-format
+msgid "Change default font"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:48
+#, kde-format
+msgid "Font:"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:53
+#, kde-format
+msgid "Use publisher font"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:60
+#, kde-format
+msgid "Justify text"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:61
+#, kde-format
+msgid "Text flow:"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:67
+#, kde-format
+msgid "Hyphenate text"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:79
+#, kde-format
+msgid "Line height:"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:92
+#, kde-format
+msgid "Brightness:"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:100
+#, kde-format
+msgid "Invert colors"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:101
+#, kde-format
+msgid "Colors:"
+msgstr ""
 
 #: main.cpp:75
 #, kde-format
