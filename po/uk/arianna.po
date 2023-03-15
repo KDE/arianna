@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-14 00:44+0000\n"
-"PO-Revision-Date: 2023-02-26 09:18+0200\n"
+"PO-Revision-Date: 2023-03-14 08:29+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -190,76 +190,74 @@ msgid "Add Book…"
 msgstr "Додати книгу…"
 
 #: content/ui/SettingsPage.qml:15
-#, fuzzy, kde-format
-#| msgctxt "Open the settings page"
-#| msgid "Settings"
+#, kde-format
 msgid "Settings"
 msgstr "Параметри"
 
 #: content/ui/SettingsPage.qml:23
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "Вигляд"
 
 #: content/ui/SettingsPage.qml:30
 #, kde-format
 msgid "Maximum width:"
-msgstr ""
+msgstr "Максимальна ширина:"
 
 #: content/ui/SettingsPage.qml:40
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Поле:"
 
 #: content/ui/SettingsPage.qml:47 content/ui/SettingsPage.qml:111
 #, kde-format
 msgid "Change default font"
-msgstr ""
+msgstr "Змінити типовий шрифт"
 
 #: content/ui/SettingsPage.qml:48
 #, kde-format
 msgid "Font:"
-msgstr ""
+msgstr "Шрифт:"
 
 #: content/ui/SettingsPage.qml:53
 #, kde-format
 msgid "Use publisher font"
-msgstr ""
+msgstr "Використати шрифт видавця"
 
 #: content/ui/SettingsPage.qml:60
 #, kde-format
 msgid "Justify text"
-msgstr ""
+msgstr "Вирівняти текст"
 
 #: content/ui/SettingsPage.qml:61
 #, kde-format
 msgid "Text flow:"
-msgstr ""
+msgstr "Розміщення тексту:"
 
 #: content/ui/SettingsPage.qml:67
 #, kde-format
 msgid "Hyphenate text"
-msgstr ""
+msgstr "Перенесення тексту"
 
 #: content/ui/SettingsPage.qml:79
 #, kde-format
 msgid "Line height:"
-msgstr ""
+msgstr "Висота рядка:"
 
 #: content/ui/SettingsPage.qml:92
 #, kde-format
 msgid "Brightness:"
-msgstr ""
+msgstr "Яскравість:"
 
 #: content/ui/SettingsPage.qml:100
 #, kde-format
 msgid "Invert colors"
-msgstr ""
+msgstr "Інвертувати кольори"
 
 #: content/ui/SettingsPage.qml:101
 #, kde-format
 msgid "Colors:"
-msgstr ""
+msgstr "Кольори:"
 
 #: main.cpp:75
 #, kde-format
