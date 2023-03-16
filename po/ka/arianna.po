@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-14 00:44+0000\n"
-"PO-Revision-Date: 2023-02-27 06:47+0100\n"
+"PO-Revision-Date: 2023-03-15 06:19+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -190,76 +190,74 @@ msgid "Add Book…"
 msgstr "წიგნის დამატება…"
 
 #: content/ui/SettingsPage.qml:15
-#, fuzzy, kde-format
-#| msgctxt "Open the settings page"
-#| msgid "Settings"
+#, kde-format
 msgid "Settings"
-msgstr "&მორგება"
+msgstr "მორგება"
 
 #: content/ui/SettingsPage.qml:23
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "გარეგნობა"
 
 #: content/ui/SettingsPage.qml:30
 #, kde-format
 msgid "Maximum width:"
-msgstr ""
+msgstr "მაქსიმალური სიგანე:"
 
 #: content/ui/SettingsPage.qml:40
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "კიდე:"
 
 #: content/ui/SettingsPage.qml:47 content/ui/SettingsPage.qml:111
 #, kde-format
 msgid "Change default font"
-msgstr ""
+msgstr "ნაგულისხმები ფონტის შეცვლა"
 
 #: content/ui/SettingsPage.qml:48
 #, kde-format
 msgid "Font:"
-msgstr ""
+msgstr "ფონტი:"
 
 #: content/ui/SettingsPage.qml:53
 #, kde-format
 msgid "Use publisher font"
-msgstr ""
+msgstr "გამომცემლის ფონტის გამოყენება"
 
 #: content/ui/SettingsPage.qml:60
 #, kde-format
 msgid "Justify text"
-msgstr ""
+msgstr "ტექსტის გასწორება"
 
 #: content/ui/SettingsPage.qml:61
 #, kde-format
 msgid "Text flow:"
-msgstr ""
+msgstr "ტექსტის ნაკადი:"
 
 #: content/ui/SettingsPage.qml:67
 #, kde-format
 msgid "Hyphenate text"
-msgstr ""
+msgstr "ტექსტის გამოტოვებები"
 
 #: content/ui/SettingsPage.qml:79
 #, kde-format
 msgid "Line height:"
-msgstr ""
+msgstr "ხაზის სიმაღლე:"
 
 #: content/ui/SettingsPage.qml:92
 #, kde-format
 msgid "Brightness:"
-msgstr ""
+msgstr "სიკაშკაშე:"
 
 #: content/ui/SettingsPage.qml:100
 #, kde-format
 msgid "Invert colors"
-msgstr ""
+msgstr "ფერების ინვერსია"
 
 #: content/ui/SettingsPage.qml:101
 #, kde-format
 msgid "Colors:"
-msgstr ""
+msgstr "ფერები:"
 
 #: main.cpp:75
 #, kde-format

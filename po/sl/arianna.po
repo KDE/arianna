@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-14 00:44+0000\n"
-"PO-Revision-Date: 2023-02-27 08:07+0100\n"
+"PO-Revision-Date: 2023-03-15 07:01+0100\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=(n%100==1 ? 1 : n%100==2 ? 2 : n%100==3 || n"
 "%100==4 ? 3 : 0);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: content/ui/EpubViewerPage.qml:120 content/ui/main.qml:160
 #, kde-format
@@ -190,76 +190,74 @@ msgid "Add Book…"
 msgstr "Dodaj knjigo…"
 
 #: content/ui/SettingsPage.qml:15
-#, fuzzy, kde-format
-#| msgctxt "Open the settings page"
-#| msgid "Settings"
+#, kde-format
 msgid "Settings"
 msgstr "Nastavitve"
 
 #: content/ui/SettingsPage.qml:23
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "Videz"
 
 #: content/ui/SettingsPage.qml:30
 #, kde-format
 msgid "Maximum width:"
-msgstr ""
+msgstr "Maksimalna širina:"
 
 #: content/ui/SettingsPage.qml:40
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Rob:"
 
 #: content/ui/SettingsPage.qml:47 content/ui/SettingsPage.qml:111
 #, kde-format
 msgid "Change default font"
-msgstr ""
+msgstr "Spremeni privzeto pisavo"
 
 #: content/ui/SettingsPage.qml:48
 #, kde-format
 msgid "Font:"
-msgstr ""
+msgstr "Pisava:"
 
 #: content/ui/SettingsPage.qml:53
 #, kde-format
 msgid "Use publisher font"
-msgstr ""
+msgstr "Uporabi pisavo izdajatelja"
 
 #: content/ui/SettingsPage.qml:60
 #, kde-format
 msgid "Justify text"
-msgstr ""
+msgstr "Poravnaj besedilo"
 
 #: content/ui/SettingsPage.qml:61
 #, kde-format
 msgid "Text flow:"
-msgstr ""
+msgstr "Tok besedila:"
 
 #: content/ui/SettingsPage.qml:67
 #, kde-format
 msgid "Hyphenate text"
-msgstr ""
+msgstr "Poveži besedilo"
 
 #: content/ui/SettingsPage.qml:79
 #, kde-format
 msgid "Line height:"
-msgstr ""
+msgstr "Višina vrstice:"
 
 #: content/ui/SettingsPage.qml:92
 #, kde-format
 msgid "Brightness:"
-msgstr ""
+msgstr "Svetlost:"
 
 #: content/ui/SettingsPage.qml:100
 #, kde-format
 msgid "Invert colors"
-msgstr ""
+msgstr "Invertiraj barve"
 
 #: content/ui/SettingsPage.qml:101
 #, kde-format
 msgid "Colors:"
-msgstr ""
+msgstr "Barve:"
 
 #: main.cpp:75
 #, kde-format

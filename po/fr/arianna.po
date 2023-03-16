@@ -5,7 +5,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-14 00:44+0000\n"
-"PO-Revision-Date: 2023-02-27 07:20+0100\n"
+"PO-Revision-Date: 2023-03-15 15:04+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -13,7 +13,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: content/ui/EpubViewerPage.qml:120 content/ui/main.qml:160
 #, kde-format
@@ -187,76 +187,74 @@ msgid "Add Book…"
 msgstr "Ajouter un livre..."
 
 #: content/ui/SettingsPage.qml:15
-#, fuzzy, kde-format
-#| msgctxt "Open the settings page"
-#| msgid "Settings"
+#, kde-format
 msgid "Settings"
 msgstr "Configuration"
 
 #: content/ui/SettingsPage.qml:23
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "Apparence"
 
 #: content/ui/SettingsPage.qml:30
 #, kde-format
 msgid "Maximum width:"
-msgstr ""
+msgstr "Largeur maximale :"
 
 #: content/ui/SettingsPage.qml:40
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Marge :"
 
 #: content/ui/SettingsPage.qml:47 content/ui/SettingsPage.qml:111
 #, kde-format
 msgid "Change default font"
-msgstr ""
+msgstr "Modifier la police par défaut"
 
 #: content/ui/SettingsPage.qml:48
 #, kde-format
 msgid "Font:"
-msgstr ""
+msgstr "Police :"
 
 #: content/ui/SettingsPage.qml:53
 #, kde-format
 msgid "Use publisher font"
-msgstr ""
+msgstr "Utiliser la police de l'éditeur"
 
 #: content/ui/SettingsPage.qml:60
 #, kde-format
 msgid "Justify text"
-msgstr ""
+msgstr "Justifier le texte"
 
 #: content/ui/SettingsPage.qml:61
 #, kde-format
 msgid "Text flow:"
-msgstr ""
+msgstr "Flux de texte :"
 
 #: content/ui/SettingsPage.qml:67
 #, kde-format
 msgid "Hyphenate text"
-msgstr ""
+msgstr "Texte avec trait d’union"
 
 #: content/ui/SettingsPage.qml:79
 #, kde-format
 msgid "Line height:"
-msgstr ""
+msgstr "Hauteur de ligne :"
 
 #: content/ui/SettingsPage.qml:92
 #, kde-format
 msgid "Brightness:"
-msgstr ""
+msgstr "Luminosité : "
 
 #: content/ui/SettingsPage.qml:100
 #, kde-format
 msgid "Invert colors"
-msgstr ""
+msgstr "Inverser les couleurs"
 
 #: content/ui/SettingsPage.qml:101
 #, kde-format
 msgid "Colors:"
-msgstr ""
+msgstr "Couleurs :"
 
 #: main.cpp:75
 #, kde-format
