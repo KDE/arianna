@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-14 00:44+0000\n"
-"PO-Revision-Date: 2023-03-06 15:00+0000\n"
+"PO-Revision-Date: 2023-03-20 11:15+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -186,76 +186,74 @@ msgid "Add Book…"
 msgstr "Adicionar um Livro…"
 
 #: content/ui/SettingsPage.qml:15
-#, fuzzy, kde-format
-#| msgctxt "Open the settings page"
-#| msgid "Settings"
+#, kde-format
 msgid "Settings"
 msgstr "Configuração"
 
 #: content/ui/SettingsPage.qml:23
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "Aparência"
 
 #: content/ui/SettingsPage.qml:30
 #, kde-format
 msgid "Maximum width:"
-msgstr ""
+msgstr "Largura máxima:"
 
 #: content/ui/SettingsPage.qml:40
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Margem:"
 
 #: content/ui/SettingsPage.qml:47 content/ui/SettingsPage.qml:111
 #, kde-format
 msgid "Change default font"
-msgstr ""
+msgstr "Mudar o tipo de letra predefinido"
 
 #: content/ui/SettingsPage.qml:48
 #, kde-format
 msgid "Font:"
-msgstr ""
+msgstr "Tipo de letra:"
 
 #: content/ui/SettingsPage.qml:53
 #, kde-format
 msgid "Use publisher font"
-msgstr ""
+msgstr "Usar o tipo de letra do publicador"
 
 #: content/ui/SettingsPage.qml:60
 #, kde-format
 msgid "Justify text"
-msgstr ""
+msgstr "Justificar o texto"
 
 #: content/ui/SettingsPage.qml:61
 #, kde-format
 msgid "Text flow:"
-msgstr ""
+msgstr "Fluxo do texto:"
 
 #: content/ui/SettingsPage.qml:67
 #, kde-format
 msgid "Hyphenate text"
-msgstr ""
+msgstr "Hifenizar o texto"
 
 #: content/ui/SettingsPage.qml:79
 #, kde-format
 msgid "Line height:"
-msgstr ""
+msgstr "Altura da linha:"
 
 #: content/ui/SettingsPage.qml:92
 #, kde-format
 msgid "Brightness:"
-msgstr ""
+msgstr "Brilho:"
 
 #: content/ui/SettingsPage.qml:100
 #, kde-format
 msgid "Invert colors"
-msgstr ""
+msgstr "Inverter as cores"
 
 #: content/ui/SettingsPage.qml:101
 #, kde-format
 msgid "Colors:"
-msgstr ""
+msgstr "Cores:"
 
 #: main.cpp:75
 #, kde-format
