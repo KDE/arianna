@@ -7,6 +7,7 @@ import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Dialogs 1.3 as Dialogs
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.13 as Kirigami
+import org.kde.kirigamiaddons.labs.mobileform 0.1 as MobileForm
 import org.kde.arianna 1.0
 
 Kirigami.ScrollablePage {
@@ -14,94 +15,173 @@ Kirigami.ScrollablePage {
 
     title: i18n("Settings")
 
-    Kirigami.FormLayout {
-        Layout.fillWidth: true
+    leftPadding: 0
+    rightPadding: 0
 
-        Kirigami.Separator {
-            Kirigami.FormData.isSection: true
+    ColumnLayout {
+        MobileForm.FormCard {
+            Layout.topMargin: Kirigami.Units.largeSpacing
+            Layout.fillWidth: true
+            contentItem: ColumnLayout {
+                spacing: 0
 
-            Kirigami.FormData.label: i18n("Appearance")
+                MobileForm.FormCardHeader {
+                    title: i18n("Appearance")
+                }
+
+                MobileForm.FormSpinBoxDelegate {
+                    label: i18n("Maximum width:")
+
+                    from: Kirigami.Units.smallSpacing
+                    to: Screen.desktopAvailableWidth
+                    value: Config.maxWidth
+                    onValueChanged: Config.maxWidth = value
+                }
+
+                MobileForm.FormDelegateSeparator {}
+
+                MobileForm.FormSpinBoxDelegate {
+                    label: i18n("Margin:")
+
+                    from: 0
+                    to: Screen.desktopAvailableWidth
+                    value: Config.margin
+                    onValueChanged: Config.margin = value
+                }
+            }
         }
 
-        QQC2.SpinBox {
-            from: Kirigami.Units.smallSpacing
-            to: Screen.desktopAvailableWidth
+        MobileForm.FormCard {
+            Layout.topMargin: Kirigami.Units.largeSpacing
+            Layout.fillWidth: true
+            contentItem: ColumnLayout {
+                spacing: 0
 
-            Kirigami.FormData.label: i18n("Maximum width:")
+                MobileForm.FormCardHeader {
+                    title: i18n("Font")
+                }
 
-            value: Config.maxWidth
-            onValueModified: Config.maxWidth = value
+                MobileForm.FormButtonDelegate {
+                    text: i18n("Change default font")
+                    onClicked: fontDialog.open()
+                }
+
+                MobileForm.FormSwitchDelegate {
+                    text: i18n("Use publisher font")
+
+                    checked: Config.usePublisherFont
+                    onCheckedChanged: Config.usePublisherFont = checkState
+                }
+            }
         }
 
-        QQC2.SpinBox {
-            from: 0
-            to: Screen.desktopAvailableWidth
+        MobileForm.FormCard {
+            Layout.topMargin: Kirigami.Units.largeSpacing
+            Layout.fillWidth: true
+            contentItem: ColumnLayout {
+                spacing: 0
 
-            Kirigami.FormData.label: i18n("Margin:")
+                MobileForm.FormCardHeader {
+                    title: i18n("Text flow")
+                }
 
-            value: Config.margin
-            onValueModified: Config.margin = value
+                MobileForm.FormCheckDelegate {
+                    id: justifyText
+                    text: i18n("Justify text")
+
+                    checked: Config.justify
+                    onCheckStateChanged: Config.justify = checkState
+                }
+
+                MobileForm.FormDelegateSeparator { above: justifyText; below: hyphenateText }
+
+                MobileForm.FormCheckDelegate {
+                    id: hyphenateText
+                    text: i18n("Hyphenate text")
+
+                    checked: Config.hyphenate
+                    onCheckStateChanged: Config.hyphenate = checkState
+                }
+
+                MobileForm.FormDelegateSeparator { above: hyphenateText }
+
+                MobileForm.FormSpinBoxDelegate {
+                    label: i18n("Line height:")
+
+                    from: 10
+                    to: 50
+                    textFromValue: (value, locale) => Number(value / 10).toLocaleString(locale, 'f', 1)
+                    valueFromText: (text, locale) => Number.fromLocaleString(locale, text) * 10
+
+                    value: Config.spacing * 10
+                    onValueChanged: Config.spacing = value / 10
+                }
+
+                MobileForm.FormDelegateSeparator { above: hyphenateText }
+
+                MobileForm.FormSpinBoxDelegate {
+                    label: i18n("Brightness:")
+
+                    from: 0
+                    to: 100
+                    stepSize: 5
+                    textFromValue: (value, locale) => Number(value / 100).toLocaleString(locale, 'f', 2)
+                    valueFromText: (text, locale) => Number.fromLocaleString(locale, text) * 100
+
+
+                    value: Config.brightness * 100
+                    onValueChanged: Config.brightness = value / 100
+                }
+            }
         }
 
-        QQC2.Button {
-            text: i18n("Change default font")
-            Kirigami.FormData.label: i18n("Font:")
+        MobileForm.FormCard {
+            Layout.topMargin: Kirigami.Units.largeSpacing
+            Layout.fillWidth: true
+            contentItem: ColumnLayout {
+                spacing: 0
 
-            onClicked: fontDialog.open()
-        }
-        QQC2.CheckBox {
-            text: i18n("Use publisher font")
+                MobileForm.FormCardHeader {
+                    title: i18n("Colors")
+                }
 
-            checked: Config.usePublisherFont
-            onCheckStateChanged: Config.usePublisherFont = checkState
-        }
+                MobileForm.FormSwitchDelegate {
+                    text: i18n("Invert colors")
 
-        QQC2.CheckBox {
-            text: i18n("Justify text")
-            Kirigami.FormData.label: i18n("Text flow:")
-
-            checked: Config.justify
-            onCheckStateChanged: Config.justify = checkState
-        }
-        QQC2.CheckBox {
-            text: i18n("Hyphenate text")
-
-            checked: Config.hyphenate
-            onCheckStateChanged: Config.hyphenate = checkState
+                    checked: Config.invert
+                    onCheckedChanged: Config.invert = checkState
+                }
+            }
         }
 
-        QQC2.SpinBox {
-            from: 10
-            to: 50
-            textFromValue: (value, locale) => Number(value / 10).toLocaleString(locale, 'f', 1)
-            valueFromText: (text, locale) => Number.fromLocaleString(locale, text) * 10
+        MobileForm.FormCard {
+            Layout.topMargin: Kirigami.Units.largeSpacing
+            Layout.fillWidth: true
+            contentItem: ColumnLayout {
+                spacing: 0
+                Component {
+                    id: aboutPage
+                    MobileForm.AboutPage {
+                        aboutData: About
+                    }
+                }
+                Component {
+                    id: aboutKDE
+                    MobileForm.AboutKDE {}
+                }
 
-            Kirigami.FormData.label: i18n("Line height:")
+                MobileForm.FormButtonDelegate {
+                    text: i18n("About Tokodon")
+                    onClicked: applicationWindow().pageStack.layers.push(aboutPage)
+                }
 
-            value: Config.spacing * 10
-            onValueModified: Config.spacing = value / 10
-        }
+                MobileForm.FormDelegateSeparator {}
 
-        QQC2.SpinBox {
-            from: 0
-            to: 100
-            stepSize: 5
-            textFromValue: (value, locale) => Number(value / 100).toLocaleString(locale, 'f', 2)
-            valueFromText: (text, locale) => Number.fromLocaleString(locale, text) * 100
-
-            Kirigami.FormData.label: i18n("Brightness:")
-
-            value: Config.brightness * 100
-            onValueModified: Config.brightness = value / 100
-
-        }
-
-        QQC2.CheckBox {
-            text: i18n("Invert colors")
-            Kirigami.FormData.label: i18n("Colors:")
-
-            checked: Config.invert
-            onCheckStateChanged: Config.invert = checkState
+                MobileForm.FormButtonDelegate {
+                    text: i18n("About KDE")
+                    onClicked: applicationWindow().pageStack.layers.push(aboutKDE)
+                }
+            }
         }
     }
 
