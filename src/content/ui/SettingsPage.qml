@@ -171,7 +171,7 @@ Kirigami.ScrollablePage {
                 }
 
                 MobileForm.FormButtonDelegate {
-                    text: i18n("About Tokodon")
+                    text: i18n("About Arianna")
                     onClicked: applicationWindow().pageStack.layers.push(aboutPage)
                 }
 
