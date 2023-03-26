@@ -76,6 +76,7 @@ int main(int argc, char *argv[])
                      KAboutLicense::GPL_V3,
                      i18n("2022 Niccolò Venerandi <niccolo@venerandi.com>"));
     about.addAuthor(i18n("Niccolò Venerandi"), i18n("Maintainer"), QStringLiteral("niccolo@venerandi.com"));
+    about.addAuthor(i18n("Carl Schwan"), i18n("Maintainer"), QStringLiteral("carl@carlschwan.eu"));
     about.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"), i18nc("EMAIL OF TRANSLATORS", "Your emails"));
     about.setOrganizationDomain("kde.org");
     about.setBugAddress("https://bugs.kde.org/describecomponents.cgi?product=arianna");
