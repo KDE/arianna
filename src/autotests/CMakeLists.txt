@@ -11,6 +11,6 @@ add_definitions(-DDATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
 #ecm_add_test(timelinetest.cpp
 #    TEST_NAME timelinetest
-#    LINK_LIBRARIES tokodon_static Qt::Test
-#    NAME_PREFIX "tokodon-"
+#    LINK_LIBRARIES arianna_static Qt::Test
+#    NAME_PREFIX "arianna-"
 #)

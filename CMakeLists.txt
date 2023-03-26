@@ -74,7 +74,7 @@ install(FILES org.kde.arianna.svg DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolo
 
 ecm_qt_install_logging_categories(
     EXPORT ARIANNA
-    FILE tokodon.categories
+    FILE arianna.categories
     SORT DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR}
 )
 
