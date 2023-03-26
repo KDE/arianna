@@ -137,6 +137,18 @@ Kirigami.Page {
         }
     }
 
+    actions.right: Kirigami.Action {
+        text: i18n("Book Details")
+        displayHint: Kirigami.DisplayHint.IconOnly
+        icon.name: "documentinfo"
+        enabled: backend.metadata
+        onTriggered: {
+            applicationWindow().pageStack.pushDialogLayer(Qt.resolvedUrl("./BookDetailsPage.qml"), {
+                metadata: backend.metadata,
+            })
+        }
+    }
+
     SearchModel {
         id: searchResultModel
 
