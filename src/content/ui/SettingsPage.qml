@@ -70,7 +70,7 @@ Kirigami.ScrollablePage {
                     text: i18n("Use publisher font")
 
                     checked: Config.usePublisherFont
-                    onCheckedChanged: Config.usePublisherFont = checkState
+                    onCheckedChanged: Config.usePublisherFont = checked
                 }
             }
         }
@@ -90,7 +90,7 @@ Kirigami.ScrollablePage {
                     text: i18n("Justify text")
 
                     checked: Config.justify
-                    onCheckStateChanged: Config.justify = checkState
+                    onCheckStateChanged: Config.justify = checked
                 }
 
                 MobileForm.FormDelegateSeparator { above: justifyText; below: hyphenateText }
@@ -100,7 +100,7 @@ Kirigami.ScrollablePage {
                     text: i18n("Hyphenate text")
 
                     checked: Config.hyphenate
-                    onCheckStateChanged: Config.hyphenate = checkState
+                    onCheckStateChanged: Config.hyphenate = checked
                 }
 
                 MobileForm.FormDelegateSeparator { above: hyphenateText }
@@ -149,7 +149,7 @@ Kirigami.ScrollablePage {
                     text: i18n("Invert colors")
 
                     checked: Config.invert
-                    onCheckedChanged: Config.invert = checkState
+                    onCheckedChanged: Config.invert = checked
                 }
             }
         }
