@@ -108,6 +108,9 @@ int main(int argc, char *argv[])
     qmlRegisterType<QSortFilterProxyModel>("org.kde.arianna", 1, 0, "SortFilterProxyModel");
     qmlRegisterType<ContentQuery>("org.kde.arianna", 1, 0, "ContentQuery");
     qmlRegisterType<CategoryEntriesModel>("org.kde.arianna", 1, 0, "CategoryEntriesModel");
+    qmlRegisterSingletonType("org.kde.arianna", 1, 0, "About", [](QQmlEngine *engine, QJSEngine *) -> QJSValue {
+        return engine->toScriptValue(KAboutData::applicationData());
+    });
 
     engine.load(QUrl(QStringLiteral("qrc:/content/ui/main.qml")));
     if (engine.rootObjects().isEmpty()) {
