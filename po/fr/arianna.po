@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 00:43+0000\n"
+"POT-Creation-Date: 2023-03-26 00:45+0000\n"
 "PO-Revision-Date: 2023-03-15 15:04+0100\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -45,7 +45,7 @@ msgstr "Veuillez sélectionner un fichier"
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
-msgstr "Fichiers « eBook »  (*.epub *.cb* *.fb2 *.fb2zip)"
+msgstr "Fichiers « eBook » (*.epub *.cb* *.fb2 *.fb2zip)"
 
 #: content/ui/EpubViewerPage.qml:209
 #, kde-format
@@ -128,7 +128,7 @@ msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
 "touch devices)"
 msgid "Open Other..."
-msgstr "Ouvrir un autre..."
+msgstr "Ouvrir un autre…"
 
 #: content/ui/main.qml:220
 #, kde-format
@@ -189,7 +189,7 @@ msgstr ""
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
-msgstr "Ajouter un livre..."
+msgstr "Ajouter un livre…"
 
 #: content/ui/SettingsPage.qml:16
 #, kde-format
@@ -241,7 +241,7 @@ msgstr "Justifier le texte"
 #: content/ui/SettingsPage.qml:100
 #, kde-format
 msgid "Hyphenate text"
-msgstr "Texte avec trait d’union"
+msgstr "Texte avec trait d'union"
 
 #: content/ui/SettingsPage.qml:109
 #, kde-format
@@ -265,9 +265,10 @@ msgid "Invert colors"
 msgstr "Inverser les couleurs"
 
 #: content/ui/SettingsPage.qml:174
-#, kde-format
-msgid "About Tokodon"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Arianna"
+msgid "About Arianna"
+msgstr "Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format

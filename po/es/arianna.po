@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 00:43+0000\n"
-"PO-Revision-Date: 2023-03-14 13:36+0100\n"
+"POT-Creation-Date: 2023-03-26 00:45+0000\n"
+"PO-Revision-Date: 2023-03-26 00:57+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.03.80\n"
 
 #: content/ui/EpubViewerPage.qml:120 content/ui/main.qml:160
 #, kde-format
@@ -187,7 +187,7 @@ msgstr "Preferencias"
 #: content/ui/main.qml:318
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
 #: content/ui/main.qml:325
 #, kde-format
@@ -216,10 +216,9 @@ msgid "Margin:"
 msgstr "Margen:"
 
 #: content/ui/SettingsPage.qml:61
-#, fuzzy, kde-format
-#| msgid "Font:"
+#, kde-format
 msgid "Font"
-msgstr "Tipo de letra:"
+msgstr "Tipo de letra"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
@@ -232,10 +231,9 @@ msgid "Use publisher font"
 msgstr "Usar tipo de letra del editor"
 
 #: content/ui/SettingsPage.qml:85
-#, fuzzy, kde-format
-#| msgid "Text flow:"
+#, kde-format
 msgid "Text flow"
-msgstr "Flujo del texto:"
+msgstr "Flujo del texto"
 
 #: content/ui/SettingsPage.qml:90
 #, kde-format
@@ -258,10 +256,9 @@ msgid "Brightness:"
 msgstr "Brillo:"
 
 #: content/ui/SettingsPage.qml:145
-#, fuzzy, kde-format
-#| msgid "Colors:"
+#, kde-format
 msgid "Colors"
-msgstr "Colores:"
+msgstr "Colores"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
@@ -269,14 +266,15 @@ msgid "Invert colors"
 msgstr "Invertir colores"
 
 #: content/ui/SettingsPage.qml:174
-#, kde-format
-msgid "About Tokodon"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Arianna"
+msgid "About Arianna"
+msgstr "Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "Acerca de KDE"
 
 #: main.cpp:75
 #, kde-format
@@ -319,6 +317,9 @@ msgstr "Lector de EPub"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Archivo EPub a abrir"
+
+#~ msgid "About Tokodon"
+#~ msgstr "Acerca de Tokodon"
 
 #~ msgctxt ""
 #~ "Title of the page with books grouped by keywords, character or genres"

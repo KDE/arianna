@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 00:43+0000\n"
+"POT-Creation-Date: 2023-03-26 00:45+0000\n"
 "PO-Revision-Date: 2023-03-20 11:15+0000\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -264,9 +264,10 @@ msgid "Invert colors"
 msgstr "Inverter as cores"
 
 #: content/ui/SettingsPage.qml:174
-#, kde-format
-msgid "About Tokodon"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Arianna"
+msgid "About Arianna"
+msgstr "Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format

@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 00:43+0000\n"
+"POT-Creation-Date: 2023-03-26 00:45+0000\n"
 "PO-Revision-Date: 2023-03-16 16:27+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -266,9 +266,10 @@ msgid "Invert colors"
 msgstr "Invertovat barvy"
 
 #: content/ui/SettingsPage.qml:174
-#, kde-format
-msgid "About Tokodon"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Arianna"
+msgid "About Arianna"
+msgstr "Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format

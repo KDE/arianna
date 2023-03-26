@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-25 00:43+0000\n"
-"PO-Revision-Date: 2023-03-14 08:29+0200\n"
+"POT-Creation-Date: 2023-03-26 00:45+0000\n"
+"PO-Revision-Date: 2023-03-25 16:07+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -186,7 +186,7 @@ msgstr "Параметри"
 #: content/ui/main.qml:318
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "Налаштувати"
 
 #: content/ui/main.qml:325
 #, kde-format
@@ -215,10 +215,9 @@ msgid "Margin:"
 msgstr "Поле:"
 
 #: content/ui/SettingsPage.qml:61
-#, fuzzy, kde-format
-#| msgid "Font:"
+#, kde-format
 msgid "Font"
-msgstr "Шрифт:"
+msgstr "Шрифт"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
@@ -231,10 +230,9 @@ msgid "Use publisher font"
 msgstr "Використати шрифт видавця"
 
 #: content/ui/SettingsPage.qml:85
-#, fuzzy, kde-format
-#| msgid "Text flow:"
+#, kde-format
 msgid "Text flow"
-msgstr "Розміщення тексту:"
+msgstr "Розміщення тексту"
 
 #: content/ui/SettingsPage.qml:90
 #, kde-format
@@ -257,10 +255,9 @@ msgid "Brightness:"
 msgstr "Яскравість:"
 
 #: content/ui/SettingsPage.qml:145
-#, fuzzy, kde-format
-#| msgid "Colors:"
+#, kde-format
 msgid "Colors"
-msgstr "Кольори:"
+msgstr "Кольори"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
@@ -268,14 +265,15 @@ msgid "Invert colors"
 msgstr "Інвертувати кольори"
 
 #: content/ui/SettingsPage.qml:174
-#, kde-format
-msgid "About Tokodon"
-msgstr ""
+#, fuzzy, kde-format
+#| msgid "Arianna"
+msgid "About Arianna"
+msgstr "Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "Про KDE"
 
 #: main.cpp:75
 #, kde-format
@@ -318,6 +316,9 @@ msgstr "Засіб для читання EPub"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Файл Epub, який слід відкрити"
+
+#~ msgid "About Tokodon"
+#~ msgstr "Про Tokodon"
 
 #~ msgctxt ""
 #~ "Title of the page with books grouped by keywords, character or genres"
