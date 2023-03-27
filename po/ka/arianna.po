@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-26 00:45+0000\n"
-"PO-Revision-Date: 2023-03-15 06:19+0100\n"
+"POT-Creation-Date: 2023-03-27 00:46+0000\n"
+"PO-Revision-Date: 2023-03-26 07:00+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -186,7 +186,7 @@ msgstr "&მორგება"
 #: content/ui/main.qml:318
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "მორგება"
 
 #: content/ui/main.qml:325
 #, kde-format
@@ -215,10 +215,9 @@ msgid "Margin:"
 msgstr "კიდე:"
 
 #: content/ui/SettingsPage.qml:61
-#, fuzzy, kde-format
-#| msgid "Font:"
+#, kde-format
 msgid "Font"
-msgstr "ფონტი:"
+msgstr "ფონტი"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
@@ -231,10 +230,9 @@ msgid "Use publisher font"
 msgstr "გამომცემლის ფონტის გამოყენება"
 
 #: content/ui/SettingsPage.qml:85
-#, fuzzy, kde-format
-#| msgid "Text flow:"
+#, kde-format
 msgid "Text flow"
-msgstr "ტექსტის ნაკადი:"
+msgstr "ტექსტის ნაკადი"
 
 #: content/ui/SettingsPage.qml:90
 #, kde-format
@@ -257,10 +255,9 @@ msgid "Brightness:"
 msgstr "სიკაშკაშე:"
 
 #: content/ui/SettingsPage.qml:145
-#, fuzzy, kde-format
-#| msgid "Colors:"
+#, kde-format
 msgid "Colors"
-msgstr "ფერები:"
+msgstr "ფერები"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
@@ -268,15 +265,14 @@ msgid "Invert colors"
 msgstr "ფერების ინვერსია"
 
 #: content/ui/SettingsPage.qml:174
-#, fuzzy, kde-format
-#| msgid "Arianna"
+#, kde-format
 msgid "About Arianna"
-msgstr "არიანა"
+msgstr "არიანას შესახებ"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "KDE-ის შესახებ"
 
 #: main.cpp:75
 #, kde-format
@@ -293,29 +289,34 @@ msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:78
+#: main.cpp:78 main.cpp:79
 #, kde-format
 msgid "Maintainer"
 msgstr "წამყვანი პროგრამისტი"
 
 #: main.cpp:79
 #, kde-format
+msgid "Carl Schwan"
+msgstr ""
+
+#: main.cpp:80
+#, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Temuri Doghonadze"
 
-#: main.cpp:79
+#: main.cpp:80
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "Temuri.doghonadze@gmail.com"
 
-#: main.cpp:92
+#: main.cpp:93
 #, kde-format
 msgid "Epub reader"
 msgstr "EPub -ის წამკითხველი"
 
-#: main.cpp:93
+#: main.cpp:94
 #, kde-format
 msgid "Epub file to open"
 msgstr "გასახსნელი Epub ფაილი"

@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-26 00:45+0000\n"
-"PO-Revision-Date: 2023-03-25 08:41+0100\n"
+"POT-Creation-Date: 2023-03-27 00:46+0000\n"
+"PO-Revision-Date: 2023-03-26 11:19+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -267,10 +267,9 @@ msgid "Invert colors"
 msgstr "Inverteix els colors"
 
 #: content/ui/SettingsPage.qml:174
-#, fuzzy, kde-format
-#| msgid "Arianna"
+#, kde-format
 msgid "About Arianna"
-msgstr "Arianna"
+msgstr "Quant a l'Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
@@ -292,32 +291,34 @@ msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:78
+#: main.cpp:78 main.cpp:79
 #, kde-format
 msgid "Maintainer"
 msgstr "Mantenidor"
 
 #: main.cpp:79
 #, kde-format
+msgid "Carl Schwan"
+msgstr ""
+
+#: main.cpp:80
+#, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Josep M. Ferrer"
 
-#: main.cpp:79
+#: main.cpp:80
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "txemaq@gmail.com"
 
-#: main.cpp:92
+#: main.cpp:93
 #, kde-format
 msgid "Epub reader"
 msgstr "Lector d'EPub"
 
-#: main.cpp:93
+#: main.cpp:94
 #, kde-format
 msgid "Epub file to open"
 msgstr "Fitxer Epub a obrir"
-
-#~ msgid "About Tokodon"
-#~ msgstr "Quant a l'Arianna"

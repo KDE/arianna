@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-26 00:45+0000\n"
-"PO-Revision-Date: 2023-03-14 21:00+0000\n"
+"POT-Creation-Date: 2023-03-27 00:46+0000\n"
+"PO-Revision-Date: 2023-03-26 14:34+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
 "Language: en_GB\n"
@@ -185,7 +185,7 @@ msgstr "Settings"
 #: content/ui/main.qml:318
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "Configure"
 
 #: content/ui/main.qml:325
 #, kde-format
@@ -214,10 +214,9 @@ msgid "Margin:"
 msgstr "Margin:"
 
 #: content/ui/SettingsPage.qml:61
-#, fuzzy, kde-format
-#| msgid "Font:"
+#, kde-format
 msgid "Font"
-msgstr "Font:"
+msgstr "Font"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
@@ -230,10 +229,9 @@ msgid "Use publisher font"
 msgstr "Use publisher font"
 
 #: content/ui/SettingsPage.qml:85
-#, fuzzy, kde-format
-#| msgid "Text flow:"
+#, kde-format
 msgid "Text flow"
-msgstr "Text flow:"
+msgstr "Text flow"
 
 #: content/ui/SettingsPage.qml:90
 #, kde-format
@@ -256,10 +254,9 @@ msgid "Brightness:"
 msgstr "Brightness:"
 
 #: content/ui/SettingsPage.qml:145
-#, fuzzy, kde-format
-#| msgid "Colors:"
+#, kde-format
 msgid "Colors"
-msgstr "Colours:"
+msgstr "Colours"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
@@ -267,15 +264,14 @@ msgid "Invert colors"
 msgstr "Invert colours"
 
 #: content/ui/SettingsPage.qml:174
-#, fuzzy, kde-format
-#| msgid "Arianna"
+#, kde-format
 msgid "About Arianna"
-msgstr "Arianna"
+msgstr "About Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "About KDE"
 
 #: main.cpp:75
 #, kde-format
@@ -292,29 +288,34 @@ msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:78
+#: main.cpp:78 main.cpp:79
 #, kde-format
 msgid "Maintainer"
 msgstr "Maintainer"
 
 #: main.cpp:79
 #, kde-format
+msgid "Carl Schwan"
+msgstr ""
+
+#: main.cpp:80
+#, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Steve Allewell"
 
-#: main.cpp:79
+#: main.cpp:80
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "steve.allewell@gmail.com"
 
-#: main.cpp:92
+#: main.cpp:93
 #, kde-format
 msgid "Epub reader"
 msgstr "EPub reader"
 
-#: main.cpp:93
+#: main.cpp:94
 #, kde-format
 msgid "Epub file to open"
 msgstr "EPub file to open"

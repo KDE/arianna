@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-26 00:45+0000\n"
+"POT-Creation-Date: 2023-03-27 00:46+0000\n"
 "PO-Revision-Date: 2023-03-16 16:27+0100\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
@@ -291,29 +291,34 @@ msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:78
+#: main.cpp:78 main.cpp:79
 #, kde-format
 msgid "Maintainer"
 msgstr "Správce"
 
 #: main.cpp:79
 #, kde-format
+msgid "Carl Schwan"
+msgstr ""
+
+#: main.cpp:80
+#, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Vít Pelčák"
 
-#: main.cpp:79
+#: main.cpp:80
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "vit@pelcak.org"
 
-#: main.cpp:92
+#: main.cpp:93
 #, kde-format
 msgid "Epub reader"
 msgstr "Čtečka Epub"
 
-#: main.cpp:93
+#: main.cpp:94
 #, kde-format
 msgid "Epub file to open"
 msgstr "Soubor epub k otevření"
