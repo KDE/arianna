@@ -253,8 +253,9 @@ Kirigami.ApplicationWindow {
             PlaceItem {
                 text: i18nc("Open the settings page", "Settings");
                 icon: "configure"
-                onTriggered: Navigation.openSettings()
+                onClicked: Navigation.openSettings()
                 QQC2.ButtonGroup.group: placeGroup
+                checkable: false
             }
         }
     }
