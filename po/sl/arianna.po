@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-27 00:46+0000\n"
-"PO-Revision-Date: 2023-03-25 10:39+0100\n"
+"POT-Creation-Date: 2023-03-28 00:45+0000\n"
+"PO-Revision-Date: 2023-03-27 09:13+0200\n"
 "Last-Translator: Matjaž Jeran <matjaz.jeran@amis.net>\n"
 "Language-Team: Slovenian <lugos-slo@lugos.si>\n"
 "Language: sl\n"
@@ -39,12 +39,12 @@ msgstr "Ni izbrane knjige"
 msgid "Open file"
 msgstr "Odpri datoteko"
 
-#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:346
+#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:347
 #, kde-format
 msgid "Please choose a file"
 msgstr "Izberite datoteko"
 
-#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:347
+#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:348
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -103,7 +103,7 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Dodaj nekaj knjig"
 
-#: content/ui/main.qml:17 content/ui/main.qml:287 main.cpp:73
+#: content/ui/main.qml:17 content/ui/main.qml:288 main.cpp:73
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
@@ -183,12 +183,12 @@ msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "Nastavitve"
 
-#: content/ui/main.qml:318
+#: content/ui/main.qml:319
 #, kde-format
 msgid "Configure"
 msgstr "Konfiguriraj"
 
-#: content/ui/main.qml:325
+#: content/ui/main.qml:326
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
@@ -265,10 +265,9 @@ msgid "Invert colors"
 msgstr "Invertiraj barve"
 
 #: content/ui/SettingsPage.qml:174
-#, fuzzy, kde-format
-#| msgid "Arianna"
+#, kde-format
 msgid "About Arianna"
-msgstr "Arianna"
+msgstr "O Arianni"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
@@ -298,7 +297,7 @@ msgstr "Vzdrževalec"
 #: main.cpp:79
 #, kde-format
 msgid "Carl Schwan"
-msgstr ""
+msgstr "Carl Schwan"
 
 #: main.cpp:80
 #, kde-format

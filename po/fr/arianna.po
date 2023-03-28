@@ -4,8 +4,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-27 00:46+0000\n"
-"PO-Revision-Date: 2023-03-15 15:04+0100\n"
+"POT-Creation-Date: 2023-03-28 00:45+0000\n"
+"PO-Revision-Date: 2023-03-26 11:29+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
 "Language: fr\n"
@@ -36,12 +36,12 @@ msgstr "Aucun livre sélectionné"
 msgid "Open file"
 msgstr "Ouvrir un fichier"
 
-#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:346
+#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:347
 #, kde-format
 msgid "Please choose a file"
 msgstr "Veuillez sélectionner un fichier"
 
-#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:347
+#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:348
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -100,7 +100,7 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Ajouter quelques livres"
 
-#: content/ui/main.qml:17 content/ui/main.qml:287 main.cpp:73
+#: content/ui/main.qml:17 content/ui/main.qml:288 main.cpp:73
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
@@ -180,12 +180,12 @@ msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "Configuration"
 
-#: content/ui/main.qml:318
+#: content/ui/main.qml:319
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "Configurer"
 
-#: content/ui/main.qml:325
+#: content/ui/main.qml:326
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
@@ -212,10 +212,9 @@ msgid "Margin:"
 msgstr "Marge :"
 
 #: content/ui/SettingsPage.qml:61
-#, fuzzy, kde-format
-#| msgid "Font:"
+#, kde-format
 msgid "Font"
-msgstr "Police :"
+msgstr "Police"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
@@ -228,10 +227,9 @@ msgid "Use publisher font"
 msgstr "Utiliser la police de l'éditeur"
 
 #: content/ui/SettingsPage.qml:85
-#, fuzzy, kde-format
-#| msgid "Text flow:"
+#, kde-format
 msgid "Text flow"
-msgstr "Flux de texte :"
+msgstr "Flux de texte"
 
 #: content/ui/SettingsPage.qml:90
 #, kde-format
@@ -254,10 +252,9 @@ msgid "Brightness:"
 msgstr "Luminosité : "
 
 #: content/ui/SettingsPage.qml:145
-#, fuzzy, kde-format
-#| msgid "Colors:"
+#, kde-format
 msgid "Colors"
-msgstr "Couleurs :"
+msgstr "Couleurs"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
@@ -273,7 +270,7 @@ msgstr "Arianna"
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "À propos de KDE"
 
 #: main.cpp:75
 #, kde-format

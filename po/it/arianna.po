@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-27 00:46+0000\n"
+"POT-Creation-Date: 2023-03-28 00:45+0000\n"
 "PO-Revision-Date: 2023-02-27 09:50+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
@@ -38,12 +38,12 @@ msgstr "Nessun libro selezionato"
 msgid "Open file"
 msgstr "Apri file"
 
-#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:346
+#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:347
 #, kde-format
 msgid "Please choose a file"
 msgstr "Scegli un file"
 
-#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:347
+#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:348
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -102,7 +102,7 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Aggiungi alcuni libri"
 
-#: content/ui/main.qml:17 content/ui/main.qml:287 main.cpp:73
+#: content/ui/main.qml:17 content/ui/main.qml:288 main.cpp:73
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
@@ -182,12 +182,12 @@ msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "Impostazioni"
 
-#: content/ui/main.qml:318
+#: content/ui/main.qml:319
 #, kde-format
 msgid "Configure"
 msgstr ""
 
-#: content/ui/main.qml:325
+#: content/ui/main.qml:326
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"

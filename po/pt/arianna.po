@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-03-27 00:46+0000\n"
-"PO-Revision-Date: 2023-03-20 11:15+0000\n"
+"POT-Creation-Date: 2023-03-28 00:45+0000\n"
+"PO-Revision-Date: 2023-03-27 23:00+0100\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -12,7 +12,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-POFile-SpellExtra: arianna Mastodon Niccolò Venerandi Epub Arianna EPub\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-POFile-SpellExtra: eBook epub cb fb ePub\n"
+"X-POFile-SpellExtra: eBook epub cb fb ePub Schwan\n"
 
 #: content/ui/EpubViewerPage.qml:120 content/ui/main.qml:160
 #, kde-format
@@ -35,12 +35,12 @@ msgstr "Nenhum livro seleccionado"
 msgid "Open file"
 msgstr "Abrir um ficheiro"
 
-#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:346
+#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:347
 #, kde-format
 msgid "Please choose a file"
 msgstr "Escolha por favor um ficheiro"
 
-#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:347
+#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:348
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -99,7 +99,7 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Adicionar alguns livros"
 
-#: content/ui/main.qml:17 content/ui/main.qml:287 main.cpp:73
+#: content/ui/main.qml:17 content/ui/main.qml:288 main.cpp:73
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
@@ -179,12 +179,12 @@ msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "Configuração"
 
-#: content/ui/main.qml:318
+#: content/ui/main.qml:319
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "Configurar"
 
-#: content/ui/main.qml:325
+#: content/ui/main.qml:326
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
@@ -211,10 +211,9 @@ msgid "Margin:"
 msgstr "Margem:"
 
 #: content/ui/SettingsPage.qml:61
-#, fuzzy, kde-format
-#| msgid "Font:"
+#, kde-format
 msgid "Font"
-msgstr "Tipo de letra:"
+msgstr "Tipo de Letra"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
@@ -227,10 +226,9 @@ msgid "Use publisher font"
 msgstr "Usar o tipo de letra do publicador"
 
 #: content/ui/SettingsPage.qml:85
-#, fuzzy, kde-format
-#| msgid "Text flow:"
+#, kde-format
 msgid "Text flow"
-msgstr "Fluxo do texto:"
+msgstr "Fluxo do texto"
 
 #: content/ui/SettingsPage.qml:90
 #, kde-format
@@ -253,10 +251,9 @@ msgid "Brightness:"
 msgstr "Brilho:"
 
 #: content/ui/SettingsPage.qml:145
-#, fuzzy, kde-format
-#| msgid "Colors:"
+#, kde-format
 msgid "Colors"
-msgstr "Cores:"
+msgstr "Cores"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
@@ -264,15 +261,14 @@ msgid "Invert colors"
 msgstr "Inverter as cores"
 
 #: content/ui/SettingsPage.qml:174
-#, fuzzy, kde-format
-#| msgid "Arianna"
+#, kde-format
 msgid "About Arianna"
-msgstr "Arianna"
+msgstr "Acerca do Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "Acerca do KDE"
 
 #: main.cpp:75
 #, kde-format
@@ -297,7 +293,7 @@ msgstr "Manutenção"
 #: main.cpp:79
 #, kde-format
 msgid "Carl Schwan"
-msgstr ""
+msgstr "Carl Schwan"
 
 #: main.cpp:80
 #, kde-format
