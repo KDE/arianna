@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-28 00:45+0000\n"
-"PO-Revision-Date: 2023-02-27 09:50+0100\n"
+"PO-Revision-Date: 2023-03-28 13:04+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: content/ui/EpubViewerPage.qml:120 content/ui/main.qml:160
 #, kde-format
@@ -185,7 +185,7 @@ msgstr "Impostazioni"
 #: content/ui/main.qml:319
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "Configura"
 
 #: content/ui/main.qml:326
 #, kde-format
@@ -194,87 +194,84 @@ msgid "Add Book…"
 msgstr "Aggiungi libro…"
 
 #: content/ui/SettingsPage.qml:16
-#, fuzzy, kde-format
-#| msgctxt "Open the settings page"
-#| msgid "Settings"
+#, kde-format
 msgid "Settings"
 msgstr "Impostazioni"
 
 #: content/ui/SettingsPage.qml:29
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "Aspetto"
 
 #: content/ui/SettingsPage.qml:33
 #, kde-format
 msgid "Maximum width:"
-msgstr ""
+msgstr "Larghezza massima:"
 
 #: content/ui/SettingsPage.qml:44
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Margine:"
 
 #: content/ui/SettingsPage.qml:61
 #, kde-format
 msgid "Font"
-msgstr ""
+msgstr "Carattere"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
 msgid "Change default font"
-msgstr ""
+msgstr "Cambia il carattere predefinito"
 
 #: content/ui/SettingsPage.qml:70
 #, kde-format
 msgid "Use publisher font"
-msgstr ""
+msgstr "Usa il carattere dell'editore"
 
 #: content/ui/SettingsPage.qml:85
 #, kde-format
 msgid "Text flow"
-msgstr ""
+msgstr "Flusso del testo"
 
 #: content/ui/SettingsPage.qml:90
 #, kde-format
 msgid "Justify text"
-msgstr ""
+msgstr "Testo giustificato"
 
 #: content/ui/SettingsPage.qml:100
 #, kde-format
 msgid "Hyphenate text"
-msgstr ""
+msgstr "Testo sillabato"
 
 #: content/ui/SettingsPage.qml:109
 #, kde-format
 msgid "Line height:"
-msgstr ""
+msgstr "Altezza della linea:"
 
 #: content/ui/SettingsPage.qml:123
 #, kde-format
 msgid "Brightness:"
-msgstr ""
+msgstr "Luminosità:"
 
 #: content/ui/SettingsPage.qml:145
 #, kde-format
 msgid "Colors"
-msgstr ""
+msgstr "Colori"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
 msgid "Invert colors"
-msgstr ""
+msgstr "Inverti i colori"
 
 #: content/ui/SettingsPage.qml:174
-#, fuzzy, kde-format
-#| msgid "Arianna"
+#, kde-format
 msgid "About Arianna"
-msgstr "Arianna"
+msgstr "Informazioni su Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "Informazioni su KDE"
 
 #: main.cpp:75
 #, kde-format
@@ -299,7 +296,7 @@ msgstr "Responsabile"
 #: main.cpp:79
 #, kde-format
 msgid "Carl Schwan"
-msgstr ""
+msgstr "Carl Schwan"
 
 #: main.cpp:80
 #, kde-format
