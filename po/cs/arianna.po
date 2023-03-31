@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-03-28 00:45+0000\n"
-"PO-Revision-Date: 2023-03-16 16:27+0100\n"
+"PO-Revision-Date: 2023-03-29 16:08+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -185,7 +185,7 @@ msgstr "Nastavení"
 #: content/ui/main.qml:319
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "Nastavit"
 
 #: content/ui/main.qml:326
 #, kde-format
@@ -214,10 +214,9 @@ msgid "Margin:"
 msgstr "Okraj:"
 
 #: content/ui/SettingsPage.qml:61
-#, fuzzy, kde-format
-#| msgid "Font:"
+#, kde-format
 msgid "Font"
-msgstr "Písmo:"
+msgstr "Písmo"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
@@ -255,10 +254,9 @@ msgid "Brightness:"
 msgstr "Jas:"
 
 #: content/ui/SettingsPage.qml:145
-#, fuzzy, kde-format
-#| msgid "Colors:"
+#, kde-format
 msgid "Colors"
-msgstr "Barvy:"
+msgstr "Barvy"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
@@ -266,15 +264,14 @@ msgid "Invert colors"
 msgstr "Invertovat barvy"
 
 #: content/ui/SettingsPage.qml:174
-#, fuzzy, kde-format
-#| msgid "Arianna"
+#, kde-format
 msgid "About Arianna"
-msgstr "Arianna"
+msgstr "O aplikaci Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "O prostředí KDE"
 
 #: main.cpp:75
 #, kde-format
@@ -299,7 +296,7 @@ msgstr "Správce"
 #: main.cpp:79
 #, kde-format
 msgid "Carl Schwan"
-msgstr ""
+msgstr "Carl Schwan"
 
 #: main.cpp:80
 #, kde-format
