@@ -90,7 +90,7 @@ Kirigami.ScrollablePage {
                     text: i18n("Justify text")
 
                     checked: Config.justify
-                    onCheckStateChanged: Config.justify = checked
+                    onCheckedChanged: Config.justify = checked
                 }
 
                 MobileForm.FormDelegateSeparator { above: justifyText; below: hyphenateText }
@@ -100,7 +100,7 @@ Kirigami.ScrollablePage {
                     text: i18n("Hyphenate text")
 
                     checked: Config.hyphenate
-                    onCheckStateChanged: Config.hyphenate = checked
+                    onCheckedChanged: Config.hyphenate = checked
                 }
 
                 MobileForm.FormDelegateSeparator { above: hyphenateText }
