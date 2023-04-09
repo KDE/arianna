@@ -14,7 +14,7 @@ import QtGraphicalEffects 1.15
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.quickcharts 1.0 as Charts
 
-FocusScope {
+QQC2.ItemDelegate {
     id: gridEntry
 
     required property url imageUrl
@@ -24,6 +24,8 @@ FocusScope {
     required property int currentProgress
 
     signal open()
+
+    background: null
 
     SystemPalette {
         id: myPalette
@@ -54,6 +56,7 @@ FocusScope {
 
     Keys.onReturnPressed: open()
     Keys.onEnterPressed: open()
+    Keys.onSpacePressed: open()
 
     Accessible.role: Accessible.ListItem
     Accessible.name: mainText

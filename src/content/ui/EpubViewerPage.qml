@@ -58,6 +58,9 @@ Kirigami.Page {
     title: backend.metadata ? backend.metadata.title : ''
     padding: 0
 
+    Keys.onLeftPressed: view.prev()
+    Keys.onRightPressed: view.next()
+
     onUrlChanged: reloadBook()
     onReaderThemeChanged: backend.setStyle()
 
