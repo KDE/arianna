@@ -96,6 +96,23 @@
   <custom>
     <value key="KDE::matrix">#arianna:kde.org</value>
   </custom>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://cdn.kde.org/screenshots/arianna/library-view.png</image>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://cdn.kde.org/screenshots/arianna/reader.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://cdn.kde.org/screenshots/arianna/reader-search.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://cdn.kde.org/screenshots/arianna/library-search.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://cdn.kde.org/screenshots/arianna/library-author.png</image>
+    </screenshot>
+  </screenshots>
   <launchable type="desktop-id">org.kde.arianna.desktop</launchable>
   <content_rating type="oars-1.1"/>
 </component>
