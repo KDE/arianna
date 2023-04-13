@@ -278,7 +278,6 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
         BookDatabase::self().addEntry(entry);
     }
     Q_EMIT countChanged();
-    qApp->processEvents();
 }
 
 CategoryEntriesModel *BookListModel::newlyAddedCategoryModel() const
