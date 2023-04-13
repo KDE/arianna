@@ -255,7 +255,9 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
             EPubContainer epub(nullptr);
             epub.openFile(entry.filename);
             const auto titles = epub.getMetadata(QStringLiteral("title"));
-            entry.title = titles[0];
+            if (!titles.isEmpty()) {
+                entry.title = titles[0];
+            }
             entry.author = epub.getMetadata(QStringLiteral("creator"));
             entry.rights = epub.getMetadata(QStringLiteral("rights")).join(QStringLiteral(", "));
             entry.source = epub.getMetadata(QStringLiteral("source")).join(QStringLiteral(", "));
