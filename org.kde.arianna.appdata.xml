@@ -18,6 +18,7 @@
   <name xml:lang="eu">Arianna</name>
   <name xml:lang="fi">Arianna</name>
   <name xml:lang="fr">Arianna</name>
+  <name xml:lang="hu">Arianna</name>
   <name xml:lang="ia">Arianna</name>
   <name xml:lang="it">Arianna</name>
   <name xml:lang="ka">არიანა</name>
@@ -80,6 +81,7 @@
   <developer_name xml:lang="eu">KDE komunitatea</developer_name>
   <developer_name xml:lang="fi">KDE-yhteisö</developer_name>
   <developer_name xml:lang="fr">La communauté de KDE</developer_name>
+  <developer_name xml:lang="hu">A KDE Közösség</developer_name>
   <developer_name xml:lang="ia">Le communitate de KDE</developer_name>
   <developer_name xml:lang="it">La comunità KDE</developer_name>
   <developer_name xml:lang="ka">KDE-ის საზოგადოება</developer_name>
