@@ -14,7 +14,3 @@ License: CC0-1.0
 Files: README.md screenshots/library.png screenshots/reader.png src/autotests/data/*
 Copyright: Carl Schwan
 License: CC0-1.0
-
-Files: src/content/ui/epub.js
-Copyright: futurepress
-License: MIT
