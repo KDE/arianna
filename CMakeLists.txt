@@ -49,7 +49,7 @@ set_package_properties(KF${QT_MAJOR_VERSION}Kirigami2 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Kirigami application UI framework"
 )
-find_package(KF${QT_MAJOR_VERSION}KirigamiAddons 0.6 REQUIRED)
+find_package(KF${QT_MAJOR_VERSION}KirigamiAddons 0.8 REQUIRED)
 find_package(KF${QT_MAJOR_VERSION}QQC2DesktopStyle REQUIRED)
 
 if (${QT_MAJOR_VERSION} STREQUAL 5)
