@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-10 00:44+0000\n"
-"PO-Revision-Date: 2023-02-07 20:12+0100\n"
+"PO-Revision-Date: 2023-04-14 13:25+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:160
 #, kde-format
@@ -188,7 +188,7 @@ msgstr "Ezarpenak"
 #: content/ui/main.qml:319
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "Konfiguratu"
 
 #: content/ui/main.qml:326
 #, kde-format
@@ -197,87 +197,84 @@ msgid "Add Book…"
 msgstr "Gehitu liburua…"
 
 #: content/ui/SettingsPage.qml:16
-#, fuzzy, kde-format
-#| msgctxt "Open the settings page"
-#| msgid "Settings"
+#, kde-format
 msgid "Settings"
 msgstr "Ezarpenak"
 
 #: content/ui/SettingsPage.qml:29
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "Itxura"
 
 #: content/ui/SettingsPage.qml:33
 #, kde-format
 msgid "Maximum width:"
-msgstr ""
+msgstr "Gehienezko zabalera:"
 
 #: content/ui/SettingsPage.qml:44
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "Marjina:"
 
 #: content/ui/SettingsPage.qml:61
 #, kde-format
 msgid "Font"
-msgstr ""
+msgstr "Letra-tipoa"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
 msgid "Change default font"
-msgstr ""
+msgstr "Aldatu letra-tipo lehenetsia"
 
 #: content/ui/SettingsPage.qml:70
 #, kde-format
 msgid "Use publisher font"
-msgstr ""
+msgstr "Erabili argitaratzailearen letra-tipoa"
 
 #: content/ui/SettingsPage.qml:85
 #, kde-format
 msgid "Text flow"
-msgstr ""
+msgstr "Testu-jarioa"
 
 #: content/ui/SettingsPage.qml:90
 #, kde-format
 msgid "Justify text"
-msgstr ""
+msgstr "Justifikatu testua"
 
 #: content/ui/SettingsPage.qml:100
 #, kde-format
 msgid "Hyphenate text"
-msgstr ""
+msgstr "Marratxoa duen testua"
 
 #: content/ui/SettingsPage.qml:109
 #, kde-format
 msgid "Line height:"
-msgstr ""
+msgstr "Lerroaren altuera:"
 
 #: content/ui/SettingsPage.qml:123
 #, kde-format
 msgid "Brightness:"
-msgstr ""
+msgstr "Distira:"
 
 #: content/ui/SettingsPage.qml:145
 #, kde-format
 msgid "Colors"
-msgstr ""
+msgstr "Koloreak"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
 msgid "Invert colors"
-msgstr ""
+msgstr "Alderantzikatu koloreak"
 
 #: content/ui/SettingsPage.qml:174
-#, fuzzy, kde-format
-#| msgid "Arianna"
+#, kde-format
 msgid "About Arianna"
-msgstr "Arianna"
+msgstr "«Arianna»ri buruz"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "KDEri buruz"
 
 #: main.cpp:75
 #, kde-format
@@ -302,7 +299,7 @@ msgstr "Arduraduna"
 #: main.cpp:79
 #, kde-format
 msgid "Carl Schwan"
-msgstr ""
+msgstr "Carl Schwan"
 
 #: main.cpp:80
 #, kde-format
@@ -324,7 +321,7 @@ msgstr "Epub irakurlea"
 #: main.cpp:94
 #, kde-format
 msgid "Epub file to open"
-msgstr ""
+msgstr "Ireki beharreko «ePub» fitxategia"
 
 #~ msgctxt ""
 #~ "Title of the page with books grouped by keywords, character or genres"
