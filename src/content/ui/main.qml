@@ -80,7 +80,6 @@ Kirigami.ApplicationWindow {
             drawerOpen = true;
         }
 
-
         leftPadding: 0
         rightPadding: 0
         topPadding: 0
@@ -113,6 +112,15 @@ Kirigami.ApplicationWindow {
 
                         Kirigami.Theme.colorSet: Kirigami.Theme.View
                         Kirigami.Theme.inherit: false
+
+                        onActiveFocusChanged: if (activeFocus) {
+                            currentIndex = 0;
+                        }
+
+                        Keys.onTabPressed: {
+                            goHomeButton.forceActiveFocus(Qt.TabFocusReason);
+                            searchField.popup.close();
+                        }
 
                         model: SortFilterProxyModel {
                             id: searchFilterProxyModel
@@ -187,7 +195,7 @@ Kirigami.ApplicationWindow {
                     Keys.onDownPressed: nextItemInFocusChain().forceActiveFocus(Qt.TabFocusReason)
                     Keys.onUpPressed: nextItemInFocusChain(false).forceActiveFocus(Qt.TabFocusReason)
                     Accessible.role: Accessible.MenuItem
-                    highlighted: checked
+                    highlighted: checked || activeFocus
                     onToggled: if (checked) {
                         item.triggered();
                     }
@@ -197,6 +205,7 @@ Kirigami.ApplicationWindow {
                     spacing: 1
                     width: scrollView.width
                     PlaceItem {
+                        id: goHomeButton
                         text: i18nc("Switch to the listing page showing the most recently read books", "Home");
                         icon: "go-home";
                         checked: true
