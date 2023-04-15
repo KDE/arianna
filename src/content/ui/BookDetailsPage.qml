@@ -63,7 +63,7 @@ Kirigami.ScrollablePage {
 
                 MobileForm.FormTextDelegate {
                     text: i18n("Publishing date:")
-                    description: new Date(root.metadata.pubdate).toLocaleDateString()
+                    description: /^\d+$/.test(root.metadata.pubdate) ? root.metadata.pubdate : new Date(root.metadata.pubdate).toLocaleDateString(
                     visible: description.length > 0
                 }
 
