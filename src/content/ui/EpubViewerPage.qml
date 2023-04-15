@@ -51,7 +51,7 @@ Kirigami.Page {
         }
         const renderTo = layouts['auto'].renderTo;
         const options = JSON.stringify(layouts['auto'].options);
-        const urlNormalized = JSON.stringify(root.url);
+        const urlNormalized = JSON.stringify(root.url).replace("#", "%23").replace("?", "%3F");
         view.runJavaScript(`open(${urlNormalized}, "filename.epub", "epub", ${renderTo}, '${options}')`);
     }
 
