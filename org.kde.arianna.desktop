@@ -43,6 +43,7 @@ GenericName[sl]=Bralnik elektronskih knjig
 GenericName[tr]=E-kitap Okuyucu
 GenericName[uk]=Читання електронних книг
 GenericName[x-test]=xxEbook Readerxx
+GenericName[zh_CN]=电子书阅读器
 Exec=arianna %u
 Terminal=false
 Icon=org.kde.arianna
