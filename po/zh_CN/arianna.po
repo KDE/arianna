@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-16 00:45+0000\n"
-"PO-Revision-Date: 2023-04-10 14:11\n"
+"PO-Revision-Date: 2023-04-16 12:32\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -185,7 +185,7 @@ msgstr "设置"
 #: content/ui/main.qml:328
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "配置"
 
 #: content/ui/main.qml:335
 #, kde-format
@@ -196,37 +196,37 @@ msgstr "添加图书"
 #: content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 #: content/ui/SettingsPage.qml:29
 #, kde-format
 msgid "Appearance"
-msgstr ""
+msgstr "外观"
 
 #: content/ui/SettingsPage.qml:33
 #, kde-format
 msgid "Maximum width:"
-msgstr ""
+msgstr "最大宽度："
 
 #: content/ui/SettingsPage.qml:44
 #, kde-format
 msgid "Margin:"
-msgstr ""
+msgstr "页边距："
 
 #: content/ui/SettingsPage.qml:61
 #, kde-format
 msgid "Font"
-msgstr ""
+msgstr "字体"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
 msgid "Change default font"
-msgstr ""
+msgstr "更改默认字体"
 
 #: content/ui/SettingsPage.qml:70
 #, kde-format
 msgid "Use publisher font"
-msgstr ""
+msgstr "使用出版字体"
 
 #: content/ui/SettingsPage.qml:85
 #, kde-format
@@ -246,32 +246,32 @@ msgstr ""
 #: content/ui/SettingsPage.qml:109
 #, kde-format
 msgid "Line height:"
-msgstr ""
+msgstr "行高："
 
 #: content/ui/SettingsPage.qml:123
 #, kde-format
 msgid "Brightness:"
-msgstr ""
+msgstr "亮度："
 
 #: content/ui/SettingsPage.qml:145
 #, kde-format
 msgid "Colors"
-msgstr ""
+msgstr "颜色"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
 msgid "Invert colors"
-msgstr ""
+msgstr "反色"
 
 #: content/ui/SettingsPage.qml:174
 #, kde-format
 msgid "About Arianna"
-msgstr ""
+msgstr "关于 Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "关于 KDE"
 
 #: main.cpp:75
 #, kde-format
@@ -296,7 +296,7 @@ msgstr "维护人员"
 #: main.cpp:79
 #, kde-format
 msgid "Carl Schwan"
-msgstr ""
+msgstr "Carl Schwan"
 
 #: main.cpp:80
 #, kde-format

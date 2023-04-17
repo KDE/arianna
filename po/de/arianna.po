@@ -9,14 +9,14 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-16 00:45+0000\n"
-"PO-Revision-Date: 2023-03-24 19:45+0100\n"
+"PO-Revision-Date: 2023-04-14 23:04+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: English <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 22.12.3\n"
 
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:168
@@ -187,7 +187,7 @@ msgstr "Einstellungen"
 #: content/ui/main.qml:328
 #, kde-format
 msgid "Configure"
-msgstr ""
+msgstr "Einrichten"
 
 #: content/ui/main.qml:335
 #, kde-format
@@ -218,7 +218,7 @@ msgstr "Rand:"
 #: content/ui/SettingsPage.qml:61
 #, kde-format
 msgid "Font"
-msgstr ""
+msgstr "Schriftart"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
@@ -233,7 +233,7 @@ msgstr "Schriftart des Herausgebers verwenden"
 #: content/ui/SettingsPage.qml:85
 #, kde-format
 msgid "Text flow"
-msgstr ""
+msgstr "Textfluss"
 
 #: content/ui/SettingsPage.qml:90
 #, kde-format
@@ -243,12 +243,12 @@ msgstr "Text im Blocksatz anzeigen"
 #: content/ui/SettingsPage.qml:100
 #, kde-format
 msgid "Hyphenate text"
-msgstr ""
+msgstr "Text mit Bindestrich schreiben"
 
 #: content/ui/SettingsPage.qml:109
 #, kde-format
 msgid "Line height:"
-msgstr "Zeilenhöhe:"
+msgstr "Zeilenhöhe"
 
 #: content/ui/SettingsPage.qml:123
 #, kde-format
@@ -258,7 +258,7 @@ msgstr "Helligkeit:"
 #: content/ui/SettingsPage.qml:145
 #, kde-format
 msgid "Colors"
-msgstr ""
+msgstr "Farben"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
@@ -266,15 +266,14 @@ msgid "Invert colors"
 msgstr "Farben umkehren"
 
 #: content/ui/SettingsPage.qml:174
-#, fuzzy, kde-format
-#| msgid "arianna"
+#, kde-format
 msgid "About Arianna"
-msgstr "Arianna"
+msgstr "Über Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr ""
+msgstr "Über KDE"
 
 #: main.cpp:75
 #, kde-format
@@ -299,7 +298,7 @@ msgstr "Betreuer"
 #: main.cpp:79
 #, kde-format
 msgid "Carl Schwan"
-msgstr ""
+msgstr "Carl Schwan"
 
 #: main.cpp:80
 #, kde-format
