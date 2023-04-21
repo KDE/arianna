@@ -1,108 +1,106 @@
-# German translations for arianna package.
-# Copyright (C) 2023 This file is copyright:
+# Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the arianna package.
-# Frederik Schwarzer <schwarzer@kde.org>, 2023.
+# josé m. <correoxm@disroot.org>, 2023.
 #
-# Automatically generated, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-16 00:45+0000\n"
-"PO-Revision-Date: 2023-04-14 23:04+0200\n"
-"Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
-"Language-Team: English <kde-i18n-de@kde.org>\n"
-"Language: de\n"
+"PO-Revision-Date: 2023-04-18 17:44+0200\n"
+"Last-Translator: josé m. <correoxm@disroot.org>\n"
+"Language-Team: galician\n"
+"Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 20.12.0\n"
 
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:168
 #, kde-format
 msgid "No search results"
-msgstr "Keine Suchergebnisse"
+msgstr "Sen resultados"
 
 #: content/ui/EpubViewerPage.qml:131 content/ui/EpubViewerPage.qml:244
 #: content/ui/EpubViewerPage.qml:248
 #, kde-format
 msgid "Loading"
-msgstr "Wird geladen"
+msgstr "Cargando"
 
 #: content/ui/EpubViewerPage.qml:151
 #, kde-format
 msgid "No book selected"
-msgstr "Kein Buch ausgewählt"
+msgstr "Sen libro seleccionado"
 
 #: content/ui/EpubViewerPage.qml:154
 #, kde-format
 msgid "Open file"
-msgstr "Datei öffnen"
+msgstr "Abrir ficheiro"
 
 #: content/ui/EpubViewerPage.qml:175 content/ui/main.qml:356
 #, kde-format
 msgid "Please choose a file"
-msgstr "Bitte wählen Sie eine Datei"
+msgstr "Elixa un ficheiro"
 
 #: content/ui/EpubViewerPage.qml:176 content/ui/main.qml:357
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
-msgstr "eBook-Dateien (*.epub *.cb* *.fb2 *.fb2zip)"
+msgstr "ficheiros de eBook (*.epub *.cb* *.fb2 *.fb2zip)"
 
 #: content/ui/EpubViewerPage.qml:212
 #, kde-format
 msgid "Copy"
-msgstr "Kopieren"
+msgstr "Copiar"
 
 #: content/ui/EpubViewerPage.qml:218
 #, kde-format
 msgid "Find"
-msgstr "Suchen"
+msgstr "Atopar"
 
 #: content/ui/EpubViewerPage.qml:229
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
-msgstr "%1 %"
+msgstr "%1%"
 
 #: content/ui/EpubViewerPage.qml:243
 #, kde-format
 msgid "Time left in chapter:"
-msgstr "Verbleibende Zeit im Kapitel:"
+msgstr "Tempo restante no capítulo:"
 
 #: content/ui/EpubViewerPage.qml:247
 #, kde-format
 msgid "Time left in book:"
-msgstr "Verbleibende Zeit im Buch:"
+msgstr "Tempo restante para o libro:"
 
 #: content/ui/EpubViewerPage.qml:258
 #, kde-format
 msgid "Previous Page"
-msgstr "Vorherige Seite"
+msgstr "Páxina Anterior"
 
 #: content/ui/EpubViewerPage.qml:274
 #, kde-format
 msgid "Next Page"
-msgstr "Nächste Seite"
+msgstr "Páxina Seguinte"
 
 #: content/ui/GridBrowserDelegate.qml:196
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
-msgstr "Neu"
+msgstr "Novo"
 
 #: content/ui/LibraryPage.qml:18
 #, kde-format
 msgid "Library"
-msgstr "Bibliothek"
+msgstr "Biblioteca"
 
 #: content/ui/LibraryPage.qml:87
 #, kde-format
 msgctxt "@info placeholder"
 msgid "Add some books"
-msgstr "Fügen Sie einige Bücher hinzu"
+msgstr "Engada algún libro"
 
 #: content/ui/main.qml:17 content/ui/main.qml:297 main.cpp:73
 #, kde-format
@@ -113,18 +111,18 @@ msgstr "Arianna"
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
-msgstr "Übersicht"
+msgstr "Inicio"
 
 #: content/ui/main.qml:213
 #, kde-format
 msgid "Home"
-msgstr "Übersicht"
+msgstr "Inicio"
 
 #: content/ui/main.qml:216
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
-msgstr "Kürzlich hinzugefügte Bücher"
+msgstr "Engadidos recentemente"
 
 #: content/ui/main.qml:222
 #, kde-format
@@ -132,7 +130,7 @@ msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
 "touch devices)"
 msgid "Open Other..."
-msgstr "Weitere öffnen ..."
+msgstr "Abrir Outro..."
 
 #: content/ui/main.qml:229
 #, kde-format
@@ -140,160 +138,160 @@ msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
 "properties"
 msgid "Group By"
-msgstr "Gruppieren nach"
+msgstr "Agrupar por"
 
 #: content/ui/main.qml:232
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
-msgstr "Autor"
+msgstr "Autoría"
 
 #: content/ui/main.qml:238
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
-msgstr "Reihe"
+msgstr "Serie"
 
 #: content/ui/main.qml:240
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
-msgstr "Nach Reihe gruppieren"
+msgstr "Agrupar por Serie"
 
 #: content/ui/main.qml:244
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
-msgstr "Herausgeber"
+msgstr "Editorial"
 
 #: content/ui/main.qml:250
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
-msgstr "Schlüsselwörter"
+msgstr "Palabras chave"
 
 #: content/ui/main.qml:252
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
-msgstr "Nach Genre gruppieren"
+msgstr "Agrupar por Xénero"
 
 #: content/ui/main.qml:263
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr "Axustes"
 
 #: content/ui/main.qml:328
 #, kde-format
 msgid "Configure"
-msgstr "Einrichten"
+msgstr "Configurar"
 
 #: content/ui/main.qml:335
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
-msgstr "Buch hinzufügen …"
+msgstr ""
 
 #: content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
-msgstr "Einstellungen"
+msgstr "Axustes"
 
 #: content/ui/SettingsPage.qml:29
 #, kde-format
 msgid "Appearance"
-msgstr "Erscheinungsbild"
+msgstr "Aparencia"
 
 #: content/ui/SettingsPage.qml:33
 #, kde-format
 msgid "Maximum width:"
-msgstr "Maximale Breite:"
+msgstr "Ancho máximo:"
 
 #: content/ui/SettingsPage.qml:44
 #, kde-format
 msgid "Margin:"
-msgstr "Rand:"
+msgstr "Marxe:"
 
 #: content/ui/SettingsPage.qml:61
 #, kde-format
 msgid "Font"
-msgstr "Schriftart"
+msgstr "Tipografía"
 
 #: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
 #, kde-format
 msgid "Change default font"
-msgstr "Standardschriftart ändern"
+msgstr "Cambiar tipo de letra por defecto"
 
 #: content/ui/SettingsPage.qml:70
 #, kde-format
 msgid "Use publisher font"
-msgstr "Schriftart des Herausgebers verwenden"
+msgstr "Usar tipografía da editorial"
 
 #: content/ui/SettingsPage.qml:85
 #, kde-format
 msgid "Text flow"
-msgstr "Textfluss"
+msgstr "Fluxo do texto"
 
 #: content/ui/SettingsPage.qml:90
 #, kde-format
 msgid "Justify text"
-msgstr "Text im Blocksatz anzeigen"
+msgstr "Xustificar texto"
 
 #: content/ui/SettingsPage.qml:100
 #, kde-format
 msgid "Hyphenate text"
-msgstr "Text mit Bindestrich schreiben"
+msgstr "Texto con guións"
 
 #: content/ui/SettingsPage.qml:109
 #, kde-format
 msgid "Line height:"
-msgstr "Zeilenhöhe"
+msgstr "Altura da liña:"
 
 #: content/ui/SettingsPage.qml:123
 #, kde-format
 msgid "Brightness:"
-msgstr "Helligkeit:"
+msgstr "Brillo:"
 
 #: content/ui/SettingsPage.qml:145
 #, kde-format
 msgid "Colors"
-msgstr "Farben"
+msgstr "Cores"
 
 #: content/ui/SettingsPage.qml:149
 #, kde-format
 msgid "Invert colors"
-msgstr "Farben umkehren"
+msgstr "Inverter cores"
 
 #: content/ui/SettingsPage.qml:174
 #, kde-format
 msgid "About Arianna"
-msgstr "Über Arianna"
+msgstr "Acerca de Arianna"
 
 #: content/ui/SettingsPage.qml:181
 #, kde-format
 msgid "About KDE"
-msgstr "Über KDE"
+msgstr "Acerca de KDE"
 
 #: main.cpp:75
 #, kde-format
 msgid "EPub Reader"
-msgstr "EPub-Lesegerät"
+msgstr "Lector EPub"
 
 #: main.cpp:77
 #, kde-format
 msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
-msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
+msgstr ""
 
 #: main.cpp:78
 #, kde-format
 msgid "Niccolò Venerandi"
-msgstr "Niccolò Venerandi"
+msgstr ""
 
 #: main.cpp:78 main.cpp:79
 #, kde-format
 msgid "Maintainer"
-msgstr "Betreuer"
+msgstr "Mantemento"
 
 #: main.cpp:79
 #, kde-format
@@ -304,26 +302,20 @@ msgstr "Carl Schwan"
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr "Deutsches KDE-Übersetzerteam"
+msgstr "José M."
 
 #: main.cpp:80
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr "kde-i18n-de@kde.org"
+msgstr "correoxm@disroot.org"
 
 #: main.cpp:93
 #, kde-format
 msgid "Epub reader"
-msgstr "EPub-Lesegerät"
+msgstr "Lector Epub"
 
 #: main.cpp:94
 #, kde-format
 msgid "Epub file to open"
-msgstr "Zu öffnende EPub-Datei"
-
-#~ msgid "arianna"
-#~ msgstr "Arianna"
-
-#~ msgid "Mastodon client"
-#~ msgstr "Mastodon-Client"
+msgstr "Ficheiro Epub para abrir"
