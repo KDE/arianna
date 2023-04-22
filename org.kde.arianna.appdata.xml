@@ -125,6 +125,10 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.0.1" date="2023-04-2">
+      <url>https://carlschwan.eu/2023/04/22/arianna-1.0.1/</url>
+      <description>This released fixes various accessibility issues and crashes.</description>
+    </release>
     <release version="1.0.0" date="2023-04-13">
       <url>https://carlschwan.eu/2023/04/12/announcing-arianna-1.0/</url>
     </release>
