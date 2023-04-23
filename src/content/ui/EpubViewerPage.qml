@@ -189,6 +189,13 @@ Kirigami.Page {
         }
     }
 
+    Connections {
+        target: applicationWindow().contextDrawer
+        function onGoTo(cfi) {
+            view.goTo(cfi);
+        }
+    }
+
     WebEngineView {
         id: view
         anchors.fill: parent
@@ -209,6 +216,10 @@ Kirigami.Page {
 
         function prev() {
             view.runJavaScript('rendition.prev()');
+        }
+
+        function goTo(cfi) {
+            view.runJavaScript('rendition.display("' + cfi + '")');
         }
 
         QQC2.Menu {
@@ -324,7 +335,7 @@ Kirigami.Page {
                     Database.addBook(backend.file, metadata);
                 });
                 get('book.navigation.toc', toc => {
-                    backend.toc = toc;
+                    applicationWindow().contextDrawer.model.importFromJson(toc)
                 });
                 break;
             case 'rendition-ready':

@@ -269,6 +269,13 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    contextDrawer: TableOfContentDrawer {
+        modal: !root.wideScreen || !enabled
+        onEnabledChanged: drawerOpen = enabled && !modal
+        enabled: root.pageStack.layers.depth > 1
+        handleVisible: enabled
+    }
+
     Connections {
         target: Navigation
 

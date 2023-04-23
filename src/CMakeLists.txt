@@ -20,6 +20,7 @@ set(arianna_src
     propertycontainer.cpp
     booklistmodel.cpp
     epubcontainer.cpp
+    tableofcontentmodel.cpp
 
     navigation.h
     navigation.cpp

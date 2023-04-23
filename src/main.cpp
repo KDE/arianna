@@ -35,6 +35,7 @@
 #include "contentlist/contentquery.h"
 #include "format.h"
 #include "navigation.h"
+#include "tableofcontentmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -108,6 +109,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<ContentList>("org.kde.arianna", 1, 0, "ContentList");
     qmlRegisterType<QSortFilterProxyModel>("org.kde.arianna", 1, 0, "SortFilterProxyModel");
     qmlRegisterType<ContentQuery>("org.kde.arianna", 1, 0, "ContentQuery");
+    qmlRegisterType<TableOfContentModel>("org.kde.arianna", 1, 0, "TableOfContentModel");
     qmlRegisterType<CategoryEntriesModel>("org.kde.arianna", 1, 0, "CategoryEntriesModel");
     qmlRegisterSingletonType("org.kde.arianna", 1, 0, "About", [](QQmlEngine *engine, QJSEngine *) -> QJSValue {
         return engine->toScriptValue(KAboutData::applicationData());
