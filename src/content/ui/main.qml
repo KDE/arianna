@@ -325,7 +325,7 @@ Kirigami.ApplicationWindow {
 
         function onOpenSettings() {
             pageStack.pushDialogLayer(Qt.resolvedUrl('./SettingsPage.qml'), {}, {
-                title: i18n("Configure"),
+                title: i18n("Settings"),
             });
         }
     }
