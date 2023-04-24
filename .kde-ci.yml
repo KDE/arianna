@@ -14,6 +14,7 @@ Dependencies:
     'frameworks/kwindowsystem': '@latest'
     'frameworks/kfilemetadata': '@latest'
     'frameworks/kdbusaddons': '@latest'
+    'frameworks/kquickcharts': '@latest'
 
 - 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
   'require':
@@ -31,6 +32,7 @@ Dependencies:
     'frameworks/kwindowsystem': '@latest-kf6'
     'frameworks/kfilemetadata': '@latest-kf6'
     'frameworks/kdbusaddons': '@latest-kf6'
+    'frameworks/kquickcharts': '@latest-kf6'
 
 - 'on': ['Linux/Qt6', 'FreeBSD/Qt6']
   'require':
