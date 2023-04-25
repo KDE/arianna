@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-24 00:45+0000\n"
-"PO-Revision-Date: 2023-03-27 13:23+0300\n"
+"PO-Revision-Date: 2023-04-24 13:00+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
 "Language: tr\n"
@@ -15,50 +15,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.03.70\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book details"
-msgstr "emir_sari@icloud.com"
+msgstr "Kitap ayrıntıları"
 
 #: content/ui/BookDetailsPage.qml:33
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by author"
-#| msgid "Author"
+#, kde-format
 msgid "Author:"
-msgstr "Yazar"
+msgstr "Yazar:"
 
 #: content/ui/BookDetailsPage.qml:41
 #, kde-format
 msgid "Description:"
-msgstr ""
+msgstr "Açıklama:"
 
 #: content/ui/BookDetailsPage.qml:49
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publisher:"
-msgstr "Yayımcı"
+msgstr "Yayımcı:"
 
 #: content/ui/BookDetailsPage.qml:57
 #, kde-format
 msgid "Language:"
-msgstr ""
+msgstr "Dil:"
 
 #: content/ui/BookDetailsPage.qml:65
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publishing date:"
-msgstr "Yayımcı"
+msgstr "Yayım tarihi:"
 
 #: content/ui/BookDetailsPage.qml:73
 #, kde-format
 msgid "Copyright:"
-msgstr ""
+msgstr "Telif hakkı:"
 
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:168
 #, kde-format
@@ -72,11 +64,9 @@ msgid "Loading"
 msgstr "Yükleniyor"
 
 #: content/ui/EpubViewerPage.qml:141
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book Details"
-msgstr "emir_sari@icloud.com"
+msgstr "Kitap Ayrıntıları"
 
 #: content/ui/EpubViewerPage.qml:163
 #, kde-format
@@ -321,7 +311,7 @@ msgstr "KDE Hakkında"
 #: content/ui/TableOfContentDrawer.qml:40
 #, kde-format
 msgid "Table of content"
-msgstr ""
+msgstr "İçindekiler"
 
 #: main.cpp:76
 #, kde-format
