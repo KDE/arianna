@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-24 00:45+0000\n"
-"PO-Revision-Date: 2023-03-27 23:00+0100\n"
+"PO-Revision-Date: 2023-04-25 21:06+0100\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -15,47 +15,39 @@ msgstr ""
 "X-POFile-SpellExtra: eBook epub cb fb ePub Schwan\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book details"
-msgstr "zepires@gmail.com"
+msgstr "Detalhes do livro"
 
 #: content/ui/BookDetailsPage.qml:33
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by author"
-#| msgid "Author"
+#, kde-format
 msgid "Author:"
-msgstr "Autor"
+msgstr "Autor:"
 
 #: content/ui/BookDetailsPage.qml:41
 #, kde-format
 msgid "Description:"
-msgstr ""
+msgstr "Descrição:"
 
 #: content/ui/BookDetailsPage.qml:49
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publisher:"
-msgstr "Publicador"
+msgstr "Publicador:"
 
 #: content/ui/BookDetailsPage.qml:57
 #, kde-format
 msgid "Language:"
-msgstr ""
+msgstr "Língua:"
 
 #: content/ui/BookDetailsPage.qml:65
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publishing date:"
-msgstr "Publicador"
+msgstr "Data de publicação:"
 
 #: content/ui/BookDetailsPage.qml:73
 #, kde-format
 msgid "Copyright:"
-msgstr ""
+msgstr "Copyright:"
 
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:168
 #, kde-format
@@ -69,11 +61,9 @@ msgid "Loading"
 msgstr "A carregar"
 
 #: content/ui/EpubViewerPage.qml:141
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book Details"
-msgstr "zepires@gmail.com"
+msgstr "Detalhes do Livro"
 
 #: content/ui/EpubViewerPage.qml:163
 #, kde-format
@@ -318,7 +308,7 @@ msgstr "Acerca do KDE"
 #: content/ui/TableOfContentDrawer.qml:40
 #, kde-format
 msgid "Table of content"
-msgstr ""
+msgstr "Índice analítico"
 
 #: main.cpp:76
 #, kde-format
@@ -366,6 +356,3 @@ msgstr "Leitor de Epub's"
 #, kde-format
 msgid "Epub file to open"
 msgstr "O ficheiro ePub a abrir"
-
-#~ msgid "Configure"
-#~ msgstr "Configurar"
