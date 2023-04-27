@@ -1,6 +1,6 @@
 # Arianna
 
-Arianna is a ebook reader.
+Arianna is an ebook reader.
 
 ![Screenshot of the library mode](screenshots/library.png)
 ![Screenshot of the epub reader](screenshots/reader.png)
