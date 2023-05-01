@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-04-24 00:45+0000\n"
-"PO-Revision-Date: 2023-03-28 13:04+0200\n"
+"PO-Revision-Date: 2023-04-25 10:51+0200\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -15,50 +15,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.04.0\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book details"
-msgstr "smart2128vr@gmail.com"
+msgstr "Dettagli del libro"
 
 #: content/ui/BookDetailsPage.qml:33
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by author"
-#| msgid "Author"
+#, kde-format
 msgid "Author:"
-msgstr "Autore"
+msgstr "Autore:"
 
 #: content/ui/BookDetailsPage.qml:41
 #, kde-format
 msgid "Description:"
-msgstr ""
+msgstr "Descrizione:"
 
 #: content/ui/BookDetailsPage.qml:49
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publisher:"
-msgstr "Editore"
+msgstr "Editore:"
 
 #: content/ui/BookDetailsPage.qml:57
 #, kde-format
 msgid "Language:"
-msgstr ""
+msgstr "Lingua:"
 
 #: content/ui/BookDetailsPage.qml:65
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publishing date:"
-msgstr "Editore"
+msgstr "Data di pubblicazione:"
 
 #: content/ui/BookDetailsPage.qml:73
 #, kde-format
 msgid "Copyright:"
-msgstr ""
+msgstr "Copyright:"
 
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:168
 #, kde-format
@@ -72,11 +64,9 @@ msgid "Loading"
 msgstr "Caricamento"
 
 #: content/ui/EpubViewerPage.qml:141
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book Details"
-msgstr "smart2128vr@gmail.com"
+msgstr "Dettagli del libro"
 
 #: content/ui/EpubViewerPage.qml:163
 #, kde-format
@@ -321,7 +311,7 @@ msgstr "Informazioni su KDE"
 #: content/ui/TableOfContentDrawer.qml:40
 #, kde-format
 msgid "Table of content"
-msgstr ""
+msgstr "Indice"
 
 #: main.cpp:76
 #, kde-format
