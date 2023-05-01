@@ -64,7 +64,7 @@ Kirigami.Page {
     onUrlChanged: reloadBook()
     onReaderThemeChanged: backend.setStyle()
 
-    actions.right: Kirigami.Action {
+    actions.main: Kirigami.Action {
         displayComponent: KirigamiComponents.SearchPopupField {
             visible: view.file !== ''
 
@@ -137,7 +137,7 @@ Kirigami.Page {
         }
     }
 
-    actions.main: Kirigami.Action {
+    actions.right: Kirigami.Action {
         text: i18n("Book Details")
         displayHint: Kirigami.DisplayHint.IconOnly
         icon.name: "documentinfo"
