@@ -11,6 +11,10 @@ Files: .flatpak-manifest.json
 Copyright: Tobias Fella
 License: CC0-1.0
 
+Files: src/content/ui/jszip.min.js
+Copyright: JsZip contributors <https://github.com/Stuk/jszip/graphs/contributors>
+License: MIT or GPL-3.0-only
+
 Files: README.md screenshots/library.png screenshots/reader.png src/autotests/data/*
 Copyright: Carl Schwan
 License: CC0-1.0
