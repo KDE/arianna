@@ -76,7 +76,7 @@ Kirigami.ApplicationWindow {
         handleClosedIcon.source: modal ? null : "sidebar-expand-left"
         handleOpenIcon.source: modal ? null : "sidebar-collapse-left"
         handleVisible: modal
-        onModalChanged: if (!modal) {
+        onModalChanged: if (!modal && pageStack.layers.currentItem.hideSidebar !== true) {
             drawerOpen = true;
         }
 
