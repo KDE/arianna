@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-24 00:45+0000\n"
+"POT-Creation-Date: 2023-05-15 00:44+0000\n"
 "PO-Revision-Date: 2023-04-24 11:53+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -246,67 +246,67 @@ msgstr "Aparença"
 msgid "Maximum width:"
 msgstr "Amplada màxima:"
 
-#: content/ui/SettingsPage.qml:44
+#: content/ui/SettingsPage.qml:47
 #, kde-format
 msgid "Margin:"
 msgstr "Marge:"
 
-#: content/ui/SettingsPage.qml:61
+#: content/ui/SettingsPage.qml:67
 #, kde-format
 msgid "Font"
 msgstr "Lletra"
 
-#: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
+#: content/ui/SettingsPage.qml:71 content/ui/SettingsPage.qml:215
 #, kde-format
 msgid "Change default font"
 msgstr "Canvia la lletra predeterminada"
 
-#: content/ui/SettingsPage.qml:70
+#: content/ui/SettingsPage.qml:76
 #, kde-format
 msgid "Use publisher font"
 msgstr "Usa la lletra de l'editorial"
 
-#: content/ui/SettingsPage.qml:85
+#: content/ui/SettingsPage.qml:94
 #, kde-format
 msgid "Text flow"
 msgstr "Flux del text"
 
-#: content/ui/SettingsPage.qml:90
+#: content/ui/SettingsPage.qml:99
 #, kde-format
 msgid "Justify text"
 msgstr "Justifica el text"
 
-#: content/ui/SettingsPage.qml:100
+#: content/ui/SettingsPage.qml:112
 #, kde-format
 msgid "Hyphenate text"
 msgstr "Partició de mots"
 
-#: content/ui/SettingsPage.qml:109
+#: content/ui/SettingsPage.qml:124
 #, kde-format
 msgid "Line height:"
 msgstr "Alçada de la línia:"
 
-#: content/ui/SettingsPage.qml:123
+#: content/ui/SettingsPage.qml:141
 #, kde-format
 msgid "Brightness:"
 msgstr "Lluminositat:"
 
-#: content/ui/SettingsPage.qml:145
+#: content/ui/SettingsPage.qml:166
 #, kde-format
 msgid "Colors"
 msgstr "Colors"
 
-#: content/ui/SettingsPage.qml:149
+#: content/ui/SettingsPage.qml:170
 #, kde-format
 msgid "Invert colors"
 msgstr "Inverteix els colors"
 
-#: content/ui/SettingsPage.qml:174
+#: content/ui/SettingsPage.qml:198
 #, kde-format
 msgid "About Arianna"
 msgstr "Quant a l'Arianna"
 
-#: content/ui/SettingsPage.qml:181
+#: content/ui/SettingsPage.qml:205
 #, kde-format
 msgid "About KDE"
 msgstr "Quant a KDE"

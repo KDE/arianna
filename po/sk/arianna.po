@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-04-24 00:45+0000\n"
+"POT-Creation-Date: 2023-05-15 00:44+0000\n"
 "PO-Revision-Date: 2023-03-12 09:05+0100\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -253,68 +253,68 @@ msgstr ""
 msgid "Maximum width:"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:44
+#: content/ui/SettingsPage.qml:47
 #, kde-format
 msgid "Margin:"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:61
+#: content/ui/SettingsPage.qml:67
 #, kde-format
 msgid "Font"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:65 content/ui/SettingsPage.qml:191
+#: content/ui/SettingsPage.qml:71 content/ui/SettingsPage.qml:215
 #, kde-format
 msgid "Change default font"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:70
+#: content/ui/SettingsPage.qml:76
 #, kde-format
 msgid "Use publisher font"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:85
+#: content/ui/SettingsPage.qml:94
 #, kde-format
 msgid "Text flow"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:90
+#: content/ui/SettingsPage.qml:99
 #, kde-format
 msgid "Justify text"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:100
+#: content/ui/SettingsPage.qml:112
 #, kde-format
 msgid "Hyphenate text"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:109
+#: content/ui/SettingsPage.qml:124
 #, kde-format
 msgid "Line height:"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:123
+#: content/ui/SettingsPage.qml:141
 #, kde-format
 msgid "Brightness:"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:145
+#: content/ui/SettingsPage.qml:166
 #, kde-format
 msgid "Colors"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:149
+#: content/ui/SettingsPage.qml:170
 #, kde-format
 msgid "Invert colors"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:174
+#: content/ui/SettingsPage.qml:198
 #, fuzzy, kde-format
 #| msgid "Arianna"
 msgid "About Arianna"
 msgstr "Arianna"
 
-#: content/ui/SettingsPage.qml:181
+#: content/ui/SettingsPage.qml:205
 #, kde-format
 msgid "About KDE"
 msgstr ""
