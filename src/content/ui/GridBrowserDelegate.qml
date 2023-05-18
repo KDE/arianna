@@ -10,7 +10,8 @@ import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Window 2.2
 import QtQml.Models 2.1
 import QtQuick.Layouts 1.2
-import QtGraphicalEffects 1.15
+import @QML_QTGRAPHICAL_EFFECTS_IMPORT@
+
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.quickcharts 1.0 as Charts
 

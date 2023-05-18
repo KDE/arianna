@@ -30,7 +30,7 @@ Kirigami.ApplicationWindow {
         }
         initialPage: LibraryPage {
             bookListModel: root.bookListModel
-            actions.main: addBookAction
+            @KIRIGAMI_ACTIONS@: addBookAction
         }
     }
 
@@ -207,20 +207,20 @@ Kirigami.ApplicationWindow {
                     PlaceItem {
                         id: goHomeButton
                         text: i18nc("Switch to the listing page showing the most recently read books", "Home");
-                        icon: "go-home";
+                        @KIRIGAMI_PLACEITEM_ICON@: "go-home";
                         checked: true
                         QQC2.ButtonGroup.group: placeGroup
                         onTriggered: Navigation.openLibrary(i18n("Home"), bookListModel, true)
                     }
                     PlaceItem {
                         text: i18nc("Switch to the listing page showing the most recently discovered books", "Recently Added Books");
-                        icon: "appointment-new";
+                        @KIRIGAMI_PLACEITEM_ICON@: "appointment-new";
                         QQC2.ButtonGroup.group: placeGroup
                         onTriggered: Navigation.openLibrary(text, bookListModel.newlyAddedCategoryModel, true)
                     }
                     PlaceItem {
                         text: i18nc("Open a book from somewhere on disk (uses the open dialog, or a drilldown on touch devices)", "Open Other...");
-                        icon: "document-open";
+                        @KIRIGAMI_PLACEITEM_ICON@: "document-open";
                         action: addBookAction
                         QQC2.ButtonGroup.group: null
                         checkable: false
@@ -230,25 +230,25 @@ Kirigami.ApplicationWindow {
                     }
                     PlaceItem {
                         text: i18nc("Switch to the listing page showing items grouped by author", "Author");
-                        icon: "actor";
+                        @KIRIGAMI_PLACEITEM_ICON@: "actor";
                         onTriggered: Navigation.openLibrary(text, bookListModel.authorCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                     PlaceItem {
                         text: i18nc("Switch to the listing page showing items grouped by series", "Series");
-                        icon: "edit-group";
+                        @KIRIGAMI_PLACEITEM_ICON@: "edit-group";
                         onTriggered: Navigation.openLibrary(i18nc("Title of the page with books grouped by what series they are in", "Group by Series"), bookListModel.seriesCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                     PlaceItem {
                         text: i18nc("Switch to the listing page showing items grouped by publisher", "Publisher");
-                        icon: "view-media-publisher";
+                        @KIRIGAMI_PLACEITEM_ICON@: "view-media-publisher";
                         onTriggered: Navigation.openLibrary(text, bookListModel.publisherCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                     PlaceItem {
                         text: i18nc("Switch to the listing page showing items grouped by genres", "Keywords");
-                        icon: "tag";
+                        @KIRIGAMI_PLACEITEM_ICON@: "tag";
                         onTriggered: Navigation.openLibrary(i18nc("Title of the page with books grouped by genres", "Group by Genres"), bookListModel.keywordCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
@@ -261,7 +261,7 @@ Kirigami.ApplicationWindow {
 
             PlaceItem {
                 text: i18nc("Open the settings page", "Settings");
-                icon: "configure"
+                @KIRIGAMI_PLACEITEM_ICON@: "configure"
                 onClicked: Navigation.openSettings()
                 QQC2.ButtonGroup.group: placeGroup
                 checkable: false

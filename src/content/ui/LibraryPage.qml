@@ -85,7 +85,7 @@ Kirigami.ScrollablePage {
             visible: contentDirectoryView.count === 0
             icon.name: "application-epub+zip"
             text: i18nc("@info placeholder", "Add some books")
-            helpfulAction: actions.main
+            helpfulAction: @KIRIGAMI_ACTIONS@
         }
     }
 }

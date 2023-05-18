@@ -71,9 +71,24 @@ if (BUILD_TESTING)
     add_subdirectory(autotests)
 endif()
 
+if(QT_MAJOR_VERSION STREQUAL "5")
+       set(QML_QTGRAPHICAL_EFFECTS_IMPORT "QtGraphicalEffects 1.15")
+       set(KIRIGAMI_PLACEITEM_ICON "icon")
+       set(KIRIGAMI_ACTIONS "actions.main")
+else()
+       set(QML_QTGRAPHICAL_EFFECTS_IMPORT "Qt5Compat.GraphicalEffects")
+       set(KIRIGAMI_PLACEITEM_ICON "icon.name")
+       set(KIRIGAMI_ACTIONS "actions")
+endif()
+
+configure_file(content/ui/GridBrowserDelegate.qml ${CMAKE_CURRENT_BINARY_DIR}/content/ui/GridBrowserDelegate.qml)
+configure_file(content/ui/main.qml ${CMAKE_CURRENT_BINARY_DIR}/content/ui/main.qml)
+configure_file(content/ui/LibraryPage.qml ${CMAKE_CURRENT_BINARY_DIR}/content/ui/LibraryPage.qml)
+configure_file(resources.qrc.in ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc)
+
 add_executable(arianna
     main.cpp
-    resources.qrc
+    ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc
 )
 
 target_include_directories(arianna PRIVATE ${CMAKE_BINARY_DIR})

@@ -6,3 +6,6 @@ compile_commands.json
 .cache/
 .flatpak-builder
 repo
+src/resources.qrc
+build*
+CMakeLists.txt.user
