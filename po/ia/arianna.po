@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-15 00:44+0000\n"
+"POT-Creation-Date: 2023-05-20 00:43+0000\n"
 "PO-Revision-Date: 2023-04-25 22:27+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
@@ -125,7 +125,7 @@ msgstr "Pagina Precedente"
 msgid "Next Page"
 msgstr "Pagina Proxime"
 
-#: content/ui/GridBrowserDelegate.qml:196
+#: content/ui/GridBrowserDelegate.qml:197
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
