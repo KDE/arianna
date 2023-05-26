@@ -4,8 +4,35 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <memory>
+#include <qabstractitemmodel.h>
 
-class TableOfContentModel : public QAbstractListModel
+class TreeItem
+{
+public:
+    explicit TreeItem(const QString &title, const QString &href, const QString &id, const QJsonArray &childs, TreeItem *parentItem = nullptr);
+
+    void appendChild(std::unique_ptr<TreeItem> &&child);
+
+    void clear();
+    TreeItem *child(int row);
+    int childCount() const;
+    QVariant data(int role) const;
+    int row() const;
+    TreeItem *parentItem();
+
+private:
+    // Position in treee
+    std::vector<std::unique_ptr<TreeItem>> m_childItems;
+    TreeItem *m_parentItem;
+
+    // Content
+    const QString m_title;
+    const QString m_href;
+    const QString m_id;
+};
+
+class TableOfContentModel : public QAbstractItemModel
 {
     Q_OBJECT
 
@@ -20,17 +47,13 @@ public:
 
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent = {}) const override;
+    QModelIndex parent(const QModelIndex &index) const override;
+    int rowCount(const QModelIndex &parent = {}) const override;
+    int columnCount(const QModelIndex &parent = {}) const override;
 
     Q_INVOKABLE void importFromJson(const QByteArray &json);
 
 private:
-    struct Item {
-        explicit Item(const QString &title, const QString &href, const QString &id);
-        QString title;
-        QString href;
-        QString id;
-    };
-
-    std::vector<Item> m_items;
+    std::unique_ptr<TreeItem> m_rootItem;
 };

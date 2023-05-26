@@ -6,6 +6,7 @@ import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Layouts 1.15
 
 import org.kde.kirigami 2.20 as Kirigami
+import org.kde.kirigamiaddons.treeview 1.0 as Tree
 import org.kde.arianna 1.0
 
 Kirigami.OverlayDrawer {
@@ -45,21 +46,18 @@ Kirigami.OverlayDrawer {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            ListView {
+            Tree.TreeListView {
                 model: TableOfContentModel {
                     id: tableOfContentModel
                 }
 
-                delegate: QQC2.ItemDelegate {
+                delegate: Tree.BasicTreeItem {
                     id: itemDelegate
 
-                    required property string title
-                    required property string href
-
-                    text: title
+                    text: model.title
                     width: ListView.view.width
 
-                    onClicked: root.goTo(href)
+                    onClicked: root.goTo(model.href)
                 }
             }
         }

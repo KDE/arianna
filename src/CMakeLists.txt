@@ -1,9 +1,9 @@
 # SPDX-FileCopyrightText: 2021 Carl Schwan <carlschwan@kde.org>
 # SPDX-License-Identifier: BSD-2-Clause
 
-set(debug_files_SRCS)
+add_library(arianna_static STATIC)
 
-ecm_qt_declare_logging_category(debug_files_SRCS
+ecm_qt_declare_logging_category(arianna_static
     HEADER arianna_debug.h
     IDENTIFIER ARIANNA_LOG
     CATEGORY_NAME org.kde.arianna
@@ -12,7 +12,7 @@ ecm_qt_declare_logging_category(debug_files_SRCS
     EXPORT ARIANNA
 )
 
-set(arianna_src
+target_sources(arianna_static PRIVATE
     clipboard.cpp
     format.cpp
     bookdatabase.cpp
@@ -33,7 +33,8 @@ set(arianna_src
     ${debug_files_SRCS}
 )
 
-add_library(arianna_static STATIC ${arianna_src})
+kconfig_add_kcfg_files(arianna_static GENERATE_MOC config.kcfgc)
+
 target_link_libraries(arianna_static PUBLIC
     Qt::Quick
     Qt::Qml
@@ -93,6 +94,5 @@ add_executable(arianna
 
 target_include_directories(arianna PRIVATE ${CMAKE_BINARY_DIR})
 target_link_libraries(arianna PRIVATE arianna_static)
-kconfig_add_kcfg_files(arianna GENERATE_MOC config.kcfgc)
 
 install(TARGETS arianna ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

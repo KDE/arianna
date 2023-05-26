@@ -3,14 +3,8 @@
 
 add_definitions(-DDATA_DIR="${CMAKE_CURRENT_SOURCE_DIR}/data")
 
-#ecm_add_test(databasetest.cpp
-#    TEST_NAME databasetest
-#    LINK_LIBRARIES arianna_static Qt::Test
-#    NAME_PREFIX "arianna-"
-#)
-
-#ecm_add_test(timelinetest.cpp
-#    TEST_NAME timelinetest
-#    LINK_LIBRARIES arianna_static Qt::Test
-#    NAME_PREFIX "arianna-"
-#)
+ecm_add_test(tableofcontenttest.cpp
+    TEST_NAME tableofcontenttest
+    LINK_LIBRARIES arianna_static Qt::Test
+    NAME_PREFIX "arianna-"
+)
