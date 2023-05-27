@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-20 00:43+0000\n"
+"POT-Creation-Date: 2023-05-27 00:44+0000\n"
 "PO-Revision-Date: 2023-04-14 13:25+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -321,7 +321,7 @@ msgstr "«Arianna»ri buruz"
 msgid "About KDE"
 msgstr "KDEri buruz"
 
-#: content/ui/TableOfContentDrawer.qml:40
+#: content/ui/TableOfContentDrawer.qml:41
 #, kde-format
 msgid "Table of content"
 msgstr ""

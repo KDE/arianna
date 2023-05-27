@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-20 00:43+0000\n"
+"POT-Creation-Date: 2023-05-27 00:44+0000\n"
 "PO-Revision-Date: 2023-03-12 09:05+0100\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -319,7 +319,7 @@ msgstr "Arianna"
 msgid "About KDE"
 msgstr ""
 
-#: content/ui/TableOfContentDrawer.qml:40
+#: content/ui/TableOfContentDrawer.qml:41
 #, kde-format
 msgid "Table of content"
 msgstr ""
