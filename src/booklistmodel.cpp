@@ -14,6 +14,7 @@
 #include <QStandardPaths>
 #include <QTimer>
 #include <QUrl>
+#include <QUuid>
 
 #include "epubcontainer.h"
 
@@ -142,10 +143,8 @@ QString saveCover(const QString &identifier, const QImage &image)
 {
     if (!image.isNull()) {
         const auto cacheLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-        QString id = identifier;
-        id.replace(QLatin1Char('/'), QLatin1Char('_'));
+        QString id = QUuid::createUuid().toString();
         QString fileName = cacheLocation + QLatin1String("/covers/") + id + QLatin1String(".jpg");
-        fileName.replace(QLatin1Char(':'), QLatin1Char('_'));
         QDir dir(cacheLocation);
         if (!dir.exists(QLatin1String("covers"))) {
             dir.mkdir(QLatin1String("covers"));
