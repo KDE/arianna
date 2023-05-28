@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-05-27 00:44+0000\n"
-"PO-Revision-Date: 2023-03-30 10:07+0300\n"
+"PO-Revision-Date: 2023-04-25 16:40+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -18,47 +18,39 @@ msgstr ""
 "X-Generator: Lokalize 22.12.3\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book details"
-msgstr "translator@legisign.org"
+msgstr "Kirjat tiedot"
 
 #: content/ui/BookDetailsPage.qml:33
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by author"
-#| msgid "Author"
+#, kde-format
 msgid "Author:"
-msgstr "Tekijä"
+msgstr "Kirjoittaja:"
 
 #: content/ui/BookDetailsPage.qml:41
 #, kde-format
 msgid "Description:"
-msgstr ""
+msgstr "Kuvaus:"
 
 #: content/ui/BookDetailsPage.qml:49
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publisher:"
-msgstr "Julkaisija"
+msgstr "Julkaisija:"
 
 #: content/ui/BookDetailsPage.qml:57
 #, kde-format
 msgid "Language:"
-msgstr ""
+msgstr "Kieli:"
 
 #: content/ui/BookDetailsPage.qml:65
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publishing date:"
-msgstr "Julkaisija"
+msgstr "Julkaisupäivä:"
 
 #: content/ui/BookDetailsPage.qml:73
 #, kde-format
 msgid "Copyright:"
-msgstr ""
+msgstr "Tekijänoikeudet:"
 
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:168
 #, kde-format
@@ -72,11 +64,9 @@ msgid "Loading"
 msgstr "Ladataan"
 
 #: content/ui/EpubViewerPage.qml:141
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book Details"
-msgstr "translator@legisign.org"
+msgstr "Kirjat tiedot"
 
 #: content/ui/EpubViewerPage.qml:163
 #, kde-format
@@ -322,7 +312,7 @@ msgstr "Tietoa KDE:stä"
 #: content/ui/TableOfContentDrawer.qml:41
 #, kde-format
 msgid "Table of content"
-msgstr ""
+msgstr "Sisällysluettelo"
 
 #: main.cpp:76
 #, kde-format
