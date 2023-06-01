@@ -289,7 +289,7 @@ msgstr "Alçària de la línia:"
 #: content/ui/SettingsPage.qml:141
 #, kde-format
 msgid "Brightness:"
-msgstr "Lluminositat:"
+msgstr "Brillantor:"
 
 #: content/ui/SettingsPage.qml:166
 #, kde-format
