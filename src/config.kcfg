@@ -63,6 +63,10 @@ SPDX-License-Identifier: CC0-1.0
       <label>Margin</label>
       <default>40</default>
     </entry>
+    <entry name="showProgress" type="bool">
+      <label>Show progress</label>
+      <default>true</default>
+    </entry>
   </group>
 </kcfg>
 

@@ -14,6 +14,7 @@ import @QML_QTGRAPHICAL_EFFECTS_IMPORT@
 
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.quickcharts 1.0 as Charts
+import org.kde.arianna 1.0
 
 QQC2.ItemDelegate {
     id: gridEntry
@@ -169,7 +170,7 @@ QQC2.ItemDelegate {
 
                 filled: true
 
-                visible: gridEntry.currentProgress !== 0 && gridEntry.currentProgress !== 100 && gridEntry.iconName === ''
+                visible: gridEntry.currentProgress !== 0 && gridEntry.currentProgress !== 100 && gridEntry.iconName === '' && Config.showProgress
 
                 anchors {
                     right: coverImage.right

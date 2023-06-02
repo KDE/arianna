@@ -54,6 +54,19 @@ Kirigami.ScrollablePage {
                         Config.save();
                     }
                 }
+
+                MobileForm.FormDelegateSeparator {}
+
+                MobileForm.FormCheckDelegate {
+                    id: showProgress
+                    text: i18n("Show progress")
+
+                    checked: Config.showProgress
+                    onCheckedChanged: {
+                        Config.showProgress = checked;
+                        Config.save();
+                    }
+                }
             }
         }
 
