@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-27 00:44+0000\n"
+"POT-Creation-Date: 2023-06-03 00:44+0000\n"
 "PO-Revision-Date: 2023-04-25 10:05+0200\n"
 "Last-Translator: Xavier BESNARD <xavier.besnard]neuf.fr>\n"
 "Language-Team: fr\n"
@@ -123,7 +123,7 @@ msgstr "Page précédente"
 msgid "Next Page"
 msgstr "Page suivante"
 
-#: content/ui/GridBrowserDelegate.qml:197
+#: content/ui/GridBrowserDelegate.qml:198
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
@@ -246,62 +246,67 @@ msgstr "Largeur maximale :"
 msgid "Margin:"
 msgstr "Marge :"
 
-#: content/ui/SettingsPage.qml:67
+#: content/ui/SettingsPage.qml:62
+#, kde-format
+msgid "Show progress"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:80
 #, kde-format
 msgid "Font"
 msgstr "Police"
 
-#: content/ui/SettingsPage.qml:71 content/ui/SettingsPage.qml:215
+#: content/ui/SettingsPage.qml:84 content/ui/SettingsPage.qml:228
 #, kde-format
 msgid "Change default font"
 msgstr "Modifier la police par défaut"
 
-#: content/ui/SettingsPage.qml:76
+#: content/ui/SettingsPage.qml:89
 #, kde-format
 msgid "Use publisher font"
 msgstr "Utiliser la police de l'éditeur"
 
-#: content/ui/SettingsPage.qml:94
+#: content/ui/SettingsPage.qml:107
 #, kde-format
 msgid "Text flow"
 msgstr "Flux de texte"
 
-#: content/ui/SettingsPage.qml:99
+#: content/ui/SettingsPage.qml:112
 #, kde-format
 msgid "Justify text"
 msgstr "Justifier le texte"
 
-#: content/ui/SettingsPage.qml:112
+#: content/ui/SettingsPage.qml:125
 #, kde-format
 msgid "Hyphenate text"
 msgstr "Texte avec trait d'union"
 
-#: content/ui/SettingsPage.qml:124
+#: content/ui/SettingsPage.qml:137
 #, kde-format
 msgid "Line height:"
 msgstr "Hauteur de ligne :"
 
-#: content/ui/SettingsPage.qml:141
+#: content/ui/SettingsPage.qml:154
 #, kde-format
 msgid "Brightness:"
 msgstr "Luminosité : "
 
-#: content/ui/SettingsPage.qml:166
+#: content/ui/SettingsPage.qml:179
 #, kde-format
 msgid "Colors"
 msgstr "Couleurs"
 
-#: content/ui/SettingsPage.qml:170
+#: content/ui/SettingsPage.qml:183
 #, kde-format
 msgid "Invert colors"
 msgstr "Inverser les couleurs"
 
-#: content/ui/SettingsPage.qml:198
+#: content/ui/SettingsPage.qml:211
 #, kde-format
 msgid "About Arianna"
 msgstr "À propos de Arianna"
 
-#: content/ui/SettingsPage.qml:205
+#: content/ui/SettingsPage.qml:218
 #, kde-format
 msgid "About KDE"
 msgstr "À propos de KDE"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-05-27 00:44+0000\n"
+"POT-Creation-Date: 2023-06-03 00:44+0000\n"
 "PO-Revision-Date: 2023-04-25 21:06+0100\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
@@ -122,7 +122,7 @@ msgstr "Página Anterior"
 msgid "Next Page"
 msgstr "Página Seguinte"
 
-#: content/ui/GridBrowserDelegate.qml:197
+#: content/ui/GridBrowserDelegate.qml:198
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
@@ -245,62 +245,67 @@ msgstr "Largura máxima:"
 msgid "Margin:"
 msgstr "Margem:"
 
-#: content/ui/SettingsPage.qml:67
+#: content/ui/SettingsPage.qml:62
+#, kde-format
+msgid "Show progress"
+msgstr ""
+
+#: content/ui/SettingsPage.qml:80
 #, kde-format
 msgid "Font"
 msgstr "Tipo de Letra"
 
-#: content/ui/SettingsPage.qml:71 content/ui/SettingsPage.qml:215
+#: content/ui/SettingsPage.qml:84 content/ui/SettingsPage.qml:228
 #, kde-format
 msgid "Change default font"
 msgstr "Mudar o tipo de letra predefinido"
 
-#: content/ui/SettingsPage.qml:76
+#: content/ui/SettingsPage.qml:89
 #, kde-format
 msgid "Use publisher font"
 msgstr "Usar o tipo de letra do publicador"
 
-#: content/ui/SettingsPage.qml:94
+#: content/ui/SettingsPage.qml:107
 #, kde-format
 msgid "Text flow"
 msgstr "Fluxo do texto"
 
-#: content/ui/SettingsPage.qml:99
+#: content/ui/SettingsPage.qml:112
 #, kde-format
 msgid "Justify text"
 msgstr "Justificar o texto"
 
-#: content/ui/SettingsPage.qml:112
+#: content/ui/SettingsPage.qml:125
 #, kde-format
 msgid "Hyphenate text"
 msgstr "Hifenizar o texto"
 
-#: content/ui/SettingsPage.qml:124
+#: content/ui/SettingsPage.qml:137
 #, kde-format
 msgid "Line height:"
 msgstr "Altura da linha:"
 
-#: content/ui/SettingsPage.qml:141
+#: content/ui/SettingsPage.qml:154
 #, kde-format
 msgid "Brightness:"
 msgstr "Brilho:"
 
-#: content/ui/SettingsPage.qml:166
+#: content/ui/SettingsPage.qml:179
 #, kde-format
 msgid "Colors"
 msgstr "Cores"
 
-#: content/ui/SettingsPage.qml:170
+#: content/ui/SettingsPage.qml:183
 #, kde-format
 msgid "Invert colors"
 msgstr "Inverter as cores"
 
-#: content/ui/SettingsPage.qml:198
+#: content/ui/SettingsPage.qml:211
 #, kde-format
 msgid "About Arianna"
 msgstr "Acerca do Arianna"
 
-#: content/ui/SettingsPage.qml:205
+#: content/ui/SettingsPage.qml:218
 #, kde-format
 msgid "About KDE"
 msgstr "Acerca do KDE"
