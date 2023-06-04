@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-03 00:44+0000\n"
-"PO-Revision-Date: 2023-04-25 21:06+0100\n"
+"PO-Revision-Date: 2023-06-03 10:43+0100\n"
 "Last-Translator: José Nuno Coelho Pires <zepires@gmail.com>\n"
 "Language-Team: Portuguese <kde-i18n-pt@kde.org>\n"
 "Language: pt\n"
@@ -248,7 +248,7 @@ msgstr "Margem:"
 #: content/ui/SettingsPage.qml:62
 #, kde-format
 msgid "Show progress"
-msgstr ""
+msgstr "Mostrar o progresso"
 
 #: content/ui/SettingsPage.qml:80
 #, kde-format

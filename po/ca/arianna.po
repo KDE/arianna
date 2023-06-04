@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-03 00:44+0000\n"
-"PO-Revision-Date: 2023-04-24 11:53+0200\n"
+"PO-Revision-Date: 2023-06-03 13:19+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
 "Language: ca\n"
@@ -254,7 +254,7 @@ msgstr "Marge:"
 #: content/ui/SettingsPage.qml:62
 #, kde-format
 msgid "Show progress"
-msgstr ""
+msgstr "Mostra el progrés"
 
 #: content/ui/SettingsPage.qml:80
 #, kde-format
@@ -367,6 +367,3 @@ msgstr "Lector d'EPub"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Fitxer Epub a obrir"
-
-#~ msgid "Configure"
-#~ msgstr "Configura"
