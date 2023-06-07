@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-03 00:44+0000\n"
-"PO-Revision-Date: 2023-03-29 16:08+0200\n"
+"PO-Revision-Date: 2023-06-05 11:12+0200\n"
 "Last-Translator: Vit Pelcak <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -15,50 +15,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.04.1\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book details"
-msgstr "vit@pelcak.org"
+msgstr "Podrobnosti knihy"
 
 #: content/ui/BookDetailsPage.qml:33
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by author"
-#| msgid "Author"
+#, kde-format
 msgid "Author:"
-msgstr "Autor"
+msgstr "Autor:"
 
 #: content/ui/BookDetailsPage.qml:41
 #, kde-format
 msgid "Description:"
-msgstr ""
+msgstr "Popis:"
 
 #: content/ui/BookDetailsPage.qml:49
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publisher:"
-msgstr "Nakladatel"
+msgstr "Vydavatel:"
 
 #: content/ui/BookDetailsPage.qml:57
 #, kde-format
 msgid "Language:"
-msgstr ""
+msgstr "Jazyk:"
 
 #: content/ui/BookDetailsPage.qml:65
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publishing date:"
-msgstr "Nakladatel"
+msgstr "Datum publikování:"
 
 #: content/ui/BookDetailsPage.qml:73
 #, kde-format
 msgid "Copyright:"
-msgstr ""
+msgstr "Autorská práva:"
 
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:168
 #, kde-format
@@ -72,11 +64,9 @@ msgid "Loading"
 msgstr "Načítání"
 
 #: content/ui/EpubViewerPage.qml:141
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book Details"
-msgstr "vit@pelcak.org"
+msgstr "Podrobnosti knihy"
 
 #: content/ui/EpubViewerPage.qml:163
 #, kde-format
@@ -261,7 +251,7 @@ msgstr "Okraj:"
 #: content/ui/SettingsPage.qml:62
 #, kde-format
 msgid "Show progress"
-msgstr ""
+msgstr "Zobrazit průběh"
 
 #: content/ui/SettingsPage.qml:80
 #, kde-format
@@ -326,7 +316,7 @@ msgstr "O prostředí KDE"
 #: content/ui/TableOfContentDrawer.qml:41
 #, kde-format
 msgid "Table of content"
-msgstr ""
+msgstr "Obsah"
 
 #: main.cpp:76
 #, kde-format
@@ -374,6 +364,3 @@ msgstr "Čtečka Epub"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Soubor epub k otevření"
-
-#~ msgid "Configure"
-#~ msgstr "Nastavit"
