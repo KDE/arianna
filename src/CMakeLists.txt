@@ -14,22 +14,35 @@ ecm_qt_declare_logging_category(arianna_static
 
 target_sources(arianna_static PRIVATE
     clipboard.cpp
+    clipboard.h
     format.cpp
+    format.h
     bookdatabase.cpp
+    bookdatabase.h
     categoryentriesmodel.cpp
+    categoryentriesmodel.h
     propertycontainer.cpp
+    propertycontainer.h
     booklistmodel.cpp
+    booklistmodel.h
     epubcontainer.cpp
+    epubcontainer.h
     tableofcontentmodel.cpp
+    tableofcontentmodel.h
 
     navigation.h
     navigation.cpp
 
     contentlist/contentlist.cpp
+    contentlist/contentlist.h
     contentlist/contentquery.cpp
+    contentlist/contentquery.h
     contentlist/contentlisterbase.cpp
+    contentlist/contentlisterbase.h
     contentlist/filesystemcontentlister.cpp
+    contentlist/filesystemcontentlister.h
     contentlist/manualcontentlister.cpp
+    contentlist/manualcontentlister.h
     ${debug_files_SRCS}
 )
 
@@ -64,7 +77,7 @@ endif()
 
 if (NOT WIN32)
     target_link_libraries(arianna_static PUBLIC KF${QT_MAJOR_VERSION}::Baloo)
-    target_sources(arianna_static PRIVATE contentlist/baloocontentlister.cpp)
+    target_sources(arianna_static PRIVATE contentlist/baloocontentlister.cpp contentlist/baloocontentlister.h)
     target_compile_definitions(arianna_static PUBLIC -DHAVE_BALOO)
 endif()
 
