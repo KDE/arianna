@@ -95,10 +95,10 @@ Q_SIGNALS:
 private:
     bool parseMimetype();
     bool parseContainer();
-    bool parseContentFile(const QString filepath);
+    bool parseContentFile(const QString &filepath);
     bool parseMetadataItem(const QDomNode &metadataNode, const QDomNodeList &nodeList);
     bool parseMetadataPropertyItem(const QDomElement &metadataElemenent, const QDomNodeList &nodeList);
-    bool parseManifestItem(const QDomNode &manifestNodes, const QString currentFolder);
+    bool parseManifestItem(const QDomNode &manifestNodes, const QString &currentFolder);
     bool parseSpineItem(const QDomNode &spineNode);
     bool parseGuideItem(const QDomNode &guideItem);
 

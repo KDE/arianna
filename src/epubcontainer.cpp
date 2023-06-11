@@ -155,7 +155,7 @@ bool EPubContainer::parseContainer()
     return false;
 }
 
-bool EPubContainer::parseContentFile(const QString filepath)
+bool EPubContainer::parseContentFile(const QString &filepath)
 {
     const KArchiveFile *rootFile = getFile(filepath);
     if (!rootFile) {
@@ -327,7 +327,7 @@ bool EPubContainer::parseMetadataItem(const QDomNode &metadataNode, const QDomNo
     return false;
 }
 
-bool EPubContainer::parseManifestItem(const QDomNode &manifestNode, const QString currentFolder)
+bool EPubContainer::parseManifestItem(const QDomNode &manifestNode, const QString &currentFolder)
 {
     QDomElement manifestElement = manifestNode.toElement();
     QString id = manifestElement.attribute(QStringLiteral("id"));

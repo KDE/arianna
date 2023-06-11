@@ -110,10 +110,10 @@ bool ContentList::cacheResults() const
     return d->cacheResults;
 }
 
-QString ContentList::getMimetype(QString filePath)
+QString ContentList::getMimetype(const QString &filePath)
 {
     QMimeDatabase db;
-    QMimeType mime = db.mimeTypeForFile(filePath);
+    const QMimeType mime = db.mimeTypeForFile(filePath);
     return mime.name();
 }
 

@@ -132,7 +132,7 @@ public:
      */
     Q_SIGNAL void searchCompleted();
 
-    Q_INVOKABLE static QString getMimetype(QString filePath);
+    Q_INVOKABLE static QString getMimetype(const QString &filePath);
 
     Q_INVOKABLE void addFile(const QUrl &filePath);
 
