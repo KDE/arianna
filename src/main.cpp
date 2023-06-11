@@ -156,7 +156,7 @@ int main(int argc, char *argv[])
     }
 
     const QStringList args = parser.positionalArguments();
-    if (args.count() > 0) {
+    if (!args.isEmpty()) {
         const auto entry = BookDatabase::self().loadEntry(args[0]);
         if (const auto book = entry) {
             Q_EMIT navigation.openBook(args[0], book->locations, book->currentLocation);
