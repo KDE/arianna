@@ -28,7 +28,7 @@ public:
     Q_INVOKABLE void saveText(QString message);
 
 private:
-    QClipboard *m_clipboard;
+    QClipboard *const m_clipboard;
 
 Q_SIGNALS:
     void imageChanged();
