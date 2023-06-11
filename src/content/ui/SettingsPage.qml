@@ -4,7 +4,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15 as QQC2
-import QtQuick.Dialogs 1.3 as Dialogs
+import QtQuick.Dialogs @QTQUICKDIALOG_VERISON@ as Dialogs
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.13 as Kirigami
 import org.kde.kirigamiaddons.labs.mobileform 0.1 as MobileForm
@@ -227,7 +227,7 @@ Kirigami.ScrollablePage {
 
         title: i18n("Change default font")
 
-        font: Config.defaultFont
+        @DIALOG_FONTDIALOG_FONT@: Config.defaultFont
 
         onAccepted: {
             Config.defaultFont = font;
