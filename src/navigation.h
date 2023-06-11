@@ -12,7 +12,7 @@ class Navigation : public QObject
     Q_OBJECT
 
 public:
-    Navigation(QObject *parent = nullptr);
+    explicit Navigation(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void openBook(const QString &fileName, const QString &locations, const QString &currentLocation);
