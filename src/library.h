@@ -16,7 +16,7 @@ public:
         FileNameRole,
         TitleRole,
     };
-    LibraryModel(QObject *parent = nullptr);
+    explicit LibraryModel(QObject *parent = nullptr);
 
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex &index, int role) const override;
