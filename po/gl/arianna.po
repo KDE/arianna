@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-06-03 00:44+0000\n"
-"PO-Revision-Date: 2023-06-05 08:29+0200\n"
+"PO-Revision-Date: 2023-06-17 09:30+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.1\n"
+"X-Generator: Lokalize 23.04.2\n"
 
 #: content/ui/BookDetailsPage.qml:16
 #, kde-format
@@ -56,7 +56,7 @@ msgstr "Dereitos de copia:"
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:168
 #, kde-format
 msgid "No search results"
-msgstr "Sen resultados"
+msgstr "A busca non ten resultados."
 
 #: content/ui/EpubViewerPage.qml:131 content/ui/EpubViewerPage.qml:267
 #: content/ui/EpubViewerPage.qml:271
@@ -307,12 +307,12 @@ msgstr "Inverter cores"
 #: content/ui/SettingsPage.qml:211
 #, kde-format
 msgid "About Arianna"
-msgstr "Acerca de Arianna"
+msgstr "Sobre Arianna"
 
 #: content/ui/SettingsPage.qml:218
 #, kde-format
 msgid "About KDE"
-msgstr "Acerca de KDE"
+msgstr "Sobre KDE"
 
 #: content/ui/TableOfContentDrawer.qml:41
 #, kde-format
