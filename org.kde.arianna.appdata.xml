@@ -14,6 +14,7 @@
   <name xml:lang="cs">Arianna</name>
   <name xml:lang="de">Arianna</name>
   <name xml:lang="en-GB">Arianna</name>
+  <name xml:lang="eo">Arianna</name>
   <name xml:lang="es">Arianna</name>
   <name xml:lang="eu">Arianna</name>
   <name xml:lang="fi">Arianna</name>
@@ -37,6 +38,7 @@
   <summary xml:lang="cs">Čtečka e-knih</summary>
   <summary xml:lang="de">EBook-Lesegerät</summary>
   <summary xml:lang="en-GB">EBook Reader</summary>
+  <summary xml:lang="eo">Bitlibra legilo</summary>
   <summary xml:lang="es">Lector de eBook</summary>
   <summary xml:lang="eu">eLiburuki irakurlea</summary>
   <summary xml:lang="fi">EPub-lukija</summary>
@@ -86,6 +88,7 @@
   <developer_name xml:lang="cs">Komunita KDE</developer_name>
   <developer_name xml:lang="de">Die KDE-Gemeinschaft</developer_name>
   <developer_name xml:lang="en-GB">The KDE Community</developer_name>
+  <developer_name xml:lang="eo">La KDE-Komunumo</developer_name>
   <developer_name xml:lang="es">La Comunidad KDE</developer_name>
   <developer_name xml:lang="eu">KDE komunitatea</developer_name>
   <developer_name xml:lang="fi">KDE-yhteisö</developer_name>
