@@ -68,7 +68,7 @@ public:
     explicit EPubContainer(QObject *parent);
     ~EPubContainer();
 
-    bool openFile(const QString path);
+    bool openFile(const QString &path);
 
     EpubItem getEpubItem(const QString &id) const
     {

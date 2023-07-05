@@ -26,7 +26,7 @@ EPubContainer::EPubContainer(QObject *parent)
 
 EPubContainer::~EPubContainer() = default;
 
-bool EPubContainer::openFile(const QString path)
+bool EPubContainer::openFile(const QString &path)
 {
     m_archive = std::make_unique<KZip>(path);
 
