@@ -42,8 +42,6 @@ struct BookEntry {
 
 public:
     explicit BookEntry()
-        : currentProgress(0)
-        , rating(0)
     {
     }
     QString filename;
@@ -61,7 +59,7 @@ public:
     QDateTime created;
     QDateTime lastOpenedTime;
     QString currentLocation;
-    int currentProgress;
+    int currentProgress = 0;
     QString thumbnail;
     QStringList description;
     QString comment;
@@ -70,7 +68,7 @@ public:
     QString identifier;
     QString source;
     QString language;
-    int rating;
+    int rating = 0;
 };
 
 bool operator==(const BookEntry &a1, const BookEntry &a2) noexcept;
