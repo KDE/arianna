@@ -176,3 +176,5 @@ Baloo::QueryRunnable *BalooContentLister::Private::createQuery(ContentQuery *con
 
     return runnable;
 }
+
+#include "moc_baloocontentlister.cpp"

@@ -299,3 +299,5 @@ void ContentList::addFile(const QUrl &filePath)
 {
     d->manualContentLister->addFile(filePath);
 }
+
+#include "moc_contentlist.cpp"

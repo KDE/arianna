@@ -184,3 +184,5 @@ void TableOfContentModel::importFromJson(const QByteArray &json)
     }
     endResetModel();
 }
+
+#include "moc_tableofcontentmodel.cpp"

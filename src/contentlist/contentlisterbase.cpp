@@ -53,3 +53,5 @@ QVariantMap ContentListerBase::metaDataForFile(const QString &file)
 
     return metadata;
 }
+
+#include "moc_contentlisterbase.cpp"

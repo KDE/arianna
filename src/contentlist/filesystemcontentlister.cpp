@@ -115,3 +115,5 @@ void FilesystemContentLister::queryFinished(QRunnable *runnable)
 }
 
 #include "filesystemcontentlister.moc"
+
+#include "moc_filesystemcontentlister.cpp"

@@ -197,3 +197,5 @@ QStringList ContentQuery::Private::mimeTypesForType(ContentQuery::Type type)
     }
     return {};
 }
+
+#include "moc_contentquery.cpp"

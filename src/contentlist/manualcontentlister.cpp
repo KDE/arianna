@@ -52,3 +52,5 @@ bool ManualContentLister::addFile(const QUrl &filePath)
 
     return true;
 }
+
+#include "moc_manualcontentlister.cpp"

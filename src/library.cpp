@@ -21,3 +21,5 @@ bool LibraryModel::addBook(const QString &fileName)
 {
     return true;
 }
+
+#include "moc_library.cpp"

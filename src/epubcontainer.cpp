@@ -518,3 +518,5 @@ QList<Collection> EPubContainer::collections() const
 {
     return m_collections;
 }
+
+#include "moc_epubcontainer.cpp"

@@ -390,3 +390,5 @@ bool operator==(const BookEntry &b1, const BookEntry &b2) noexcept
 {
     return b1.filename == b2.filename;
 }
+
+#include "moc_categoryentriesmodel.cpp"

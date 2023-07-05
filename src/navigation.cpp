@@ -7,3 +7,5 @@ Navigation::Navigation(QObject *parent)
     : QObject(parent)
 {
 }
+
+#include "moc_navigation.cpp"

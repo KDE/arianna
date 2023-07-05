@@ -278,3 +278,5 @@ void BookDatabase::updateEntry(const QString &fileName, const QString &property,
 
     d->closeDb();
 }
+
+#include "moc_bookdatabase.cpp"

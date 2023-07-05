@@ -379,3 +379,5 @@ QStringList BookListModel::knownBookFiles() const
     }
     return files;
 }
+
+#include "moc_booklistmodel.cpp"

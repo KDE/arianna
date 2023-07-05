@@ -31,3 +31,5 @@ QString PropertyContainer::name() const
 {
     return m_name;
 }
+
+#include "moc_propertycontainer.cpp"

@@ -10,3 +10,5 @@ QString Format::formatDuration(quint64 milliseconds) const
     KFormat::DurationFormatOptions options = static_cast<KFormat::DurationFormatOptions>(KFormat::InitialDuration | KFormat::HideSeconds);
     return format.formatDuration(milliseconds, options);
 }
+
+#include "moc_format.cpp"
