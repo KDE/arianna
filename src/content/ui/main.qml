@@ -5,8 +5,9 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Layouts 1.15
 import Qt.labs.platform 1.1
-import org.kde.kirigami 2.13 as Kirigami
 import org.kde.arianna 1.0
+import org.kde.kirigami 2.13 as Kirigami
+import org.kde.kirigamiaddons.delegates 1.0 as Delegates
 import org.kde.kirigamiaddons.labs.components 1.0 as KirigamiComponents
 
 Kirigami.ApplicationWindow {
@@ -62,7 +63,7 @@ Kirigami.ApplicationWindow {
         modal: Kirigami.Settings.isMobile || (applicationWindow().width < Kirigami.Units.gridUnit * 50 && !collapsed) // Only modal when not collapsed, otherwise collapsed won't show.
         z: modal ? Math.round(position * 10000000) : 100
         drawerOpen: !Kirigami.Settings.isMobile && enabled
-        enabled: pageStack.currentItem.hideSidebar !== true && pageStack.layers.currentItem.hideSidebar !== true
+        enabled: pageStack.currentItem && pageStack.currentItem.hideSidebar !== true && pageStack.layers.currentItem.hideSidebar !== true
         onEnabledChanged: drawerOpen = !Kirigami.Settings.isMobile && enabled
         width: Kirigami.Units.gridUnit * 16
         Behavior on width {
@@ -92,7 +93,7 @@ Kirigami.ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.preferredHeight: root.pageStack.globalToolBar.preferredHeight
 
-                leftPadding: Kirigami.Units.largeSpacing
+                leftPadding: Kirigami.Units.smallSpacing
                 rightPadding: Kirigami.Units.smallSpacing
                 topPadding: Kirigami.Units.smallSpacing
                 bottomPadding: Kirigami.Units.smallSpacing
@@ -129,7 +130,7 @@ Kirigami.ApplicationWindow {
                             filterCaseSensitivity: Qt.CaseInsensitive
                         }
 
-                        delegate: QQC2.ItemDelegate {
+                        delegate: Delegates.RoundedItemDelegate {
                             id: searchDelegate
 
                             required property string title
@@ -138,12 +139,8 @@ Kirigami.ApplicationWindow {
                             required property string locations
                             required property string currentLocation
 
-                            leftInset: 1
-                            rightInset: 1
-
                             highlighted: activeFocus
 
-                            width: ListView.view.width
                             onClicked: {
                                 Navigation.openBook(filename, locations, currentLocation);
                                 searchField.popup.close();
@@ -186,8 +183,9 @@ Kirigami.ApplicationWindow {
                 Layout.fillWidth: true
 
                 contentWidth: availableWidth
+                topPadding: Kirigami.Units.smallSpacing / 2
 
-                component PlaceItem : Kirigami.BasicListItem {
+                component PlaceItem : Delegates.RoundedItemDelegate {
                     id: item
                     signal triggered;
                     checkable: true
@@ -207,20 +205,20 @@ Kirigami.ApplicationWindow {
                     PlaceItem {
                         id: goHomeButton
                         text: i18nc("Switch to the listing page showing the most recently read books", "Home");
-                        @KIRIGAMI_PLACEITEM_ICON@: "go-home";
+                        icon.name: "go-home";
                         checked: true
                         QQC2.ButtonGroup.group: placeGroup
                         onTriggered: Navigation.openLibrary(i18n("Home"), bookListModel, true)
                     }
                     PlaceItem {
                         text: i18nc("Switch to the listing page showing the most recently discovered books", "Recently Added Books");
-                        @KIRIGAMI_PLACEITEM_ICON@: "appointment-new";
+                        icon.name: "appointment-new";
                         QQC2.ButtonGroup.group: placeGroup
                         onTriggered: Navigation.openLibrary(text, bookListModel.newlyAddedCategoryModel, true)
                     }
                     PlaceItem {
                         text: i18nc("Open a book from somewhere on disk (uses the open dialog, or a drilldown on touch devices)", "Open Other...");
-                        @KIRIGAMI_PLACEITEM_ICON@: "document-open";
+                        icon.name: "document-open";
                         action: addBookAction
                         QQC2.ButtonGroup.group: null
                         checkable: false
@@ -230,25 +228,25 @@ Kirigami.ApplicationWindow {
                     }
                     PlaceItem {
                         text: i18nc("Switch to the listing page showing items grouped by author", "Author");
-                        @KIRIGAMI_PLACEITEM_ICON@: "actor";
+                        icon.name: "actor";
                         onTriggered: Navigation.openLibrary(text, bookListModel.authorCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                     PlaceItem {
                         text: i18nc("Switch to the listing page showing items grouped by series", "Series");
-                        @KIRIGAMI_PLACEITEM_ICON@: "edit-group";
+                        icon.name: "edit-group";
                         onTriggered: Navigation.openLibrary(i18nc("Title of the page with books grouped by what series they are in", "Group by Series"), bookListModel.seriesCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                     PlaceItem {
                         text: i18nc("Switch to the listing page showing items grouped by publisher", "Publisher");
-                        @KIRIGAMI_PLACEITEM_ICON@: "view-media-publisher";
+                        icon.name: "view-media-publisher";
                         onTriggered: Navigation.openLibrary(text, bookListModel.publisherCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                     PlaceItem {
                         text: i18nc("Switch to the listing page showing items grouped by genres", "Keywords");
-                        @KIRIGAMI_PLACEITEM_ICON@: "tag";
+                        icon.name: "tag";
                         onTriggered: Navigation.openLibrary(i18nc("Title of the page with books grouped by genres", "Group by Genres"), bookListModel.keywordCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
@@ -261,10 +259,11 @@ Kirigami.ApplicationWindow {
 
             PlaceItem {
                 text: i18nc("Open the settings page", "Settings");
-                @KIRIGAMI_PLACEITEM_ICON@: "configure"
+                icon.name: "configure"
                 onClicked: Navigation.openSettings()
                 QQC2.ButtonGroup.group: placeGroup
                 checkable: false
+                Layout.bottomMargin: Kirigami.Units.smallSpacing / 2
             }
         }
     }
@@ -333,6 +332,7 @@ Kirigami.ApplicationWindow {
         function onOpenSettings() {
             pageStack.pushDialogLayer(Qt.resolvedUrl('./SettingsPage.qml'), {}, {
                 title: i18n("Settings"),
+                width: Kirigami.Units.gridUnit * 12,
             });
         }
     }
