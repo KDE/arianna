@@ -13,10 +13,11 @@ import QtQuick.Layouts 1.2
 import @QML_QTGRAPHICAL_EFFECTS_IMPORT@
 
 import org.kde.kirigami 2.19 as Kirigami
+import org.kde.kirigamiaddons.delegates 1.0 as Delegates
 import org.kde.quickcharts 1.0 as Charts
 import org.kde.arianna 1.0
 
-QQC2.ItemDelegate {
+Delegates.RoundedItemDelegate {
     id: gridEntry
 
     required property url imageUrl
@@ -25,16 +26,12 @@ QQC2.ItemDelegate {
     required property string secondaryText
     required property int currentProgress
 
-    signal open()
-
-    background: null
-
     SystemPalette {
         id: myPalette
     }
 
     property color stateIndicatorColor: {
-        if (gridEntry.activeFocus || hoverHandle.pressed || hoverHandle.containsMouse) {
+        if (gridEntry.activeFocus || gridEntry.pressed || gridEntry.hovered) {
             return Kirigami.Theme.highlightColor;
         } else {
             return "transparent";
@@ -43,7 +40,7 @@ QQC2.ItemDelegate {
 
     property real stateIndicatorOpacity: {
         if ((!Kirigami.Settings.isMobile && gridEntry.activeFocus) ||
-            !Kirigami.Settings.isMobile || hoverHandle.pressed || hoverHandle.containsMouse) {
+            !Kirigami.Settings.isMobile || gridEntry.pressed || gridEntry.hovered) {
             return 0.3;
         } else {
             return 0;
@@ -56,65 +53,13 @@ QQC2.ItemDelegate {
         contextMenuLoader.item.open();
     }
 
-    Keys.onReturnPressed: open()
-    Keys.onEnterPressed: open()
-    Keys.onSpacePressed: open()
-
     Accessible.role: Accessible.ListItem
     Accessible.name: mainText
 
-    Item {
-        id: parentItem
-        anchors {
-            fill: parent
-            // mobile uses more spacing between delegates
-            margins: Kirigami.Settings.isMobile ? Kirigami.Units.largeSpacing : 0
-            bottomMargin: Kirigami.Settings.isMobile ? Kirigami.Units.largeSpacing : Kirigami.Units.smallSpacing
-        }
-
-        // highlight colour
-        Rectangle {
-            id: stateIndicator
-
-            z: Kirigami.Settings.isMobile ? 1 : 0 // on desktop, we want hover actions to be above highlight
-
-            color: stateIndicatorColor
-            opacity: stateIndicatorOpacity
-            radius: Kirigami.Settings.isMobile ? Kirigami.Units.smallSpacing : 3
-
-            // expand margins of highlight box on mobile, so that it doesn't look like
-            // it's clipping the text
-            anchors {
-                fill: parent
-                leftMargin: Kirigami.Settings.isMobile ? -Kirigami.Units.smallSpacing : 0
-                rightMargin: Kirigami.Settings.isMobile ? -Kirigami.Units.smallSpacing : 0
-                bottomMargin: Kirigami.Settings.isMobile ? -Kirigami.Units.smallSpacing : 0
-            }
-        }
-
-        // click handler
-        MouseArea {
-            id: hoverHandle
-
-            anchors.fill: parent
-            // fix mousearea from stealing swipes from flickable
-            propagateComposedEvents: false
-            onReleased: {
-                if (!propagateComposedEvents) {
-                    propagateComposedEvents = true
-                }
-            }
-
-            hoverEnabled: true
-            cursorShape: Qt.PointingHandCursor
-
-            onClicked: open()
-
-            TextMetrics {
-                id: mainLabelSize
-                font: mainLabel.font
-                text: mainLabel.text
-            }
+    contentItem: ColumnLayout {
+        Item {
+            Layout.fillWidth: true
+            Layout.preferredHeight: gridEntry.width - 2 * Kirigami.Units.largeSpacing
 
             Image {
                 id: coverImage
@@ -209,66 +154,67 @@ QQC2.ItemDelegate {
                     top: coverImage.top
                 }
             }
+        }
 
-            // labels
-            RowLayout {
-                id: labels
+        // labels
+        RowLayout {
+            id: labels
 
-                anchors {
-                    left: parent.left
-                    right: parent.right
-                    bottom: parent.bottom
-                    top: coverImage.bottom
+            Layout.fillWidth: true
+
+            TextMetrics {
+                id: mainLabelSize
+                font: mainLabel.font
+                text: mainLabel.text
+            }
+
+            ColumnLayout {
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true
+                spacing: 0
+
+                Kirigami.Heading {
+                    id: mainLabel
+                    text: gridEntry.mainText
+
+                    level: Kirigami.Settings.isMobile ? 6 : 4
+
+                    // FIXME: Center-aligned text looks better overall, but
+                    // sometimes results in font kerning issues
+                    // See https://bugreports.qt.io/browse/QTBUG-49646
+                    horizontalAlignment: Kirigami.Settings.isMobile ? Text.AlignLeft : Text.AlignHCenter
+
+                    Layout.fillWidth: true
+                    Layout.maximumHeight: mainLabelSize.boundingRect.height
+                    Layout.alignment: Kirigami.Settings.isMobile ? Qt.AlignLeft : Qt.AlignVCenter
+                    Layout.leftMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
+                    Layout.rightMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
+
+                    wrapMode: !Kirigami.Settings.isMobile && QQC2.Label.NoWrap
+                    maximumLineCount: Kirigami.Settings.isMobile ? 1 : 2
+                    elide: Text.ElideRight
                 }
 
-                ColumnLayout {
-                    Layout.alignment: Qt.AlignVCenter
+                QQC2.Label {
+                    id: secondaryLabel
+
+                    text: gridEntry.secondaryText
+                    opacity: 0.6
+
+                    // FIXME: Center-aligned text looks better overall, but
+                    // sometimes results in font kerning issues
+                    // See https://bugreports.qt.io/browse/QTBUG-49646
+                    horizontalAlignment: Kirigami.Settings.isMobile ? Text.AlignLeft : Text.AlignHCenter
+
                     Layout.fillWidth: true
-                    spacing: 0
+                    Layout.alignment: Kirigami.Settings.isMobile ? Qt.AlignLeft : Qt.AlignVCenter
+                    Layout.topMargin: Kirigami.Settings.isMobile ? Kirigami.Units.smallSpacing : 0
+                    Layout.leftMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
+                    Layout.rightMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
 
-                    Kirigami.Heading {
-                        id: mainLabel
-                        text: gridEntry.mainText
-
-                        level: Kirigami.Settings.isMobile ? 6 : 4
-
-                        // FIXME: Center-aligned text looks better overall, but
-                        // sometimes results in font kerning issues
-                        // See https://bugreports.qt.io/browse/QTBUG-49646
-                        horizontalAlignment: Kirigami.Settings.isMobile ? Text.AlignLeft : Text.AlignHCenter
-
-                        Layout.fillWidth: true
-                        Layout.maximumHeight: mainLabelSize.boundingRect.height
-                        Layout.alignment: Kirigami.Settings.isMobile ? Qt.AlignLeft : Qt.AlignVCenter
-                        Layout.leftMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
-                        Layout.rightMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
-
-                        wrapMode: !Kirigami.Settings.isMobile && QQC2.Label.NoWrap
-                        maximumLineCount: Kirigami.Settings.isMobile ? 1 : 2
-                        elide: Text.ElideRight
-                    }
-
-                    QQC2.Label {
-                        id: secondaryLabel
-
-                        text: gridEntry.secondaryText
-                        opacity: 0.6
-
-                        // FIXME: Center-aligned text looks better overall, but
-                        // sometimes results in font kerning issues
-                        // See https://bugreports.qt.io/browse/QTBUG-49646
-                        horizontalAlignment: Kirigami.Settings.isMobile ? Text.AlignLeft : Text.AlignHCenter
-
-                        Layout.fillWidth: true
-                        Layout.alignment: Kirigami.Settings.isMobile ? Qt.AlignLeft : Qt.AlignVCenter
-                        Layout.topMargin: Kirigami.Settings.isMobile ? Kirigami.Units.smallSpacing : 0
-                        Layout.leftMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
-                        Layout.rightMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
-
-                        maximumLineCount: Kirigami.Settings.isMobile ? 1 : -1
-                        elide: Text.ElideRight
-                        font: Kirigami.Settings.isMobile ? Kirigami.Theme.smallFont : Kirigami.Theme.defaultFont
-                    }
+                    maximumLineCount: Kirigami.Settings.isMobile ? 1 : -1
+                    elide: Text.ElideRight
+                    font: Kirigami.Settings.isMobile ? Kirigami.Theme.smallFont : Kirigami.Theme.defaultFont
                 }
             }
         }

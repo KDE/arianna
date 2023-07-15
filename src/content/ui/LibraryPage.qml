@@ -39,7 +39,7 @@ Kirigami.ScrollablePage {
                 return 170 + Kirigami.Units.gridUnit * 2 + Kirigami.Units.largeSpacing
             }
         }
-        currentIndex: Kirigami.Settings.isMobile ? 0 : -1
+        currentIndex: -1
         reuseItems: true
         activeFocusOnTab: true
         keyNavigationEnabled: true
@@ -58,7 +58,6 @@ Kirigami.ScrollablePage {
 
             width: Kirigami.Settings.isMobile ? contentDirectoryView.cellWidth : 170
             height: contentDirectoryView.cellHeight
-            focus: true
 
             imageUrl: categoryEntriesModel === '' ? ('file://' + thumbnail) : ''
             iconName: if (categoryEntriesModel !== '') {
@@ -72,7 +71,7 @@ Kirigami.ScrollablePage {
             mainText: bookDelegate.title
             secondaryText: author ? bookDelegate.author.join(', ') : ''
 
-            onOpen: if (categoryEntriesModel) {
+            onClicked: if (categoryEntriesModel) {
                 Navigation.openLibrary(title, categoryEntriesModel, false);
             } else {
                 Navigation.openBook(filename, locations, currentLocation);
