@@ -21,9 +21,7 @@ ListModel {
 
         const markupEscape = text => text ? text.replace(/&/g, "&amp;")
             .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;") : '';
+            .replace(/>/g, "&gt;") : '';
         const regexEscape = str => str ? str.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&') : '';
         const regex = new RegExp(regexEscape(query), 'ig');
         results.forEach(({ cfi, excerpt, section }) => {
