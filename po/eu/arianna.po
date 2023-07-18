@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-03 00:44+0000\n"
+"POT-Creation-Date: 2023-07-18 08:24+0000\n"
 "PO-Revision-Date: 2023-04-14 13:25+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -63,7 +63,7 @@ msgstr "Argitaratzailea"
 msgid "Copyright:"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:168
+#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:165
 #, kde-format
 msgid "No search results"
 msgstr "Ez dago bilaketaren emaitzarik"
@@ -138,7 +138,7 @@ msgstr "Aurreko orrialdea"
 msgid "Next Page"
 msgstr "Hurrengo orrialdea"
 
-#: content/ui/GridBrowserDelegate.qml:198
+#: content/ui/GridBrowserDelegate.qml:143
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
@@ -149,35 +149,35 @@ msgstr "Berria"
 msgid "Library"
 msgstr "Liburutegia"
 
-#: content/ui/LibraryPage.qml:87
+#: content/ui/LibraryPage.qml:86
 #, kde-format
 msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Gehitu liburu batzuk"
 
-#: content/ui/main.qml:17 content/ui/main.qml:304 main.cpp:74
+#: content/ui/main.qml:18 content/ui/main.qml:303 main.cpp:74
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
 
-#: content/ui/main.qml:209
+#: content/ui/main.qml:207
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
 msgstr "Etxea"
 
-#: content/ui/main.qml:213
+#: content/ui/main.qml:211
 #, kde-format
 msgid "Home"
 msgstr "Etxea"
 
-#: content/ui/main.qml:216
+#: content/ui/main.qml:214
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
 msgstr "Azkenaldian gehitutako liburuak"
 
-#: content/ui/main.qml:222
+#: content/ui/main.qml:220
 #, kde-format
 msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
@@ -185,7 +185,7 @@ msgctxt ""
 msgid "Open Other..."
 msgstr "Ireki beste..."
 
-#: content/ui/main.qml:229
+#: content/ui/main.qml:227
 #, kde-format
 msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
@@ -193,49 +193,49 @@ msgctxt ""
 msgid "Group By"
 msgstr "Taldekatu honen arabera"
 
-#: content/ui/main.qml:232
+#: content/ui/main.qml:230
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
 msgstr "Egilea"
 
-#: content/ui/main.qml:238
+#: content/ui/main.qml:236
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
 msgstr "Sailak"
 
-#: content/ui/main.qml:240
+#: content/ui/main.qml:238
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
 msgstr "Taldekatu sailen arabera"
 
-#: content/ui/main.qml:244
+#: content/ui/main.qml:242
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
 msgstr "Argitaratzailea"
 
-#: content/ui/main.qml:250
+#: content/ui/main.qml:248
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Gako-hitzak"
 
-#: content/ui/main.qml:252
+#: content/ui/main.qml:250
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr "Taldekatu generoen arabera"
 
-#: content/ui/main.qml:263
+#: content/ui/main.qml:261
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "Ezarpenak"
 
-#: content/ui/main.qml:335 content/ui/SettingsPage.qml:16
+#: content/ui/main.qml:334 content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
 msgstr "Ezarpenak"

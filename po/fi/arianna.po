@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-06-03 00:44+0000\n"
+"POT-Creation-Date: 2023-07-18 08:24+0000\n"
 "PO-Revision-Date: 2023-06-27 18:07+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -52,7 +52,7 @@ msgstr "Julkaisupäivä:"
 msgid "Copyright:"
 msgstr "Tekijänoikeudet:"
 
-#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:168
+#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:165
 #, kde-format
 msgid "No search results"
 msgstr "Ei hakutuloksia"
@@ -125,7 +125,7 @@ msgstr "Edellinen sivu"
 msgid "Next Page"
 msgstr "Seuraava sivu"
 
-#: content/ui/GridBrowserDelegate.qml:198
+#: content/ui/GridBrowserDelegate.qml:143
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
@@ -136,35 +136,35 @@ msgstr "Uusi"
 msgid "Library"
 msgstr "Kirjasto"
 
-#: content/ui/LibraryPage.qml:87
+#: content/ui/LibraryPage.qml:86
 #, kde-format
 msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Lisää kirjoja"
 
-#: content/ui/main.qml:17 content/ui/main.qml:304 main.cpp:74
+#: content/ui/main.qml:18 content/ui/main.qml:303 main.cpp:74
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
 
-#: content/ui/main.qml:209
+#: content/ui/main.qml:207
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
 msgstr "Koti"
 
-#: content/ui/main.qml:213
+#: content/ui/main.qml:211
 #, kde-format
 msgid "Home"
 msgstr "Koti"
 
-#: content/ui/main.qml:216
+#: content/ui/main.qml:214
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
 msgstr "Äskettäin lisätyt kirjat"
 
-#: content/ui/main.qml:222
+#: content/ui/main.qml:220
 #, kde-format
 msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
@@ -172,7 +172,7 @@ msgctxt ""
 msgid "Open Other..."
 msgstr "Avaa muu…"
 
-#: content/ui/main.qml:229
+#: content/ui/main.qml:227
 #, kde-format
 msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
@@ -180,49 +180,49 @@ msgctxt ""
 msgid "Group By"
 msgstr "Ryhmittely"
 
-#: content/ui/main.qml:232
+#: content/ui/main.qml:230
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
 msgstr "Tekijä"
 
-#: content/ui/main.qml:238
+#: content/ui/main.qml:236
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
 msgstr "Sarja"
 
-#: content/ui/main.qml:240
+#: content/ui/main.qml:238
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
 msgstr "Ryhmittele sarjoittain"
 
-#: content/ui/main.qml:244
+#: content/ui/main.qml:242
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
 msgstr "Julkaisija"
 
-#: content/ui/main.qml:250
+#: content/ui/main.qml:248
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Hakusanat"
 
-#: content/ui/main.qml:252
+#: content/ui/main.qml:250
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr "Ryhmittele lajityypeittäin"
 
-#: content/ui/main.qml:263
+#: content/ui/main.qml:261
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "Asetukset"
 
-#: content/ui/main.qml:335 content/ui/SettingsPage.qml:16
+#: content/ui/main.qml:334 content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
 msgstr "Asetukset"
