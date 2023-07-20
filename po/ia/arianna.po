@@ -311,7 +311,7 @@ msgstr "A proposito de Arianna"
 #: content/ui/SettingsPage.qml:218
 #, kde-format
 msgid "About KDE"
-msgstr "A proposio de KDE"
+msgstr "A proposito de KDE"
 
 #: content/ui/TableOfContentDrawer.qml:41
 #, kde-format
