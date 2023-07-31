@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-07-19 00:47+0000\n"
-"PO-Revision-Date: 2023-04-14 13:25+0200\n"
+"PO-Revision-Date: 2023-07-30 08:28+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
 "Language: eu\n"
@@ -18,50 +18,42 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 22.12.3\n"
+"X-Generator: Lokalize 23.04.3\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book details"
-msgstr "xalba@ni.eus"
+msgstr "Liburuaren xehetasunak"
 
 #: content/ui/BookDetailsPage.qml:33
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by author"
-#| msgid "Author"
+#, kde-format
 msgid "Author:"
-msgstr "Egilea"
+msgstr "Egilea:"
 
 #: content/ui/BookDetailsPage.qml:41
 #, kde-format
 msgid "Description:"
-msgstr ""
+msgstr "Azalpena:"
 
 #: content/ui/BookDetailsPage.qml:49
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publisher:"
-msgstr "Argitaratzailea"
+msgstr "Argitaratzailea:"
 
 #: content/ui/BookDetailsPage.qml:57
 #, kde-format
 msgid "Language:"
-msgstr ""
+msgstr "Hizkuntza:"
 
 #: content/ui/BookDetailsPage.qml:65
-#, fuzzy, kde-format
-#| msgctxt "Switch to the listing page showing items grouped by publisher"
-#| msgid "Publisher"
+#, kde-format
 msgid "Publishing date:"
-msgstr "Argitaratzailea"
+msgstr "Argitalpen data:"
 
 #: content/ui/BookDetailsPage.qml:73
 #, kde-format
 msgid "Copyright:"
-msgstr ""
+msgstr "Copyright:"
 
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:165
 #, kde-format
@@ -75,11 +67,9 @@ msgid "Loading"
 msgstr "Zamatzen"
 
 #: content/ui/EpubViewerPage.qml:141
-#, fuzzy, kde-format
-#| msgctxt "EMAIL OF TRANSLATORS"
-#| msgid "Your emails"
+#, kde-format
 msgid "Book Details"
-msgstr "xalba@ni.eus"
+msgstr "Liburuaren xehetasunak"
 
 #: content/ui/EpubViewerPage.qml:163
 #, kde-format
@@ -264,7 +254,7 @@ msgstr "Marjina:"
 #: content/ui/SettingsPage.qml:62
 #, kde-format
 msgid "Show progress"
-msgstr ""
+msgstr "Erakutsi aurrerapena"
 
 #: content/ui/SettingsPage.qml:80
 #, kde-format
@@ -329,7 +319,7 @@ msgstr "KDEri buruz"
 #: content/ui/TableOfContentDrawer.qml:41
 #, kde-format
 msgid "Table of content"
-msgstr ""
+msgstr "Edukien aurkibidea"
 
 #: main.cpp:76
 #, kde-format
