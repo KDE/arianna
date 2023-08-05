@@ -28,6 +28,7 @@
   <name xml:lang="pt">Arianna</name>
   <name xml:lang="sk">Arianna</name>
   <name xml:lang="sl">Arianna</name>
+  <name xml:lang="sv">Arianna</name>
   <name xml:lang="tr">Arianna</name>
   <name xml:lang="uk">Arianna</name>
   <name xml:lang="x-test">xxAriannaxx</name>
@@ -51,6 +52,7 @@
   <summary xml:lang="pt">Leitor de E-Books</summary>
   <summary xml:lang="sk">Čítačka elektronických kníh</summary>
   <summary xml:lang="sl">Bralnik elektronskih knjig</summary>
+  <summary xml:lang="sv">E-bokläsare</summary>
   <summary xml:lang="tr">E-kitap Okuyucu</summary>
   <summary xml:lang="uk">Читання електронних книг</summary>
   <summary xml:lang="x-test">xxEBook Readerxx</summary>
@@ -73,6 +75,7 @@
     <p xml:lang="nl">Een e-boeklezer en toepassing voor bibliotheekbeheer die ".epub"-bestanden ondersteunt. Arianna ontdekt uw boeken automatisch en sorteert ze op categorieën, genres en auteurs.</p>
     <p xml:lang="pt">Um leitor de e-books e de gestão de bibliotecas de ficheiros ".epub". O Arianna descobre automaticamente os seus livros, ordenando-os por categorias, géneros e autores.</p>
     <p xml:lang="sl">Bralnik elektronskih knjig in upravljalnik knjižnice, ki podpira datoteke ".epub". Arianna samodejno odkriva vaše knjige in jih razvrsti po kategorijah, žanrih in avtorjih.</p>
+    <p xml:lang="sv">En e-bokläsare och bibliotekshanterare som stöder ".epub"-filer. Arianna upptäcker dina böcker automatiskt och sorterar dem efter kategorier, genrer och författare.</p>
     <p xml:lang="tr">'.epub' dosyalarını destekleyen bir e-kitap okuyucu ve kitaplık yönetim uygulaması. Arianna kitaplarınızı kendiliğinden bulur ve onları kategoriye, türe ve yazarlara göre sıralar.</p>
     <p xml:lang="uk">Програма для читання та керування бібліотекою з підтримкою файлів «.epub». Arianna автоматично виявить ваші книги і упорядкує їх за категоріями, жанрами та авторами.</p>
     <p xml:lang="x-test">xxAn ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sorts them by categories, genres and authors.xx</p>
@@ -103,6 +106,7 @@
   <developer_name xml:lang="pt">A Comunidade do KDE</developer_name>
   <developer_name xml:lang="sk">KDE Komunita</developer_name>
   <developer_name xml:lang="sl">Skupnost KDE</developer_name>
+  <developer_name xml:lang="sv">KDE-gemenskapen</developer_name>
   <developer_name xml:lang="tr">KDE Topluluğu</developer_name>
   <developer_name xml:lang="uk">Спільнота KDE</developer_name>
   <developer_name xml:lang="x-test">xxThe KDE Communityxx</developer_name>
