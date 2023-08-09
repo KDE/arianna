@@ -24,6 +24,7 @@
   <name xml:lang="ia">Arianna</name>
   <name xml:lang="it">Arianna</name>
   <name xml:lang="ka">არიანა</name>
+  <name xml:lang="ko">Arianna</name>
   <name xml:lang="nl">Arianna</name>
   <name xml:lang="pt">Arianna</name>
   <name xml:lang="sk">Arianna</name>
@@ -48,6 +49,7 @@
   <summary xml:lang="ia">Lector de EBook</summary>
   <summary xml:lang="it">Lettore EBook</summary>
   <summary xml:lang="ka">ელწიგნების მკითხველი</summary>
+  <summary xml:lang="ko">전자책 리더</summary>
   <summary xml:lang="nl">E-book-lezer</summary>
   <summary xml:lang="pt">Leitor de E-Books</summary>
   <summary xml:lang="sk">Čítačka elektronických kníh</summary>
@@ -72,6 +74,7 @@
     <p xml:lang="ia">Un lector de ebook de app gerente de bibliotheca supportante files de ".epub". Arianna discopere tu libros automaticamente, e los ordina per categorias, generes e autores.</p>
     <p xml:lang="it">Un lettore di ebook e gestore di libreria che supporta file «.epub». Arianna individua automaticamente i libri e li ordina per categorie, generi e autori.</p>
     <p xml:lang="ka">ელწიგნების წასაკითხი და ბიბლიოთეკების მმართველი აპლიკაცია ".epub" ფაილების მხარდაჭერით. Arianna ავტომატურად აღმოაჩენს თქვენს წიგნებს და მათ კატეგორიების, ჟანრების და ავტორების მიხედვით დაალაგებს.</p>
+    <p xml:lang="ko">".epub" 파일을 지원하는 전자책 리더 및 관리 앱입니다. Arianna는 책을 자동으로 발견하여 분류, 장르, 저자별로 정렬합니다.</p>
     <p xml:lang="nl">Een e-boeklezer en toepassing voor bibliotheekbeheer die ".epub"-bestanden ondersteunt. Arianna ontdekt uw boeken automatisch en sorteert ze op categorieën, genres en auteurs.</p>
     <p xml:lang="pt">Um leitor de e-books e de gestão de bibliotecas de ficheiros ".epub". O Arianna descobre automaticamente os seus livros, ordenando-os por categorias, géneros e autores.</p>
     <p xml:lang="sl">Bralnik elektronskih knjig in upravljalnik knjižnice, ki podpira datoteke ".epub". Arianna samodejno odkriva vaše knjige in jih razvrsti po kategorijah, žanrih in avtorjih.</p>
@@ -102,6 +105,7 @@
   <developer_name xml:lang="ia">Le communitate de KDE</developer_name>
   <developer_name xml:lang="it">La comunità KDE</developer_name>
   <developer_name xml:lang="ka">KDE-ის საზოგადოება</developer_name>
+  <developer_name xml:lang="ko">KDE 커뮤니티</developer_name>
   <developer_name xml:lang="nl">De KDE gemeenschap</developer_name>
   <developer_name xml:lang="pt">A Comunidade do KDE</developer_name>
   <developer_name xml:lang="sk">KDE Komunita</developer_name>
