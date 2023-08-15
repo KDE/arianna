@@ -72,7 +72,8 @@ Kirigami.ApplicationWindow {
                 easing.type: Easing.InOutQuad
             }
         }
-        Kirigami.Theme.colorSet: Kirigami.Theme.Window
+        Kirigami.Theme.colorSet: Kirigami.Theme.View
+        Kirigami.Theme.inherit: false
 
         handleClosedIcon.source: modal ? null : "sidebar-expand-left"
         handleOpenIcon.source: modal ? null : "sidebar-collapse-left"
@@ -200,7 +201,7 @@ Kirigami.ApplicationWindow {
                 }
 
                 ColumnLayout {
-                    spacing: 1
+                    spacing: 0
                     width: scrollView.width
                     PlaceItem {
                         id: goHomeButton
@@ -223,6 +224,16 @@ Kirigami.ApplicationWindow {
                         QQC2.ButtonGroup.group: null
                         checkable: false
                     }
+
+                    PlaceItem {
+                        text: i18nc("Open the settings page", "Settings");
+                        icon.name: "configure"
+                        onClicked: Navigation.openSettings()
+                        QQC2.ButtonGroup.group: placeGroup
+                        checkable: false
+                        Layout.bottomMargin: Kirigami.Units.smallSpacing / 2
+                    }
+
                     Kirigami.ListSectionHeader {
                         text: i18nc("Heading for switching to listing page showing items grouped by some properties", "Group By")
                     }
@@ -255,15 +266,6 @@ Kirigami.ApplicationWindow {
 
             Item {
                 Layout.fillHeight: true
-            }
-
-            PlaceItem {
-                text: i18nc("Open the settings page", "Settings");
-                icon.name: "configure"
-                onClicked: Navigation.openSettings()
-                QQC2.ButtonGroup.group: placeGroup
-                checkable: false
-                Layout.bottomMargin: Kirigami.Units.smallSpacing / 2
             }
         }
     }
