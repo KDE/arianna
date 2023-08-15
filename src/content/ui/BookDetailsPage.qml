@@ -5,76 +5,67 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.13 as Kirigami
-import org.kde.kirigamiaddons.labs.mobileform 0.1 as MobileForm
+import org.kde.kirigamiaddons.formcard 1.0 as FormCard
 import org.kde.arianna 1.0
 
-Kirigami.ScrollablePage {
+FormCard.FormCardPage {
     id: root
 
     property var metadata
 
     title: i18nc("@info:title", "Book Details")
 
-    leftPadding: 0
-    rightPadding: 0
+    FormCard.FormCard {
+        Layout.topMargin: Kirigami.Units.largeSpacing
 
-    ColumnLayout {
-        MobileForm.FormCard {
-            Layout.topMargin: Kirigami.Units.largeSpacing
-            Layout.fillWidth: true
-            contentItem: ColumnLayout {
-                spacing: 0
+        FormCard.FormHeader {
+            title: root.metadata.title
+        }
 
-                MobileForm.FormCardHeader {
-                    title: root.metadata.title
-                }
+        FormCard.FormTextDelegate {
+            text: i18n("Author:")
+            description: root.metadata.creator
+            visible: description.length > 0
+        }
 
-                MobileForm.FormTextDelegate {
-                    text: i18n("Author:")
-                    description: root.metadata.creator
-                    visible: description.length > 0
-                }
+        FormCard.FormDelegateSeparator {}
 
-                MobileForm.FormDelegateSeparator {}
+        FormCard.FormTextDelegate {
+            text: i18n("Description:")
+            description: root.metadata.description
+            visible: description.length > 0
+        }
 
-                MobileForm.FormTextDelegate {
-                    text: i18n("Description:")
-                    description: root.metadata.description
-                    visible: description.length > 0
-                }
+        FormCard.FormDelegateSeparator {}
 
-                MobileForm.FormDelegateSeparator {}
+        FormCard.FormTextDelegate {
+            text: i18n("Publisher:")
+            description: root.metadata.publisher
+            visible: description.length > 0
+        }
 
-                MobileForm.FormTextDelegate {
-                    text: i18n("Publisher:")
-                    description: root.metadata.publisher
-                    visible: description.length > 0
-                }
+        FormCard.FormDelegateSeparator {}
 
-                MobileForm.FormDelegateSeparator {}
+        FormCard.FormTextDelegate {
+            text: i18n("Language:")
+            description: Qt.locale(root.metadata.language).nativeLanguageName
+            visible: description.length > 0
+        }
 
-                MobileForm.FormTextDelegate {
-                    text: i18n("Language:")
-                    description: Qt.locale(root.metadata.language).nativeLanguageName
-                    visible: description.length > 0
-                }
+        FormCard.FormDelegateSeparator {}
 
-                MobileForm.FormDelegateSeparator {}
+        FormCard.FormTextDelegate {
+            text: i18n("Publishing date:")
+            description: /^\d+$/.test(root.metadata.pubdate) ? root.metadata.pubdate : new Date(root.metadata.pubdate).toLocaleDateString()
+            visible: description.length > 0
+        }
 
-                MobileForm.FormTextDelegate {
-                    text: i18n("Publishing date:")
-                    description: /^\d+$/.test(root.metadata.pubdate) ? root.metadata.pubdate : new Date(root.metadata.pubdate).toLocaleDateString()
-                    visible: description.length > 0
-                }
+        FormCard.FormDelegateSeparator {}
 
-                MobileForm.FormDelegateSeparator {}
-
-                MobileForm.FormTextDelegate {
-                    text: i18n("Copyright:")
-                    description: root.metadata.rights
-                    visible: description.length > 0
-                }
-            }
+        FormCard.FormTextDelegate {
+            text: i18n("Copyright:")
+            description: root.metadata.rights
+            visible: description.length > 0
         }
     }
 }
