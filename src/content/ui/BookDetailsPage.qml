@@ -13,7 +13,7 @@ Kirigami.ScrollablePage {
 
     property var metadata
 
-    title: i18n("Book Details")
+    title: i18nc("@info:title", "Book Details")
 
     leftPadding: 0
     rightPadding: 0
