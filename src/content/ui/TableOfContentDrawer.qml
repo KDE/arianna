@@ -38,7 +38,7 @@ Kirigami.OverlayDrawer {
             bottomPadding: Kirigami.Units.smallSpacing
 
             Kirigami.Heading {
-                text: i18n("Table of content")
+                text: i18n("Table of Contents")
             }
         }
 
