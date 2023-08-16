@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-18 08:24+0000\n"
+"POT-Creation-Date: 2023-08-16 02:24+0000\n"
 "PO-Revision-Date: 2023-06-17 09:30+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
@@ -53,7 +53,7 @@ msgstr "Data de publicación:"
 msgid "Copyright:"
 msgstr "Dereitos de copia:"
 
-#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:165
+#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:166
 #, kde-format
 msgid "No search results"
 msgstr "A busca non ten resultados."
@@ -79,12 +79,12 @@ msgstr "Sen libro seleccionado"
 msgid "Open file"
 msgstr "Abrir ficheiro"
 
-#: content/ui/EpubViewerPage.qml:187 content/ui/main.qml:363
+#: content/ui/EpubViewerPage.qml:187 content/ui/main.qml:365
 #, kde-format
 msgid "Please choose a file"
 msgstr "Elixa un ficheiro"
 
-#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:364
+#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:366
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -143,29 +143,29 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Engada algún libro"
 
-#: content/ui/main.qml:18 content/ui/main.qml:303 main.cpp:74
+#: content/ui/main.qml:18 content/ui/main.qml:305 main.cpp:74
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
 
-#: content/ui/main.qml:207
+#: content/ui/main.qml:208
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
 msgstr "Inicio"
 
-#: content/ui/main.qml:211
+#: content/ui/main.qml:212
 #, kde-format
 msgid "Home"
 msgstr "Inicio"
 
-#: content/ui/main.qml:214
+#: content/ui/main.qml:215
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
 msgstr "Engadidos recentemente"
 
-#: content/ui/main.qml:220
+#: content/ui/main.qml:221
 #, kde-format
 msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
@@ -173,7 +173,13 @@ msgctxt ""
 msgid "Open Other..."
 msgstr "Abrir Outro..."
 
-#: content/ui/main.qml:227
+#: content/ui/main.qml:229
+#, kde-format
+msgctxt "Open the settings page"
+msgid "Settings"
+msgstr "Axustes"
+
+#: content/ui/main.qml:238
 #, kde-format
 msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
@@ -181,54 +187,48 @@ msgctxt ""
 msgid "Group By"
 msgstr "Agrupar por"
 
-#: content/ui/main.qml:230
+#: content/ui/main.qml:241
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
 msgstr "Autoría"
 
-#: content/ui/main.qml:236
+#: content/ui/main.qml:247
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
 msgstr "Serie"
 
-#: content/ui/main.qml:238
+#: content/ui/main.qml:249
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
 msgstr "Agrupar por Serie"
 
-#: content/ui/main.qml:242
+#: content/ui/main.qml:253
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
 msgstr "Editorial"
 
-#: content/ui/main.qml:248
+#: content/ui/main.qml:259
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Palabras chave"
 
-#: content/ui/main.qml:250
+#: content/ui/main.qml:261
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr "Agrupar por Xénero"
 
-#: content/ui/main.qml:261
-#, kde-format
-msgctxt "Open the settings page"
-msgid "Settings"
-msgstr "Axustes"
-
-#: content/ui/main.qml:334 content/ui/SettingsPage.qml:16
+#: content/ui/main.qml:336 content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
 msgstr "Axustes"
 
-#: content/ui/main.qml:342
+#: content/ui/main.qml:344
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
