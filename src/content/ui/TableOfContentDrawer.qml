@@ -19,7 +19,7 @@ Kirigami.OverlayDrawer {
     edge: Qt.application.layoutDirection == Qt.RightToLeft ? Qt.LeftEdge : Qt.RightEdge
     handleClosedIcon.name: 'format-list-ordered'
     handleClosedToolTip: i18nc("@info:tooltip", "Open table of contents")
-    handleOpenToolTip: i18n("@info:tooltip", "Close table of contents")
+    handleOpenToolTip: i18nc("@info:tooltip", "Close table of contents")
 
     topPadding: 0
     leftPadding: 0
