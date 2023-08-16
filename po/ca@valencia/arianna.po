@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-19 00:47+0000\n"
+"POT-Creation-Date: 2023-08-16 00:43+0000\n"
 "PO-Revision-Date: 2023-06-03 13:19+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -21,8 +21,10 @@ msgstr ""
 "X-Generator: Lokalize 20.12.0\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, kde-format
-msgid "Book details"
+#, fuzzy, kde-format
+#| msgid "Book Details"
+msgctxt "@info:title"
+msgid "Book Details"
 msgstr "Detalls del llibre"
 
 #: content/ui/BookDetailsPage.qml:33
@@ -55,7 +57,7 @@ msgstr "Data de publicació:"
 msgid "Copyright:"
 msgstr "Copyright:"
 
-#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:165
+#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:166
 #, kde-format
 msgid "No search results"
 msgstr "Busca sense cap resultat"
@@ -81,12 +83,12 @@ msgstr "No hi ha cap llibre seleccionat"
 msgid "Open file"
 msgstr "Obri un fitxer"
 
-#: content/ui/EpubViewerPage.qml:187 content/ui/main.qml:363
+#: content/ui/EpubViewerPage.qml:187 content/ui/main.qml:365
 #, kde-format
 msgid "Please choose a file"
 msgstr "Seleccioneu un fitxer"
 
-#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:364
+#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:366
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -145,29 +147,29 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Afig diversos llibres"
 
-#: content/ui/main.qml:18 content/ui/main.qml:303 main.cpp:74
+#: content/ui/main.qml:18 content/ui/main.qml:305 main.cpp:74
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
 
-#: content/ui/main.qml:207
+#: content/ui/main.qml:208
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
 msgstr "Inici"
 
-#: content/ui/main.qml:211
+#: content/ui/main.qml:212
 #, kde-format
 msgid "Home"
 msgstr "Inici"
 
-#: content/ui/main.qml:214
+#: content/ui/main.qml:215
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
 msgstr "Llibres afegits recentment"
 
-#: content/ui/main.qml:220
+#: content/ui/main.qml:221
 #, kde-format
 msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
@@ -175,7 +177,13 @@ msgctxt ""
 msgid "Open Other..."
 msgstr "Obri'n altres..."
 
-#: content/ui/main.qml:227
+#: content/ui/main.qml:229
+#, kde-format
+msgctxt "Open the settings page"
+msgid "Settings"
+msgstr "Configuració"
+
+#: content/ui/main.qml:238
 #, kde-format
 msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
@@ -183,54 +191,48 @@ msgctxt ""
 msgid "Group By"
 msgstr "Agrupa per"
 
-#: content/ui/main.qml:230
+#: content/ui/main.qml:241
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
 msgstr "Autoria"
 
-#: content/ui/main.qml:236
+#: content/ui/main.qml:247
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
 msgstr "Sèries"
 
-#: content/ui/main.qml:238
+#: content/ui/main.qml:249
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
 msgstr "Agrupa per sèries"
 
-#: content/ui/main.qml:242
+#: content/ui/main.qml:253
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
 msgstr "Editorial"
 
-#: content/ui/main.qml:248
+#: content/ui/main.qml:259
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Paraules clau"
 
-#: content/ui/main.qml:250
+#: content/ui/main.qml:261
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr "Agrupa per gèneres"
 
-#: content/ui/main.qml:261
-#, kde-format
-msgctxt "Open the settings page"
-msgid "Settings"
-msgstr "Configuració"
-
-#: content/ui/main.qml:334 content/ui/SettingsPage.qml:16
+#: content/ui/main.qml:336 content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
 msgstr "Configuració"
 
-#: content/ui/main.qml:342
+#: content/ui/main.qml:344
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
@@ -316,9 +318,23 @@ msgstr "Quant a Arianna"
 msgid "About KDE"
 msgstr "Quant a KDE"
 
-#: content/ui/TableOfContentDrawer.qml:41
+#: content/ui/TableOfContentDrawer.qml:21
+#, fuzzy, kde-format
+#| msgid "Table of content"
+msgctxt "@info:tooltip"
+msgid "Open table of contents"
+msgstr "Taula de contingut"
+
+#: content/ui/TableOfContentDrawer.qml:22
 #, kde-format
-msgid "Table of content"
+msgid "@info:tooltip"
+msgstr ""
+
+#: content/ui/TableOfContentDrawer.qml:43
+#, fuzzy, kde-format
+#| msgid "Table of content"
+msgctxt "@info:title"
+msgid "Table of Contents"
 msgstr "Taula de contingut"
 
 #: main.cpp:76
@@ -367,3 +383,6 @@ msgstr "Lector d'EPub"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Fitxer Epub a obrir"
+
+#~ msgid "Book details"
+#~ msgstr "Detalls del llibre"

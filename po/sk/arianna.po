@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-19 00:47+0000\n"
+"POT-Creation-Date: 2023-08-16 00:43+0000\n"
 "PO-Revision-Date: 2023-03-12 09:05+0100\n"
 "Last-Translator: Roman Paholik <wizzardsk@gmail.com>\n"
 "Language-Team: Slovak <kde-sk@linux.sk>\n"
@@ -19,7 +19,8 @@ msgstr ""
 #, fuzzy, kde-format
 #| msgctxt "EMAIL OF TRANSLATORS"
 #| msgid "Your emails"
-msgid "Book details"
+msgctxt "@info:title"
+msgid "Book Details"
 msgstr "wizzardsk@gmail.com"
 
 #: content/ui/BookDetailsPage.qml:33
@@ -58,7 +59,7 @@ msgstr "Vydavateľ"
 msgid "Copyright:"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:165
+#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:166
 #, kde-format
 msgid "No search results"
 msgstr ""
@@ -86,12 +87,12 @@ msgstr ""
 msgid "Open file"
 msgstr "Otvoriť súbor"
 
-#: content/ui/EpubViewerPage.qml:187 content/ui/main.qml:363
+#: content/ui/EpubViewerPage.qml:187 content/ui/main.qml:365
 #, kde-format
 msgid "Please choose a file"
 msgstr "Prosím, vyberte súbor"
 
-#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:364
+#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:366
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -150,29 +151,29 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr ""
 
-#: content/ui/main.qml:18 content/ui/main.qml:303 main.cpp:74
+#: content/ui/main.qml:18 content/ui/main.qml:305 main.cpp:74
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
 
-#: content/ui/main.qml:207
+#: content/ui/main.qml:208
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
 msgstr "Domov"
 
-#: content/ui/main.qml:211
+#: content/ui/main.qml:212
 #, kde-format
 msgid "Home"
 msgstr "Domov"
 
-#: content/ui/main.qml:214
+#: content/ui/main.qml:215
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
 msgstr ""
 
-#: content/ui/main.qml:220
+#: content/ui/main.qml:221
 #, kde-format
 msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
@@ -180,7 +181,13 @@ msgctxt ""
 msgid "Open Other..."
 msgstr ""
 
-#: content/ui/main.qml:227
+#: content/ui/main.qml:229
+#, kde-format
+msgctxt "Open the settings page"
+msgid "Settings"
+msgstr "Nastavenia"
+
+#: content/ui/main.qml:238
 #, kde-format
 msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
@@ -188,56 +195,50 @@ msgctxt ""
 msgid "Group By"
 msgstr "Zoskupiť podľa"
 
-#: content/ui/main.qml:230
+#: content/ui/main.qml:241
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
 msgstr "Autor"
 
-#: content/ui/main.qml:236
+#: content/ui/main.qml:247
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
 msgstr "Série"
 
-#: content/ui/main.qml:238
+#: content/ui/main.qml:249
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
 msgstr ""
 
-#: content/ui/main.qml:242
+#: content/ui/main.qml:253
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
 msgstr "Vydavateľ"
 
-#: content/ui/main.qml:248
+#: content/ui/main.qml:259
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Kľúčové slová"
 
-#: content/ui/main.qml:250
+#: content/ui/main.qml:261
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr ""
 
-#: content/ui/main.qml:261
-#, kde-format
-msgctxt "Open the settings page"
-msgid "Settings"
-msgstr "Nastavenia"
-
-#: content/ui/main.qml:334 content/ui/SettingsPage.qml:16
+#: content/ui/main.qml:336 content/ui/SettingsPage.qml:16
 #, fuzzy, kde-format
 #| msgctxt "Open the settings page"
 #| msgid "Settings"
 msgid "Settings"
 msgstr "Nastavenia"
 
-#: content/ui/main.qml:342
+#: content/ui/main.qml:344
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
@@ -324,9 +325,21 @@ msgstr "Arianna"
 msgid "About KDE"
 msgstr ""
 
-#: content/ui/TableOfContentDrawer.qml:41
+#: content/ui/TableOfContentDrawer.qml:21
 #, kde-format
-msgid "Table of content"
+msgctxt "@info:tooltip"
+msgid "Open table of contents"
+msgstr ""
+
+#: content/ui/TableOfContentDrawer.qml:22
+#, kde-format
+msgid "@info:tooltip"
+msgstr ""
+
+#: content/ui/TableOfContentDrawer.qml:43
+#, kde-format
+msgctxt "@info:title"
+msgid "Table of Contents"
 msgstr ""
 
 #: main.cpp:76
@@ -375,3 +388,9 @@ msgstr ""
 #, kde-format
 msgid "Epub file to open"
 msgstr ""
+
+#, fuzzy
+#~| msgctxt "EMAIL OF TRANSLATORS"
+#~| msgid "Your emails"
+#~ msgid "Book details"
+#~ msgstr "wizzardsk@gmail.com"

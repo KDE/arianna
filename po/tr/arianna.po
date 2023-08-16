@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-07-19 00:47+0000\n"
+"POT-Creation-Date: 2023-08-16 00:43+0000\n"
 "PO-Revision-Date: 2023-08-11 13:57+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -18,9 +18,11 @@ msgstr ""
 "X-Generator: Lokalize 23.11.70\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, kde-format
-msgid "Book details"
-msgstr "Kitap ayrıntıları"
+#, fuzzy, kde-format
+#| msgid "Book Details"
+msgctxt "@info:title"
+msgid "Book Details"
+msgstr "Kitap Ayrıntıları"
 
 #: content/ui/BookDetailsPage.qml:33
 #, kde-format
@@ -52,7 +54,7 @@ msgstr "Yayım tarihi:"
 msgid "Copyright:"
 msgstr "Telif hakkı:"
 
-#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:165
+#: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:166
 #, kde-format
 msgid "No search results"
 msgstr "Arama sonucu yok"
@@ -78,12 +80,12 @@ msgstr "Seçili kitap yok"
 msgid "Open file"
 msgstr "Dosya Aç"
 
-#: content/ui/EpubViewerPage.qml:187 content/ui/main.qml:363
+#: content/ui/EpubViewerPage.qml:187 content/ui/main.qml:365
 #, kde-format
 msgid "Please choose a file"
 msgstr "Lütfen bir dosya seçin"
 
-#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:364
+#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:366
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -142,29 +144,29 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Kitaplar ekle"
 
-#: content/ui/main.qml:18 content/ui/main.qml:303 main.cpp:74
+#: content/ui/main.qml:18 content/ui/main.qml:305 main.cpp:74
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
 
-#: content/ui/main.qml:207
+#: content/ui/main.qml:208
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
 msgstr "Ana Ekran"
 
-#: content/ui/main.qml:211
+#: content/ui/main.qml:212
 #, kde-format
 msgid "Home"
 msgstr "Ana Ekran"
 
-#: content/ui/main.qml:214
+#: content/ui/main.qml:215
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
 msgstr "Son Eklenen Kitaplar"
 
-#: content/ui/main.qml:220
+#: content/ui/main.qml:221
 #, kde-format
 msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
@@ -172,7 +174,13 @@ msgctxt ""
 msgid "Open Other..."
 msgstr "Başka Aç..."
 
-#: content/ui/main.qml:227
+#: content/ui/main.qml:229
+#, kde-format
+msgctxt "Open the settings page"
+msgid "Settings"
+msgstr "Ayarlar"
+
+#: content/ui/main.qml:238
 #, kde-format
 msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
@@ -180,54 +188,48 @@ msgctxt ""
 msgid "Group By"
 msgstr "Şuna Göre Grupla"
 
-#: content/ui/main.qml:230
+#: content/ui/main.qml:241
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
 msgstr "Yazar"
 
-#: content/ui/main.qml:236
+#: content/ui/main.qml:247
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
 msgstr "Seri"
 
-#: content/ui/main.qml:238
+#: content/ui/main.qml:249
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
 msgstr "Seriye Göre Grupla"
 
-#: content/ui/main.qml:242
+#: content/ui/main.qml:253
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
 msgstr "Yayımcı"
 
-#: content/ui/main.qml:248
+#: content/ui/main.qml:259
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Anahtar Sözcükler"
 
-#: content/ui/main.qml:250
+#: content/ui/main.qml:261
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr "Türe Göre Grupla"
 
-#: content/ui/main.qml:261
-#, kde-format
-msgctxt "Open the settings page"
-msgid "Settings"
-msgstr "Ayarlar"
-
-#: content/ui/main.qml:334 content/ui/SettingsPage.qml:16
+#: content/ui/main.qml:336 content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: content/ui/main.qml:342
+#: content/ui/main.qml:344
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
@@ -313,9 +315,23 @@ msgstr "Arianna Hakkında"
 msgid "About KDE"
 msgstr "KDE Hakkında"
 
-#: content/ui/TableOfContentDrawer.qml:41
+#: content/ui/TableOfContentDrawer.qml:21
+#, fuzzy, kde-format
+#| msgid "Table of content"
+msgctxt "@info:tooltip"
+msgid "Open table of contents"
+msgstr "İçindekiler"
+
+#: content/ui/TableOfContentDrawer.qml:22
 #, kde-format
-msgid "Table of content"
+msgid "@info:tooltip"
+msgstr ""
+
+#: content/ui/TableOfContentDrawer.qml:43
+#, fuzzy, kde-format
+#| msgid "Table of content"
+msgctxt "@info:title"
+msgid "Table of Contents"
 msgstr "İçindekiler"
 
 #: main.cpp:76
@@ -364,6 +380,9 @@ msgstr "Epub Okuyucusu"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Açılacak Epub dosyası"
+
+#~ msgid "Book details"
+#~ msgstr "Kitap ayrıntıları"
 
 #~ msgid "Configure"
 #~ msgstr "Yapılandır"
