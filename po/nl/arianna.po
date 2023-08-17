@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-16 00:43+0000\n"
-"PO-Revision-Date: 2023-06-03 12:11+0200\n"
+"POT-Creation-Date: 2023-08-17 00:43+0000\n"
+"PO-Revision-Date: 2023-08-16 11:15+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
 "Language: nl\n"
@@ -15,11 +15,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.1\n"
+"X-Generator: Lokalize 23.04.3\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@info:title"
 msgid "Book Details"
 msgstr "Boekdetails"
@@ -316,20 +315,21 @@ msgid "About KDE"
 msgstr "Over KDE"
 
 #: content/ui/TableOfContentDrawer.qml:21
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
-msgstr "Inhoudsopgave"
+msgstr "Inhoudsopgave openen"
 
 #: content/ui/TableOfContentDrawer.qml:22
-#, kde-format
-msgid "@info:tooltip"
-msgstr ""
+#, fuzzy, kde-format
+#| msgctxt "@info:tooltip"
+#| msgid "Open table of contents"
+msgctxt "@info:tooltip"
+msgid "Close table of contents"
+msgstr "Inhoudsopgave openen"
 
 #: content/ui/TableOfContentDrawer.qml:43
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
 msgstr "Inhoudsopgave"
@@ -380,6 +380,9 @@ msgstr "Epub-lezer"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Te openen Epub-bestand"
+
+#~ msgid "@info:tooltip"
+#~ msgstr "@info:tekstballon"
 
 #~ msgid "Book details"
 #~ msgstr "Boekdetails"
