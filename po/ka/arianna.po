@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-08-17 00:43+0000\n"
-"PO-Revision-Date: 2023-06-04 05:15+0200\n"
+"PO-Revision-Date: 2023-08-17 06:16+0200\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -16,11 +16,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.3.2\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@info:title"
 msgid "Book Details"
 msgstr "წიგნის დეტალები"
@@ -317,22 +316,19 @@ msgid "About KDE"
 msgstr "KDE-ის შესახებ"
 
 #: content/ui/TableOfContentDrawer.qml:21
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
-msgstr "სარჩევი"
+msgstr "სარჩევის გახსნა"
 
 #: content/ui/TableOfContentDrawer.qml:22
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
-msgstr "სარჩევი"
+msgstr "სარჩევის დახურვა"
 
 #: content/ui/TableOfContentDrawer.qml:43
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
 msgstr "სარჩევი"

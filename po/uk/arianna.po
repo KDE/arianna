@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-08-17 00:43+0000\n"
-"PO-Revision-Date: 2023-08-16 07:46+0300\n"
+"PO-Revision-Date: 2023-08-17 09:02+0300\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "Language: uk\n"
@@ -322,12 +322,10 @@ msgid "Open table of contents"
 msgstr "Відкрити таблицю змісту"
 
 #: content/ui/TableOfContentDrawer.qml:22
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Open table of contents"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
-msgstr "Відкрити таблицю змісту"
+msgstr "Закрити таблицю змісту"
 
 #: content/ui/TableOfContentDrawer.qml:43
 #, kde-format
