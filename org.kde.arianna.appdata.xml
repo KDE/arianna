@@ -9,6 +9,7 @@
     <binary>arianna</binary>
   </provides>
   <name>Arianna</name>
+  <name xml:lang="ar">أريانا</name>
   <name xml:lang="ca">Arianna</name>
   <name xml:lang="ca-valencia">Arianna</name>
   <name xml:lang="cs">Arianna</name>
@@ -35,6 +36,7 @@
   <name xml:lang="x-test">xxAriannaxx</name>
   <name xml:lang="zh-CN">Arianna</name>
   <summary>EBook Reader</summary>
+  <summary xml:lang="ar">قارئ كتب إلكترونية</summary>
   <summary xml:lang="ca">Lector de llibres electrònics</summary>
   <summary xml:lang="ca-valencia">Lector de llibres electrònics</summary>
   <summary xml:lang="cs">Čtečka e-knih</summary>
@@ -61,6 +63,7 @@
   <summary xml:lang="zh-CN">电子书阅读器</summary>
   <description>
     <p>An ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sorts them by categories, genres and authors.</p>
+    <p xml:lang="ar">قارئ كُتب إلكترونية ومدير للمكتبة وداعم لملفات ".epub". أريانا يكتشف كتبك تلقائيا ويرتبها بواسطة التصنيفات والأنواع والكتاب</p>
     <p xml:lang="ca">Una aplicació de lectura de llibres electrònics i gestió de biblioteques que permet fitxers «.epub». L'Arianna descobreix automàticament els vostres llibres, i els ordena per categories, gèneres i autors.</p>
     <p xml:lang="ca-valencia">Una aplicació de lectura de llibres electrònics i gestió de biblioteques que permet fitxers «.epub». Arianna descobrix automàticament els vostres llibres, i els ordena per categories, gèneres i autors.</p>
     <p xml:lang="de">EBook-Lesegerät und Bibliotheksverwaltung mit Unterstützung für „.epub“-Dateien. Arianna findet Ihre Bücher automatisch und sortiert sie nach Kategorien, Genres und Autoren.</p>
@@ -90,6 +93,7 @@
     <category>Network</category>
   </categories>
   <developer_name>The KDE Community</developer_name>
+  <developer_name xml:lang="ar">مجتمع كِيدِي</developer_name>
   <developer_name xml:lang="ca">La comunitat KDE</developer_name>
   <developer_name xml:lang="ca-valencia">La comunitat KDE</developer_name>
   <developer_name xml:lang="cs">Komunita KDE</developer_name>
