@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2020 Tobias Fella <fella@posteo.de>
 [Desktop Entry]
 Name=Arianna
+Name[ar]=أريانا
 Name[ca]=Arianna
 Name[ca@valencia]=Arianna
 Name[cs]=Arianna
@@ -28,6 +29,7 @@ Name[uk]=Arianna
 Name[x-test]=xxAriannaxx
 Name[zh_CN]=Arianna
 GenericName=Ebook Reader
+GenericName[ar]=قارئ كتب إلكترونية
 GenericName[ca]=Lector de llibres electrònics
 GenericName[ca@valencia]=Lector de llibres electrònics
 GenericName[cs]=Čtečka e-knih
