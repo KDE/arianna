@@ -3,8 +3,11 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-set(PROJECT_VERSION "1.1.0")
-project(arianna VERSION ${PROJECT_VERSION})
+# KDE Applications version, managed by release script.
+set(RELEASE_SERVICE_VERSION_MAJOR "23")
+set(RELEASE_SERVICE_VERSION_MINOR "08")
+set(RELEASE_SERVICE_VERSION_MICRO "0")
+project(arianna VERSION ${RELEASE_SERVICE_VERSION})
 
 set(KF_MIN_VERSION "5.98.0")
 set(QT_MIN_VERSION "5.15.0")
