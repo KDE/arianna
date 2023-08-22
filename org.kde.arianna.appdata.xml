@@ -139,6 +139,7 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="23.08.0" date="2023-08-24"/>
     <release version="1.1.0" date="2023-08-24"/>
     <release version="1.1.0" date="2023-06-10">
       <url>https://carlschwan.eu/2023/06/10/announcing-arianna-1.0/</url>
@@ -147,9 +148,6 @@
     <release version="1.0.1" date="2023-04-22">
       <url>https://carlschwan.eu/2023/04/22/arianna-1.0.1/</url>
       <description>This release fixes various accessibility issues and crashes.</description>
-    </release>
-    <release version="1.0.0" date="2023-04-13">
-      <url>https://carlschwan.eu/2023/04/12/announcing-arianna-1.0/</url>
     </release>
   </releases>
   <launchable type="desktop-id">org.kde.arianna.desktop</launchable>
