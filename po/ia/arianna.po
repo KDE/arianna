@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-08-17 00:43+0000\n"
-"PO-Revision-Date: 2023-06-11 21:55+0200\n"
+"PO-Revision-Date: 2023-08-24 17:59+0200\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -15,11 +15,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@info:title"
 msgid "Book Details"
 msgstr "Detalios de libro"
@@ -316,25 +315,22 @@ msgid "About KDE"
 msgstr "A proposito de KDE"
 
 #: content/ui/TableOfContentDrawer.qml:21
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
-msgstr "Tebella de contento (Index)"
+msgstr "Aperi Tabella de contento (Index)"
 
 #: content/ui/TableOfContentDrawer.qml:22
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
-msgstr "Tebella de contento (Index)"
+msgstr "Tabella de contento (Index)"
 
 #: content/ui/TableOfContentDrawer.qml:43
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
-msgstr "Tebella de contento (Index)"
+msgstr "Tabella de contento (Index)"
 
 #: main.cpp:76
 #, kde-format
