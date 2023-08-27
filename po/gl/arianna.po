@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-08-17 00:43+0000\n"
-"PO-Revision-Date: 2023-06-17 09:30+0200\n"
+"PO-Revision-Date: 2023-08-26 03:30+0200\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Galician <proxecto@trasno.gal>\n"
 "Language: gl\n"
@@ -16,11 +16,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 23.04.2\n"
+"X-Generator: Lokalize 23.04.3\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@info:title"
 msgid "Book Details"
 msgstr "Detalles do libro"
@@ -317,22 +316,19 @@ msgid "About KDE"
 msgstr "Sobre KDE"
 
 #: content/ui/TableOfContentDrawer.qml:21
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
-msgstr "Índice"
+msgstr "Abrir o índice."
 
 #: content/ui/TableOfContentDrawer.qml:22
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
-msgstr "Índice"
+msgstr "Pechar o índice."
 
 #: content/ui/TableOfContentDrawer.qml:43
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
 msgstr "Índice"
