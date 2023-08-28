@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-08-17 00:43+0000\n"
-"PO-Revision-Date: 2023-08-02 12:41\n"
+"PO-Revision-Date: 2023-08-27 03:42\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
 "Language: zh_CN\n"
@@ -21,37 +21,37 @@ msgstr ""
 #, kde-format
 msgctxt "@info:title"
 msgid "Book Details"
-msgstr ""
+msgstr "图书详情"
 
 #: content/ui/BookDetailsPage.qml:33
 #, kde-format
 msgid "Author:"
-msgstr ""
+msgstr "作者："
 
 #: content/ui/BookDetailsPage.qml:41
 #, kde-format
 msgid "Description:"
-msgstr ""
+msgstr "描述："
 
 #: content/ui/BookDetailsPage.qml:49
 #, kde-format
 msgid "Publisher:"
-msgstr ""
+msgstr "出版社："
 
 #: content/ui/BookDetailsPage.qml:57
 #, kde-format
 msgid "Language:"
-msgstr ""
+msgstr "语言："
 
 #: content/ui/BookDetailsPage.qml:65
 #, kde-format
 msgid "Publishing date:"
-msgstr ""
+msgstr "出版日期："
 
 #: content/ui/BookDetailsPage.qml:73
 #, kde-format
 msgid "Copyright:"
-msgstr ""
+msgstr "版权："
 
 #: content/ui/EpubViewerPage.qml:123 content/ui/main.qml:166
 #, kde-format
@@ -67,7 +67,7 @@ msgstr "正在加载"
 #: content/ui/EpubViewerPage.qml:141
 #, kde-format
 msgid "Book Details"
-msgstr ""
+msgstr "图书详情"
 
 #: content/ui/EpubViewerPage.qml:163
 #, kde-format
