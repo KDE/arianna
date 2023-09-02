@@ -18,11 +18,10 @@ msgstr ""
 "X-Generator: Lokalize 23.04.1\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@info:title"
 msgid "Book Details"
-msgstr "Podrobnosti knihy"
+msgstr ""
 
 #: content/ui/BookDetailsPage.qml:33
 #, kde-format
@@ -316,25 +315,22 @@ msgid "About KDE"
 msgstr "O prostředí KDE"
 
 #: content/ui/TableOfContentDrawer.qml:21
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
-msgstr "Obsah"
+msgstr ""
 
 #: content/ui/TableOfContentDrawer.qml:22
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
-msgstr "Obsah"
+msgstr ""
 
 #: content/ui/TableOfContentDrawer.qml:43
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
-msgstr "Obsah"
+msgstr ""
 
 #: main.cpp:76
 #, kde-format
@@ -382,6 +378,3 @@ msgstr "Čtečka Epub"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Soubor epub k otevření"
-
-#~ msgid "Book details"
-#~ msgstr "Podrobnosti knihy"
