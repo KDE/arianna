@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-17 00:43+0000\n"
+"POT-Creation-Date: 2023-09-13 00:43+0000\n"
 "PO-Revision-Date: 2023-07-24 21:33+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: English <kde-i18n-de@kde.org>\n"
@@ -26,32 +26,32 @@ msgctxt "@info:title"
 msgid "Book Details"
 msgstr "Buchdetails"
 
-#: content/ui/BookDetailsPage.qml:33
+#: content/ui/BookDetailsPage.qml:24
 #, kde-format
 msgid "Author:"
 msgstr "Autor:"
 
-#: content/ui/BookDetailsPage.qml:41
+#: content/ui/BookDetailsPage.qml:32
 #, kde-format
 msgid "Description:"
 msgstr "Beschreibung:"
 
-#: content/ui/BookDetailsPage.qml:49
+#: content/ui/BookDetailsPage.qml:40
 #, kde-format
 msgid "Publisher:"
 msgstr "Herausgeber:"
 
-#: content/ui/BookDetailsPage.qml:57
+#: content/ui/BookDetailsPage.qml:48
 #, kde-format
 msgid "Language:"
 msgstr "Sprache:"
 
-#: content/ui/BookDetailsPage.qml:65
+#: content/ui/BookDetailsPage.qml:56
 #, kde-format
 msgid "Publishing date:"
 msgstr "Veröffentlichungsdatum:"
 
-#: content/ui/BookDetailsPage.qml:73
+#: content/ui/BookDetailsPage.qml:64
 #, kde-format
 msgid "Copyright:"
 msgstr "Copyright:"
@@ -237,82 +237,82 @@ msgctxt "@action:button"
 msgid "Add Book…"
 msgstr "Buch hinzufügen …"
 
-#: content/ui/SettingsPage.qml:29
+#: content/ui/SettingsPage.qml:19
 #, kde-format
 msgid "Appearance"
 msgstr "Erscheinungsbild"
 
-#: content/ui/SettingsPage.qml:33
+#: content/ui/SettingsPage.qml:24
 #, kde-format
 msgid "Maximum width:"
 msgstr "Maximale Breite:"
 
-#: content/ui/SettingsPage.qml:47
+#: content/ui/SettingsPage.qml:38
 #, kde-format
 msgid "Margin:"
 msgstr "Rand:"
 
-#: content/ui/SettingsPage.qml:62
+#: content/ui/SettingsPage.qml:53
 #, kde-format
 msgid "Show progress"
 msgstr "Fortschritt anzeigen"
 
-#: content/ui/SettingsPage.qml:80
+#: content/ui/SettingsPage.qml:64
 #, kde-format
 msgid "Font"
 msgstr "Schriftart"
 
-#: content/ui/SettingsPage.qml:84 content/ui/SettingsPage.qml:228
+#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:200
 #, kde-format
 msgid "Change default font"
 msgstr "Standardschriftart ändern"
 
-#: content/ui/SettingsPage.qml:89
+#: content/ui/SettingsPage.qml:77
 #, kde-format
 msgid "Use publisher font"
 msgstr "Schriftart des Herausgebers verwenden"
 
-#: content/ui/SettingsPage.qml:107
+#: content/ui/SettingsPage.qml:88
 #, kde-format
 msgid "Text flow"
 msgstr "Textfluss"
 
-#: content/ui/SettingsPage.qml:112
+#: content/ui/SettingsPage.qml:94
 #, kde-format
 msgid "Justify text"
 msgstr "Text im Blocksatz anzeigen"
 
-#: content/ui/SettingsPage.qml:125
+#: content/ui/SettingsPage.qml:107
 #, kde-format
 msgid "Hyphenate text"
 msgstr "Text mit Bindestrich schreiben"
 
-#: content/ui/SettingsPage.qml:137
+#: content/ui/SettingsPage.qml:119
 #, kde-format
 msgid "Line height:"
 msgstr "Zeilenhöhe"
 
-#: content/ui/SettingsPage.qml:154
+#: content/ui/SettingsPage.qml:136
 #, kde-format
 msgid "Brightness:"
 msgstr "Helligkeit:"
 
-#: content/ui/SettingsPage.qml:179
+#: content/ui/SettingsPage.qml:154
 #, kde-format
 msgid "Colors"
 msgstr "Farben"
 
-#: content/ui/SettingsPage.qml:183
+#: content/ui/SettingsPage.qml:159
 #, kde-format
 msgid "Invert colors"
 msgstr "Farben umkehren"
 
-#: content/ui/SettingsPage.qml:211
+#: content/ui/SettingsPage.qml:173
 #, kde-format
 msgid "About Arianna"
 msgstr "Über Arianna"
 
-#: content/ui/SettingsPage.qml:218
+#: content/ui/SettingsPage.qml:187
 #, kde-format
 msgid "About KDE"
 msgstr "Über KDE"

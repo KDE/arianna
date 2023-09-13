@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-17 00:43+0000\n"
+"POT-Creation-Date: 2023-09-13 00:43+0000\n"
 "PO-Revision-Date: 2023-08-17 12:44+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -23,32 +23,32 @@ msgctxt "@info:title"
 msgid "Book Details"
 msgstr "Kitap Ayrıntıları"
 
-#: content/ui/BookDetailsPage.qml:33
+#: content/ui/BookDetailsPage.qml:24
 #, kde-format
 msgid "Author:"
 msgstr "Yazar:"
 
-#: content/ui/BookDetailsPage.qml:41
+#: content/ui/BookDetailsPage.qml:32
 #, kde-format
 msgid "Description:"
 msgstr "Açıklama:"
 
-#: content/ui/BookDetailsPage.qml:49
+#: content/ui/BookDetailsPage.qml:40
 #, kde-format
 msgid "Publisher:"
 msgstr "Yayımcı:"
 
-#: content/ui/BookDetailsPage.qml:57
+#: content/ui/BookDetailsPage.qml:48
 #, kde-format
 msgid "Language:"
 msgstr "Dil:"
 
-#: content/ui/BookDetailsPage.qml:65
+#: content/ui/BookDetailsPage.qml:56
 #, kde-format
 msgid "Publishing date:"
 msgstr "Yayım tarihi:"
 
-#: content/ui/BookDetailsPage.qml:73
+#: content/ui/BookDetailsPage.qml:64
 #, kde-format
 msgid "Copyright:"
 msgstr "Telif hakkı:"
@@ -234,82 +234,82 @@ msgctxt "@action:button"
 msgid "Add Book…"
 msgstr "Kitap Ekle…"
 
-#: content/ui/SettingsPage.qml:29
+#: content/ui/SettingsPage.qml:19
 #, kde-format
 msgid "Appearance"
 msgstr "Görünüş"
 
-#: content/ui/SettingsPage.qml:33
+#: content/ui/SettingsPage.qml:24
 #, kde-format
 msgid "Maximum width:"
 msgstr "En çok genişlik:"
 
-#: content/ui/SettingsPage.qml:47
+#: content/ui/SettingsPage.qml:38
 #, kde-format
 msgid "Margin:"
 msgstr "Kenar boşluğu:"
 
-#: content/ui/SettingsPage.qml:62
+#: content/ui/SettingsPage.qml:53
 #, kde-format
 msgid "Show progress"
 msgstr "İlerlemeyi göster"
 
-#: content/ui/SettingsPage.qml:80
+#: content/ui/SettingsPage.qml:64
 #, kde-format
 msgid "Font"
 msgstr "Yazıtipi"
 
-#: content/ui/SettingsPage.qml:84 content/ui/SettingsPage.qml:228
+#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:200
 #, kde-format
 msgid "Change default font"
 msgstr "Öntanımlı yazıtipini değiştir"
 
-#: content/ui/SettingsPage.qml:89
+#: content/ui/SettingsPage.qml:77
 #, kde-format
 msgid "Use publisher font"
 msgstr "Yayımcı yazıtipini kullan"
 
-#: content/ui/SettingsPage.qml:107
+#: content/ui/SettingsPage.qml:88
 #, kde-format
 msgid "Text flow"
 msgstr "Metin akışı"
 
-#: content/ui/SettingsPage.qml:112
+#: content/ui/SettingsPage.qml:94
 #, kde-format
 msgid "Justify text"
 msgstr "Metni iki yana yasla"
 
-#: content/ui/SettingsPage.qml:125
+#: content/ui/SettingsPage.qml:107
 #, kde-format
 msgid "Hyphenate text"
 msgstr "Metni tirele"
 
-#: content/ui/SettingsPage.qml:137
+#: content/ui/SettingsPage.qml:119
 #, kde-format
 msgid "Line height:"
 msgstr "Satır yüksekliği:"
 
-#: content/ui/SettingsPage.qml:154
+#: content/ui/SettingsPage.qml:136
 #, kde-format
 msgid "Brightness:"
 msgstr "Parlaklık:"
 
-#: content/ui/SettingsPage.qml:179
+#: content/ui/SettingsPage.qml:154
 #, kde-format
 msgid "Colors"
 msgstr "Renkler"
 
-#: content/ui/SettingsPage.qml:183
+#: content/ui/SettingsPage.qml:159
 #, kde-format
 msgid "Invert colors"
 msgstr "Renkleri tersine çevir"
 
-#: content/ui/SettingsPage.qml:211
+#: content/ui/SettingsPage.qml:173
 #, kde-format
 msgid "About Arianna"
 msgstr "Arianna Hakkında"
 
-#: content/ui/SettingsPage.qml:218
+#: content/ui/SettingsPage.qml:187
 #, kde-format
 msgid "About KDE"
 msgstr "KDE Hakkında"

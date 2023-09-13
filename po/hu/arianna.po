@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-08-17 00:43+0000\n"
+"POT-Creation-Date: 2023-09-13 00:43+0000\n"
 "PO-Revision-Date: 2023-03-30 23:27+0200\n"
 "Last-Translator: K. Áron <aronkvh@gmail.com>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -25,38 +25,38 @@ msgctxt "@info:title"
 msgid "Book Details"
 msgstr "aron.kovacs@kde.org"
 
-#: content/ui/BookDetailsPage.qml:33
+#: content/ui/BookDetailsPage.qml:24
 #, fuzzy, kde-format
 #| msgctxt "Switch to the listing page showing items grouped by author"
 #| msgid "Author"
 msgid "Author:"
 msgstr "Szerző szerint"
 
-#: content/ui/BookDetailsPage.qml:41
+#: content/ui/BookDetailsPage.qml:32
 #, kde-format
 msgid "Description:"
 msgstr ""
 
-#: content/ui/BookDetailsPage.qml:49
+#: content/ui/BookDetailsPage.qml:40
 #, fuzzy, kde-format
 #| msgctxt "Switch to the listing page showing items grouped by publisher"
 #| msgid "Publisher"
 msgid "Publisher:"
 msgstr "Kiadó szerint"
 
-#: content/ui/BookDetailsPage.qml:57
+#: content/ui/BookDetailsPage.qml:48
 #, kde-format
 msgid "Language:"
 msgstr ""
 
-#: content/ui/BookDetailsPage.qml:65
+#: content/ui/BookDetailsPage.qml:56
 #, fuzzy, kde-format
 #| msgctxt "Switch to the listing page showing items grouped by publisher"
 #| msgid "Publisher"
 msgid "Publishing date:"
 msgstr "Kiadó szerint"
 
-#: content/ui/BookDetailsPage.qml:73
+#: content/ui/BookDetailsPage.qml:64
 #, kde-format
 msgid "Copyright:"
 msgstr ""
@@ -244,82 +244,82 @@ msgctxt "@action:button"
 msgid "Add Book…"
 msgstr "Könyv hozzáadása..."
 
-#: content/ui/SettingsPage.qml:29
+#: content/ui/SettingsPage.qml:19
 #, kde-format
 msgid "Appearance"
 msgstr "Megjelenés"
 
-#: content/ui/SettingsPage.qml:33
+#: content/ui/SettingsPage.qml:24
 #, kde-format
 msgid "Maximum width:"
 msgstr "Maximális szélesség:"
 
-#: content/ui/SettingsPage.qml:47
+#: content/ui/SettingsPage.qml:38
 #, kde-format
 msgid "Margin:"
 msgstr "Margó:"
 
-#: content/ui/SettingsPage.qml:62
+#: content/ui/SettingsPage.qml:53
 #, kde-format
 msgid "Show progress"
 msgstr ""
 
-#: content/ui/SettingsPage.qml:80
+#: content/ui/SettingsPage.qml:64
 #, kde-format
 msgid "Font"
 msgstr "Betűtípus:"
 
-#: content/ui/SettingsPage.qml:84 content/ui/SettingsPage.qml:228
+#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:200
 #, kde-format
 msgid "Change default font"
 msgstr "Alapértelmezett betűtípus megváltoztatása"
 
-#: content/ui/SettingsPage.qml:89
+#: content/ui/SettingsPage.qml:77
 #, kde-format
 msgid "Use publisher font"
 msgstr "A kiadó betűtípusának használata"
 
-#: content/ui/SettingsPage.qml:107
+#: content/ui/SettingsPage.qml:88
 #, kde-format
 msgid "Text flow"
 msgstr "Szövegfolyam"
 
-#: content/ui/SettingsPage.qml:112
+#: content/ui/SettingsPage.qml:94
 #, kde-format
 msgid "Justify text"
 msgstr "Sorkizárás"
 
-#: content/ui/SettingsPage.qml:125
+#: content/ui/SettingsPage.qml:107
 #, kde-format
 msgid "Hyphenate text"
 msgstr "Szöveg elválasztása"
 
-#: content/ui/SettingsPage.qml:137
+#: content/ui/SettingsPage.qml:119
 #, kde-format
 msgid "Line height:"
 msgstr "Sormagasság:"
 
-#: content/ui/SettingsPage.qml:154
+#: content/ui/SettingsPage.qml:136
 #, kde-format
 msgid "Brightness:"
 msgstr "Fényerő:"
 
-#: content/ui/SettingsPage.qml:179
+#: content/ui/SettingsPage.qml:154
 #, kde-format
 msgid "Colors"
 msgstr "Színek"
 
-#: content/ui/SettingsPage.qml:183
+#: content/ui/SettingsPage.qml:159
 #, kde-format
 msgid "Invert colors"
 msgstr "Színek megfordítása"
 
-#: content/ui/SettingsPage.qml:211
+#: content/ui/SettingsPage.qml:173
 #, kde-format
 msgid "About Arianna"
 msgstr "Az Arianna-ról"
 
-#: content/ui/SettingsPage.qml:218
+#: content/ui/SettingsPage.qml:187
 #, kde-format
 msgid "About KDE"
 msgstr "A KDE-ről"
