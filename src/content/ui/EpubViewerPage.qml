@@ -64,90 +64,91 @@ Kirigami.Page {
     onUrlChanged: reloadBook()
     onReaderThemeChanged: backend.setStyle()
 
-    actions.main: Kirigami.Action {
-        displayComponent: KirigamiComponents.SearchPopupField {
-            visible: view.file !== ''
+    actions: [
+        Kirigami.Action {
+            displayComponent: KirigamiComponents.SearchPopupField {
+                visible: view.file !== ''
 
-            implicitWidth: Kirigami.Units.gridUnit * 14
+                implicitWidth: Kirigami.Units.gridUnit * 14
 
-            spaceAvailableRight: false
+                spaceAvailableRight: false
 
-            autoAccept: false
-            onAccepted: if (text === '') {
-                view.runJavaScript(`find.clearHighlight()`)
-            } else {
-                searchResultModel.search(text);
-                searchResultModel.loading = true;
-            }
+                autoAccept: false
+                onAccepted: if (text === '') {
+                    view.runJavaScript(`find.clearHighlight()`)
+                } else {
+                    searchResultModel.search(text);
+                    searchResultModel.loading = true;
+                }
 
-            popupContentItem: ListView {
-                id: searchView
+                popupContentItem: ListView {
+                    id: searchView
 
-                model: searchResultModel
+                    model: searchResultModel
 
-                delegate: QQC2.ItemDelegate {
-                    id: searchDelegate
+                    delegate: QQC2.ItemDelegate {
+                        id: searchDelegate
 
-                    required property string sectionMarkup
-                    required property string markup
-                    required property string cfi
+                        required property string sectionMarkup
+                        required property string markup
+                        required property string cfi
 
-                    width: ListView.view.width
+                        width: ListView.view.width
 
-                    leftInset: 1
-                    rightInset: 1
+                        leftInset: 1
+                        rightInset: 1
 
-                    highlighted: activeFocus
+                        highlighted: activeFocus
 
-                    onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
+                        onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
 
-                    Kirigami.Theme.colorSet: Kirigami.Theme.Window
-                    Kirigami.Theme.inherit: false
+                        Kirigami.Theme.colorSet: Kirigami.Theme.Window
+                        Kirigami.Theme.inherit: false
 
-                    contentItem: ColumnLayout {
-                        QQC2.Label {
-                            Layout.fillWidth: true
-                            text: searchDelegate.sectionMarkup
-                            wrapMode: Text.WordWrap
-                            font: Kirigami.Theme.smallFont
-                        }
-                        QQC2.Label {
-                            Layout.fillWidth: true
-                            text: searchDelegate.markup
-                            wrapMode: Text.WordWrap
+                        contentItem: ColumnLayout {
+                            QQC2.Label {
+                                Layout.fillWidth: true
+                                text: searchDelegate.sectionMarkup
+                                wrapMode: Text.WordWrap
+                                font: Kirigami.Theme.smallFont
+                            }
+                            QQC2.Label {
+                                Layout.fillWidth: true
+                                text: searchDelegate.markup
+                                wrapMode: Text.WordWrap
+                            }
                         }
                     }
-                }
 
-                Kirigami.PlaceholderMessage {
-                    text: i18n("No search results")
-                    visible: searchView.count === 0 && searchField.text.length > 2
-                    icon.name: "system-search"
-                    anchors.centerIn: parent
-                    width: parent.width - Kirigami.Units.gridUnit * 4
-                }
+                    Kirigami.PlaceholderMessage {
+                        text: i18n("No search results")
+                        visible: searchView.count === 0 && searchField.text.length > 2
+                        icon.name: "system-search"
+                        anchors.centerIn: parent
+                        width: parent.width - Kirigami.Units.gridUnit * 4
+                    }
 
-                Kirigami.PlaceholderMessage {
-                    text: i18n("Loading")
-                    visible: searchResultModel.loading
-                    anchors.centerIn: parent
-                    width: parent.width - Kirigami.Units.gridUnit * 4
+                    Kirigami.PlaceholderMessage {
+                        text: i18n("Loading")
+                        visible: searchResultModel.loading
+                        anchors.centerIn: parent
+                        width: parent.width - Kirigami.Units.gridUnit * 4
+                    }
                 }
             }
+        },
+        Kirigami.Action {
+            text: i18n("Book Details")
+            displayHint: Kirigami.DisplayHint.IconOnly
+            icon.name: "documentinfo"
+            enabled: backend.metadata
+            onTriggered: {
+                applicationWindow().pageStack.pushDialogLayer(Qt.resolvedUrl("./BookDetailsPage.qml"), {
+                    metadata: backend.metadata,
+                })
+            }
         }
-    }
-
-    actions.right: Kirigami.Action {
-        text: i18n("Book Details")
-        displayHint: Kirigami.DisplayHint.IconOnly
-        icon.name: "documentinfo"
-        enabled: backend.metadata
-        onTriggered: {
-            applicationWindow().pageStack.pushDialogLayer(Qt.resolvedUrl("./BookDetailsPage.qml"), {
-                metadata: backend.metadata,
-            })
-        }
-    }
+    ]
 
     SearchModel {
         id: searchResultModel
@@ -199,7 +200,7 @@ Kirigami.Page {
     WebEngineView {
         id: view
         anchors.fill: parent
-        url: "main.html"
+        url: Qt.resolvedUrl("main.html")
         visible: root.url !== ''
         webChannel: channel
 
@@ -207,7 +208,9 @@ Kirigami.Page {
             root.bookClosed();
         }
 
-        onJavaScriptConsoleMessage: console.error('WEB:', message, lineNumber, sourceID)
+        onJavaScriptConsoleMessage: (level, message, lineNumber, sourceID) => {
+            console.error('WEB:', level, message, lineNumber, sourceID)
+        }
         onLoadingChanged: reloadBook()
 
         function next() {
@@ -355,7 +358,6 @@ Kirigami.Page {
                 break;
             case 'book-error':
                 console.error('Book error', action.payload);
-                view.file = '';
                 break;
             case 'selection':
                 backend.selection = action.payload;

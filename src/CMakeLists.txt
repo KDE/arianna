@@ -19,6 +19,8 @@ target_sources(arianna_static PRIVATE
     format.h
     bookdatabase.cpp
     bookdatabase.h
+    bookserver.cpp
+    bookserver.h
     categoryentriesmodel.cpp
     categoryentriesmodel.h
     propertycontainer.cpp
@@ -30,8 +32,8 @@ target_sources(arianna_static PRIVATE
     tableofcontentmodel.cpp
     tableofcontentmodel.h
 
-    navigation.h
     navigation.cpp
+    navigation.h
 
     contentlist/contentlist.cpp
     contentlist/contentlist.h
@@ -49,34 +51,31 @@ target_sources(arianna_static PRIVATE
 kconfig_add_kcfg_files(arianna_static GENERATE_MOC config.kcfgc)
 
 target_link_libraries(arianna_static PUBLIC
-    Qt::Quick
-    Qt::Qml
-    Qt::Gui
-    Qt::Network
-    Qt::WebSockets
-    Qt::QuickControls2
-    Qt::Svg
-    Qt::Sql
-    Qt::Xml
-    Qt::Widgets
-    KF${QT_MAJOR_VERSION}::I18n
-    KF${QT_MAJOR_VERSION}::Kirigami2
-    KF${QT_MAJOR_VERSION}::ConfigCore
-    KF${QT_MAJOR_VERSION}::ConfigGui
-    KF${QT_MAJOR_VERSION}::WindowSystem
-    KF${QT_MAJOR_VERSION}::DBusAddons
-    KF${QT_MAJOR_VERSION}::FileMetaData
-    KF${QT_MAJOR_VERSION}::Archive
-    KF${QT_MAJOR_VERSION}::CoreAddons)
+    Qt6::Quick
+    Qt6::Qml
+    Qt6::Gui
+    Qt6::HttpServer
+    Qt6::Network
+    Qt6::WebSockets
+    Qt6::QuickControls2
+    Qt6::Svg
+    Qt6::Sql
+    Qt6::Xml
+    Qt6::Widgets
+    KF6::I18n
+    KF6::Kirigami2
+    KF6::ConfigCore
+    KF6::ConfigGui
+    KF6::WindowSystem
+    KF6::DBusAddons
+    KF6::FileMetaData
+    KF6::Archive
+    KF6::CoreAddons)
 
-if (${QT_MAJOR_VERSION} STREQUAL 5)
-    target_link_libraries(arianna_static PUBLIC Qt::WebEngine)
-else()
-    target_link_libraries(arianna_static PUBLIC Qt::WebEngineQuick)
-endif()
+target_link_libraries(arianna_static PUBLIC Qt::WebEngineQuick)
 
 if (NOT WIN32)
-    target_link_libraries(arianna_static PUBLIC KF${QT_MAJOR_VERSION}::Baloo)
+    target_link_libraries(arianna_static PUBLIC KF6::Baloo)
     target_sources(arianna_static PRIVATE contentlist/baloocontentlister.cpp contentlist/baloocontentlister.h)
     target_compile_definitions(arianna_static PUBLIC -DHAVE_BALOO)
 endif()
@@ -85,29 +84,9 @@ if (BUILD_TESTING)
     add_subdirectory(autotests)
 endif()
 
-if(QT_MAJOR_VERSION STREQUAL "5")
-       set(QML_QTGRAPHICAL_EFFECTS_IMPORT "QtGraphicalEffects 1.15")
-       set(KIRIGAMI_PLACEITEM_ICON "icon")
-       set(KIRIGAMI_ACTIONS "actions.main")
-       set(QTQUICKDIALOG_VERSION "1.3")
-       set(DIALOG_FONTDIALOG_FONT "font")
-else()
-       set(QML_QTGRAPHICAL_EFFECTS_IMPORT "Qt5Compat.GraphicalEffects")
-       set(KIRIGAMI_PLACEITEM_ICON "icon.name")
-       set(KIRIGAMI_ACTIONS "actions")
-       set(QTQUICKDIALOG_VERSION "")
-       set(DIALOG_FONTDIALOG_FONT "currentFont")
-endif()
-
-configure_file(content/ui/GridBrowserDelegate.qml ${CMAKE_CURRENT_BINARY_DIR}/content/ui/GridBrowserDelegate.qml)
-configure_file(content/ui/main.qml ${CMAKE_CURRENT_BINARY_DIR}/content/ui/main.qml)
-configure_file(content/ui/LibraryPage.qml ${CMAKE_CURRENT_BINARY_DIR}/content/ui/LibraryPage.qml)
-configure_file(content/ui/SettingsPage.qml ${CMAKE_CURRENT_BINARY_DIR}/content/ui/SettingsPage.qml)
-configure_file(resources.qrc.in ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc)
-
 add_executable(arianna
     main.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/resources.qrc
+    resources.qrc
 )
 
 target_include_directories(arianna PRIVATE ${CMAKE_BINARY_DIR})

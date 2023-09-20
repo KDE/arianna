@@ -4,13 +4,13 @@ SPDX-FileCopyrightText: 2022 Carl Schwan <carl@carlschwan.eu>
 SPDX-License-Identifier: LGPL-3.0-or-later
 -->
   <qresource prefix="/">
-    <file alias="content/ui/main.qml">@CMAKE_CURRENT_BINARY_DIR@/content/ui/main.qml</file>
+    <file>content/ui/main.qml</file>
     <file>content/ui/BookDetailsPage.qml</file>
-    <file alias="content/ui/SettingsPage.qml">@CMAKE_CURRENT_BINARY_DIR@/content/ui/SettingsPage.qml</file>
-    <file alias="content/ui/LibraryPage.qml">@CMAKE_CURRENT_BINARY_DIR@/content/ui/LibraryPage.qml</file>
+    <file>content/ui/SettingsPage.qml</file>
+    <file>content/ui/LibraryPage.qml</file>
     <file>content/ui/EpubViewerPage.qml</file>
     <file>content/ui/TableOfContentDrawer.qml</file>
-    <file alias="content/ui/GridBrowserDelegate.qml">@CMAKE_CURRENT_BINARY_DIR@/content/ui/GridBrowserDelegate.qml</file>
+    <file>content/ui/GridBrowserDelegate.qml</file>
     <file>content/ui/SearchModel.qml</file>
     <file>content/ui/main.html</file>
     <file>content/ui/epub.js</file>

@@ -10,7 +10,7 @@ import QtQuick.Controls 2.15 as QQC2
 import QtQuick.Window 2.2
 import QtQml.Models 2.1
 import QtQuick.Layouts 1.2
-import @QML_QTGRAPHICAL_EFFECTS_IMPORT@
+import QtQuick.Effects
 
 import org.kde.kirigami 2.19 as Kirigami
 import org.kde.kirigamiaddons.delegates 1.0 as Delegates
@@ -82,17 +82,20 @@ Delegates.RoundedItemDelegate {
                     right: parent.right
                     margins: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
                 }
+            }
 
-                layer {
-                    enabled: !Kirigami.Settings.isMobile // don't use drop shadow on mobile
-                    effect: DropShadow {
-                        source: coverImage
-                        radius: 16
-                        samples: (radius * 2) + 1
-                        cached: true
-                        color: myPalette.shadow
-                    }
-                }
+            MultiEffect {
+                source: coverImage
+                enabled: !Kirigami.Settings.isMobile // don't use drop shadow on mobile
+
+                shadowColor: myPalette.shadow
+                autoPaddingEnabled: true
+                shadowBlur: 1.0
+                shadowEnabled: button.showShadow
+                shadowVerticalOffset: 3
+                shadowHorizontalOffset: 1
+
+                anchors.fill: coverImage
             }
 
             Kirigami.Icon {
