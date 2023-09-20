@@ -9,11 +9,7 @@
 #include <QQmlContext>
 #include <QQuickStyle>
 #include <QQuickWindow>
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-#include <QtWebEngine>
-#else
 #include <QtWebEngineQuick>
-#endif
 
 #include <QApplication>
 
@@ -29,6 +25,7 @@
 #include "arianna-version.h"
 #include "bookdatabase.h"
 #include "booklistmodel.h"
+#include "bookserver.h"
 #include "clipboard.h"
 #include "config.h"
 #include "contentlist/contentlist.h"
@@ -39,16 +36,8 @@
 
 int main(int argc, char *argv[])
 {
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-#endif
-
     QNetworkProxyFactory::setUseSystemConfiguration(true);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    QtWebEngine::initialize();
-#else
     QtWebEngineQuick::initialize();
-#endif
 
     QApplication app(argc, argv);
     // Default to org.kde.desktop style unless the user forces another style
@@ -114,6 +103,8 @@ int main(int argc, char *argv[])
     qmlRegisterSingletonType("org.kde.arianna", 1, 0, "About", [](QQmlEngine *engine, QJSEngine *) -> QJSValue {
         return engine->toScriptValue(KAboutData::applicationData());
     });
+
+    BookServer bookServer;
 
     engine.load(QUrl(QStringLiteral("qrc:/content/ui/main.qml")));
     if (engine.rootObjects().isEmpty()) {

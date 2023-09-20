@@ -41,31 +41,27 @@ ecm_setup_version(${PROJECT_VERSION}
     VERSION_HEADER ${CMAKE_CURRENT_BINARY_DIR}/arianna-version.h
 )
 
-find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} NO_MODULE COMPONENTS Widgets Core Quick Gui QuickControls2 WebSockets WebChannel Test Svg Sql Xml)
-set_package_properties(Qt${QT_MAJOR_VERSION} PROPERTIES
+find_package(Qt6 ${QT_MIN_VERSION} NO_MODULE COMPONENTS Widgets Core Quick Gui QuickControls2 WebSockets WebChannel Test Svg Sql Xml HttpServer)
+set_package_properties(Qt6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
 )
-find_package(KF${QT_MAJOR_VERSION} ${KF_MIN_VERSION} COMPONENTS Kirigami2 I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Archive QuickCharts)
-set_package_properties(KF${QT_MAJOR_VERSION} PROPERTIES
+find_package(KF6 ${KF_MIN_VERSION} COMPONENTS Kirigami2 I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Archive QuickCharts)
+set_package_properties(KF6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
 )
-set_package_properties(KF${QT_MAJOR_VERSION}Kirigami2 PROPERTIES
+set_package_properties(KF6Kirigami2 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Kirigami application UI framework"
 )
-find_package(KF${QT_MAJOR_VERSION}KirigamiAddons 0.10 REQUIRED)
-find_package(KF${QT_MAJOR_VERSION}QQC2DesktopStyle REQUIRED)
+find_package(KF6KirigamiAddons 0.10 REQUIRED)
+find_package(KF6QQC2DesktopStyle REQUIRED)
 
-if (${QT_MAJOR_VERSION} STREQUAL 5)
-    find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} NO_MODULE COMPONENTS WebEngine)
-else()
-    find_package(Qt${QT_MAJOR_VERSION} ${QT_MIN_VERSION} NO_MODULE COMPONENTS WebEngineQuick)
-endif()
+find_package(Qt6 ${QT_MIN_VERSION} NO_MODULE COMPONENTS WebEngineQuick)
 
 if (NOT WIN32)
-    find_package(KF${QT_MAJOR_VERSION} ${KF_MIN_VERSION} COMPONENTS Baloo)
+    find_package(KF6 ${KF_MIN_VERSION} COMPONENTS Baloo)
 endif()
 
 add_definitions(-DQT_NO_FOREACH -DQT_NO_KEYWORDS)

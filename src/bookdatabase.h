@@ -6,6 +6,7 @@
 #include <QObject>
 #include <memory>
 #include <optional>
+#include <qtypes.h>
 
 struct BookEntry;
 /**

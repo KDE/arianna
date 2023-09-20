@@ -445,7 +445,10 @@ const open = async (uri, filename, inputType, renderTo, options) => {
                 break
             }
             default:
-                await book.open(uri, inputType)
+                const url = new URL("/book/", "http://localhost:45961");
+                url.searchParams.append('url', decodeURI(uri));
+                console.log("book.open", url.href, uri)
+                await book.open(url.href, inputType)
         }
     } catch(e) {
         dispatch({

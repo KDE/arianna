@@ -14,12 +14,6 @@
 #include <QTimer>
 #include <QUrl>
 
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-using countsize = int;
-#else
-using countsize = qsizetype;
-#endif
-
 struct ContentEntry {
     QString filename;
     QUrl filePath;
@@ -50,11 +44,11 @@ public:
     bool completed = false;
 
     static void appendToList(QueryListProperty *property, ContentQuery *value);
-    static ContentQuery *listValueAt(QueryListProperty *property, countsize index);
+    static ContentQuery *listValueAt(QueryListProperty *property, qsizetype index);
     static void clearList(QueryListProperty *property);
-    static countsize countList(QueryListProperty *property);
+    static qsizetype countList(QueryListProperty *property);
     static void removeLast(QueryListProperty *property);
-    static void replace(QueryListProperty *property, countsize index, ContentQuery *value);
+    static void replace(QueryListProperty *property, qsizetype index, ContentQuery *value);
 
     static QStringList cachedFiles;
 };
@@ -83,13 +77,15 @@ ContentList::ContentList(QObject *parent)
     connect(d->manualContentLister, &ContentListerBase::fileFound, this, &ContentList::fileFound);
     connect(d->manualContentLister, &ContentListerBase::searchCompleted, this, &ContentList::searchCompleted);
 
-    d->listProperty = QQmlListProperty<ContentQuery>
-    {
-        this, &d->queries, &ContentList::Private::appendToList, &ContentList::Private::countList, &ContentList::Private::listValueAt,
-            &ContentList::Private::clearList,
-#if QT_VERSION >= QT_VERSION_CHECK(6, 0, 0)
-            &ContentList::Private::replace, &ContentList::Private::removeLast,
-#endif
+    d->listProperty = QQmlListProperty<ContentQuery>{
+        this,
+        &d->queries,
+        &ContentList::Private::appendToList,
+        &ContentList::Private::countList,
+        &ContentList::Private::listValueAt,
+        &ContentList::Private::clearList,
+        &ContentList::Private::replace,
+        &ContentList::Private::removeLast,
     };
 }
 
@@ -256,12 +252,12 @@ void ContentList::Private::appendToList(Private::QueryListProperty *property, Co
         model->startSearch();
 }
 
-ContentQuery *ContentList::Private::listValueAt(Private::QueryListProperty *property, countsize index)
+ContentQuery *ContentList::Private::listValueAt(Private::QueryListProperty *property, qsizetype index)
 {
     return static_cast<QList<ContentQuery *> *>(property->data)->at(index);
 }
 
-countsize ContentList::Private::countList(Private::QueryListProperty *property)
+qsizetype ContentList::Private::countList(Private::QueryListProperty *property)
 {
     return static_cast<QList<ContentQuery *> *>(property->data)->size();
 }
@@ -285,7 +281,7 @@ void ContentList::Private::removeLast(QueryListProperty *property)
     }
 }
 
-void ContentList::Private::replace(QueryListProperty *property, countsize index, ContentQuery *value)
+void ContentList::Private::replace(QueryListProperty *property, qsizetype index, ContentQuery *value)
 {
     auto list = static_cast<QList<ContentQuery *> *>(property->data);
     auto model = static_cast<ContentList *>(property->object);

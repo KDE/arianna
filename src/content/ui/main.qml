@@ -31,7 +31,7 @@ Kirigami.ApplicationWindow {
         }
         initialPage: LibraryPage {
             bookListModel: root.bookListModel
-            @KIRIGAMI_ACTIONS@: addBookAction
+            actions: addBookAction
         }
     }
 
