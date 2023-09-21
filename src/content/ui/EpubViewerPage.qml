@@ -252,9 +252,8 @@ Kirigami.Page {
                 text: i18nc("Book reading progress", "%1%", Math.round(backend.progress * 100))
                 onClicked: menu.popup(progressButton, 0, - menu.height)
 
-                Component.onCompleted: if (background.hasOwnProperty("showMenuArrow")) {
-                    background.showMenuArrow = true;
-                }
+                Accessible.role: Accessible.ButtonMenu
+
                 property QQC2.Menu menu: QQC2.Menu {
                     width: Kirigami.Units.gridUnit * 10
                     height: Kirigami.Units.gridUnit * 15
