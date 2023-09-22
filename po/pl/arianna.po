@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-13 00:43+0000\n"
+"POT-Creation-Date: 2023-09-22 00:41+0000\n"
 "PO-Revision-Date: 2023-09-10 10:54+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
@@ -59,8 +59,8 @@ msgstr "Prawa autorskie:"
 msgid "No search results"
 msgstr "Nie ma żadnych wyników wyszukiwania"
 
-#: content/ui/EpubViewerPage.qml:131 content/ui/EpubViewerPage.qml:267
-#: content/ui/EpubViewerPage.qml:271
+#: content/ui/EpubViewerPage.qml:131 content/ui/EpubViewerPage.qml:266
+#: content/ui/EpubViewerPage.qml:270
 #, kde-format
 msgid "Loading"
 msgstr "Wczytywanie"
@@ -107,22 +107,22 @@ msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1%"
 
-#: content/ui/EpubViewerPage.qml:266
+#: content/ui/EpubViewerPage.qml:265
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "Pozostały czas w rozdziale:"
 
-#: content/ui/EpubViewerPage.qml:270
+#: content/ui/EpubViewerPage.qml:269
 #, kde-format
 msgid "Time left in book:"
 msgstr "Pozostały czas w książce:"
 
-#: content/ui/EpubViewerPage.qml:281
+#: content/ui/EpubViewerPage.qml:280
 #, kde-format
 msgid "Previous Page"
 msgstr "Poprzednia strona"
 
-#: content/ui/EpubViewerPage.qml:297
+#: content/ui/EpubViewerPage.qml:296
 #, kde-format
 msgid "Next Page"
 msgstr "Następna strona"

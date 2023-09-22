@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-13 00:43+0000\n"
+"POT-Creation-Date: 2023-09-22 00:41+0000\n"
 "PO-Revision-Date: 2023-09-16 10:10\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -58,8 +58,8 @@ msgstr "版权："
 msgid "No search results"
 msgstr "无搜索结果"
 
-#: content/ui/EpubViewerPage.qml:131 content/ui/EpubViewerPage.qml:267
-#: content/ui/EpubViewerPage.qml:271
+#: content/ui/EpubViewerPage.qml:131 content/ui/EpubViewerPage.qml:266
+#: content/ui/EpubViewerPage.qml:270
 #, kde-format
 msgid "Loading"
 msgstr "正在加载"
@@ -106,22 +106,22 @@ msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1%"
 
-#: content/ui/EpubViewerPage.qml:266
+#: content/ui/EpubViewerPage.qml:265
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "章节剩余时间："
 
-#: content/ui/EpubViewerPage.qml:270
+#: content/ui/EpubViewerPage.qml:269
 #, kde-format
 msgid "Time left in book:"
 msgstr "全书剩余时间："
 
-#: content/ui/EpubViewerPage.qml:281
+#: content/ui/EpubViewerPage.qml:280
 #, kde-format
 msgid "Previous Page"
 msgstr "上一页"
 
-#: content/ui/EpubViewerPage.qml:297
+#: content/ui/EpubViewerPage.qml:296
 #, kde-format
 msgid "Next Page"
 msgstr "下一页"
