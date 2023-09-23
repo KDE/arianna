@@ -378,26 +378,3 @@ msgstr "Epub Okuyucusu"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Açılacak Epub dosyası"
-
-#~ msgid "@info:tooltip"
-#~ msgstr "@info:tooltip"
-
-#~ msgid "Book details"
-#~ msgstr "Kitap ayrıntıları"
-
-#~ msgid "Configure"
-#~ msgstr "Yapılandır"
-
-#~ msgid "About Tokodon"
-#~ msgstr "Tokodon Hakkında"
-
-#~ msgctxt ""
-#~ "Title of the page with books grouped by keywords, character or genres"
-#~ msgid "Group by Keywords, Characters and Genres"
-#~ msgstr "Anahtar Sözcükler, Karakterler ve Türe Göre Grupla"
-
-#~ msgid "arianna"
-#~ msgstr "arianna"
-
-#~ msgid "Mastodon client"
-#~ msgstr "Mastodon İstemcisi"
