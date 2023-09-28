@@ -4,7 +4,7 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15 as QQC2
-import QtQuick.Dialogs @QTQUICKDIALOG_VERSION@ as Dialogs
+import QtQuick.Dialogs as Dialogs
 import QtQuick.Layouts 1.15
 import org.kde.kirigami 2.13 as Kirigami
 import org.kde.kirigamiaddons.formcard 1.0 as FormCard
@@ -199,7 +199,7 @@ FormCard.FormCardPage {
 
         title: i18n("Change default font")
 
-        @DIALOG_FONTDIALOG_FONT@: Config.defaultFont
+        currentFont: Config.defaultFont
 
         onAccepted: {
             Config.defaultFont = font;
