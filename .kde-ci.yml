@@ -2,24 +2,6 @@
 # SPDX-License-Identifier: BSD-2-Clause
 
 Dependencies:
-- 'on': ['Linux/Qt5', 'FreeBSD/Qt5', 'Windows/Qt5']
-  'require':
-    'frameworks/extra-cmake-modules': '@latest'
-    'frameworks/kcoreaddons': '@latest'
-    'frameworks/kirigami': '@latest'
-    'frameworks/ki18n': '@latest'
-    'frameworks/kconfig': '@latest'
-    'libraries/kirigami-addons': '@latest'
-    'frameworks/qqc2-desktop-style': '@latest'
-    'frameworks/kwindowsystem': '@latest'
-    'frameworks/kfilemetadata': '@latest'
-    'frameworks/kdbusaddons': '@latest'
-    'frameworks/kquickcharts': '@latest'
-
-- 'on': ['Linux/Qt5', 'FreeBSD/Qt5']
-  'require':
-    'frameworks/baloo': '@latest'
-
 - 'on': ['Linux/Qt6', 'FreeBSD/Qt6', 'Windows/Qt6']
   'require':
     'frameworks/extra-cmake-modules': '@latest-kf6'
