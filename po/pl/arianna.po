@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-09-26 01:45+0000\n"
-"PO-Revision-Date: 2023-09-10 10:54+0200\n"
+"PO-Revision-Date: 2023-09-30 11:01+0200\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -22,7 +22,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:title"
 msgid "Book Details"
-msgstr ""
+msgstr "Szczegóły książki"
 
 #: content/ui/BookDetailsPage.qml:24
 #, kde-format
@@ -319,19 +319,19 @@ msgstr "O KDE"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
-msgstr ""
+msgstr "Otwórz spis treści"
 
 #: content/ui/TableOfContentDrawer.qml:22
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
-msgstr ""
+msgstr "Zamknij spis treści"
 
 #: content/ui/TableOfContentDrawer.qml:43
 #, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
-msgstr ""
+msgstr "Spis treści"
 
 #: main.cpp:65
 #, kde-format
