@@ -99,6 +99,7 @@ parts:
         source-type: local
         plugin: cmake
         build-packages:
+        - extra-cmake-modules
         - kirigami-addons-dev
         - kirigami2-dev
         - kquickcharts-dev
