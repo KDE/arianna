@@ -63,6 +63,11 @@ layout:
         symlink: $SNAP/kf5/usr/share/X11
     /usr/share/qt5:
         bind: $SNAP/kf5/usr/share/qt5
+slots:
+    session-dbus-interface:
+        interface: dbus
+        name: org.kde.arianna
+        bus: session
 package-repositories:
 -   type: apt
     components:
