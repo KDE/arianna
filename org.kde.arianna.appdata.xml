@@ -150,15 +150,12 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="23.08.2" date="2023-10-12"/>
     <release version="23.08.1" date="2023-09-14"/>
     <release version="23.08.0" date="2023-08-24"/>
     <release version="1.1.0" date="2023-06-10">
       <url>https://carlschwan.eu/2023/06/10/announcing-arianna-1.0/</url>
       <description>This release adds a table of content overview as well as a book detail dialog.</description>
-    </release>
-    <release version="1.0.1" date="2023-04-22">
-      <url>https://carlschwan.eu/2023/04/22/arianna-1.0.1/</url>
-      <description>This release fixes various accessibility issues and crashes.</description>
     </release>
   </releases>
   <launchable type="desktop-id">org.kde.arianna.desktop</launchable>
