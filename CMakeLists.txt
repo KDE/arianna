@@ -64,6 +64,8 @@ if (NOT WIN32)
     find_package(KF6 ${KF_MIN_VERSION} COMPONENTS Baloo)
 endif()
 
+ecm_find_qmlmodule(QtWebChannel)
+
 add_definitions(-DQT_NO_FOREACH -DQT_NO_KEYWORDS)
 
 add_subdirectory(src)
