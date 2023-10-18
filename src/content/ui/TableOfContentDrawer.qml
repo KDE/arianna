@@ -67,7 +67,6 @@ Kirigami.OverlayDrawer {
                     required property string title
                     required property string href
 
-                    model: treeView.model
                     text: title
 
                     onClicked: root.goTo(href)
