@@ -7,6 +7,8 @@ import QtQuick.Layouts
 
 import org.kde.kirigami 2 as Kirigami
 import org.kde.kirigamiaddons.delegates 1 as Delegates
+import org.kde.kirigamiaddons.treeview 1.0 as Tree
+import org.kde.kitemmodels 1
 import org.kde.arianna
 
 Kirigami.OverlayDrawer {
@@ -48,18 +50,42 @@ Kirigami.OverlayDrawer {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            TreeView {
+            ListView {
                 id: treeView
 
-                model: TableOfContentModel {
-                    id: tableOfContentModel
+                contentWidth: parent.availableWidth
+
+                model: KDescendantsProxyModel {
+                    model: TableOfContentModel {
+                        id: tableOfContentModel
+                    }
                 }
 
                 delegate: Delegates.RoundedItemDelegate {
                     id: itemDelegate
 
+                    leftInset: (Qt.application.layoutDirection !== Qt.RightToLeft ? decoration.width + itemDelegate.padding * 2 : 0)
+                    leftPadding: (Qt.application.layoutDirection !== Qt.RightToLeft ? decoration.width + itemDelegate.padding * 2 : 0) + Kirigami.Units.smallSpacing
+
+                    rightInset: (Qt.application.layoutDirection === Qt.RightToLeft ? decoration.width + itemDelegate.padding * 2 : 0) + Kirigami.Units.smallSpacing
+                    rightPadding: (Qt.application.layoutDirection === Qt.RightToLeft ? decoration.width + itemDelegate.padding * 2 : 0) + Kirigami.Units.smallSpacing * 2
+
+                    data: [
+                        Tree.TreeViewDecoration {
+                            id: decoration
+                            anchors {
+                                left: parent.left
+                                top:parent.top
+                                bottom: parent.bottom
+                                leftMargin: parent.padding
+                            }
+                            parent: itemDelegate
+                            parentDelegate: itemDelegate
+                            model: treeView.model
+                        }
+                    ]
+
                     text: model.title
-                    width: treeView.width
 
                     onClicked: root.goTo(model.href)
                 }

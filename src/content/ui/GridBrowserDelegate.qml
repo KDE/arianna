@@ -91,7 +91,7 @@ Delegates.RoundedItemDelegate {
                 shadowColor: myPalette.shadow
                 autoPaddingEnabled: true
                 shadowBlur: 1.0
-                shadowEnabled: button.showShadow
+                shadowEnabled: true
                 shadowVerticalOffset: 3
                 shadowHorizontalOffset: 1
 
