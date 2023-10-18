@@ -61,33 +61,16 @@ Kirigami.OverlayDrawer {
                     }
                 }
 
-                delegate: Delegates.RoundedItemDelegate {
+                delegate: Delegates.RoundedTreeDelegate {
                     id: itemDelegate
 
-                    leftInset: (Qt.application.layoutDirection !== Qt.RightToLeft ? decoration.width + itemDelegate.padding * 2 : 0)
-                    leftPadding: (Qt.application.layoutDirection !== Qt.RightToLeft ? decoration.width + itemDelegate.padding * 2 : 0) + Kirigami.Units.smallSpacing
+                    required property string title
+                    required property string href
 
-                    rightInset: (Qt.application.layoutDirection === Qt.RightToLeft ? decoration.width + itemDelegate.padding * 2 : 0) + Kirigami.Units.smallSpacing
-                    rightPadding: (Qt.application.layoutDirection === Qt.RightToLeft ? decoration.width + itemDelegate.padding * 2 : 0) + Kirigami.Units.smallSpacing * 2
+                    model: treeView.model
+                    text: title
 
-                    data: [
-                        Tree.TreeViewDecoration {
-                            id: decoration
-                            anchors {
-                                left: parent.left
-                                top:parent.top
-                                bottom: parent.bottom
-                                leftMargin: parent.padding
-                            }
-                            parent: itemDelegate
-                            parentDelegate: itemDelegate
-                            model: treeView.model
-                        }
-                    ]
-
-                    text: model.title
-
-                    onClicked: root.goTo(model.href)
+                    onClicked: root.goTo(href)
                 }
             }
         }
