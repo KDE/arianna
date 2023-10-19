@@ -6,10 +6,10 @@
 #include <KZip>
 #include <QDomNode>
 #include <QHash>
+#include <QList>
 #include <QMimeDatabase>
 #include <QObject>
 #include <QSet>
-#include <QVector>
 #include <memory>
 
 class KArchiveDirectory;
