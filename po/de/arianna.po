@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-09-26 01:45+0000\n"
+"POT-Creation-Date: 2023-10-19 01:41+0000\n"
 "PO-Revision-Date: 2023-07-24 21:33+0200\n"
 "Last-Translator: Frederik Schwarzer <schwarzer@kde.org>\n"
 "Language-Team: English <kde-i18n-de@kde.org>\n"
@@ -317,21 +317,21 @@ msgstr "Über Arianna"
 msgid "About KDE"
 msgstr "Über KDE"
 
-#: content/ui/TableOfContentDrawer.qml:21
+#: content/ui/TableOfContentDrawer.qml:23
 #, fuzzy, kde-format
 #| msgid "Table of content"
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
 msgstr "Inhaltsverzeichnis"
 
-#: content/ui/TableOfContentDrawer.qml:22
+#: content/ui/TableOfContentDrawer.qml:24
 #, fuzzy, kde-format
 #| msgid "Table of content"
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
 msgstr "Inhaltsverzeichnis"
 
-#: content/ui/TableOfContentDrawer.qml:43
+#: content/ui/TableOfContentDrawer.qml:45
 #, fuzzy, kde-format
 #| msgid "Table of content"
 msgctxt "@info:title"
