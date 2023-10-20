@@ -23,6 +23,7 @@
   <name xml:lang="gl">Arianna</name>
   <name xml:lang="hu">Arianna</name>
   <name xml:lang="ia">Arianna</name>
+  <name xml:lang="is">Arianna</name>
   <name xml:lang="it">Arianna</name>
   <name xml:lang="ka">არიანა</name>
   <name xml:lang="ko">Arianna</name>
@@ -51,6 +52,7 @@
   <summary xml:lang="fr">Lecteur de fichiers « eBook »</summary>
   <summary xml:lang="gl">Lector de Ebook.</summary>
   <summary xml:lang="ia">Lector de EBook</summary>
+  <summary xml:lang="is">Rafbókalesari</summary>
   <summary xml:lang="it">Lettore EBook</summary>
   <summary xml:lang="ka">ელწიგნების მკითხველი</summary>
   <summary xml:lang="ko">전자책 리더</summary>
@@ -79,6 +81,7 @@
     <p xml:lang="fr">Un lecteur de fichier au format « eBook » et une application de gestion de bibliothèque prenant en charge les fichiers au format « epub ». Arianna identifie automatiquement vos livres et les trie par catégories, genres et auteurs.</p>
     <p xml:lang="gl">Aplicación para ler libros electrónicos e xestionar a biblioteca, con soporte para ficheiros ".epub". Arianna amósalle os libros directamente, ordenados por categoría, xénero e autoría.</p>
     <p xml:lang="ia">Un lector de ebook de app gerente de bibliotheca supportante files de ".epub". Arianna discopere tu libros automaticamente, e los ordina per categorias, generes e autores.</p>
+    <p xml:lang="is">Rafbókalesari og umsjónarforrit fyrir rafbækur sem styður ".epub"-skrár. Arianna finnur bækurnar þínar sjálfkrafa og raðar þeim eftir flokkum, tegundum og höfundum.</p>
     <p xml:lang="it">Un lettore di ebook e gestore di libreria che supporta file «.epub». Arianna individua automaticamente i libri e li ordina per categorie, generi e autori.</p>
     <p xml:lang="ka">ელწიგნების წასაკითხი და ბიბლიოთეკების მმართველი აპლიკაცია ".epub" ფაილების მხარდაჭერით. Arianna ავტომატურად აღმოაჩენს თქვენს წიგნებს და მათ კატეგორიების, ჟანრების და ავტორების მიხედვით დაალაგებს.</p>
     <p xml:lang="ko">".epub" 파일을 지원하는 전자책 리더 및 관리 앱입니다. Arianna는 책을 자동으로 발견하여 분류, 장르, 저자별로 정렬합니다.</p>
@@ -112,6 +115,7 @@
   <developer_name xml:lang="gl">A Comunidade KDE</developer_name>
   <developer_name xml:lang="hu">A KDE Közösség</developer_name>
   <developer_name xml:lang="ia">Le communitate de KDE</developer_name>
+  <developer_name xml:lang="is">KDE-samfélagið</developer_name>
   <developer_name xml:lang="it">La comunità KDE</developer_name>
   <developer_name xml:lang="ka">KDE-ის საზოგადოება</developer_name>
   <developer_name xml:lang="ko">KDE 커뮤니티</developer_name>
