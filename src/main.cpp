@@ -57,7 +57,7 @@ int main(int argc, char *argv[])
     app.setFont(font);
 #endif
 
-    KLocalizedString::setApplicationDomain("arianna");
+    KLocalizedString::setApplicationDomain(QByteArrayLiteral("arianna"));
 
     KAboutData about(QStringLiteral("arianna"),
                      i18n("Arianna"),
