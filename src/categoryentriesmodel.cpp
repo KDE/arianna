@@ -261,7 +261,7 @@ void CategoryEntriesModel::addCategoryEntry(const QString &categoryName, const B
             desiredCategory = categoryName.left(splitPos);
         }
         CategoryEntriesModel *categoryModel = nullptr;
-        for (CategoryEntriesModel *existingModel : qAsConst(d->categoryModels)) {
+        for (CategoryEntriesModel *existingModel : std::as_const(d->categoryModels)) {
             if (QString::compare(existingModel->name(), desiredCategory, Qt::CaseInsensitive) == 0) {
                 categoryModel = existingModel;
                 break;
