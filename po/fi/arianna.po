@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2023-10-19 01:41+0000\n"
-"PO-Revision-Date: 2023-06-27 18:07+0300\n"
+"PO-Revision-Date: 2023-09-29 09:36+0300\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -18,8 +18,7 @@ msgstr ""
 "X-Generator: Lokalize 22.12.3\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@info:title"
 msgid "Book Details"
 msgstr "Kirjat tiedot"
@@ -317,22 +316,19 @@ msgid "About KDE"
 msgstr "Tietoa KDE:stä"
 
 #: content/ui/TableOfContentDrawer.qml:23
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
-msgstr "Sisällysluettelo"
+msgstr "Avaa sisällysluettelo"
 
 #: content/ui/TableOfContentDrawer.qml:24
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
-msgstr "Sisällysluettelo"
+msgstr "Sulje sisällysluettelo"
 
 #: content/ui/TableOfContentDrawer.qml:45
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
 msgstr "Sisällysluettelo"
