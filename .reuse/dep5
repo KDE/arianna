@@ -11,10 +11,6 @@ Files: .flatpak-manifest.json
 Copyright: Tobias Fella
 License: CC0-1.0
 
-Files: snapcraft.yaml
-Copyright: Scarlett Moore
-License: CC0-1.0
-
 Files: src/content/ui/jszip.min.js
 Copyright: JsZip contributors <https://github.com/Stuk/jszip/graphs/contributors>
 License: MIT or GPL-3.0-only
