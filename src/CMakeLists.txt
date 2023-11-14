@@ -63,7 +63,7 @@ target_link_libraries(arianna_static PUBLIC
     Qt6::Xml
     Qt6::Widgets
     KF6::I18n
-    KF6::Kirigami2
+    KF6::Kirigami
     KF6::ConfigCore
     KF6::ConfigGui
     KF6::WindowSystem
