@@ -40,6 +40,7 @@
   <name xml:lang="uk">Arianna</name>
   <name xml:lang="x-test">xxAriannaxx</name>
   <name xml:lang="zh-CN">Arianna</name>
+  <name xml:lang="zh-TW">Arianna</name>
   <summary>EBook Reader</summary>
   <summary xml:lang="ar">قارئ كتب إلكترونية</summary>
   <summary xml:lang="ca">Lector de llibres electrònics</summary>
@@ -70,6 +71,7 @@
   <summary xml:lang="uk">Читання електронних книг</summary>
   <summary xml:lang="x-test">xxEBook Readerxx</summary>
   <summary xml:lang="zh-CN">电子书阅读器</summary>
+  <summary xml:lang="zh-TW">電子書閱讀器</summary>
   <description>
     <p>An ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sorts them by categories, genres and authors.</p>
     <p xml:lang="ar">قارئ كُتب إلكترونية ومدير للمكتبة وداعم لملفات ".epub". أريانا يكتشف كتبك تلقائيا ويرتبها بواسطة التصنيفات والأنواع والكتاب</p>
@@ -99,6 +101,7 @@
     <p xml:lang="uk">Програма для читання та керування бібліотекою з підтримкою файлів «.epub». Arianna автоматично виявить ваші книги і упорядкує їх за категоріями, жанрами та авторами.</p>
     <p xml:lang="x-test">xxAn ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sorts them by categories, genres and authors.xx</p>
     <p xml:lang="zh-CN">支持“.epub”文件的电子书阅读器和书库管理。Arianna 可以自动索引您的书籍，并按照类别、体裁或作者整理。</p>
+    <p xml:lang="zh-TW">一個電子書閱讀器與書庫管理應用程式，支援 ".epub" 檔案。Arianna 會自動探索您的書本，並依分類、風格與作者排序。</p>
   </description>
   <url type="homepage">https://apps.kde.org/arianna/</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?product=Arianna</url>
@@ -136,6 +139,7 @@
   <developer_name xml:lang="uk">Спільнота KDE</developer_name>
   <developer_name xml:lang="x-test">xxThe KDE Communityxx</developer_name>
   <developer_name xml:lang="zh-CN">KDE 社区</developer_name>
+  <developer_name xml:lang="zh-TW">KDE 社群</developer_name>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
   <custom>
