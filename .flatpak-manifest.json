@@ -2,10 +2,10 @@
     "id": "org.kde.arianna",
     "branch": "master",
     "runtime": "org.kde.Platform",
-    "runtime-version": "5.15-22.08",
+    "runtime-version": "6.6-kf6preview",
     "sdk": "org.kde.Sdk",
     "base": "io.qt.qtwebengine.BaseApp",
-    "base-version": "5.15-22.08",
+    "base-version": "6.6",
     "command": "arianna",
     "tags": [
         "nightly"
@@ -22,6 +22,17 @@
         "--talk-name=org.kde.baloo"
     ],
     "modules": [
+        {
+            "name": "qt6-qthttpserver",
+            "buildsystem": "cmake-ninja",
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://download.qt.io/official_releases/qt/6.6/6.6.1/submodules/qthttpserver-everywhere-src-6.6.1.tar.xz",
+                    "sha256": "1bfeb3f52f15002a0197a4ef4f3ada7b43a6d0681e1797a11c1460ecfa83124c"
+                }
+            ]
+        },
         {
             "name": "kirigamiaddons",
             "config-opts": [ "-DBUILD_TESTING=OFF" ],
@@ -59,15 +70,8 @@
             "builddir": true,
             "sources": [
                 {
-                    "type": "archive",
-                    "url": "https://download.kde.org/stable/frameworks/5.102/baloo-5.102.0.tar.xz",
-                    "sha256": "ddac3964c3a05e50c996bfe5682802e14f31900102dd72d6ad2c7f18db61dd78",
-                    "x-checker-data": {
-                        "type": "anitya",
-                        "project-id": 8762,
-                        "stable-only": true,
-                        "url-template": "https://download.kde.org/stable/frameworks/$major.$minor/baloo-$version.tar.xz"
-                    }
+                    "type": "git",
+                    "url": "https://invent.kde.org/frameworks/baloo.git"
                 }
             ]
         },
