@@ -55,6 +55,7 @@
   <summary xml:lang="fi">EPub-lukija</summary>
   <summary xml:lang="fr">Lecteur de fichiers « eBook »</summary>
   <summary xml:lang="gl">Lector de Ebook.</summary>
+  <summary xml:lang="hu">E-könyvolvasó</summary>
   <summary xml:lang="ia">Lector de EBook</summary>
   <summary xml:lang="is">Rafbókalesari</summary>
   <summary xml:lang="it">Lettore EBook</summary>
@@ -87,6 +88,7 @@
     <p xml:lang="fi">E-kirjalukija- ja kirjastonhallintasovellus, joka tukee ”.epub”-tiedostoja. Arianna löytää kirjat automaattisesti ja lajittelee ne luokittain, tyylilajeittain ja tekijöittäin.</p>
     <p xml:lang="fr">Un lecteur de fichier au format « eBook » et une application de gestion de bibliothèque prenant en charge les fichiers au format « epub ». Arianna identifie automatiquement vos livres et les trie par catégories, genres et auteurs.</p>
     <p xml:lang="gl">Aplicación para ler libros electrónicos e xestionar a biblioteca, con soporte para ficheiros ".epub". Arianna amósalle os libros directamente, ordenados por categoría, xénero e autoría.</p>
+    <p xml:lang="hu">E-könyvolvasó és könyvtárkezelő alkalmazás, amely támogatja az „.epub” fájlokat. Az Arianna automatikusan megtalálja a könyveit, és rendezi azokat kategória, műfaj és szerző szerint.</p>
     <p xml:lang="ia">Un lector de ebook de app gerente de bibliotheca supportante files de ".epub". Arianna discopere tu libros automaticamente, e los ordina per categorias, generes e autores.</p>
     <p xml:lang="is">Rafbókalesari og umsjónarforrit fyrir rafbækur sem styður ".epub"-skrár. Arianna finnur bækurnar þínar sjálfkrafa og raðar þeim eftir flokkum, tegundum og höfundum.</p>
     <p xml:lang="it">Un lettore di ebook e gestore di libreria che supporta file «.epub». Arianna individua automaticamente i libri e li ordina per categorie, generi e autori.</p>
