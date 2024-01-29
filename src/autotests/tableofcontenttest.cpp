@@ -1,9 +1,9 @@
 // SPDX-FileCopyrightText: 2023 Carl Schwan <carl@carlschwan.eu>
 // SPDX-License-Identifier: LGPL-3.0-or-later
 
+#include "tableofcontentmodel.h"
 #include <QAbstractItemModelTester>
 #include <QtTest/QtTest>
-#include <tableofcontentmodel.h>
 
 class TableOfContentTest : public QObject
 {
