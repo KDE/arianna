@@ -72,7 +72,7 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/frameworks/baloo.git",
-                    "branch": "releases/24.02"
+                    "tag": "v6.0.0"
                 }
             ]
         },
