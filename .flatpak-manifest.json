@@ -60,7 +60,7 @@
             ],
             "subdir": "libraries/liblmdb"
         },
-                {
+        {
             "config-opts": [
                 "-DBUILD_TESTING=OFF",
                 "-DCMAKE_INSTALL_LIBDIR=lib"
@@ -71,7 +71,8 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://invent.kde.org/frameworks/baloo.git"
+                    "url": "https://invent.kde.org/frameworks/baloo.git",
+                    "branch": "releases/24.02"
                 }
             ]
         },
