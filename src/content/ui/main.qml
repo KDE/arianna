@@ -311,6 +311,7 @@ Kirigami.ApplicationWindow {
                 root.pageStack.replace(Qt.resolvedUrl('./LibraryPage.qml'), {
                     title: title,
                     bookListModel: model,
+                    actions: addBookAction
                 });
                 root.pageStack.currentItem.title = title;
                 root.pageStack.currentItem.bookListModel = model;
