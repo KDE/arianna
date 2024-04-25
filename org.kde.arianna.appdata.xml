@@ -116,6 +116,7 @@
   </description>
   <url type="homepage">https://apps.kde.org/arianna/</url>
   <url type="bugtracker">https://bugs.kde.org/enter_bug.cgi?product=Arianna</url>
+  <url type="vcs-browser">https://invent.kde.org/graphics/arianna</url>
   <categories>
     <category>Network</category>
   </categories>
@@ -154,6 +155,11 @@
   <developer_name xml:lang="x-test">xxThe KDE Communityxx</developer_name>
   <developer_name xml:lang="zh-CN">KDE 社区</developer_name>
   <developer_name xml:lang="zh-TW">KDE 社群</developer_name>
+  <supports>
+    <control>pointing</control>
+    <control>touch</control>
+    <control>keyboard</control>
+  </supports>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0</project_license>
   <custom>
