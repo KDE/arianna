@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-19 01:41+0000\n"
+"POT-Creation-Date: 2024-05-01 00:37+0000\n"
 "PO-Revision-Date: 2023-11-15 18:24+0100\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -78,12 +78,12 @@ msgstr "Žiadna vybraná kniha"
 msgid "Open file"
 msgstr "Otvoriť súbor"
 
-#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:365
+#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:366
 #, kde-format
 msgid "Please choose a file"
 msgstr "Prosím, vyberte súbor"
 
-#: content/ui/EpubViewerPage.qml:189 content/ui/main.qml:366
+#: content/ui/EpubViewerPage.qml:189 content/ui/main.qml:367
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -222,12 +222,12 @@ msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr "Zoskupiť podľa žánrov"
 
-#: content/ui/main.qml:336 content/ui/SettingsPage.qml:16
+#: content/ui/main.qml:337 content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
 msgstr "Nastavenia"
 
-#: content/ui/main.qml:344
+#: content/ui/main.qml:345
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"

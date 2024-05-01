@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2023-10-19 01:41+0000\n"
+"POT-Creation-Date: 2024-05-01 00:37+0000\n"
 "PO-Revision-Date: 2023-08-17 13:00+0200\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -82,12 +82,12 @@ msgstr "No hi ha cap llibre seleccionat"
 msgid "Open file"
 msgstr "Obri un fitxer"
 
-#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:365
+#: content/ui/EpubViewerPage.qml:188 content/ui/main.qml:366
 #, kde-format
 msgid "Please choose a file"
 msgstr "Seleccioneu un fitxer"
 
-#: content/ui/EpubViewerPage.qml:189 content/ui/main.qml:366
+#: content/ui/EpubViewerPage.qml:189 content/ui/main.qml:367
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -226,12 +226,12 @@ msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr "Agrupa per gèneres"
 
-#: content/ui/main.qml:336 content/ui/SettingsPage.qml:16
+#: content/ui/main.qml:337 content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
 msgstr "Configuració"
 
-#: content/ui/main.qml:344
+#: content/ui/main.qml:345
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
