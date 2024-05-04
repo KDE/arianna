@@ -1,15 +1,15 @@
 // SPDX-FileCopyrightText: 2022 Carl Schwan <carl@carlschwan.eu>
 // SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accepted-LGPL
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15 as QQC2
-import QtWebEngine 1.4
-import QtWebChannel 1.4
-import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.19 as Kirigami
-import org.kde.kirigamiaddons.labs.components 1.0 as KirigamiComponents
-import org.kde.arianna 1.0
-import Qt.labs.platform 1.1
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtWebEngine
+import QtWebChannel
+import QtQuick.Layouts
+import org.kde.kirigami as Kirigami
+import org.kde.kirigamiaddons.delegates as Delegates
+import org.kde.arianna
+import Qt.labs.platform
 
 Kirigami.Page {
     id: root
@@ -64,78 +64,62 @@ Kirigami.Page {
     onUrlChanged: reloadBook()
     onReaderThemeChanged: backend.setStyle()
 
-    actions: [
-        Kirigami.Action {
-            displayComponent: KirigamiComponents.SearchPopupField {
-                visible: view.file !== ''
+    Kirigami.SearchDialog {
+        id: searchDialog
 
-                implicitWidth: Kirigami.Units.gridUnit * 14
+        onAccepted: if (text === '') {
+            view.runJavaScript(`find.clearHighlight()`)
+        } else {
+            searchResultModel.search(text);
+            searchResultModel.loading = true;
+        }
 
-                spaceAvailableRight: false
+        placeholderMessage: if (searchResultModel.loading) {
+            return i18n("Loading");
+        } else if (searchResultsCount === 0 && searchDialog.text.length > 2) {
+            return i18n("No search results");
+        } else {
+            return '';
+        }
 
-                autoAccept: false
-                onAccepted: if (text === '') {
-                    view.runJavaScript(`find.clearHighlight()`)
-                } else {
-                    searchResultModel.search(text);
-                    searchResultModel.loading = true;
+        model: searchResultModel
+
+        delegate: Delegates.RoundedItemDelegate {
+            id: searchDelegate
+
+            required property string sectionMarkup
+            required property string markup
+            required property string cfi
+
+            onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
+
+            contentItem: ColumnLayout {
+                QQC2.Label {
+                    Layout.fillWidth: true
+                    text: searchDelegate.sectionMarkup
+                    wrapMode: Text.WordWrap
+                    font: Kirigami.Theme.smallFont
                 }
-
-                popupContentItem: ListView {
-                    id: searchView
-
-                    model: searchResultModel
-
-                    delegate: QQC2.ItemDelegate {
-                        id: searchDelegate
-
-                        required property string sectionMarkup
-                        required property string markup
-                        required property string cfi
-
-                        width: ListView.view.width
-
-                        leftInset: 1
-                        rightInset: 1
-
-                        highlighted: activeFocus
-
-                        onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
-
-                        Kirigami.Theme.colorSet: Kirigami.Theme.Window
-                        Kirigami.Theme.inherit: false
-
-                        contentItem: ColumnLayout {
-                            QQC2.Label {
-                                Layout.fillWidth: true
-                                text: searchDelegate.sectionMarkup
-                                wrapMode: Text.WordWrap
-                                font: Kirigami.Theme.smallFont
-                            }
-                            QQC2.Label {
-                                Layout.fillWidth: true
-                                text: searchDelegate.markup
-                                wrapMode: Text.WordWrap
-                            }
-                        }
-                    }
-
-                    Kirigami.PlaceholderMessage {
-                        text: i18n("No search results")
-                        visible: searchView.count === 0 && searchField.text.length > 2
-                        icon.name: "system-search"
-                        anchors.centerIn: parent
-                        width: parent.width - Kirigami.Units.gridUnit * 4
-                    }
-
-                    Kirigami.PlaceholderMessage {
-                        text: i18n("Loading")
-                        visible: searchResultModel.loading
-                        anchors.centerIn: parent
-                        width: parent.width - Kirigami.Units.gridUnit * 4
-                    }
+                QQC2.Label {
+                    Layout.fillWidth: true
+                    text: searchDelegate.markup
+                    wrapMode: Text.WordWrap
                 }
             }
+        }
+
+        Shortcut {
+            sequence: "Ctrl+K"
+            onActivated: searchDialog.open()
+        }
+    }
+
+    actions: [
+        Kirigami.Action {
+            text: i18nc("@action:intoolbar", "Search")
+            displayHint: Kirigami.DisplayHint.IconOnly
+            icon.name: "system-search-symbolic"
+            onTriggered: searchDialog.open();
         },
         Kirigami.Action {
             text: i18n("Book Details")
