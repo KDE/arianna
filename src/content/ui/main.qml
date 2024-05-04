@@ -1,14 +1,13 @@
 // SPDX-FileCopyrightText: 2022 Carl Schwan <carl@carlschwan.eu>
 // SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accepted-LGPL
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15 as QQC2
-import QtQuick.Layouts 1.15
-import Qt.labs.platform 1.1
-import org.kde.arianna 1.0
-import org.kde.kirigami 2.13 as Kirigami
-import org.kde.kirigamiaddons.delegates 1.0 as Delegates
-import org.kde.kirigamiaddons.labs.components 1.0 as KirigamiComponents
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Layouts
+import Qt.labs.platform
+import org.kde.arianna
+import org.kde.kirigami as Kirigami
+import org.kde.kirigamiaddons.delegates as Delegates
 
 Kirigami.ApplicationWindow {
     id: root
@@ -99,77 +98,71 @@ Kirigami.ApplicationWindow {
                 topPadding: Kirigami.Units.smallSpacing
                 bottomPadding: Kirigami.Units.smallSpacing
 
-                contentItem: KirigamiComponents.SearchPopupField {
-                    id: searchField
-
-                    spaceAvailableLeft: false
-                    autoAccept: false
-
-                    onTextChanged: searchFilterProxyModel.setFilterFixedString(text)
-
-                    popupContentItem: ListView {
-                        id: search
-
-                        currentIndex: 0
-
-                        Kirigami.Theme.colorSet: Kirigami.Theme.View
-                        Kirigami.Theme.inherit: false
-
-                        onActiveFocusChanged: if (activeFocus) {
-                            currentIndex = 0;
+                contentItem: Kirigami.SearchField {
+                    TapHandler {
+                        onTapped: {
+                            searchDialog.open();
                         }
-
-                        Keys.onTabPressed: {
-                            goHomeButton.forceActiveFocus(Qt.TabFocusReason);
-                            searchField.popup.close();
-                        }
-
-                        model: SortFilterProxyModel {
-                            id: searchFilterProxyModel
-                            sourceModel: root.bookListModel
-                            filterRole: CategoryEntriesModel.TitleRole
-                            filterCaseSensitivity: Qt.CaseInsensitive
-                        }
-
-                        delegate: Delegates.RoundedItemDelegate {
-                            id: searchDelegate
-
-                            required property string title
-                            required property string author
-                            required property string filename
-                            required property string locations
-                            required property string currentLocation
-
-                            highlighted: activeFocus
-
-                            onClicked: {
-                                Navigation.openBook(filename, locations, currentLocation);
-                                searchField.popup.close();
-                            }
-
-                            contentItem: ColumnLayout {
-                                QQC2.Label {
-                                    Layout.fillWidth: true
-                                    text: searchDelegate.title
-                                    wrapMode: Text.WordWrap
-                                }
-                                QQC2.Label {
-                                    Layout.fillWidth: true
-                                    text: searchDelegate.author
-                                    wrapMode: Text.WordWrap
-                                    font: Kirigami.Theme.smallFont
-                                }
-                            }
-                        }
-
-                        Kirigami.PlaceholderMessage {
-                            text: i18n("No search results")
-                            visible: search.count === 0
-                            icon.name: "system-search"
-                            anchors.centerIn: parent
-                            width: parent.width - Kirigami.Units.gridUnit * 4
+                        acceptedButtons: Qt.RightButton | Qt.LeftButton
+                    }
+                    Keys.onPressed: (event) => {
+                        if (event.key !== Qt.Key_Tab || event.key !== Qt.Key_Backtab) {
+                            searchDialog.open();
+                            searchDialog.text = text;
                         }
                     }
+                    Keys.priority: Keys.AfterItem
+                }
+
+                Kirigami.SearchDialog {
+                    id: searchDialog
+
+                    parent: QQC2.Overlay.overlay
+
+                    onTextChanged: {
+                        searchFilterProxyModel.setFilterFixedString(text)
+                    }
+
+                    model: SortFilterProxyModel {
+                        id: searchFilterProxyModel
+                        sourceModel: root.bookListModel
+                        filterRole: CategoryEntriesModel.TitleRole
+                        filterCaseSensitivity: Qt.CaseInsensitive
+                    }
+
+                    delegate: Delegates.RoundedItemDelegate {
+                        id: searchDelegate
+
+                        required property int index
+                        required property string title
+                        required property string author
+                        required property string filename
+                        required property string locations
+                        required property string currentLocation
+
+                        highlighted: activeFocus
+
+                        onClicked: {
+                            Navigation.openBook(filename, locations, currentLocation);
+                            searchDialog.close();
+                        }
+
+                        contentItem: ColumnLayout {
+                            QQC2.Label {
+                                Layout.fillWidth: true
+                                text: searchDelegate.title
+                                wrapMode: Text.WordWrap
+                            }
+                            QQC2.Label {
+                                Layout.fillWidth: true
+                                text: searchDelegate.author
+                                wrapMode: Text.WordWrap
+                                font: Kirigami.Theme.smallFont
+                            }
+                        }
+                    }
+
+                    emptyText: i18n("No search results")
                 }
             }
 
