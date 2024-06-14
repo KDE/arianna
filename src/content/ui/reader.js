@@ -1,4 +1,5 @@
-import '../foliate-js/view.js'
+import './foliate-js/view.js'
+import { FootnoteHandler } from './foliate-js/footnotes.js';
 
 let backend;
 window.onload = () => {
@@ -60,7 +61,7 @@ const isFBZ = ({ name, type }) =>
 
 const open = async file => {
     if (!file.size) {
-        emit({ type: 'book-error', payload: 'not-found' })
+        dispatch({ type: 'book-error', payload: 'not-found' })
         return
     }
 
@@ -107,4 +108,116 @@ const open = async file => {
     dispatch({ type: 'book-ready', book, reader })
 }
 
+const footnoteDialog = document.getElementById('footnote-dialog')
+footnoteDialog.addEventListener('close', () => {
+    emit({ type: 'dialog-close' })
+    const view = footnoteDialog.querySelector('foliate-view')
+    view.close()
+    view.remove()
+    if (footnoteDialog.returnValue === 'go')
+        globalThis.reader.view.goTo(footnoteDialog.querySelector('[name="href"]').value)
+    footnoteDialog.returnValue = null
+})
+footnoteDialog.addEventListener('click', e =>
+    e.target === footnoteDialog ? footnoteDialog.close() : null)
+
+// getRect function in epub implementation
+const frameRect = (frame, rect, sx = 1, sy = 1) => {
+    const left = sx * rect.left + frame.left
+    const right = sx * rect.right + frame.left
+    const top = sy * rect.top + frame.top
+    const bottom = sy * rect.bottom + frame.top
+    return { left, right, top, bottom }
+}
+
+class CursorAutohider {
+    #timeout
+    #el
+    #check
+    #state
+    constructor(el, check, state = {}) {
+        this.#el = el
+        this.#check = check
+        this.#state = state
+        if (this.#state.hidden) this.hide()
+        this.#el.addEventListener('mousemove', ({ screenX, screenY }) => {
+            // check if it actually moved
+            if (screenX === this.#state.x && screenY === this.#state.y) return
+            this.#state.x = screenX, this.#state.y = screenY
+            this.show()
+            if (this.#timeout) clearTimeout(this.#timeout)
+            if (check()) this.#timeout = setTimeout(this.hide.bind(this), 1000)
+        }, false)
+    }
+    cloneFor(el) {
+        return new CursorAutohider(el, this.#check, this.#state)
+    }
+    hide() {
+        this.#el.style.cursor = 'none'
+        this.#state.hidden = true
+    }
+    show() {
+        this.#el.style.cursor = 'auto'
+        this.#state.hidden = false
+    }
+}
+
 // Create the Reader class : init->'foliate-view', handleEvents()
+
+class Reader {
+    autohideCursor
+    #cursorAutohider = new CursorAutohider(
+        document.documentElement, () => this.autohideCursor)
+    #footnoteHandler = new FootnoteHandler()
+    constructor(book) {
+        this.book = book
+        if (book.metadata?.description)
+            book.metadata.description = toPangoMarkup(book.metadata.description)
+        this.pageTotal = book.pageList
+            ?.findLast(x => !isNaN(parseInt(x.label)))?.label
+        this.style.mediaActiveClass = book.media?.activeClass
+
+        this.#footnoteHandler.addEventListener('before-render', e => {
+            const { view } = e.detail
+            view.addEventListener('link', e => {
+                e.preventDefault()
+                const { href } = e.detail
+                this.view.goTo(href)
+                footnoteDialog.close()
+            })
+            view.addEventListener('external-link', e => {
+                e.preventDefault()
+                emit({ type: 'external-link', ...e.detail })
+            })
+            footnoteDialog.querySelector('main').replaceChildren(view)
+
+            const { renderer } = view
+            renderer.setAttribute('flow', 'scrolled')
+            renderer.setAttribute('margin', '12px')
+            renderer.setAttribute('gap', '5%')
+            renderer.setStyles(getCSS(this.style))
+        })
+        //Add the Dialog element in the main.html: footnote-dialog
+        this.#footnoteHandler.addEventListener('render', e => {
+            const { href, hidden, type } = e.detail
+
+            footnoteDialog.querySelector('[name="href"]').value = href
+            footnoteDialog.querySelector('[value="go"]').style.display =
+                hidden ? 'none' : 'block'
+
+            const { uiText } = globalThis
+            footnoteDialog.querySelector('header').innerText =
+                uiText.references[type] ?? uiText.references.footnote
+            footnoteDialog.querySelector('[value="go"]').innerText =
+                uiText.references[type + '-go'] ?? uiText.references['footnote-go']
+
+            footnoteDialog.showModal()
+            dispatch({ type: 'dialog-open' })
+        })
+    }
+    async init() {
+        this.view = document.createElement('foliate-view')
+        await this.view.open(this.book)
+        document.body.append(this.view)
+    }
+}
