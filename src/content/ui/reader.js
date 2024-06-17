@@ -110,7 +110,7 @@ const open = async file => {
 
 const footnoteDialog = document.getElementById('footnote-dialog')
 footnoteDialog.addEventListener('close', () => {
-    emit({ type: 'dialog-close' })
+    dispatch({ type: 'dialog-close' })
     const view = footnoteDialog.querySelector('foliate-view')
     view.close()
     view.remove()
@@ -187,7 +187,7 @@ class Reader {
             })
             view.addEventListener('external-link', e => {
                 e.preventDefault()
-                emit({ type: 'external-link', ...e.detail })
+                dispatch({ type: 'external-link', ...e.detail })
             })
             footnoteDialog.querySelector('main').replaceChildren(view)
 
