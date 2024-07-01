@@ -23,6 +23,53 @@ const dispatch = action => {
     }
 }
 
+const debounce = (f, wait, immediate) => {
+    let timeout
+    return (...args) => {
+        const later = () => {
+            timeout = null
+            if (!immediate) f(...args)
+        }
+        const callNow = immediate && !timeout
+        if (timeout) clearTimeout(timeout)
+        timeout = setTimeout(later, wait)
+        if (callNow) f(...args)
+    }
+}
+
+const getSelectionRange = sel => {
+    if (!sel.rangeCount) return
+    const range = sel.getRangeAt(0)
+    if (range.collapsed) return
+    return range
+}
+
+const getLang = el => {
+    const lang = el.lang || el?.getAttributeNS?.('http://www.w3.org/XML/1998/namespace', 'lang')
+    if (lang) return lang
+    if (el.parentElement) return getLang(el.parentElement)
+}
+
+const blobToBase64 = blob => new Promise(resolve => {
+    const reader = new FileReader()
+    reader.readAsDataURL(blob)
+    reader.onloadend = () => resolve(reader.result.split(',')[1])
+})
+
+const embedImages = async doc => {
+    for (const el of doc.querySelectorAll('img[src]')) {
+        const res = await fetch(el.src)
+        const blob = await res.blob()
+        el.src = `data:${blob.type};base64,${await blobToBase64(blob)}`
+    }
+}
+
+const getHTML = async range => {
+    const fragment = range.cloneContents()
+    await embedImages(fragment)
+    return new XMLSerializer().serializeToString(fragment)
+}
+
 const isZip = async file => {
     const arr = new Uint8Array(await file.slice(0, 4).arrayBuffer())
     return arr[0] === 0x50 && arr[1] === 0x4b && arr[2] === 0x03 && arr[3] === 0x04
@@ -109,6 +156,142 @@ const open = async file => {
     dispatch({ type: 'book-ready', payload: { book, reader } })
 }
 
+const getCSS = ({
+    lineHeight, justify, hyphenate, invert, theme, overrideFont, userStylesheet,
+    mediaActiveClass,
+}) => [`
+    @namespace epub "http://www.idpf.org/2007/ops";
+    @media print {
+        html {
+            column-width: auto !important;
+            height: auto !important;
+            width: auto !important;
+        }
+    }
+    @media screen {
+        html {
+            color-scheme: ${invert ? 'only light' : 'light dark'};
+            color: ${theme.light.fg};
+        }
+        a:any-link {
+            color: ${theme.light.link};
+        }
+        @media (prefers-color-scheme: dark) {
+            html {
+                color: ${invert ? theme.inverted.fg : theme.dark.fg};
+                ${invert ? '-webkit-font-smoothing: antialiased;' : ''}
+            }
+            a:any-link {
+                color: ${invert ? theme.inverted.link : theme.dark.link};
+            }
+        }
+        aside[epub|type~="footnote"] {
+            display: none;
+        }
+    }
+    html {
+        line-height: ${lineHeight};
+        hanging-punctuation: allow-end last;
+        orphans: 2;
+        widows: 2;
+    }
+    [align="left"] { text-align: left; }
+    [align="right"] { text-align: right; }
+    [align="center"] { text-align: center; }
+    [align="justify"] { text-align: justify; }
+    :is(hgroup, header) p {
+        text-align: unset;
+        hyphens: unset;
+    }
+    pre {
+        white-space: pre-wrap !important;
+        tab-size: 2;
+    }
+`, `
+    @media screen and (prefers-color-scheme: light) {
+        ${theme.light.bg !== '#ffffff' ? `
+        html, body {
+            color: ${theme.light.fg} !important;
+            background: none !important;
+        }
+        body * {
+            color: inherit !important;
+            border-color: currentColor !important;
+            background-color: ${theme.light.bg} !important;
+        }
+        a:any-link {
+            color: ${theme.light.link} !important;
+        }
+        svg, img {
+            background-color: transparent !important;
+            mix-blend-mode: multiply;
+        }
+        .${CSS.escape(mediaActiveClass)}, .${CSS.escape(mediaActiveClass)} * {
+            color: ${theme.light.fg} !important;
+            background: color-mix(in hsl, ${theme.light.fg}, #fff 50%) !important;
+            background: color-mix(in hsl, ${theme.light.fg}, ${theme.light.bg} 85%) !important;
+        }` : ''}
+    }
+    @media screen and (prefers-color-scheme: dark) {
+        ${invert ? '' : `
+        html, body {
+            color: ${theme.dark.fg} !important;
+            background: none !important;
+        }
+        body * {
+            color: inherit !important;
+            border-color: currentColor !important;
+            background-color: ${theme.dark.bg} !important;
+        }
+        a:any-link {
+            color: ${theme.dark.link} !important;
+        }
+        .${CSS.escape(mediaActiveClass)}, .${CSS.escape(mediaActiveClass)} * {
+            color: ${theme.dark.fg} !important;
+            background: color-mix(in hsl, ${theme.dark.fg}, #000 50%) !important;
+            background: color-mix(in hsl, ${theme.dark.fg}, ${theme.dark.bg} 75%) !important;
+        }`}
+    }
+    p, li, blockquote, dd {
+        line-height: ${lineHeight};
+        text-align: ${justify ? 'justify' : 'start'};
+        hyphens: ${hyphenate ? 'auto' : 'none'};
+    }
+    ${overrideFont ? '* { font-family: revert !important }' : ''}
+` + userStylesheet]
+
+const pointIsInView = ({ x, y }) =>
+    x > 0 && y > 0 && x < window.innerWidth && y < window.innerHeight
+
+const getPosition = target => {
+    // TODO: vertical text
+    const frameElement = (target.getRootNode?.() ?? target?.endContainer?.getRootNode?.())
+        ?.defaultView?.frameElement
+
+    const transform = frameElement ? getComputedStyle(frameElement).transform : ''
+    const match = transform.match(/matrix\((.+)\)/)
+    const [sx, , , sy] = match?.[1]?.split(/\s*,\s*/)?.map(x => parseFloat(x)) ?? []
+
+    const frame = frameElement?.getBoundingClientRect() ?? { top: 0, left: 0 }
+    const rects = Array.from(target.getClientRects())
+    const first = frameRect(frame, rects[0], sx, sy)
+    const last = frameRect(frame, rects.at(-1), sx, sy)
+    const start = {
+        point: { x: (first.left + first.right) / 2, y: first.top },
+        dir: 'up',
+    }
+    const end = {
+        point: { x: (last.left + last.right) / 2, y: last.bottom },
+        dir: 'down',
+    }
+    const startInView = pointIsInView(start.point)
+    const endInView = pointIsInView(end.point)
+    if (!startInView && !endInView) return { point: { x: 0, y: 0 } }
+    if (!startInView) return end
+    if (!endInView) return start
+    return start.point.y > window.innerHeight - end.point.y ? start : end
+}
+
 const footnoteDialog = document.getElementById('footnote-dialog')
 footnoteDialog.addEventListener('close', () => {
     dispatch({ type: 'dialog-close' })
@@ -170,6 +353,12 @@ class Reader {
     #cursorAutohider = new CursorAutohider(
         document.documentElement, () => this.autohideCursor)
     #footnoteHandler = new FootnoteHandler()
+    style = {
+        spacing: 1.4,
+        justify: true,
+        hyphenate: true,
+        invert: false,
+    }
     constructor(book) {
         this.book = book
         if (book.metadata?.description)
@@ -221,6 +410,29 @@ class Reader {
         this.#handleEvents()
         await this.view.open(this.book)
         document.body.append(this.view)
+        this.sectionFractions = this.view.getSectionFractions()
+    }
+    setAppearance({ style, layout, autohideCursor }) {
+        Object.assign(this.style, style)
+        const { theme } = style
+        const $style = document.documentElement.style
+        $style.setProperty('--light-bg', theme.light.bg)
+        $style.setProperty('--light-fg', theme.light.fg)
+        $style.setProperty('--dark-bg', theme.dark.bg)
+        $style.setProperty('--dark-fg', theme.dark.fg)
+        const renderer = this.view?.renderer
+        if (renderer) {
+            renderer.setAttribute('flow', layout.flow)
+            renderer.setAttribute('gap', layout.gap * 100 + '%')
+            renderer.setAttribute('max-inline-size', layout.maxInlineSize + 'px')
+            renderer.setAttribute('max-block-size', layout.maxBlockSize + 'px')
+            renderer.setAttribute('max-column-count', layout.maxColumnCount)
+            if (layout.animated) renderer.setAttribute('animated', '')
+            else renderer.removeAttribute('animated')
+            renderer.setStyles?.(getCSS(this.style))
+        }
+        document.body.classList.toggle('invert', this.style.invert)
+        this.autohideCursor = autohideCursor
     }
     #handleEvents() {
         this.view.addEventListener('relocate', e => {
