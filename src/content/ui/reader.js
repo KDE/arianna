@@ -99,14 +99,14 @@ const open = async file => {
     }
 
     if (!book) {
-        dispatch({ type: 'book-error', payload: 'unsupported-type' })
+        dispatch({ type: 'book-error', payload: 'unsupported-type' }) //payload type will change here.
         return
     }
 
     const reader = new Reader(book)
     globalThis.reader = reader
     await reader.init()
-    dispatch({ type: 'book-ready', book, reader })
+    dispatch({ type: 'book-ready', payload: { book, reader } })
 }
 
 const footnoteDialog = document.getElementById('footnote-dialog')
@@ -188,7 +188,7 @@ class Reader {
             })
             view.addEventListener('external-link', e => {
                 e.preventDefault()
-                dispatch({ type: 'external-link', ...e.detail })
+                dispatch({ type: 'external-link', payload: e.detail })
             })
             footnoteDialog.querySelector('main').replaceChildren(view)
 
@@ -218,7 +218,230 @@ class Reader {
     }
     async init() {
         this.view = document.createElement('foliate-view')
+        this.#handleEvents()
         await this.view.open(this.book)
         document.body.append(this.view)
     }
+    #handleEvents() {
+        this.view.addEventListener('relocate', e => {
+            const { heads, feet } = this.view.renderer
+            if (heads) {
+                const { tocItem } = e.detail
+                heads.at(-1).innerText = tocItem?.label ?? ''
+                if (heads.length > 1)
+                    heads[0].innerText = this.book.metadata.title
+            }
+            if (feet) {
+                const { pageItem, location: { current, next, total } } = e.detail
+                if (pageItem) {
+                    // only show page number at the end
+                    // because we only have visible range for the spread,
+                    // not each column
+                    feet.at(-1).innerText = format.page(pageItem.label, this.pageTotal)
+                    if (feet.length > 1)
+                        feet[0].innerText = format.loc(current + 1, total)
+                }
+                else {
+                    feet[0].innerText = format.loc(current + 1, total)
+                    if (feet.length > 1) {
+                        const r = 1 - 1 / feet.length
+                        const end = Math.floor((1 - r) * current + r * next)
+                        feet.at(-1).innerText = format.loc(end + 1, total)
+                    }
+                }
+            }
+            dispatch({ type: 'relocate', payload: e.detail })
+        })
+        this.view.addEventListener('create-overlay', e =>
+            dispatch({ type: 'create-overlay', payload: e.detail }))
+        this.view.addEventListener('show-annotation', e => {
+            const { value, index, range } = e.detail
+            const pos = getPosition(range)
+            this.#showAnnotation({ index, range, value, pos })
+        })
+        this.view.addEventListener('draw-annotation', e => {
+            const { draw, annotation, doc, range } = e.detail
+            const { color } = annotation
+            if (['underline', 'squiggly', 'strikethrough'].includes(color)) {
+                const { defaultView } = doc
+                const node = range.startContainer
+                const el = node.nodeType === 1 ? node : node.parentElement
+                const { writingMode } = defaultView.getComputedStyle(el)
+                draw(Overlayer[color], { writingMode })
+            }
+            else draw(Overlayer.highlight, { color })
+        })
+        this.view.addEventListener('external-link', e => {
+            e.preventDefault()
+            dispatch({ type: 'external-link', payload: e.detail })
+        })
+        this.view.addEventListener('link', e =>
+            this.#footnoteHandler.handle(this.book, e)?.catch(err => {
+                console.warn(err)
+                this.view.goTo(e.detail.href)
+            }))
+        this.view.addEventListener('load', e => this.#onLoad(e))
+        this.view.history.addEventListener('index-change', e => {
+            const { canGoBack, canGoForward } = e.target
+            dispatch({ type: 'history-index-change', payload: { canGoBack, canGoForward } })
+        })
+    }
+    #onLoad(e) {
+        const { doc, index } = e.detail
+        for (const img of doc.querySelectorAll('img'))
+            img.addEventListener('dblclick', () => fetch(img.src)
+                .then(res => res.blob())
+                .then(blob => Promise.all([blobToBase64(blob), blob.type]))
+                .then(([base64, mimetype]) =>
+                    dispatch({ type: 'show-image', payload: { base64, mimetype } }))
+                .catch(e => console.error(e)))
+
+        let isSelecting = false
+        doc.addEventListener('pointerdown', () => isSelecting = true)
+        doc.addEventListener('pointerup', () => {
+            isSelecting = false
+            const sel = doc.getSelection()
+            const range = getSelectionRange(sel)
+            if (!range) return
+            const pos = getPosition(range)
+            const value = this.view.getCFI(index, range)
+            const lang = getLang(range.commonAncestorContainer)
+            const text = sel.toString()
+            this.#showSelection({ index, range, lang, value, pos, text })
+        })
+
+        if (!this.view.isFixedLayout)
+            // go to the next page when selecting to the end of a page
+            // this makes it possible to select across pages
+            doc.addEventListener('selectionchange', debounce(() => {
+                if (!isSelecting) return
+                if (this.view.renderer.getAttribute('flow') !== 'paginated') return
+                const { lastLocation } = this.view
+                if (!lastLocation) return
+                const selRange = getSelectionRange(doc.getSelection())
+                if (!selRange) return
+                if (selRange.compareBoundaryPoints(Range.END_TO_END, lastLocation.range) >= 0)
+                    this.view.next()
+            }, 1000))
+
+        this.#cursorAutohider.cloneFor(doc.documentElement)
+    }
+    #showAnnotation({ index, range, value, pos }) {
+        globalThis.showSelection({ type: 'annotation', value, pos })
+            .then(action => {
+                if (action === 'select')
+                    this.#showSelection({ index, range, value, pos })
+            })
+    }
+    #showSelection({ index, range, lang, value, pos, text }) {
+        if (!text) {
+            const sel = range.startContainer.ownerDocument.getSelection()
+            sel.removeAllRanges()
+            sel.addRange(range)
+            text = sel.toString()
+        }
+        const content = range.toString()
+        globalThis.showSelection({ type: 'selection', text, content, lang, value, pos }).then(action => {
+            switch (action) {
+                case 'copy': getHTML(range).then(html =>
+                    dispatch({ type: 'selection', payload: { action, text, html } }))
+                    break
+                case 'copy-citation':
+                    dispatch({ type: 'selection', payload: { action, text, value,
+                        ...this.view.getProgressOf(index, range) }})
+                    break
+                case 'highlight':
+                    this.#showAnnotation({ index, range, value, pos })
+                    break
+                case 'print':
+                    this.printRange(range.startContainer.ownerDocument, range)
+                    break
+                case 'speak-from-here':
+                    this.view.initTTS().then(() => dispatch({
+                        type: 'selection', payload: { action,
+                        ssml: this.view.tts.from(range),
+                    }}))
+                    break
+            }
+        })
+    }
+    printRange(doc, range) {
+        const iframe = document.createElement('iframe')
+        // NOTE: it needs `allow-scripts` to remove the frame after printing
+        // and `allow-modals` to show the print dialog
+        iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-modals')
+        const css = getCSS(this.style)
+        iframe.addEventListener('load', () => {
+            const doc = iframe.contentDocument
+
+            const beforeStyle = doc.createElement('style')
+            beforeStyle.textContent = css[0]
+            doc.head.prepend(beforeStyle)
+
+            const afterStyle = doc.createElement('style')
+            afterStyle.textContent = css[1]
+            doc.head.append(afterStyle)
+
+            if (range) {
+                const frag = range.cloneContents()
+                doc.body.replaceChildren()
+                doc.body.appendChild(frag)
+            }
+            iframe.contentWindow.addEventListener('afterprint', () =>
+                iframe.remove())
+            iframe.contentWindow.print()
+        }, { once: true })
+
+        iframe.src = doc.defaultView.frameElement.src
+        iframe.style.display = 'none'
+        document.body.append(iframe)
+    }
+    print() {
+        this.printRange(this.view.renderer.getContents()[0]?.doc)
+    }
+    async getCover() {
+        try {
+            const blob = await this.book.getCover?.()
+            return blob ? blobToBase64(blob) : null
+        } catch (e) {
+            console.warn(e)
+            console.warn('Failed to load cover')
+            return null
+        }
+    }
+
+    // wrap these renderer methods
+    // because `FoliateWebView.exec()` can only pass one argument
+    scrollBy([x, y]) {
+        return this.view.renderer.scrollBy?.(x, y)
+    }
+    snap([x, y]) {
+        return this.view.renderer.snap?.(x, y)
+    }
 }
+
+globalThis.visualViewport.addEventListener('resize', () =>
+    dispatch({ type: 'pinch-zoom', payload: { scale: globalThis.visualViewport.scale }}))
+
+const printf = (str, args) => {
+    for (const arg of args) str = str.replace('%s', arg)
+    return str
+}
+
+globalThis.init = ({ uiText }) => {
+    globalThis.uiText = uiText
+
+    format.loc = (a, b) => printf(uiText.loc, [a, b])
+    format.page = (a, b) => b
+        ? printf(uiText.page, [a, b])
+        : printf(uiText.pageWithoutTotal, [a])
+
+    footnoteDialog.querySelector('[value="close"]').innerText = uiText.close
+
+    document.getElementById('file-input').click()
+}
+
+document.getElementById('file-input').onchange = e => open(e.target.files[0])
+    .catch(({ message, stack }) => dispatch({ type: 'book-error', payload: { message, stack }}))
+
+dispatch({ type: 'ready' })
