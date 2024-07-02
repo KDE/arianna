@@ -14,7 +14,13 @@ SPDX-License-Identifier: LGPL-3.0-or-later
     <file>content/ui/SearchModel.qml</file>
     <file>content/ui/main.html</file>
     <file>content/ui/reader.js</file>
+    <file>content/ui/foliate-js/reader.html</file>
     <file>content/ui/markup.js</file>
+
+    <file>content/ui/foliate-js/vendor/pdfjs/pdf.js</file>
+    <file>content/ui/foliate-js/vendor/pdfjs/pdf.worker.js</file>
+    <file>content/ui/foliate-js/vendor/fflate.js</file>
+    <file>content/ui/foliate-js/vendor/zip.js</file>
     
     <file>content/ui/foliate-js/comic-book.js</file>
     <file>content/ui/foliate-js/dict.js</file>

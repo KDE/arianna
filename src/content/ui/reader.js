@@ -84,7 +84,7 @@ const isPDF = async file => {
 
 const makeZipLoader = async file => {
     const { configure, ZipReader, BlobReader, TextWriter, BlobWriter } =
-        await import('../foliate-js/vendor/zip.js')
+        await import('./foliate-js/vendor/zip.js')
     configure({ useWebWorkers: false })
     const reader = new ZipReader(new BlobReader(file))
     const entries = await reader.getEntries()
@@ -118,29 +118,29 @@ const open = async file => {
         const loader = await makeZipLoader(file)
         const { entries } = loader
         if (isCBZ(file)) {
-            const { makeComicBook } = await import('../foliate-js/comic-book.js')
+            const { makeComicBook } = await import('./foliate-js/comic-book.js')
             book = makeComicBook(loader, file)
         } else if (isFBZ(file)) {
-            const { makeFB2 } = await import('../foliate-js/fb2.js')
+            const { makeFB2 } = await import('./foliate-js/fb2.js')
             const entry = entries.find(entry => entry.filename.endsWith('.fb2'))
             const blob = await loader.loadBlob((entry ?? entries[0]).filename)
             book = await makeFB2(blob)
         } else {
-            const { EPUB } = await import('../foliate-js/epub.js')
+            const { EPUB } = await import('./foliate-js/epub.js')
             book = await new EPUB(loader).init()
         }
     }
     else if (await isPDF(file)) {
-        const { makePDF } = await import('../foliate-js/pdf.js')
+        const { makePDF } = await import('./foliate-js/pdf.js')
         book = await makePDF(file)
     }
     else {
-        const { isMOBI, MOBI } = await import('../foliate-js/mobi.js')
+        const { isMOBI, MOBI } = await import('./foliate-js/mobi.js')
         if (await isMOBI(file)) {
-            const fflate = await import('../foliate-js/vendor/fflate.js')
+            const fflate = await import('./foliate-js/vendor/fflate.js')
             book = await new MOBI({ unzlib: fflate.unzlibSync }).open(file)
         } else if (isFB2(file)) {
-            const { makeFB2 } = await import('../foliate-js/fb2.js')
+            const { makeFB2 } = await import('./foliate-js/fb2.js')
             book = await makeFB2(file)
         }
     }
