@@ -1,5 +1,5 @@
 import './foliate-js/view.js'
-import { FootnoteHandler } from './foliate-js/footnotes.js';
+import { FootnoteHandler } from './foliate-js/footnotes.js'
 import { toPangoMarkup } from './markup.js'
 
 let backend;
