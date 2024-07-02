@@ -21,5 +21,16 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
     <script src="./foliate-js/vendor/pdfjs/pdf.js"></script>
     <script src="reader.js" type="module"></script>
     <div id="viewer"></div>
+<dialog id="footnote-dialog">
+    <div>
+        <header></header>
+        <main></main>
+        <form method="dialog">
+            <input name="href" type="hidden">
+            <button value="close"></button>
+            <button value="go"></button>
+        </form>
+    </div>
+</dialog>
 </body>
 </html>

@@ -107,7 +107,11 @@ const isFBZ = ({ name, type }) =>
     type === 'application/x-zip-compressed-fb2'
     || name.endsWith('.fb2.zip') || name.endsWith('.fbz')
 
-const open = async file => {
+const open = async url => {
+    const response = await fetch(url);
+    const file = await response.blob();
+    file.name = response.url.split('/').pop();
+
     if (!file.size) {
         dispatch({ type: 'book-error', payload: 'not-found' })
         return
@@ -154,6 +158,10 @@ const open = async file => {
     globalThis.reader = reader
     await reader.init()
     dispatch({ type: 'book-ready', payload: { book, reader } })
+}
+
+window.openSync = url => {
+    open(url);
 }
 
 const getCSS = ({
@@ -649,11 +657,4 @@ globalThis.init = ({ uiText }) => {
         : printf(uiText.pageWithoutTotal, [a])
 
     footnoteDialog.querySelector('[value="close"]').innerText = uiText.close
-
-    document.getElementById('file-input').click()
 }
-
-document.getElementById('file-input').onchange = e => open(e.target.files[0])
-    .catch(({ message, stack }) => dispatch({ type: 'book-error', payload: { message, stack }}))
-
-dispatch({ type: 'ready' })

@@ -10,8 +10,11 @@ using namespace Qt::StringLiterals;
 
 BookServer::BookServer()
 {
-    server.route(u"/book/"_s, [](const QHttpServerRequest &request) {
+    server.route(u"/book"_s, [](const QHttpServerRequest &request) {
         const auto fileName = QUrl::fromPercentEncoding(request.query().queryItemValue(u"url"_s).toUtf8()).replace(QLatin1Char('+'), QLatin1Char(' '));
+        if (!fileName.endsWith(u".epub"_s)) {
+            return QHttpServerResponse{QHttpServerResponder::StatusCode::Unauthorized};
+        }
         QFileInfo fileInfo(fileName.mid(7));
         return QHttpServerResponse::fromFile(fileName.mid(7));
     });

@@ -51,8 +51,8 @@ Kirigami.Page {
         }
         const renderTo = layouts['auto'].renderTo;
         const options = JSON.stringify(layouts['auto'].options);
-        const urlNormalized = JSON.stringify(root.url).replace("#", "%23").replace("?", "%3F");
-        view.runJavaScript(`open(${urlNormalized}, "filename.epub", "epub", ${renderTo}, '${options}')`);
+        const urlNormalized = JSON.stringify('http://127.0.0.1:45961/book?url=' + encodeURIComponent(root.url));
+        view.runJavaScript(`openSync(${urlNormalized})`);
     }
 
     title: backend.metadata ? backend.metadata.title : ''
@@ -313,6 +313,7 @@ Kirigami.Page {
         function dispatch(action) {
             switch (action.type) {
             case 'book-ready':
+                console.log(JSON.stringify(action.payload.book));
                 searchResultModel.clear();
                 searchResultModel.loading = false;
                 get('book.package.metadata', metadata => {
