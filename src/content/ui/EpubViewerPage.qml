@@ -321,9 +321,16 @@ Kirigami.Page {
                     root.bookReady(backend.metadata.title);
                     Database.addBook(backend.file, metadata);
                 });
-                get('book.navigation.toc', toc => {
-                    applicationWindow().contextDrawer.model.importFromJson(toc)
-                });
+                
+                const { book } = action.payload;
+                if (book && book.toc) {
+                    applicationWindow().contextDrawer.model.importFromJson(JSON.stringify(book.toc));
+                } else {
+                    console.warn('Book or TOC not available');
+                }
+                // get('book.navigation.toc', toc => {
+                //     applicationWindow().contextDrawer.model.importFromJson(toc)
+                // });
                 break;
             case 'rendition-ready':
                 setStyle();
