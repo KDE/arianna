@@ -11,8 +11,8 @@ set(RELEASE_SERVICE_VERSION "${RELEASE_SERVICE_VERSION_MAJOR}.${RELEASE_SERVICE_
 
 project(arianna VERSION ${RELEASE_SERVICE_VERSION})
 
-set(KF_MIN_VERSION "5.240.0")
-set(QT_MIN_VERSION "6.5.0")
+set(KF_MIN_VERSION "6.4.0")
+set(QT_MIN_VERSION "6.6.0")
 
 find_package(ECM ${KF_MIN_VERSION} REQUIRED NO_MODULE)
 
@@ -51,11 +51,7 @@ set_package_properties(KF6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
 )
-set_package_properties(KF6Kirigami PROPERTIES
-    TYPE REQUIRED
-    PURPOSE "Kirigami application UI framework"
-)
-find_package(KF6KirigamiAddons 0.11 REQUIRED)
+find_package(KF6KirigamiAddons 1.4.0 REQUIRED)
 find_package(KF6QQC2DesktopStyle REQUIRED)
 
 find_package(Qt6 ${QT_MIN_VERSION} NO_MODULE COMPONENTS WebEngineQuick)
