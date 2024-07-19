@@ -28,12 +28,14 @@ include(ECMFindQmlModule)
 include(KDEClangFormat)
 include(ECMQtDeclareLoggingCategory)
 include(KDECMakeSettings)
+include(ECMDeprecationSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
 include(ECMAddAppIcon)
 include(KDEGitCommitHooks)
 include(ECMAddTests)
 include(ECMCheckOutboundLicense)
 include(KDEClangFormat)
+
 
 ecm_setup_version(${PROJECT_VERSION}
     VARIABLE_PREFIX ARIANNA
@@ -61,6 +63,9 @@ if (NOT WIN32)
 endif()
 
 ecm_find_qmlmodule(QtWebChannel)
+ecm_set_disabled_deprecation_versions(QT 6.7.2
+    KF 6.4.0
+)
 
 add_definitions(-DQT_NO_FOREACH -DQT_NO_KEYWORDS)
 
