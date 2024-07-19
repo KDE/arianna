@@ -62,7 +62,7 @@ Kirigami.Page {
     Keys.onRightPressed: view.next()
 
     onUrlChanged: reloadBook()
-    onReaderThemeChanged: backend.setStyle()
+    onReaderThemeChanged: backend.applyStyle()
 
     Kirigami.SearchDialog {
         id: searchDialog
@@ -198,15 +198,15 @@ Kirigami.Page {
         onLoadingChanged: reloadBook()
 
         function next() {
-            view.runJavaScript('rendition.next()');
+            view.runJavaScript('reader.view.next()');
         }
 
         function prev() {
-            view.runJavaScript('rendition.prev()');
+            view.runJavaScript('reader.view.prev()');
         }
 
         function goTo(cfi) {
-            view.runJavaScript('rendition.display("' + cfi + '")');
+            view.runJavaScript('reader.view.goTo("' + cfi + '")');
         }
 
         QQC2.Menu {
@@ -306,12 +306,34 @@ Kirigami.Page {
             return view.runJavaScript(`JSON.stringify(${script})`, callback)
         }
         onMetadataChanged: if (metadata) {
-            view.runJavaScript('loadLocations()', () => {
-                view.runJavaScript('render()')
-            });
+            view.runJavaScript('reader.view.renderer.next()')
         }
         function dispatch(action) {
             switch (action.type) {
+            case 'ready':
+                console.log("hell")
+                const uiText = {
+                    loc: i18n("Loc. %s of %s"),
+                    page: i18n("Page %s of %s"),
+                    pageWithoutTotal: i18n("Page %s"),
+                    close: i18n("Close"),
+                    references: {
+                        "footnote": i18n("Footnote"),
+                        "footnote-go": i18n("Go to Footnote"),
+                        "endnote": i18n("Endnote"),
+                        "endnote-go": i18n("Go to Endnote"),
+                        "note": i18n("Note"),
+                        "note-go": i18n("Go to Note"),
+                        "glossary": i18n("Definition"),
+                        "glossary-go": i18n("Go to Definition"),
+                        "biblioentry": i18n("Bibliography"),
+                        "biblioentry-go": i18n("Go to Bibliography"),
+                    },
+                }
+
+                console.log(`init({'uiText': ${JSON.stringify(uiText)}})`)
+                view.runJavaScript(`init({'uiText': ${JSON.stringify(uiText)}})`)
+                break;
             case 'book-ready':
                 console.log(JSON.stringify(action.payload.book));
                 searchResultModel.clear();
@@ -328,15 +350,15 @@ Kirigami.Page {
                 if (metadata) {
                     backend.metadata = metadata;
                     root.bookReady(backend.metadata.title);
-                    Database.addBook(backend.file, JSON.stringify(metadata));
+                    //Database.addBook(backend.file, JSON.stringify(metadata));
                 }
                 // get('book.navigation.toc', toc => {
                 //     applicationWindow().contextDrawer.model.importFromJson(toc)
                 // });
+                applyStyle();
+                view.runJavaScript('reader.view.next()');
                 break;
             case 'rendition-ready':
-                setStyle();
-                view.runJavaScript('setupRendition()');
                 if (currentLocation) {
                     view.runJavaScript(`rendition.display('${currentLocation}')`)
                 } else {
@@ -366,7 +388,7 @@ Kirigami.Page {
             }
         }
 
-        function setStyle() {
+        function applyStyle() {
             const getIbooksInternalTheme = bgColor => {
                 const red = bgColor.r;
                 const green = bgColor.g;
@@ -384,35 +406,36 @@ Kirigami.Page {
             let fontWeight = 400
             const fontStyle = fontDesc.styleName
 
-            // unfortunately, it appears that WebKitGTK doesn't support font-stretch
-            const fontStretch = [
-                'ultra-condensed', 'extra-condensed', 'condensed', 'semi-condensed', 'normal',
-                'semi-expanded', 'expanded', 'extra-expanded', 'ultra-expanded'
-            ][fontDesc.stretch]
-
             const style = {
-                fontFamily: fontFamily,
-                fontSize: fontSize,
-                fontWeight: fontWeight,
-                fontStyle: fontStyle,
-                fontStretch: fontStretch,
-                spacing: Config.spacing,
-                margin: Config.margin,
-                maxWidth: Config.maxWidth,
-                usePublisherFont: Config.usePublisherFont,
-                justify: Config.justify,
-                hyphenate: Config.hyphenate,
-                fgColor: Kirigami.Theme.textColor.toString(),
-                bgColor: Kirigami.Theme.backgroundColor.toString(),
-                linkColor: Kirigami.Theme.linkColor.toString(),
-                selectionFgColor: Kirigami.Theme.highlightedTextColor.toString(),
-                selectionBgColor: Kirigami.Theme.highlightColor.toString(),
-                invert: Config.invert,
-                brightness: Config.brightness,
-                ibooksInternalTheme: getIbooksInternalTheme(Kirigami.Theme.backgroundColor)
+                layout: {
+                    gap: 0.06,
+                    maxInlineSize: 720,
+                    maxBlockSize: 1440,
+                    maxColumnCount: 2,
+                    flow: 'paginated', // 'scrolled'
+                    animated: true,
+                },
+                style: {
+                    lineHeight: 1.5,
+                    justify: Config.justify,
+                    hyphenate: Config.hyphenate,
+                    invert: Config.invert,
+                    theme: {
+                        light: {
+                            fg: Kirigami.Theme.textColor.toString(),
+                            bg: Kirigami.Theme.backgroundColor.toString()
+                        },
+                        dark: {
+                            fg: Kirigami.Theme.textColor.toString(),
+                            bg: Kirigami.Theme.backgroundColor.toString()
+                        }
+                    },
+                    overrideFont: !Config.usePublisherFont,
+                    userStylesheet: '',
+                }
             }
 
-            view.runJavaScript(`setStyle(${JSON.stringify(style)})`)
+            view.runJavaScript(`reader.setAppearance(${JSON.stringify(style)})`)
         }
     }
 

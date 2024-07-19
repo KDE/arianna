@@ -23,6 +23,8 @@ const dispatch = action => {
     }
 }
 
+const format = {}
+
 const debounce = (f, wait, immediate) => {
     let timeout
     return (...args) => {
@@ -160,7 +162,7 @@ const open = async url => {
     dispatch({ type: 'book-ready', payload: { book, reader } })
 }
 
-window.openSync = url => {
+globalThis.openSync = function(url) {
     open(url);
 }
 
@@ -415,6 +417,9 @@ class Reader {
     }
     async init() {
         this.view = document.createElement('foliate-view')
+        console.log('window.innerHeight', window.innerHeight)
+        this.view.height = window.innerHeight;
+        this.view.width = window.innerWidth;
         this.#handleEvents()
         await this.view.open(this.book)
         document.body.append(this.view)

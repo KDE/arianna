@@ -1,12 +1,7 @@
 <!DOCTYPE html>
-<html>
-<!--
-SPDX-FileCopyrightText: 2022 Carl Schwan <carl@carlschwan.eu>
-SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accepted-LGPL
--->
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8">
+<meta name="color-scheme" content="light dark">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' blob:; script-src 'self'; style-src 'self' blob: 'unsafe-inline'; img-src 'self' blob: data:; connect-src 'self' blob: data:; frame-src blob: data:; object-src blob: data:; form-action 'none';">
 <style>
 html {
     /* TODO: high contrast mode */
@@ -128,15 +123,8 @@ foliate-view {
     }
 }
 </style>
-</head>
-<body>
-    <script src="qrc:/content/ui/jszip.min.js"></script>
-    <script src="qrc:/qtwebchannel/qwebchannel.js"></script>
-    <!-- <script src="epub.js"></script> -->
-    <script src="utils.js"></script>
-    <script src="./foliate-js/vendor/pdfjs/pdf.js"></script>
-    <script src="reader.js" type="module"></script>
-    <div id="viewer"></div>
+<input type="file" id="file-input" hidden>
+<div id="ribbon"></div>
 <dialog id="footnote-dialog">
     <div>
         <header></header>
@@ -148,5 +136,6 @@ foliate-view {
         </form>
     </div>
 </dialog>
-</body>
-</html>
+<script src="qrc:/qtwebchannel/qwebchannel.js"></script>
+<script src="foliate-js/vendor/pdfjs/pdf.js"></script>
+<script src="reader.js" type="module"></script>
