@@ -381,6 +381,3 @@ msgstr "Lector d'EPub"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Fitxer Epub a obrir"
-
-#~ msgid "Book details"
-#~ msgstr "Detalls del llibre"
