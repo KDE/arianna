@@ -422,7 +422,7 @@ Kirigami.Page {
                     invert: Config.invert,
                     theme: {
                         light: {
-                            fg: Kirigami.Theme.textColor.toString(),
+                            fg: Kirigami.Theme.textColor.invert.toString(),
                             bg: Kirigami.Theme.backgroundColor.toString()
                         },
                         dark: {
