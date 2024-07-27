@@ -333,6 +333,7 @@ Kirigami.Page {
 
                 console.log(`init({'uiText': ${JSON.stringify(uiText)}})`)
                 view.runJavaScript(`init({'uiText': ${JSON.stringify(uiText)}})`)
+                backend.locationsReady = true;
                 break;
             case 'book-ready':
                 console.log(JSON.stringify(action.payload.book));
