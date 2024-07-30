@@ -449,6 +449,7 @@ class Reader {
     }
     #handleEvents() {
         this.view.addEventListener('relocate', e => {
+            console.log('relocate event:', JSON.stringify(e.detail));
             const { heads, feet } = this.view.renderer
             if (heads) {
                 const { tocItem } = e.detail
@@ -475,7 +476,18 @@ class Reader {
                     }
                 }
             }
-            dispatch({ type: 'relocate', payload: e.detail })
+            dispatch({
+                type: 'relocate',
+                payload: {
+                    fraction: e.detail.fraction,
+                    section: e.detail.section,
+                    location: e.detail.location,
+                    time: e.detail.time,
+                    tocItem: e.detail.tocItem,
+                    pageItem: e.detail.pageItem,
+                    cfi: e.detail.cfi
+                }
+            });        
         })
         this.view.addEventListener('create-overlay', e =>
             dispatch({ type: 'create-overlay', payload: e.detail }))

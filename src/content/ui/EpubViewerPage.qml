@@ -302,6 +302,9 @@ Kirigami.Page {
         property var metadata: null
         property var top: ({})
         property string file: root.url
+        property int timeInChapter: 0
+        property int timeInBook: 0
+
         function get(script, callback) {
             return view.runJavaScript(`JSON.stringify(${script})`, callback)
         }
@@ -333,7 +336,6 @@ Kirigami.Page {
 
                 console.log(`init({'uiText': ${JSON.stringify(uiText)}})`)
                 view.runJavaScript(`init({'uiText': ${JSON.stringify(uiText)}})`)
-                backend.locationsReady = true;
                 break;
             case 'book-ready':
                 console.log(JSON.stringify(action.payload.book));
@@ -379,9 +381,13 @@ Kirigami.Page {
             case 'selection':
                 backend.selection = action.payload;
                 break;
-            case 'relocated':
-                root.relocated(action.payload.start.cfi, action.payload.start.percentage * 100)
+            case 'relocate':
+                backend.progress = action.payload.fraction;
                 backend.location = action.payload;
+                backend.timeInChapter = Math.round(action.payload.time.section);
+                backend.timeInBook = Math.round(action.payload.time.total);
+                root.relocated(action.payload.cfi, action.payload.fraction * 100);
+                backend.locationsReady = true;
                 break;
             case 'find-results':
                 searchResultModel.resultFound(action.payload.q, action.payload.results);
