@@ -16,6 +16,7 @@ apps:
     command: usr/bin/arianna
     plugs:
       - home
+      - browser-support
     command-chain:
       - snap/command-chain/desktop-launch6
 slots:
