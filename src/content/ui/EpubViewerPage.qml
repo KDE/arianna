@@ -429,12 +429,12 @@ Kirigami.Page {
                     invert: Config.invert,
                     theme: {
                         light: {
-                            fg: Kirigami.Theme.textColor.invert.toString(),
-                            bg: Kirigami.Theme.backgroundColor.toString()
+                            fg: Config.invert ? Kirigami.Theme.backgroundColor.toString() : Kirigami.Theme.textColor.toString(),
+                            bg: Config.invert ? Kirigami.Theme.textColor.toString() : Kirigami.Theme.backgroundColor.toString() 
                         },
                         dark: {
-                            fg: Kirigami.Theme.textColor.toString(),
-                            bg: Kirigami.Theme.backgroundColor.toString()
+                            fg: Config.invert ? Kirigami.Theme.backgroundColor.toString() : Kirigami.Theme.textColor.toString(),
+                            bg: Config.invert ? Kirigami.Theme.textColor.toString() : Kirigami.Theme.backgroundColor.toString()
                         }
                     },
                     overrideFont: !Config.usePublisherFont,

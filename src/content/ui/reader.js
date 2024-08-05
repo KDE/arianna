@@ -449,7 +449,6 @@ class Reader {
     }
     #handleEvents() {
         this.view.addEventListener('relocate', e => {
-            console.log('relocate event:', JSON.stringify(e.detail));
             const { heads, feet } = this.view.renderer
             if (heads) {
                 const { tocItem } = e.detail
