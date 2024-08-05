@@ -275,7 +275,17 @@ Kirigami.Page {
             QQC2.Slider {
                 padding: Kirigami.Units.smallSpacing
                 value: backend.progress
-                onValueChanged: backend.progress = value
+                onValueChanged: {
+                    if (pressed) {
+        	            backend.progress = value
+                    }
+                }
+	            onPressedChanged: {
+    	            if (!pressed) {
+        	            backend.progress = value
+        	            view.runJavaScript(`reader.view.goToFraction(${value})`)
+    	            }
+	            }
                 live: false
                 Layout.fillWidth: true
             }
