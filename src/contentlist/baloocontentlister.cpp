@@ -26,7 +26,7 @@ public:
     {
     }
 
-    BalooContentLister *q = nullptr;
+    BalooContentLister *const q;
 
     Baloo::QueryRunnable *createQuery(ContentQuery *contentQuery, const QString &location = QString{});
 
