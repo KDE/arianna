@@ -66,7 +66,7 @@ class EPubContainer : public QObject
     Q_OBJECT
 public:
     explicit EPubContainer(QObject *parent);
-    ~EPubContainer();
+    ~EPubContainer() override;
 
     bool openFile(const QString &path);
 
