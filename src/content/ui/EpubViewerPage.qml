@@ -237,8 +237,16 @@ Kirigami.Page {
             QQC2.ToolButton {
                 id: progressButton
                 text: i18nc("Book reading progress", "%1%", Math.round(backend.progress * 100))
-                onClicked: menu.popup(progressButton, 0, - menu.height)
-
+                property bool isMenuOpen: false
+                onClicked: {
+                    isMenuOpen = !isMenuOpen;
+                    if(isMenuOpen){
+                        menu.popup(progressButton, 0, - menu.height)
+                    }else{
+                        menu.close();
+                    }
+                }
+                
                 Accessible.role: Accessible.ButtonMenu
 
                 property QQC2.Menu menu: QQC2.Menu {
@@ -250,11 +258,11 @@ Kirigami.Page {
                             Layout.fillWidth: true
                             QQC2.Label {
                                 Kirigami.FormData.label: i18n("Time left in chapter:")
-                                text: backend.location.timeInChapter ? Format.formatDuration(backend.location.timeInChapter) : i18n("Loading")
+                                text: backend.timeInChapter ? Format.formatDuration(backend.timeInChapter * 1000) : i18n("Loading")
                             }
                             QQC2.Label {
                                 Kirigami.FormData.label: i18n("Time left in book:")
-                                text: backend.location.timeInBook ? Format.formatDuration(backend.location.timeInBook) : i18n("Loading")
+                                text: backend.timeInBook ? Format.formatDuration(backend.timeInBook * 1000) : i18n("Loading")
                             }
                         }
                     }
@@ -394,8 +402,8 @@ Kirigami.Page {
             case 'relocate':
                 backend.progress = action.payload.fraction;
                 backend.location = action.payload;
-                backend.timeInChapter = Math.round(action.payload.time.section);
-                backend.timeInBook = Math.round(action.payload.time.total);
+                backend.timeInChapter = Math.round(action.payload.time.section * 60);
+                backend.timeInBook = Math.round(action.payload.time.total * 60);
                 root.relocated(action.payload.cfi, action.payload.fraction * 100);
                 backend.locationsReady = true;
                 break;
