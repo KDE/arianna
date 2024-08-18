@@ -6,6 +6,7 @@
 using namespace Qt::StringLiterals;
 
 #include <QFileInfo>
+#include <QTcpServer>
 
 BookServer::BookServer()
 {
@@ -16,15 +17,32 @@ BookServer::BookServer()
     });
 
     server.afterRequest([](QHttpServerResponse &&resp) {
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+        auto headers = resp.headers();
+        headers.append("Access-Control-Allow-Origin", "*");
+        resp.setHeaders(headers);
+#else
         resp.setHeader("Access-Control-Allow-Origin", "*");
+#endif
         return std::move(resp);
     });
 
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    auto tcpserver = std::make_unique<QTcpServer>();
+    if (!tcpserver->listen(QHostAddress::Any, 45961) || !server.bind(tcpserver.get())) {
+        qWarning() << "Server failed to listen on a port.";
+        return;
+    }
+    quint16 port = tcpserver->serverPort();
+    auto s = tcpserver.release();
+    Q_UNUSED(s);
+#else
     const auto port = server.listen(QHostAddress::Any, 45961);
     if (!port) {
         qWarning() << "Server failed to listen on a port.";
         return;
     }
+#endif
 
     qWarning() << u"Running on http://127.0.0.1:%1/ (Press CTRL+C to quit)"_s.arg(port);
 }
