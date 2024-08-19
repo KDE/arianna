@@ -10,7 +10,6 @@
 #include <QDateTime>
 #include <QDirIterator>
 #include <QMimeDatabase>
-#include <QRunnable>
 #include <QThreadPool>
 #include <QTimer>
 #include <QVariantHash>
