@@ -68,7 +68,7 @@ msgstr "Žádné výsledky hledání"
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Search"
-msgstr ""
+msgstr "Hledat"
 
 #: content/ui/EpubViewerPage.qml:125
 #, kde-format
