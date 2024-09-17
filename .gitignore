@@ -8,3 +8,4 @@ compile_commands.json
 repo
 build*
 CMakeLists.txt.user
+*.kdev4
