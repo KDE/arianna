@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-01 00:38+0000\n"
-"PO-Revision-Date: 2023-10-01 05:27+0100\n"
+"PO-Revision-Date: 2024-09-19 21:59+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -69,7 +69,7 @@ msgstr "Neniuj serĉrezultoj"
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Search"
-msgstr ""
+msgstr "Serĉi"
 
 #: content/ui/EpubViewerPage.qml:125
 #, kde-format
