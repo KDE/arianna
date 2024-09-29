@@ -3,6 +3,7 @@
 # This file is distributed under the same license as the arianna package.
 # Frederik Schwarzer <schwarzer@kde.org>, 2023.
 # SPDX-FileCopyrightText: 2023 Johannes Obermayr <johannesobermayr@gmx.de>
+# SPDX-FileCopyrightText: 2024 Frank Steinmetzger <dev-kde@felsenfleischer.de>
 #
 # Automatically generated, 2023.
 msgid ""
@@ -10,15 +11,15 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-09-01 00:38+0000\n"
-"PO-Revision-Date: 2023-12-18 15:52+0100\n"
-"Last-Translator: Johannes Obermayr <johannesobermayr@gmx.de>\n"
+"PO-Revision-Date: 2024-09-27 13:37+0200\n"
+"Last-Translator: Frank Steinmetzger <dev-kde@felsenfleischer.de>\n"
 "Language-Team: English <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.4\n"
+"X-Generator: Lokalize 24.08.1\n"
 
 #: content/ui/BookDetailsPage.qml:16
 #, kde-format
@@ -71,7 +72,7 @@ msgstr "Keine Suchergebnisse"
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Search"
-msgstr ""
+msgstr "Suchen"
 
 #: content/ui/EpubViewerPage.qml:125
 #, kde-format
