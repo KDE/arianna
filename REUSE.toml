@@ -1,0 +1,30 @@
+# SPDX-FileCopyrightText: none
+# SPDX-License-Identifier: CC0-1.0
+version = 1
+SPDX-PackageName = "Arianna"
+SPDX-PackageSupplier = "Carl Schwan <carl@carlschwan.eu>"
+SPDX-PackageDownloadLocation = "https://invent.kde.org/graphics/arianna"
+
+[[annotations]]
+path = ["org.kde.arianna.svg", "logo.png"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Áron Kovács"
+SPDX-License-Identifier = "CC-BY-SA-4.0"
+
+[[annotations]]
+path = ".flatpak-manifest.json"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Tobias Fella"
+SPDX-License-Identifier = "CC0-1.0"
+
+[[annotations]]
+path = "src/content/ui/jszip.min.js"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "JsZip contributors <https://github.com/Stuk/jszip/graphs/contributors>"
+SPDX-License-Identifier = "MIT or GPL-3.0-only"
+
+[[annotations]]
+path = ["README.md", "screenshots/library.png", "screenshots/reader.png", "src/autotests/data/**"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "Carl Schwan"
+SPDX-License-Identifier = "CC0-1.0"
