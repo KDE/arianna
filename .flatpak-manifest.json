@@ -28,8 +28,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://download.qt.io/official_releases/qt/6.6/6.6.1/submodules/qthttpserver-everywhere-src-6.6.1.tar.xz",
-                    "sha256": "1bfeb3f52f15002a0197a4ef4f3ada7b43a6d0681e1797a11c1460ecfa83124c"
+                    "url": "https://download.qt.io/official_releases/qt/6.7/6.7.3/submodules/qthttpserver-everywhere-src-6.7.3.tar.xz",
+                    "sha256": "7f2317c7e52b6b634a5be9a9c917066fb707b905ec618f047cc57b8093f4deff"
                 }
             ]
         },
