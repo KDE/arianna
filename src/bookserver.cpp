@@ -16,12 +16,13 @@ BookServer::BookServer()
         return QHttpServerResponse::fromFile(fileName.mid(7));
     });
 
-    server.afterRequest([](QHttpServerResponse &&resp) {
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    server.addAfterRequestHandler(&server, [](const QHttpServerRequest &, QHttpServerResponse &resp) {
         auto headers = resp.headers();
         headers.append("Access-Control-Allow-Origin", "*");
         resp.setHeaders(headers);
 #else
+    server.afterRequest([](QHttpServerResponse &&resp) {
         resp.setHeader("Access-Control-Allow-Origin", "*");
 #endif
         return std::move(resp);
