@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-01 00:38+0000\n"
+"POT-Creation-Date: 2024-10-09 00:38+0000\n"
 "PO-Revision-Date: 2023-11-03 12:09+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -267,7 +267,7 @@ msgstr "Показывать продвижение"
 msgid "Font"
 msgstr "Шрифт"
 
-#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:200
+#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:188
 #, kde-format
 msgid "Change default font"
 msgstr "Изменить стандартный шрифт"
@@ -317,7 +317,7 @@ msgstr "Инвертировать цвета"
 msgid "About Arianna"
 msgstr "О программе Arianna"
 
-#: content/ui/SettingsPage.qml:187
+#: content/ui/SettingsPage.qml:180
 #, kde-format
 msgid "About KDE"
 msgstr "О KDE"

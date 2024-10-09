@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-01 00:38+0000\n"
+"POT-Creation-Date: 2024-10-09 00:38+0000\n"
 "PO-Revision-Date: 2024-09-01 07:55+0200\n"
 "Last-Translator: Iñigo Salvador Azurmendi <xalba@ni.eus>\n"
 "Language-Team: Basque <kde-i18n-eu@kde.org>\n"
@@ -268,7 +268,7 @@ msgstr "Erakutsi aurrerapena"
 msgid "Font"
 msgstr "Letra-tipoa"
 
-#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:200
+#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:188
 #, kde-format
 msgid "Change default font"
 msgstr "Aldatu letra-tipo lehenetsia"
@@ -318,7 +318,7 @@ msgstr "Alderantzikatu koloreak"
 msgid "About Arianna"
 msgstr "«Arianna»ri buruz"
 
-#: content/ui/SettingsPage.qml:187
+#: content/ui/SettingsPage.qml:180
 #, kde-format
 msgid "About KDE"
 msgstr "KDEri buruz"

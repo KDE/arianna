@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-01 00:38+0000\n"
+"POT-Creation-Date: 2024-10-09 00:38+0000\n"
 "PO-Revision-Date: 2023-08-25 20:55+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -265,7 +265,7 @@ msgstr "진행 표시"
 msgid "Font"
 msgstr "글꼴"
 
-#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:200
+#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:188
 #, kde-format
 msgid "Change default font"
 msgstr "기본 글꼴 변경"
@@ -315,7 +315,7 @@ msgstr "색 반전"
 msgid "About Arianna"
 msgstr "Arianna 정보"
 
-#: content/ui/SettingsPage.qml:187
+#: content/ui/SettingsPage.qml:180
 #, kde-format
 msgid "About KDE"
 msgstr "KDE 정보"

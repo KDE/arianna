@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-09-01 00:38+0000\n"
+"POT-Creation-Date: 2024-10-09 00:38+0000\n"
 "PO-Revision-Date: 2023-10-12 11:53+0000\n"
 "Last-Translator: Guðmundur Erlingsson <gudmundure@gmail.com>\n"
 "Language-Team: Icelandic <kde-i18n-doc@kde.org>\n"
@@ -265,7 +265,7 @@ msgstr "Sýna framvindu"
 msgid "Font"
 msgstr "Letur"
 
-#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:200
+#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:188
 #, kde-format
 msgid "Change default font"
 msgstr "Skipta um sjálfgefið letur"
@@ -315,7 +315,7 @@ msgstr "Snúa við litum"
 msgid "About Arianna"
 msgstr "Um Arianna"
 
-#: content/ui/SettingsPage.qml:187
+#: content/ui/SettingsPage.qml:180
 #, kde-format
 msgid "About KDE"
 msgstr "Um KDE"
