@@ -1,13 +1,13 @@
-# Copyright (C) YEAR This file is copyright:
+# Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the arianna package.
 #
-# Olesya Gerasimenko <translation-team@basealt.ru>, 2023.
+# SPDX-FileCopyrightText: 2023, 2024 Olesya Gerasimenko <translation-team@basealt.ru>
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-09 00:38+0000\n"
-"PO-Revision-Date: 2023-11-03 12:09+0300\n"
+"PO-Revision-Date: 2024-10-10 12:13+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
@@ -16,11 +16,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Lokalize 23.04.3\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: content/ui/BookDetailsPage.qml:16
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@info:title"
 msgid "Book Details"
 msgstr "Сведения о книге"
@@ -323,22 +322,19 @@ msgid "About KDE"
 msgstr "О KDE"
 
 #: content/ui/TableOfContentDrawer.qml:23
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
-msgstr "Содержание"
+msgstr "Открыть содержание"
 
 #: content/ui/TableOfContentDrawer.qml:24
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
-msgstr "Содержание"
+msgstr "Закрыть содержание"
 
 #: content/ui/TableOfContentDrawer.qml:45
-#, fuzzy, kde-format
-#| msgid "Table of content"
+#, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
 msgstr "Содержание"
