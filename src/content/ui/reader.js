@@ -1,6 +1,8 @@
 import './foliate-js/view.js'
 import { FootnoteHandler } from './foliate-js/footnotes.js'
 import { toPangoMarkup } from './markup.js'
+import { searchMatcher } from './foliate-js/search.js'
+import { textWalker } from './foliate-js/text-walker.js'
 
 let backend;
 window.onload = () => {
@@ -601,6 +603,34 @@ class Reader {
             }
         })
     }
+
+    async search(query, options = {}) {
+        const matcher = searchMatcher(textWalker, {
+            defaultLocale: this.book.language,
+            matchCase: options.matchCase,
+            matchDiacritics: options.matchDiacritics,
+            matchWholeWords: options.matchWholeWords
+        });
+    
+        const results = [];
+        for (const [index, section] of this.book.sections.entries()) {
+            const doc = await section.createDocument();
+            for (const result of matcher(doc, query)) {
+                const cfi = this.view.getCFI(index, result.range);
+                // chapter name instead
+                const sectionTitle = section.label || `Section ${index + 1}`;
+                results.push({
+                    cfi,
+                    excerpt: result.excerpt,
+                    section: sectionTitle
+                });
+            }
+        }
+    
+        dispatch({ type: 'find-results', payload: { query, results } });
+        return results;
+    }
+    
     printRange(doc, range) {
         const iframe = document.createElement('iframe')
         // NOTE: it needs `allow-scripts` to remove the frame after printing
@@ -654,6 +684,10 @@ class Reader {
     snap([x, y]) {
         return this.view.renderer.snap?.(x, y)
     }
+}
+
+globalThis.find = {
+    find: (query, inBook, highlight) => globalThis.reader.search(query)
 }
 
 globalThis.visualViewport.addEventListener('resize', () =>

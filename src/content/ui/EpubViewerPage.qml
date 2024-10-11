@@ -91,7 +91,13 @@ Kirigami.Page {
             required property string markup
             required property string cfi
 
-            onClicked: view.runJavaScript(`rendition.display('${cfi}')`)
+                        onClicked: {
+                            view.runJavaScript(`reader.view.goTo('${cfi}')`)
+                            //searchField.text = "";
+                        }
+
+                        Kirigami.Theme.colorSet: Kirigami.Theme.Window
+                        Kirigami.Theme.inherit: false
 
             contentItem: ColumnLayout {
                 QQC2.Label {
