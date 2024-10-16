@@ -25,6 +25,7 @@
   <name xml:lang="he">אריאנה</name>
   <name xml:lang="hu">Arianna</name>
   <name xml:lang="ia">Arianna</name>
+  <name xml:lang="id">Arianna</name>
   <name xml:lang="is">Arianna</name>
   <name xml:lang="it">Arianna</name>
   <name xml:lang="ka">არიანა</name>
@@ -60,6 +61,7 @@
   <summary xml:lang="he">מציג ספרים דיגיטליים</summary>
   <summary xml:lang="hu">E-könyvolvasó</summary>
   <summary xml:lang="ia">Lector de EBook</summary>
+  <summary xml:lang="id">Pembaca EBook</summary>
   <summary xml:lang="is">Rafbókalesari</summary>
   <summary xml:lang="it">Lettore EBook</summary>
   <summary xml:lang="ka">ელწიგნების მკითხველი</summary>
@@ -95,6 +97,7 @@
     <p xml:lang="he">יישום להצגת ספרים דיגיטליים ולניהול ספרייה שתומך בקובצי „‎.epub”. אריאנה מגלה את הספרים שלך אוטומטית וממיינת אותם לפי קטגוריות, סוגות ומחברים/מחברות.</p>
     <p xml:lang="hu">E-könyvolvasó és könyvtárkezelő alkalmazás, amely támogatja az „.epub” fájlokat. Az Arianna automatikusan megtalálja a könyveit, és rendezi azokat kategória, műfaj és szerző szerint.</p>
     <p xml:lang="ia">Un lector de ebook de app gerente de bibliotheca supportante files de ".epub". Arianna discopere tu libros automaticamente, e los ordina per categorias, generes e autores.</p>
+    <p xml:lang="id">Aplikasi pembaca buku elektronik dan pengelolaan pustaka yang mendukung file ".epub". Arianna menemukan buku Anda secara otomatis, dan mengurutkannya berdasarkan kategori, genre, dan penulis.</p>
     <p xml:lang="is">Rafbókalesari og umsjónarforrit fyrir rafbækur sem styður ".epub"-skrár. Arianna finnur bækurnar þínar sjálfkrafa og raðar þeim eftir flokkum, tegundum og höfundum.</p>
     <p xml:lang="it">Un lettore di ebook e gestore di libreria che supporta file «.epub». Arianna individua automaticamente i libri e li ordina per categorie, generi e autori.</p>
     <p xml:lang="ka">ელწიგნების წასაკითხი და ბიბლიოთეკების მმართველი აპლიკაცია ".epub" ფაილების მხარდაჭერით. Arianna ავტომატურად აღმოაჩენს თქვენს წიგნებს და მათ კატეგორიების, ჟანრების და ავტორების მიხედვით დაალაგებს.</p>
@@ -136,6 +139,7 @@
   <developer_name xml:lang="he">קהילת KDE</developer_name>
   <developer_name xml:lang="hu">A KDE Közösség</developer_name>
   <developer_name xml:lang="ia">Le communitate de KDE</developer_name>
+  <developer_name xml:lang="id">Komunitas KDE</developer_name>
   <developer_name xml:lang="is">KDE-samfélagið</developer_name>
   <developer_name xml:lang="it">La comunità KDE</developer_name>
   <developer_name xml:lang="ka">KDE-ის საზოგადოება</developer_name>
