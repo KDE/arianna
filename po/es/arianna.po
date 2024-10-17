@@ -1,9 +1,9 @@
-# Spanish translations for arianna.po package.
+# Translation of arianna to Spanish
 # Copyright (C) 2022 This file is copyright:
 # This file is distributed under the same license as the arianna package.
 #
 # Automatically generated, 2022.
-# Eloy Cuadra <ecuadra@eloihr.net>, 2022, 2023.
+# SPDX-FileCopyrightText: 2022, 2023 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
