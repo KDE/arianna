@@ -416,6 +416,9 @@ Kirigami.Page {
             case 'find-results':
                 searchResultModel.resultFound(action.payload.q, action.payload.results);
                 break;
+            case 'external-link':
+                Qt.openUrlExternally(action.payload.href)
+                break;
             }
         }
 
@@ -475,4 +478,3 @@ Kirigami.Page {
         registeredObjects: [backend]
     }
 }
-
