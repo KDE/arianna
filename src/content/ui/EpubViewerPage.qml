@@ -115,7 +115,7 @@ Kirigami.Page {
         }
 
         Shortcut {
-            sequence: "Ctrl+K"
+            sequence: "Ctrl+F"
             onActivated: searchDialog.open()
         }
     }
