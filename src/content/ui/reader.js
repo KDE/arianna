@@ -604,6 +604,22 @@ class Reader {
         })
     }
 
+    createTocMap() {
+        const map = new Map();
+        const processTocItem = (item) => {
+            // console.log(`Label: ${item.label}, Href: ${item.href}`);
+            const { index } = this.book.resolveHref(item.href);
+            if (index !== undefined) {
+                map.set(index, item.label);
+            }
+            // nested chapters/sections
+            if (item.subitems) {
+                item.subitems.forEach(processTocItem);
+            }
+        };
+        return map;
+    }
+
     async search(query, options = {}) {
         const matcher = searchMatcher(textWalker, {
             defaultLocale: this.book.language,
@@ -611,22 +627,26 @@ class Reader {
             matchDiacritics: options.matchDiacritics,
             matchWholeWords: options.matchWholeWords
         });
-    
+
         const results = [];
+        const tocMap = this.createTocMap();
+
         for (const [index, section] of this.book.sections.entries()) {
             const doc = await section.createDocument();
+            
+            // Get the chapter name(label) for this section from the TOC map
+            const chapterName = tocMap.get(index) || `Chapter ${index + 1}`;
+            
             for (const result of matcher(doc, query)) {
                 const cfi = this.view.getCFI(index, result.range);
-                // chapter name instead
-                const sectionTitle = section.label || `Section ${index + 1}`;
                 results.push({
                     cfi,
                     excerpt: result.excerpt,
-                    section: sectionTitle
+                    section: chapterName
                 });
             }
         }
-    
+
         dispatch({ type: 'find-results', payload: { query, results } });
         return results;
     }

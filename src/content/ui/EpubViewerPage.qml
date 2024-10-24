@@ -69,6 +69,7 @@ Kirigami.Page {
 
         onAccepted: if (text === '') {
             view.runJavaScript(`find.clearHighlight()`)
+            searchResultModel.clear();
         } else {
             searchResultModel.search(text);
             searchResultModel.loading = true;
