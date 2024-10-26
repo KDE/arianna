@@ -62,7 +62,7 @@ public:
     /**
      * Inherited from QmlParserStatus, not implemented.
      */
-    void classBegin() override{};
+    void classBegin() override {};
     /**
      * \brief triggers the loading of the cache.
      * Inherited from QmlParserStatus

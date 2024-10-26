@@ -11,7 +11,7 @@ class CategoryEntriesModel::Private
 {
 public:
     Private(CategoryEntriesModel *qq)
-        : q(qq){};
+        : q(qq) {};
     ~Private() = default;
     CategoryEntriesModel *q;
     QString name;

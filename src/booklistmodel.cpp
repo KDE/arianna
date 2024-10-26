@@ -33,7 +33,7 @@ public:
         , publisherCategoryModel(nullptr)
         , keywordCategoryModel(nullptr)
         , folderCategoryModel(nullptr)
-        , cacheLoaded(false){};
+        , cacheLoaded(false) {};
 
     QList<BookEntry> entries;
 

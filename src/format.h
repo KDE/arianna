@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include <QObject>
 #include <KFormat>
+#include <QObject>
 
 class Format : public QObject
 {

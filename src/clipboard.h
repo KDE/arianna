@@ -3,8 +3,8 @@
 
 #pragma once
 
-#include <QObject>
 #include <QImage>
+#include <QObject>
 
 class QClipboard;
 
