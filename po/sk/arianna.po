@@ -1,19 +1,19 @@
 # translation of arianna.po to Slovak
-# Roman Paholik <wizzardsk@gmail.com>, 2023.
+# SPDX-FileCopyrightText: 2023, 2024 Roman Paholik <wizzardsk@gmail.com>
 # Ferdinand Galko <galko.ferdinand@gmail.com>, 2023.
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-10-09 00:38+0000\n"
-"PO-Revision-Date: 2023-11-15 18:24+0100\n"
-"Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
-"Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
+"PO-Revision-Date: 2024-11-10 19:33+0100\n"
+"Last-Translator: Roman Paholík <wizzardsk@gmail.com>\n"
+"Language-Team: Slovak <kde-sk@linux.sk>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.3\n"
+"X-Generator: Lokalize 24.08.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 
 #: content/ui/BookDetailsPage.qml:16
@@ -67,7 +67,7 @@ msgstr "Žiadne výsledky hľadania"
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Search"
-msgstr ""
+msgstr "Hľadať"
 
 #: content/ui/EpubViewerPage.qml:125
 #, kde-format
