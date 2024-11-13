@@ -169,6 +169,7 @@
   <custom>
     <value key="KDE::matrix">#arianna:kde.org</value>
     <value key="KDE::mastodon">https://kde.social/@arianna</value>
+    <value key="KDE::supporters">Erik Bernoth</value>
   </custom>
   <screenshots>
     <screenshot type="default">
