@@ -8,6 +8,7 @@ import Qt.labs.platform
 import org.kde.arianna
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.delegates as Delegates
+import org.kde.config as KConfig
 
 Kirigami.ApplicationWindow {
     id: root
@@ -359,5 +360,9 @@ Kirigami.ApplicationWindow {
             title: i18n("Please choose a file")
             nameFilters: [i18nc("Name filter for EPUB files", "eBook files (*.epub *.cb* *.fb2 *.fb2zip)")]
         }
+    }
+
+    KConfig.WindowStateSaver {
+        configGroupName: "Main"
     }
 }
