@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-09 00:38+0000\n"
+"POT-Creation-Date: 2024-11-16 00:39+0000\n"
 "PO-Revision-Date: 2024-09-01 19:38+0300\n"
 "Last-Translator: Emir SARI <emir_sari@icloud.com>\n"
 "Language-Team: Turkish <kde-l10n-tr@kde.org>\n"
@@ -59,7 +59,7 @@ msgstr "Telif hakkı:"
 msgid "Loading"
 msgstr "Yükleniyor"
 
-#: content/ui/EpubViewerPage.qml:80 content/ui/main.qml:165
+#: content/ui/EpubViewerPage.qml:80 content/ui/main.qml:166
 #, kde-format
 msgid "No search results"
 msgstr "Arama sonucu yok"
@@ -85,12 +85,12 @@ msgstr "Seçili kitap yok"
 msgid "Open file"
 msgstr "Dosya Aç"
 
-#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:359
+#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:360
 #, kde-format
 msgid "Please choose a file"
 msgstr "Dosya Seç"
 
-#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:360
+#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:361
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -149,29 +149,29 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Okumaya başlamak için kitaplar ekleyin"
 
-#: content/ui/main.qml:17 content/ui/main.qml:298 main.cpp:63
+#: content/ui/main.qml:18 content/ui/main.qml:299 main.cpp:63
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
 
-#: content/ui/main.qml:201
+#: content/ui/main.qml:202
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
 msgstr "Ana Ekran"
 
-#: content/ui/main.qml:205
+#: content/ui/main.qml:206
 #, kde-format
 msgid "Home"
 msgstr "Ana Ekran"
 
-#: content/ui/main.qml:208
+#: content/ui/main.qml:209
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
 msgstr "Son Eklenen Kitaplar"
 
-#: content/ui/main.qml:214
+#: content/ui/main.qml:215
 #, kde-format
 msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
@@ -179,13 +179,13 @@ msgctxt ""
 msgid "Open Other..."
 msgstr "Başka Aç…"
 
-#: content/ui/main.qml:222
+#: content/ui/main.qml:223
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: content/ui/main.qml:231
+#: content/ui/main.qml:232
 #, kde-format
 msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
@@ -193,48 +193,48 @@ msgctxt ""
 msgid "Group By"
 msgstr "Şuna Göre Grupla"
 
-#: content/ui/main.qml:234
+#: content/ui/main.qml:235
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
 msgstr "Yazar"
 
-#: content/ui/main.qml:240
+#: content/ui/main.qml:241
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
 msgstr "Seri"
 
-#: content/ui/main.qml:242
+#: content/ui/main.qml:243
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
 msgstr "Seriye Göre Grupla"
 
-#: content/ui/main.qml:246
+#: content/ui/main.qml:247
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
 msgstr "Yayımcı"
 
-#: content/ui/main.qml:252
+#: content/ui/main.qml:253
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Anahtar Sözcükler"
 
-#: content/ui/main.qml:254
+#: content/ui/main.qml:255
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr "Türe Göre Grupla"
 
-#: content/ui/main.qml:330 content/ui/SettingsPage.qml:16
+#: content/ui/main.qml:331 content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
 msgstr "Ayarlar"
 
-#: content/ui/main.qml:338
+#: content/ui/main.qml:339
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"

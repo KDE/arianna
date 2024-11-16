@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-10-09 00:38+0000\n"
+"POT-Creation-Date: 2024-11-16 00:39+0000\n"
 "PO-Revision-Date: 2024-09-19 21:59+0200\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
@@ -60,7 +60,7 @@ msgstr "Kopirajto:"
 msgid "Loading"
 msgstr "Ŝargante"
 
-#: content/ui/EpubViewerPage.qml:80 content/ui/main.qml:165
+#: content/ui/EpubViewerPage.qml:80 content/ui/main.qml:166
 #, kde-format
 msgid "No search results"
 msgstr "Neniuj serĉrezultoj"
@@ -86,12 +86,12 @@ msgstr "Neniu libro elektita"
 msgid "Open file"
 msgstr "Malfermi dosieron"
 
-#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:359
+#: content/ui/EpubViewerPage.qml:172 content/ui/main.qml:360
 #, kde-format
 msgid "Please choose a file"
 msgstr "Bonvolu elekti dosieron"
 
-#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:360
+#: content/ui/EpubViewerPage.qml:173 content/ui/main.qml:361
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
@@ -150,29 +150,29 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Aldoni kelkajn librojn"
 
-#: content/ui/main.qml:17 content/ui/main.qml:298 main.cpp:63
+#: content/ui/main.qml:18 content/ui/main.qml:299 main.cpp:63
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
 
-#: content/ui/main.qml:201
+#: content/ui/main.qml:202
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
 msgstr "Hejmo"
 
-#: content/ui/main.qml:205
+#: content/ui/main.qml:206
 #, kde-format
 msgid "Home"
 msgstr "Hejmo"
 
-#: content/ui/main.qml:208
+#: content/ui/main.qml:209
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
 msgstr "Lastatempe Aldonitaj Libroj"
 
-#: content/ui/main.qml:214
+#: content/ui/main.qml:215
 #, kde-format
 msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
@@ -180,13 +180,13 @@ msgctxt ""
 msgid "Open Other..."
 msgstr "Malfermi Alian..."
 
-#: content/ui/main.qml:222
+#: content/ui/main.qml:223
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "Agordoj"
 
-#: content/ui/main.qml:231
+#: content/ui/main.qml:232
 #, kde-format
 msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
@@ -194,48 +194,48 @@ msgctxt ""
 msgid "Group By"
 msgstr "Group By"
 
-#: content/ui/main.qml:234
+#: content/ui/main.qml:235
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
 msgstr "Aŭtoro"
 
-#: content/ui/main.qml:240
+#: content/ui/main.qml:241
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
 msgstr "Serio"
 
-#: content/ui/main.qml:242
+#: content/ui/main.qml:243
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
 msgstr "Grupo laŭ Serio"
 
-#: content/ui/main.qml:246
+#: content/ui/main.qml:247
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
 msgstr "Eldonisto"
 
-#: content/ui/main.qml:252
+#: content/ui/main.qml:253
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "Ŝlosilvortoj"
 
-#: content/ui/main.qml:254
+#: content/ui/main.qml:255
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr "Grupo laŭ Ĝenroj"
 
-#: content/ui/main.qml:330 content/ui/SettingsPage.qml:16
+#: content/ui/main.qml:331 content/ui/SettingsPage.qml:16
 #, kde-format
 msgid "Settings"
 msgstr "Agordoj"
 
-#: content/ui/main.qml:338
+#: content/ui/main.qml:339
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Book…"
