@@ -15,6 +15,7 @@
 
 #include <KAboutData>
 #include <KConfig>
+#include <KCrash>
 #include <KDBusService>
 #include <KLocalizedContext>
 #include <KLocalizedString>
@@ -72,6 +73,8 @@ int main(int argc, char *argv[])
     about.setBugAddress("https://bugs.kde.org/describecomponents.cgi?product=arianna");
 
     KAboutData::setApplicationData(about);
+    KCrash::initialize();
+
     QGuiApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("org.kde.arianna")));
 
     KDBusService service(KDBusService::Unique);

@@ -70,7 +70,9 @@ target_link_libraries(arianna_static PUBLIC
     KF6::DBusAddons
     KF6::FileMetaData
     KF6::Archive
-    KF6::CoreAddons)
+    KF6::CoreAddons
+    KF6::Crash
+)
 
 target_link_libraries(arianna_static PUBLIC Qt::WebEngineQuick)
 

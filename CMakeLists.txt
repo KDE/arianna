@@ -48,7 +48,7 @@ set_package_properties(Qt6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
 )
-find_package(KF6 ${KF_MIN_VERSION} COMPONENTS Kirigami I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Archive QuickCharts)
+find_package(KF6 ${KF_MIN_VERSION} COMPONENTS Kirigami I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Archive QuickCharts Crash)
 set_package_properties(KF6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"

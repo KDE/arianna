@@ -15,6 +15,7 @@ Dependencies:
     'frameworks/kfilemetadata': '@latest-kf6'
     'frameworks/kdbusaddons': '@latest-kf6'
     'frameworks/kquickcharts': '@latest-kf6'
+    'frameworks/kcrash': '@latest-kf6'
 
 - 'on': ['Linux/Qt6', 'FreeBSD/Qt6']
   'require':
