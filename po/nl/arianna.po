@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-16 00:39+0000\n"
+"POT-Creation-Date: 2024-11-25 00:38+0000\n"
 "PO-Revision-Date: 2024-09-01 13:59+0200\n"
 "Last-Translator: Freek de Kruijf <freekdekruijf@kde.nl>\n"
 "Language-Team: \n"
@@ -149,7 +149,7 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Enige boeken toevoegen"
 
-#: content/ui/main.qml:18 content/ui/main.qml:299 main.cpp:63
+#: content/ui/main.qml:18 content/ui/main.qml:299 main.cpp:64
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
@@ -338,49 +338,49 @@ msgctxt "@info:title"
 msgid "Table of Contents"
 msgstr "Inhoudsopgave"
 
-#: main.cpp:65
+#: main.cpp:66
 #, kde-format
 msgid "EPub Reader"
 msgstr "EPub-lezer"
 
-#: main.cpp:67
+#: main.cpp:68
 #, kde-format
 msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 
-#: main.cpp:68
+#: main.cpp:69
 #, kde-format
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:68 main.cpp:69
+#: main.cpp:69 main.cpp:70
 #, kde-format
 msgid "Maintainer"
 msgstr "Onderhouder"
 
-#: main.cpp:69
+#: main.cpp:70
 #, kde-format
 msgid "Carl Schwan"
 msgstr "Carl Schwan"
 
-#: main.cpp:70
+#: main.cpp:71
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Freek de Kruijf - 2022"
 
-#: main.cpp:70
+#: main.cpp:71
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "freekdekruijf@kde.nl"
 
-#: main.cpp:83
+#: main.cpp:86
 #, kde-format
 msgid "Epub reader"
 msgstr "Epub-lezer"
 
-#: main.cpp:84
+#: main.cpp:87
 #, kde-format
 msgid "Epub file to open"
 msgstr "Te openen Epub-bestand"
