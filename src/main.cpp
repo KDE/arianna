@@ -80,7 +80,6 @@ int main(int argc, char *argv[])
     KDBusService service(KDBusService::Unique);
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
-    QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QCoreApplication::quit);
 
     QCommandLineParser parser;
     parser.setApplicationDescription(i18n("Epub reader"));
