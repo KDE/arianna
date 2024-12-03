@@ -46,41 +46,6 @@
   <name xml:lang="zh-CN">Arianna</name>
   <name xml:lang="zh-TW">Arianna</name>
   <summary>EBook reader</summary>
-  <summary xml:lang="ar">قارئ كتب إلكترونية</summary>
-  <summary xml:lang="ca">Lector de llibres electrònics</summary>
-  <summary xml:lang="ca-valencia">Lector de llibres electrònics</summary>
-  <summary xml:lang="cs">Čtečka e-knih</summary>
-  <summary xml:lang="de">EBook-Lesegerät</summary>
-  <summary xml:lang="en-GB">EBook Reader</summary>
-  <summary xml:lang="eo">Bitlibra legilo</summary>
-  <summary xml:lang="es">Lector de eBook</summary>
-  <summary xml:lang="eu">eLiburuki irakurlea</summary>
-  <summary xml:lang="fi">EPub-lukija</summary>
-  <summary xml:lang="fr">Lecteur de fichiers « eBook »</summary>
-  <summary xml:lang="gl">Lector de Ebook.</summary>
-  <summary xml:lang="he">מציג ספרים דיגיטליים</summary>
-  <summary xml:lang="hu">E-könyvolvasó</summary>
-  <summary xml:lang="ia">Lector de EBook</summary>
-  <summary xml:lang="id">Pembaca EBook</summary>
-  <summary xml:lang="is">Rafbókalesari</summary>
-  <summary xml:lang="it">Lettore EBook</summary>
-  <summary xml:lang="ka">ელწიგნების მკითხველი</summary>
-  <summary xml:lang="ko">전자책 리더</summary>
-  <summary xml:lang="lv">E-grāmatu lasītājs</summary>
-  <summary xml:lang="nl">E-book-lezer</summary>
-  <summary xml:lang="pl">Czytnik Ebooków</summary>
-  <summary xml:lang="pt">Leitor de E-Books</summary>
-  <summary xml:lang="pt-BR">Leitor de ebook</summary>
-  <summary xml:lang="ro">Cititor de cărți electronice</summary>
-  <summary xml:lang="ru">Приложение для чтения электронных книг</summary>
-  <summary xml:lang="sk">Čítačka elektronických kníh</summary>
-  <summary xml:lang="sl">Bralnik elektronskih knjig</summary>
-  <summary xml:lang="sv">E-bokläsare</summary>
-  <summary xml:lang="tr">E-kitap Okuyucusu</summary>
-  <summary xml:lang="uk">Читання електронних книг</summary>
-  <summary xml:lang="x-test">xxEBook Readerxx</summary>
-  <summary xml:lang="zh-CN">电子书阅读器</summary>
-  <summary xml:lang="zh-TW">電子書閱讀器</summary>
   <description>
     <p>An ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sorts them by categories, genres and authors.</p>
     <p xml:lang="ar">قارئ كُتب إلكترونية ومدير للمكتبة وداعم لملفات ".epub". أريانا يكتشف كتبك تلقائيا ويرتبها بواسطة التصنيفات والأنواع والكتاب</p>
