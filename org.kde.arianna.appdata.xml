@@ -169,4 +169,8 @@
   </releases>
   <launchable type="desktop-id">org.kde.arianna.desktop</launchable>
   <content_rating type="oars-1.1"/>
+  <branding>
+    <color type="primary" scheme_preference="light">#feb978</color>
+    <color type="primary" scheme_preference="dark">#714903</color>
+  </branding>
 </component>
