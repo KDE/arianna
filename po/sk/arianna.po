@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 00:38+0000\n"
+"POT-Creation-Date: 2024-12-04 00:38+0000\n"
 "PO-Revision-Date: 2023-11-15 18:24+0100\n"
 "Last-Translator: Ferdinand Galko <galko.ferdinand@gmail.com>\n"
 "Language-Team: Slovak <opensuse-translation@opensuse.org>\n"
@@ -374,12 +374,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "wizzardsk@gmail.com,galko.ferdinand@gmail.com"
 
-#: main.cpp:86
+#: main.cpp:85
 #, kde-format
 msgid "Epub reader"
 msgstr "Čítačka Epub"
 
-#: main.cpp:87
+#: main.cpp:86
 #, kde-format
 msgid "Epub file to open"
 msgstr "Súbor Epub, ktorý sa má otvoriť"

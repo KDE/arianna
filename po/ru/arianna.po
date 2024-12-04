@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-11-25 00:38+0000\n"
+"POT-Creation-Date: 2024-12-04 00:38+0000\n"
 "PO-Revision-Date: 2024-10-10 12:13+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
@@ -376,12 +376,12 @@ msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "translation-team@basealt.ru"
 
-#: main.cpp:86
+#: main.cpp:85
 #, kde-format
 msgid "Epub reader"
 msgstr "Программа для чтения EPub"
 
-#: main.cpp:87
+#: main.cpp:86
 #, kde-format
 msgid "Epub file to open"
 msgstr "Файл EPub, который следует открыть"
