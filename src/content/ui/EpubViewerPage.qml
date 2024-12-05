@@ -76,7 +76,7 @@ Kirigami.Page {
 
         emptyText: if (searchResultModel.loading) {
             return i18n("Loading");
-        } else if (searchResultsCount === 0 && searchDialog.text.length > 2) {
+        } else if (count === 0 && searchDialog.text.length > 2) {
             return i18n("No search results");
         } else {
             return '';
