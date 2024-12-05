@@ -359,14 +359,12 @@ Kirigami.Page {
                     },
                 }
 
-                console.log(`init({'uiText': ${JSON.stringify(uiText)}})`)
                 view.runJavaScript(`init({'uiText': ${JSON.stringify(uiText)}})`)
                 break;
             case 'book-ready':
-                console.log(JSON.stringify(action.payload.book));
                 searchResultModel.clear();
                 searchResultModel.loading = false;
-                
+
                 const { book } = action.payload;
                 if (book && book.toc) {
                     applicationWindow().contextDrawer.model.importFromJson(JSON.stringify(book.toc));
