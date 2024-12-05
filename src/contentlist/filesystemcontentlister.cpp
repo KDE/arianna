@@ -43,7 +43,7 @@ public:
                     continue;
 
                 if (!m_query->mimeTypes().isEmpty()) {
-                    QString mimeType = mimeDb.mimeTypeForFile(filePath).name();
+                    QString mimeType = mimeDb.mimeTypeForName(filePath).name();
                     if (!m_query->mimeTypes().contains(mimeType)) {
                         continue;
                     }
