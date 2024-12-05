@@ -181,12 +181,6 @@
     <screenshot>
       <image>https://cdn.kde.org/screenshots/arianna/reader-search.png</image>
     </screenshot>
-    <screenshot>
-      <image>https://cdn.kde.org/screenshots/arianna/library-search.png</image>
-    </screenshot>
-    <screenshot>
-      <image>https://cdn.kde.org/screenshots/arianna/library-author.png</image>
-    </screenshot>
   </screenshots>
   <releases>
     <release version="24.12.0" date="2024-12-12"/>
