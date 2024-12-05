@@ -54,6 +54,7 @@ Kirigami.OverlayDrawer {
                 id: treeView
 
                 contentWidth: parent.availableWidth
+                clip: true
 
                 model: KDescendantsProxyModel {
                     model: TableOfContentModel {
