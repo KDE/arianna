@@ -2,10 +2,16 @@
 // SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accepted-LGPL
 
 #include "categoryentriesmodel.h"
-#include "propertycontainer.h"
+#include "arianna_debug.h"
+#include "epubcontainer.h"
+
 #include <KFileMetaData/UserMetaData>
+
 #include <QDir>
 #include <QFileInfo>
+#include <QImage>
+#include <QStandardPaths>
+#include <QUuid>
 
 class CategoryEntriesModel::Private
 {
@@ -127,8 +133,21 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
             return QString{};
         case CategoryEntryCountRole:
             return QVariant::fromValue<int>(0);
-        case ThumbnailRole:
+        case ThumbnailRole: {
+            if (entry.thumbnail.isEmpty()) {
+                return {};
+            }
+            if (QFileInfo::exists(entry.thumbnail)) {
+                return entry.thumbnail;
+            }
+
+            QFile file(entry.thumbnail);
+            EPubContainer epub(nullptr);
+            epub.openFile(entry.filename);
+            auto image = epub.getImage(epub.getMetadata(QStringLiteral("cover")).join(QChar()));
+            entry.saveCover(image, entry.thumbnail);
             return entry.thumbnail;
+        }
         case DescriptionRole:
             return entry.description;
         case CommentRole:
@@ -389,6 +408,36 @@ void CategoryEntriesModel::setRole(Roles role)
 bool operator==(const BookEntry &b1, const BookEntry &b2) noexcept
 {
     return b1.filename == b2.filename;
+}
+
+QString BookEntry::saveCover(const QImage &image, const QString &path) const
+{
+    if (image.isNull()) {
+        qCDebug(ARIANNA_LOG) << "cover is empty";
+        return {};
+    }
+
+    QString fileName;
+    const auto cacheLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
+
+    if (path.isEmpty()) {
+        QString id = QUuid::createUuid().toString(QUuid::WithoutBraces);
+        fileName = cacheLocation + QLatin1String("/covers/") + id + QLatin1String(".jpg");
+    } else {
+        fileName = path;
+    }
+
+    QDir dir(cacheLocation);
+    if (!dir.exists(QLatin1String("covers"))) {
+        dir.mkdir(QLatin1String("covers"));
+    }
+    if (!image.save(fileName)) {
+        qCWarning(ARIANNA_LOG) << "Error saving image" << fileName;
+        return {};
+    } else {
+        qCDebug(ARIANNA_LOG) << "saving cover to" << fileName;
+    }
+    return fileName;
 }
 
 #include "moc_categoryentriesmodel.cpp"

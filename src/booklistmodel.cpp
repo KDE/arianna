@@ -139,29 +139,6 @@ public:
     }
 };
 
-QString saveCover(const QString &identifier, const QImage &image)
-{
-    if (!image.isNull()) {
-        const auto cacheLocation = QStandardPaths::writableLocation(QStandardPaths::CacheLocation);
-        QString id = QUuid::createUuid().toString();
-        QString fileName = cacheLocation + QLatin1String("/covers/") + id + QLatin1String(".jpg");
-        QDir dir(cacheLocation);
-        if (!dir.exists(QLatin1String("covers"))) {
-            dir.mkdir(QLatin1String("covers"));
-        }
-        if (!image.save(fileName)) {
-            qCWarning(ARIANNA_LOG) << "Error saving image" << fileName;
-        } else {
-            qCDebug(ARIANNA_LOG) << "saving cover to" << fileName;
-        }
-        return fileName;
-    } else {
-        qCDebug(ARIANNA_LOG) << "cover is empty";
-        // TODO generate generic cover
-        return {};
-    }
-}
-
 BookListModel::BookListModel(QObject *parent)
     : CategoryEntriesModel(parent)
     , d(std::make_unique<Private>())
@@ -266,7 +243,7 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
             entry.publisher = epub.getMetadata(QStringLiteral("publisher")).join(QStringLiteral(", "));
 
             auto image = epub.getImage(epub.getMetadata(QStringLiteral("cover")).join(QChar()));
-            entry.thumbnail = saveCover(epub.getMetadata(QStringLiteral("identifier")).join(QChar()), image);
+            entry.thumbnail = entry.saveCover(image);
 
             const auto collections = epub.collections();
             for (const auto &collection : collections) {

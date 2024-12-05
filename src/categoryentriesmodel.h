@@ -44,6 +44,9 @@ public:
     explicit BookEntry()
     {
     }
+
+    QString saveCover(const QImage &image, const QString &path = {}) const;
+
     QString filename;
     QString filetitle;
     QString title;
