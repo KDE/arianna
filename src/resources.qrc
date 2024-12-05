@@ -42,7 +42,6 @@ SPDX-License-Identifier: LGPL-3.0-or-later
     <file>content/ui/foliate-js/uri-template.js</file>
     <file>content/ui/foliate-js/view.js</file>
 
-    <file>content/ui/epub-viewer.js</file>
     <file>content/ui/jszip.min.js</file>
     <file>content/ui/utils.js</file>
   </qresource>
