@@ -14,7 +14,8 @@
 #include <QDir>
 
 #include <arianna_debug.h>
-#include <qstringliteral.h>
+
+using namespace Qt::StringLiterals;
 
 class BookDatabase::Private
 {
@@ -245,15 +246,15 @@ void BookDatabase::updateEntry(const QString &fileName, const QString &property,
         return;
     }
 
-    QStringList stringListValues;
-    // clang-format off
-    stringListValues << QStringLiteral("series")
-                     << QStringLiteral("author")
-                     << QStringLiteral("characters")
-                     << QStringLiteral("genres")
-                     << QStringLiteral("keywords")
-                     << QStringLiteral("tags");
-    // clang-format on
+    const QStringList stringListValues{
+        u"series"_s,
+        u"author"_s,
+        u"character"_s
+        u"genres"_s,
+        u"keywords"_s,
+        u"tags"_s,
+    };
+
     QString val;
     if (stringListValues.contains(property)) {
         val = value.toStringList().join(QLatin1Char(','));
