@@ -172,6 +172,7 @@ FormCard.FormCardPage {
         FormCard.FormButtonDelegate {
             text: i18n("About Arianna")
             onClicked: applicationWindow().pageStack.layers.push(Qt.createComponent("org.kde.kirigamiaddons.formcard", "AboutPage"))
+            icon.name: "org.kde.arianna"
         }
 
         FormCard.FormDelegateSeparator {}
@@ -179,6 +180,7 @@ FormCard.FormCardPage {
         FormCard.FormButtonDelegate {
             text: i18n("About KDE")
             onClicked: applicationWindow().pageStack.layers.push(Qt.createComponent("org.kde.kirigamiaddons.formcard", "AboutKDE"))
+            icon.name: "kde"
         }
     }
 
