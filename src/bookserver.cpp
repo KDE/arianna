@@ -21,12 +21,13 @@ BookServer::BookServer()
         auto headers = resp.headers();
         headers.append("Access-Control-Allow-Origin", "*");
         resp.setHeaders(headers);
+    });
 #else
     server.afterRequest([](QHttpServerResponse &&resp) {
         resp.setHeader("Access-Control-Allow-Origin", "*");
-#endif
         return std::move(resp);
     });
+#endif
 
 #if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     auto tcpserver = std::make_unique<QTcpServer>();
