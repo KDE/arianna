@@ -12,11 +12,6 @@ window.onload = () => {
     new QWebChannel(qt.webChannelTransport, (channel) => {
         backend = channel.objects.backend;
         dispatch({ type: 'ready' })
-        backend.progressChanged.connect(() => {
-            if (!rendition.location || rendition.location.start.percentage !== backend.progress) {
-                rendition.display(book.locations.cfiFromPercentage(backend.progress))
-            }
-        })
     })
 }
 
