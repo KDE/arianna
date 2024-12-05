@@ -329,7 +329,7 @@ Kirigami.ApplicationWindow {
         function onOpenSettings() {
             pageStack.pushDialogLayer(Qt.resolvedUrl('./SettingsPage.qml'), {}, {
                 title: i18n("Settings"),
-                width: Kirigami.Units.gridUnit * 12,
+                width: Kirigami.Units.gridUnit * 24,
             });
         }
     }
