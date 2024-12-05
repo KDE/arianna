@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: John Factotum
+// SPDX-License-Identifier: MIT
+
 import './foliate-js/view.js'
 import { FootnoteHandler } from './foliate-js/footnotes.js'
 import { toPangoMarkup } from './markup.js'

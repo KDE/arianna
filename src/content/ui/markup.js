@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: John Factotum
+// SPDX-License-Identifier: MIT
+
 const unescapeHTML = str => {
     const textarea = document.createElement('textarea')
     textarea.innerHTML = str

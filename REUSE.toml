@@ -24,6 +24,13 @@ SPDX-FileCopyrightText = "JsZip contributors <https://github.com/Stuk/jszip/grap
 SPDX-License-Identifier = "MIT or GPL-3.0-only"
 
 [[annotations]]
+path = "src/content/ui/foliate-js/**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "John Factotum"
+SPDX-License-Identifier = "MIT"
+
+
+[[annotations]]
 path = ["README.md", "screenshots/library.png", "screenshots/reader.png", "src/autotests/data/**"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Carl Schwan"
