@@ -92,15 +92,14 @@ Kirigami.Page {
             required property string markup
             required property string cfi
 
-                        onClicked: {
-                            view.runJavaScript(`reader.view.goTo('${cfi}')`)
-                            //searchField.text = "";
-                        }
-
-                        Kirigami.Theme.colorSet: Kirigami.Theme.Window
-                        Kirigami.Theme.inherit: false
+            onClicked: {
+                view.runJavaScript(`reader.view.goTo('${cfi}')`)
+                searchDialog.close();
+            }
 
             contentItem: ColumnLayout {
+                spacing: 0
+
                 QQC2.Label {
                     Layout.fillWidth: true
                     text: searchDelegate.sectionMarkup
@@ -145,7 +144,7 @@ Kirigami.Page {
         id: searchResultModel
 
         onSearchTriggered: (text) => {
-            view.runJavaScript(`find.find('${text}', true, true)`)
+            view.runJavaScript(`reader.search('${text}')`)
         }
     }
 
@@ -253,7 +252,6 @@ Kirigami.Page {
                         menu.close();
                     }
                 }
-                
                 Accessible.role: Accessible.ButtonMenu
 
                 property QQC2.Menu menu: QQC2.Menu {
@@ -339,7 +337,6 @@ Kirigami.Page {
         function dispatch(action) {
             switch (action.type) {
             case 'ready':
-                console.log("hell")
                 const uiText = {
                     loc: i18n("Loc. %s of %s"),
                     page: i18n("Page %s of %s"),
@@ -372,31 +369,20 @@ Kirigami.Page {
                     console.warn('Book or TOC not available');
                 }
 
+                applyStyle();
+
                 const metadata = action.payload.book.metadata;
                 if (metadata) {
                     backend.metadata = metadata;
                     root.bookReady(backend.metadata.title);
+
+                    if (metadata.identifier && currentLocation.length > 0) {
+                        view.runJavaScript(`reader.view.init({'lastLocation': "${currentLocation}"})`)
+                    }
                     //Database.addBook(backend.file, JSON.stringify(metadata));
-                }
-                // get('book.navigation.toc', toc => {
-                //     applicationWindow().contextDrawer.model.importFromJson(toc)
-                // });
-                applyStyle();
-                view.runJavaScript('reader.view.next()');
-                break;
-            case 'rendition-ready':
-                if (currentLocation) {
-                    view.runJavaScript(`rendition.display('${currentLocation}')`)
                 } else {
-                    view.runJavaScript(`rendition.display()`);
+                    view.runJavaScript('reader.view.next()');
                 }
-                break;
-            case 'locations-ready':
-                backend.locationsReady = true;
-                break;
-            case 'locations-generated':
-                backend.locationsReady = true;
-                root.locationsLoaded(action.payload.locations)
                 break;
             case 'book-error':
                 console.error('Book error', action.payload);
