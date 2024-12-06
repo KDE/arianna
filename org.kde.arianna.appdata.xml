@@ -57,7 +57,7 @@
   <summary xml:lang="eu">eLiburuki irakurlea</summary>
   <summary xml:lang="fi">EPub-lukija</summary>
   <summary xml:lang="fr">Lecteur de fichiers « eBook »</summary>
-  <summary xml:lang="gl">Lector de Ebook.</summary>
+  <summary xml:lang="gl">Lector de libros electrónicos.</summary>
   <summary xml:lang="he">מציג ספרים דיגיטליים</summary>
   <summary xml:lang="hu">E-könyvolvasó</summary>
   <summary xml:lang="ia">Lector de EBook</summary>
@@ -136,7 +136,7 @@
   <developer_name xml:lang="eu">KDE komunitatea</developer_name>
   <developer_name xml:lang="fi">KDE-yhteisö</developer_name>
   <developer_name xml:lang="fr">La communauté de KDE</developer_name>
-  <developer_name xml:lang="gl">A Comunidade KDE</developer_name>
+  <developer_name xml:lang="gl">Comunidade KDE</developer_name>
   <developer_name xml:lang="he">קהילת KDE</developer_name>
   <developer_name xml:lang="hu">A KDE Közösség</developer_name>
   <developer_name xml:lang="ia">Le communitate de KDE</developer_name>
