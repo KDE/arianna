@@ -58,9 +58,6 @@ Kirigami.Page {
     title: backend.metadata ? backend.metadata.title : ''
     padding: 0
 
-    Keys.onLeftPressed: view.prev()
-    Keys.onRightPressed: view.next()
-
     onUrlChanged: reloadBook()
     onReaderThemeChanged: backend.applyStyle()
 
@@ -461,5 +458,15 @@ Kirigami.Page {
     WebChannel {
         id: channel
         registeredObjects: [backend]
+    }
+
+    Shortcut {
+        sequence: "Right"
+        onActivated: view.next()
+    }
+
+    Shortcut {
+        sequence: "Left"
+        onActivated: view.prev()
     }
 }
