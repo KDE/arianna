@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-06 02:29+0000\n"
-"PO-Revision-Date: 2024-09-22 13:18+0200\n"
+"PO-Revision-Date: 2024-12-06 11:56+0100\n"
 "Last-Translator: Adrián Chaves (Gallaecio) <adrian@chaves.io>\n"
 "Language-Team: Proxecto Trasno (proxecto@trasno.gal)\n"
 "Language: gl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.05.2\n"
+"X-Generator: Lokalize 24.08.3\n"
 
 #: content/ui/BookDetailsPage.qml:16
 #, kde-format
@@ -126,12 +126,12 @@ msgstr "Tempo restante para o libro:"
 #: content/ui/EpubViewerPage.qml:267
 #, kde-format
 msgid "Previous Page"
-msgstr "Páxina Anterior"
+msgstr "Páxina anterior"
 
 #: content/ui/EpubViewerPage.qml:283
 #, kde-format
 msgid "Next Page"
-msgstr "Páxina Seguinte"
+msgstr "Páxina seguinte"
 
 #: content/ui/GridBrowserDelegate.qml:146
 #, kde-format
