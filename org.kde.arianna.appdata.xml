@@ -46,9 +46,12 @@
   <name xml:lang="zh-CN">Arianna</name>
   <name xml:lang="zh-TW">Arianna</name>
   <summary>EBook reader</summary>
+  <summary xml:lang="ar">قارئ كتب إلكترونية</summary>
   <summary xml:lang="ca">Lector de llibres electrònics</summary>
+  <summary xml:lang="ca-valencia">Lector de llibres electrònics</summary>
   <summary xml:lang="es">Lector de eBook</summary>
   <summary xml:lang="eu">eLiburuki irakurlea</summary>
+  <summary xml:lang="fr">Lecteur de fichiers « eBook »</summary>
   <summary xml:lang="gl">Lector de libros electrónicos.</summary>
   <summary xml:lang="he">מציג ספרים דיגיטליים</summary>
   <summary xml:lang="ia">Lector de EBook</summary>
