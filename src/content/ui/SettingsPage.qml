@@ -179,7 +179,7 @@ FormCard.FormCardPage {
 
         FormCard.FormButtonDelegate {
             text: i18n("About KDE")
-            onClicked: applicationWindow().pageStack.layers.push(Qt.createComponent("org.kde.kirigamiaddons.formcard", "AboutKDE"))
+            onClicked: applicationWindow().pageStack.layers.push(Qt.createComponent("org.kde.kirigamiaddons.formcard", "AboutKDEPage"))
             icon.name: "kde"
         }
     }
