@@ -37,6 +37,7 @@
   <name xml:lang="pt-BR">Arianna</name>
   <name xml:lang="ro">Arianna</name>
   <name xml:lang="ru">Arianna</name>
+  <name xml:lang="sa">एरियान्ना</name>
   <name xml:lang="sk">Arianna</name>
   <name xml:lang="sl">Arianna</name>
   <name xml:lang="sv">Arianna</name>
@@ -58,6 +59,7 @@
   <summary xml:lang="it">Lettore EBook</summary>
   <summary xml:lang="ka">ელწიგნების მკითხველი</summary>
   <summary xml:lang="nl">E-book-lezer</summary>
+  <summary xml:lang="sa">ईपुस्तक पाठक</summary>
   <summary xml:lang="sl">Bralnik elektronskih knjig</summary>
   <summary xml:lang="sv">E-bokläsare</summary>
   <summary xml:lang="tr">E-kitap Okuyucusu</summary>
@@ -90,6 +92,7 @@
     <p xml:lang="pt">Um leitor de e-books e de gestão de bibliotecas de ficheiros ".epub". O Arianna descobre automaticamente os seus livros, ordenando-os por categorias, géneros e autores.</p>
     <p xml:lang="ro">Cititor de cărți electronice și aplicație de gestiune a bibliotecii cu suport pentru fișiere „.epub”. Arianna vă descoperă automat cărțile și le sortează pe categorii, genuri și autori.</p>
     <p xml:lang="ru">Приложение для чтения электронных книг и управления библиотекой с поддержкой файлов «.epub». Arianna автоматически обнаруживает книги и сортирует их по категориям, жанрам и авторам.</p>
+    <p xml:lang="sa">".epub" सञ्चिकानां समर्थनं कुर्वन् एकः ईपुस्तकपाठकः पुस्तकालयप्रबन्धन-अनुप्रयोगः च । एरियाना भवतः पुस्तकानि स्वयमेव आविष्करोति, श्रेणीभिः, विधैः, लेखकैः च क्रमेण क्रमयति ।</p>
     <p xml:lang="sk">Čítačka elektronických kníh a aplikácia na správu knižnice podporujúca súbory ".epub". Arianna automaticky vyhľadáva vaše knihy a triedi ich podľa kategórií, žánrov a autorov.</p>
     <p xml:lang="sl">Bralnik elektronskih knjig in upravljalnik knjižnice, ki podpira datoteke ".epub". Arianna samodejno odkriva vaše knjige in jih razvrsti po kategorijah, žanrih in avtorjih.</p>
     <p xml:lang="sv">En e-bokläsare och bibliotekshanterare som stöder ".epub"-filer. Arianna upptäcker dina böcker automatiskt och sorterar dem efter kategorier, genrer och författare.</p>
@@ -133,6 +136,7 @@
   <developer_name xml:lang="pt-BR">A comunidade KDE</developer_name>
   <developer_name xml:lang="ro">Comunitatea KDE</developer_name>
   <developer_name xml:lang="ru">The KDE Community</developer_name>
+  <developer_name xml:lang="sa">केडीई समुदायः</developer_name>
   <developer_name xml:lang="sk">KDE Komunita</developer_name>
   <developer_name xml:lang="sl">Skupnost KDE</developer_name>
   <developer_name xml:lang="sv">KDE-gemenskapen</developer_name>
