@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-07 00:39+0000\n"
-"PO-Revision-Date: 2024-09-03 14:53+0200\n"
+"PO-Revision-Date: 2024-12-16 17:43+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -135,73 +135,72 @@ msgstr "Pagina Proxime"
 #: content/ui/EpubViewerPage.qml:338
 #, kde-format
 msgid "Loc. %s of %s"
-msgstr ""
+msgstr "Loc. %s de %s"
 
 #: content/ui/EpubViewerPage.qml:339
 #, kde-format
 msgid "Page %s of %s"
-msgstr ""
+msgstr "Pagina %s de %s"
 
 #: content/ui/EpubViewerPage.qml:340
 #, kde-format
 msgid "Page %s"
-msgstr ""
+msgstr "Pagina %s"
 
 #: content/ui/EpubViewerPage.qml:341
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Claude"
 
 #: content/ui/EpubViewerPage.qml:343
 #, kde-format
 msgid "Footnote"
-msgstr ""
+msgstr "Apostilla"
 
 #: content/ui/EpubViewerPage.qml:344
 #, kde-format
 msgid "Go to Footnote"
-msgstr ""
+msgstr "Vade a apostilla"
 
 #: content/ui/EpubViewerPage.qml:345
 #, kde-format
 msgid "Endnote"
-msgstr ""
+msgstr "Nota final"
 
 #: content/ui/EpubViewerPage.qml:346
 #, kde-format
 msgid "Go to Endnote"
-msgstr ""
+msgstr "Vade a Nota Final"
 
 #: content/ui/EpubViewerPage.qml:347
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "Nota"
 
 #: content/ui/EpubViewerPage.qml:348
 #, kde-format
 msgid "Go to Note"
-msgstr ""
+msgstr "Vade a Nota"
 
 #: content/ui/EpubViewerPage.qml:349
-#, fuzzy, kde-format
-#| msgid "Description:"
+#, kde-format
 msgid "Definition"
-msgstr "Description."
+msgstr "Definition"
 
 #: content/ui/EpubViewerPage.qml:350
 #, kde-format
 msgid "Go to Definition"
-msgstr ""
+msgstr "Vade a definition"
 
 #: content/ui/EpubViewerPage.qml:351
 #, kde-format
 msgid "Bibliography"
-msgstr ""
+msgstr "Bibliographia"
 
 #: content/ui/EpubViewerPage.qml:352
 #, kde-format
 msgid "Go to Bibliography"
-msgstr ""
+msgstr "Vade a Bibliographia"
 
 #: content/ui/GridBrowserDelegate.qml:146
 #, kde-format
