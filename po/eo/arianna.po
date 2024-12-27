@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-07 00:39+0000\n"
-"PO-Revision-Date: 2024-09-19 21:59+0200\n"
+"PO-Revision-Date: 2024-12-26 21:43+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -136,73 +136,72 @@ msgstr "Sekva Paĝo"
 #: content/ui/EpubViewerPage.qml:338
 #, kde-format
 msgid "Loc. %s of %s"
-msgstr ""
+msgstr "Loko %s de %s"
 
 #: content/ui/EpubViewerPage.qml:339
 #, kde-format
 msgid "Page %s of %s"
-msgstr ""
+msgstr "Paĝo %s de %s"
 
 #: content/ui/EpubViewerPage.qml:340
 #, kde-format
 msgid "Page %s"
-msgstr ""
+msgstr "Paĝo %s"
 
 #: content/ui/EpubViewerPage.qml:341
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Fermi"
 
 #: content/ui/EpubViewerPage.qml:343
 #, kde-format
 msgid "Footnote"
-msgstr ""
+msgstr "Piednoto"
 
 #: content/ui/EpubViewerPage.qml:344
 #, kde-format
 msgid "Go to Footnote"
-msgstr ""
+msgstr "Iri al Piednoto"
 
 #: content/ui/EpubViewerPage.qml:345
 #, kde-format
 msgid "Endnote"
-msgstr ""
+msgstr "Finnoto"
 
 #: content/ui/EpubViewerPage.qml:346
 #, kde-format
 msgid "Go to Endnote"
-msgstr ""
+msgstr "Iri al Finnoto"
 
 #: content/ui/EpubViewerPage.qml:347
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "Noto"
 
 #: content/ui/EpubViewerPage.qml:348
 #, kde-format
 msgid "Go to Note"
-msgstr ""
+msgstr "Iri al Noto"
 
 #: content/ui/EpubViewerPage.qml:349
-#, fuzzy, kde-format
-#| msgid "Description:"
+#, kde-format
 msgid "Definition"
-msgstr "Priskribo:"
+msgstr "Difino"
 
 #: content/ui/EpubViewerPage.qml:350
 #, kde-format
 msgid "Go to Definition"
-msgstr ""
+msgstr "Iri al Difino"
 
 #: content/ui/EpubViewerPage.qml:351
 #, kde-format
 msgid "Bibliography"
-msgstr ""
+msgstr "Bibliografio"
 
 #: content/ui/EpubViewerPage.qml:352
 #, kde-format
 msgid "Go to Bibliography"
-msgstr ""
+msgstr "Iri al Bibliografio"
 
 #: content/ui/GridBrowserDelegate.qml:146
 #, kde-format
