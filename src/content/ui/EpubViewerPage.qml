@@ -234,6 +234,19 @@ Kirigami.Page {
             }
         }
     }
+
+    // Allows the user to move pages by rotating the wheel
+    MouseArea {
+        anchors.fill: view
+        onWheel: (event) => {
+            if (event.angleDelta.y > 0) {
+                view.prev()
+            } else {
+                view.next()
+            }
+        }
+    }
+
     footer: QQC2.ToolBar {
         visible: backend.locationsReady
         contentItem: RowLayout {
