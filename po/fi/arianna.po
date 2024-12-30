@@ -1,13 +1,14 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the arianna package.
 # SPDX-FileCopyrightText: 2023, 2024 Tommi Nieminen <translator@legisign.org>
+# Tommi Nieminen <translator@legisign.org>, 2024.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-07 00:39+0000\n"
-"PO-Revision-Date: 2024-10-16 18:25+0300\n"
+"PO-Revision-Date: 2024-12-09 21:04+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -15,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.2\n"
+"X-Generator: Lokalize 22.12.3\n"
 
 #: content/ui/BookDetailsPage.qml:16
 #, kde-format
@@ -135,73 +136,72 @@ msgstr "Seuraava sivu"
 #: content/ui/EpubViewerPage.qml:338
 #, kde-format
 msgid "Loc. %s of %s"
-msgstr ""
+msgstr "Sij. %s/%s"
 
 #: content/ui/EpubViewerPage.qml:339
 #, kde-format
 msgid "Page %s of %s"
-msgstr ""
+msgstr "Sivu %s/%s"
 
 #: content/ui/EpubViewerPage.qml:340
 #, kde-format
 msgid "Page %s"
-msgstr ""
+msgstr "Sivu %s"
 
 #: content/ui/EpubViewerPage.qml:341
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Sulje"
 
 #: content/ui/EpubViewerPage.qml:343
 #, kde-format
 msgid "Footnote"
-msgstr ""
+msgstr "Alaviite"
 
 #: content/ui/EpubViewerPage.qml:344
 #, kde-format
 msgid "Go to Footnote"
-msgstr ""
+msgstr "Siirry alaviitteeseen"
 
 #: content/ui/EpubViewerPage.qml:345
 #, kde-format
 msgid "Endnote"
-msgstr ""
+msgstr "Loppuviite"
 
 #: content/ui/EpubViewerPage.qml:346
 #, kde-format
 msgid "Go to Endnote"
-msgstr ""
+msgstr "Siirry loppuviitteeseen"
 
 #: content/ui/EpubViewerPage.qml:347
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "Muistiinpano"
 
 #: content/ui/EpubViewerPage.qml:348
 #, kde-format
 msgid "Go to Note"
-msgstr ""
+msgstr "Siirry muistiinpanoon"
 
 #: content/ui/EpubViewerPage.qml:349
-#, fuzzy, kde-format
-#| msgid "Description:"
+#, kde-format
 msgid "Definition"
-msgstr "Kuvaus:"
+msgstr "Määritelmä"
 
 #: content/ui/EpubViewerPage.qml:350
 #, kde-format
 msgid "Go to Definition"
-msgstr ""
+msgstr "Siirry määritelmään"
 
 #: content/ui/EpubViewerPage.qml:351
 #, kde-format
 msgid "Bibliography"
-msgstr ""
+msgstr "Lähdeluettelo"
 
 #: content/ui/EpubViewerPage.qml:352
 #, kde-format
 msgid "Go to Bibliography"
-msgstr ""
+msgstr "Siirry lähdeluetteloon"
 
 #: content/ui/GridBrowserDelegate.qml:146
 #, kde-format

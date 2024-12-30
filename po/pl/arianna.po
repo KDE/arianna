@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2024-12-07 00:39+0000\n"
-"PO-Revision-Date: 2024-09-07 11:24+0200\n"
+"PO-Revision-Date: 2024-12-29 08:39+0100\n"
 "Last-Translator: Łukasz Wojniłowicz <lukasz.wojnilowicz@gmail.com>\n"
 "Language-Team: Polish <kde-i18n-doc@kde.org>\n"
 "Language: pl\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 24.12.0\n"
 
 #: content/ui/BookDetailsPage.qml:16
 #, kde-format
@@ -136,73 +136,72 @@ msgstr "Następna strona"
 #: content/ui/EpubViewerPage.qml:338
 #, kde-format
 msgid "Loc. %s of %s"
-msgstr ""
+msgstr "Poł. %s z %s"
 
 #: content/ui/EpubViewerPage.qml:339
 #, kde-format
 msgid "Page %s of %s"
-msgstr ""
+msgstr "Strona %s z %s"
 
 #: content/ui/EpubViewerPage.qml:340
 #, kde-format
 msgid "Page %s"
-msgstr ""
+msgstr "Strona %s"
 
 #: content/ui/EpubViewerPage.qml:341
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Zamknij"
 
 #: content/ui/EpubViewerPage.qml:343
 #, kde-format
 msgid "Footnote"
-msgstr ""
+msgstr "Stopka"
 
 #: content/ui/EpubViewerPage.qml:344
 #, kde-format
 msgid "Go to Footnote"
-msgstr ""
+msgstr "Przejdź do stopki"
 
 #: content/ui/EpubViewerPage.qml:345
 #, kde-format
 msgid "Endnote"
-msgstr ""
+msgstr "Notatka końcowa"
 
 #: content/ui/EpubViewerPage.qml:346
 #, kde-format
 msgid "Go to Endnote"
-msgstr ""
+msgstr "Przejdź do notatki końcowej"
 
 #: content/ui/EpubViewerPage.qml:347
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "Notatka"
 
 #: content/ui/EpubViewerPage.qml:348
 #, kde-format
 msgid "Go to Note"
-msgstr ""
+msgstr "Przejdź do notatki"
 
 #: content/ui/EpubViewerPage.qml:349
-#, fuzzy, kde-format
-#| msgid "Description:"
+#, kde-format
 msgid "Definition"
-msgstr "Opis:"
+msgstr "Definicja"
 
 #: content/ui/EpubViewerPage.qml:350
 #, kde-format
 msgid "Go to Definition"
-msgstr ""
+msgstr "Przejdź do definicji"
 
 #: content/ui/EpubViewerPage.qml:351
 #, kde-format
 msgid "Bibliography"
-msgstr ""
+msgstr "Bibliografia"
 
 #: content/ui/EpubViewerPage.qml:352
 #, kde-format
 msgid "Go to Bibliography"
-msgstr ""
+msgstr "Przejdź do bibliografii"
 
 #: content/ui/GridBrowserDelegate.qml:146
 #, kde-format
