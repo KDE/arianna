@@ -49,8 +49,8 @@ Kirigami.Page {
         if (!root.url || view.loading) {
             return;
         }
-        const renderTo = layouts['auto'].renderTo;
-        const options = JSON.stringify(layouts['auto'].options);
+        const renderTo = layouts[Config.bookReadingStyle].renderTo;
+        const options = JSON.stringify(layouts[Config.bookReadingStyle].options);
         const urlNormalized = JSON.stringify('http://127.0.0.1:45961/book?url=' + encodeURIComponent(root.url));
         view.runJavaScript(`openSync(${urlNormalized})`);
     }
@@ -434,14 +434,13 @@ Kirigami.Page {
             const fontSize = fontDesc.pixelSize
             let fontWeight = 400
             const fontStyle = fontDesc.styleName
-
             const style = {
                 layout: {
                     gap: 0.06,
                     maxInlineSize: 720,
                     maxBlockSize: 1440,
                     maxColumnCount: 2,
-                    flow: 'paginated', // 'scrolled'
+                    flow: layouts[Config.bookReadingStyle].options.flow,
                     animated: true,
                 },
                 style: {

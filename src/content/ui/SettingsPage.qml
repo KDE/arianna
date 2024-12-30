@@ -166,6 +166,54 @@ FormCard.FormCardPage {
         }
     }
 
+
+    FormCard.FormHeader {
+        title: i18n("Reading Style")
+    }
+
+    FormCard.FormCard {
+        FormCard.FormRadioDelegate {
+            text: i18n("Automatic")
+            checked: Config.bookReadingStyle == "auto"
+            onCheckedChanged: {
+                if (checked) {
+                    Config.bookReadingStyle = "auto";
+                    Config.save();
+                }
+            }
+        }
+        FormCard.FormRadioDelegate {
+            text: i18n("Continuous")
+            checked: Config.bookReadingStyle == "continuous"
+            onCheckedChanged: {
+                if (checked) {
+                    Config.bookReadingStyle = "continuous";
+                    Config.save();
+                }
+            }
+        }
+        FormCard.FormRadioDelegate {
+            text: i18n("Single Page")
+            checked: Config.bookReadingStyle == "single"
+            onCheckedChanged: {
+                if (checked) {
+                    Config.bookReadingStyle = "single";
+                    Config.save();
+                }
+            }
+        }
+        FormCard.FormRadioDelegate {
+            text: i18n("Scolled")
+            checked: Config.bookReadingStyle == "scrolled"
+            onCheckedChanged: {
+                if (checked) {
+                    Config.bookReadingStyle = "scrolled";
+                    Config.save();
+                }
+            }
+        }
+    }
+
     FormCard.FormCard {
         Layout.topMargin: Kirigami.Units.largeSpacing
 

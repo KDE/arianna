@@ -67,6 +67,10 @@ SPDX-License-Identifier: CC0-1.0
       <label>Show progress</label>
       <default>true</default>
     </entry>
+    <entry name="bookReadingStyle" type="String">
+      <label>Book Reading Style</label>
+      <default>automatic</default>
+    </entry>
   </group>
 </kcfg>
 
