@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-07 00:39+0000\n"
+"POT-Creation-Date: 2024-12-31 00:39+0000\n"
 "PO-Revision-Date: 2024-12-09 21:04+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
@@ -54,8 +54,8 @@ msgstr "Julkaisupäivä:"
 msgid "Copyright:"
 msgstr "Tekijänoikeudet:"
 
-#: content/ui/EpubViewerPage.qml:76 content/ui/EpubViewerPage.qml:263
-#: content/ui/EpubViewerPage.qml:267
+#: content/ui/EpubViewerPage.qml:76 content/ui/EpubViewerPage.qml:276
+#: content/ui/EpubViewerPage.qml:280
 #, kde-format
 msgid "Loading"
 msgstr "Ladataan"
@@ -107,98 +107,98 @@ msgstr "Kopioi"
 msgid "Find"
 msgstr "Etsi"
 
-#: content/ui/EpubViewerPage.qml:242
+#: content/ui/EpubViewerPage.qml:255
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1 %"
 
-#: content/ui/EpubViewerPage.qml:262
+#: content/ui/EpubViewerPage.qml:275
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "Luvussa aikaa jäljellä:"
 
-#: content/ui/EpubViewerPage.qml:266
+#: content/ui/EpubViewerPage.qml:279
 #, kde-format
 msgid "Time left in book:"
 msgstr "Kirjassa aikaa jäljellä:"
 
-#: content/ui/EpubViewerPage.qml:277
+#: content/ui/EpubViewerPage.qml:290
 #, kde-format
 msgid "Previous Page"
 msgstr "Edellinen sivu"
 
-#: content/ui/EpubViewerPage.qml:303
+#: content/ui/EpubViewerPage.qml:316
 #, kde-format
 msgid "Next Page"
 msgstr "Seuraava sivu"
 
-#: content/ui/EpubViewerPage.qml:338
+#: content/ui/EpubViewerPage.qml:351
 #, kde-format
 msgid "Loc. %s of %s"
 msgstr "Sij. %s/%s"
 
-#: content/ui/EpubViewerPage.qml:339
+#: content/ui/EpubViewerPage.qml:352
 #, kde-format
 msgid "Page %s of %s"
 msgstr "Sivu %s/%s"
 
-#: content/ui/EpubViewerPage.qml:340
+#: content/ui/EpubViewerPage.qml:353
 #, kde-format
 msgid "Page %s"
 msgstr "Sivu %s"
 
-#: content/ui/EpubViewerPage.qml:341
+#: content/ui/EpubViewerPage.qml:354
 #, kde-format
 msgid "Close"
 msgstr "Sulje"
 
-#: content/ui/EpubViewerPage.qml:343
+#: content/ui/EpubViewerPage.qml:356
 #, kde-format
 msgid "Footnote"
 msgstr "Alaviite"
 
-#: content/ui/EpubViewerPage.qml:344
+#: content/ui/EpubViewerPage.qml:357
 #, kde-format
 msgid "Go to Footnote"
 msgstr "Siirry alaviitteeseen"
 
-#: content/ui/EpubViewerPage.qml:345
+#: content/ui/EpubViewerPage.qml:358
 #, kde-format
 msgid "Endnote"
 msgstr "Loppuviite"
 
-#: content/ui/EpubViewerPage.qml:346
+#: content/ui/EpubViewerPage.qml:359
 #, kde-format
 msgid "Go to Endnote"
 msgstr "Siirry loppuviitteeseen"
 
-#: content/ui/EpubViewerPage.qml:347
+#: content/ui/EpubViewerPage.qml:360
 #, kde-format
 msgid "Note"
 msgstr "Muistiinpano"
 
-#: content/ui/EpubViewerPage.qml:348
+#: content/ui/EpubViewerPage.qml:361
 #, kde-format
 msgid "Go to Note"
 msgstr "Siirry muistiinpanoon"
 
-#: content/ui/EpubViewerPage.qml:349
+#: content/ui/EpubViewerPage.qml:362
 #, kde-format
 msgid "Definition"
 msgstr "Määritelmä"
 
-#: content/ui/EpubViewerPage.qml:350
+#: content/ui/EpubViewerPage.qml:363
 #, kde-format
 msgid "Go to Definition"
 msgstr "Siirry määritelmään"
 
-#: content/ui/EpubViewerPage.qml:351
+#: content/ui/EpubViewerPage.qml:364
 #, kde-format
 msgid "Bibliography"
 msgstr "Lähdeluettelo"
 
-#: content/ui/EpubViewerPage.qml:352
+#: content/ui/EpubViewerPage.qml:365
 #, kde-format
 msgid "Go to Bibliography"
 msgstr "Siirry lähdeluetteloon"

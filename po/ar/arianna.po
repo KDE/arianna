@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2024-12-07 00:39+0000\n"
+"POT-Creation-Date: 2024-12-31 00:39+0000\n"
 "PO-Revision-Date: 2024-12-18 17:08+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
@@ -54,8 +54,8 @@ msgstr "تاريخ النشر:"
 msgid "Copyright:"
 msgstr "حقوق النسخ:"
 
-#: content/ui/EpubViewerPage.qml:76 content/ui/EpubViewerPage.qml:263
-#: content/ui/EpubViewerPage.qml:267
+#: content/ui/EpubViewerPage.qml:76 content/ui/EpubViewerPage.qml:276
+#: content/ui/EpubViewerPage.qml:280
 #, kde-format
 msgid "Loading"
 msgstr "جاري التحميل"
@@ -107,98 +107,98 @@ msgstr "انسخ"
 msgid "Find"
 msgstr "اعثر"
 
-#: content/ui/EpubViewerPage.qml:242
+#: content/ui/EpubViewerPage.qml:255
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1٪"
 
-#: content/ui/EpubViewerPage.qml:262
+#: content/ui/EpubViewerPage.qml:275
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "الوقت المتبقي في الفصل:"
 
-#: content/ui/EpubViewerPage.qml:266
+#: content/ui/EpubViewerPage.qml:279
 #, kde-format
 msgid "Time left in book:"
 msgstr "الوقت المتبقي في الكتاب:"
 
-#: content/ui/EpubViewerPage.qml:277
+#: content/ui/EpubViewerPage.qml:290
 #, kde-format
 msgid "Previous Page"
 msgstr "الصفحة السابقة"
 
-#: content/ui/EpubViewerPage.qml:303
+#: content/ui/EpubViewerPage.qml:316
 #, kde-format
 msgid "Next Page"
 msgstr "الصفحة التالية"
 
-#: content/ui/EpubViewerPage.qml:338
+#: content/ui/EpubViewerPage.qml:351
 #, kde-format
 msgid "Loc. %s of %s"
 msgstr "الموقع %s من %s"
 
-#: content/ui/EpubViewerPage.qml:339
+#: content/ui/EpubViewerPage.qml:352
 #, kde-format
 msgid "Page %s of %s"
 msgstr "الصفحة %s من %s"
 
-#: content/ui/EpubViewerPage.qml:340
+#: content/ui/EpubViewerPage.qml:353
 #, kde-format
 msgid "Page %s"
 msgstr "الصفحة %s"
 
-#: content/ui/EpubViewerPage.qml:341
+#: content/ui/EpubViewerPage.qml:354
 #, kde-format
 msgid "Close"
 msgstr "أغلق"
 
-#: content/ui/EpubViewerPage.qml:343
+#: content/ui/EpubViewerPage.qml:356
 #, kde-format
 msgid "Footnote"
 msgstr "الحاشية"
 
-#: content/ui/EpubViewerPage.qml:344
+#: content/ui/EpubViewerPage.qml:357
 #, kde-format
 msgid "Go to Footnote"
 msgstr "انتقل إلى الحاشية"
 
-#: content/ui/EpubViewerPage.qml:345
+#: content/ui/EpubViewerPage.qml:358
 #, kde-format
 msgid "Endnote"
 msgstr "الحاشية الختامية"
 
-#: content/ui/EpubViewerPage.qml:346
+#: content/ui/EpubViewerPage.qml:359
 #, kde-format
 msgid "Go to Endnote"
 msgstr "انتقل إلى الحاشية الختامية"
 
-#: content/ui/EpubViewerPage.qml:347
+#: content/ui/EpubViewerPage.qml:360
 #, kde-format
 msgid "Note"
 msgstr "الملاحظة"
 
-#: content/ui/EpubViewerPage.qml:348
+#: content/ui/EpubViewerPage.qml:361
 #, kde-format
 msgid "Go to Note"
 msgstr "انتقل إلى الملاحظة"
 
-#: content/ui/EpubViewerPage.qml:349
+#: content/ui/EpubViewerPage.qml:362
 #, kde-format
 msgid "Definition"
 msgstr "التعريف"
 
-#: content/ui/EpubViewerPage.qml:350
+#: content/ui/EpubViewerPage.qml:363
 #, kde-format
 msgid "Go to Definition"
 msgstr "انتقل إلى التعريف"
 
-#: content/ui/EpubViewerPage.qml:351
+#: content/ui/EpubViewerPage.qml:364
 #, kde-format
 msgid "Bibliography"
 msgstr "ثبَت مراجع"
 
-#: content/ui/EpubViewerPage.qml:352
+#: content/ui/EpubViewerPage.qml:365
 #, kde-format
 msgid "Go to Bibliography"
 msgstr "انتقل إلى ثبت المراجع"
