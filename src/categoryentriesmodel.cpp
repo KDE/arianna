@@ -379,9 +379,13 @@ std::optional<BookEntry> CategoryEntriesModel::bookFromFile(const QString &filen
 
 void CategoryEntriesModel::entryDataChanged(const BookEntry &entry)
 {
-    int entryIndex = d->entries.indexOf(entry) + d->categoryModels.count();
-    QModelIndex changed = index(entryIndex);
-    Q_EMIT dataChanged(changed, changed);
+    int itemOffset = d->entries.indexOf(entry);
+    if (itemOffset >= 0) {
+        d->entries[itemOffset] = entry;
+        int entryIndex = itemOffset + d->categoryModels.count();
+        QModelIndex changed = index(entryIndex);
+        Q_EMIT dataChanged(changed, changed);
+    }
 }
 
 void CategoryEntriesModel::entryRemove(const BookEntry &entry)
