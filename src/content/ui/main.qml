@@ -276,10 +276,11 @@ Kirigami.ApplicationWindow {
 
         function onOpenBook(filename, locations, currentLocation) {
             const epubViewer = root.pageStack.layers.push('./EpubViewerPage.qml', {
-                url: 'file://' + filename,
-                filename: filename,
-                locations: locations,
                 currentLocation: currentLocation,
+                locations: locations,
+                filename: filename,
+                // url change is a loading trigger so put this last
+                url: 'file://' + filename
             });
 
             epubViewer.relocated.connect((newLocation, newProgress) => {

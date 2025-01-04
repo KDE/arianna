@@ -52,7 +52,9 @@ Kirigami.Page {
         const renderTo = layouts['auto'].renderTo;
         const options = JSON.stringify(layouts['auto'].options);
         const urlNormalized = JSON.stringify('http://127.0.0.1:45961/book?url=' + encodeURIComponent(root.url));
-        view.runJavaScript(`openSync(${urlNormalized})`);
+        const initCfi = currentLocation ? JSON.stringify(currentLocation) : "null";
+        console.info("opening book", root.url, " to ", initCfi);
+        view.runJavaScript(`openSync(${urlNormalized}, ${initCfi})`);
     }
 
     title: backend.metadata ? backend.metadata.title : ''
@@ -385,10 +387,6 @@ Kirigami.Page {
                 if (metadata) {
                     backend.metadata = metadata;
                     root.bookReady(backend.metadata.title);
-
-                    if (metadata.identifier && currentLocation.length > 0) {
-                        view.runJavaScript(`reader.view.init({'lastLocation': "${currentLocation}"})`)
-                    }
                     //Database.addBook(backend.file, JSON.stringify(metadata));
                 } else {
                     view.runJavaScript('reader.view.next()');

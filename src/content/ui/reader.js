@@ -109,7 +109,7 @@ const isFBZ = ({ name, type }) =>
     type === 'application/x-zip-compressed-fb2'
     || name.endsWith('.fb2.zip') || name.endsWith('.fbz')
 
-const open = async url => {
+const open = async (url, initCfi) => {
     const response = await fetch(url);
     const file = await response.blob();
     file.name = response.url.split('/').pop();
@@ -155,15 +155,14 @@ const open = async url => {
         dispatch({ type: 'book-error', payload: 'unsupported-type' }) //payload type will change here.
         return
     }
-
-    const reader = new Reader(book)
+    const reader = new Reader(book, initCfi)
     globalThis.reader = reader
     await reader.init()
     dispatch({ type: 'book-ready', payload: { book, reader } })
 }
 
-globalThis.openSync = function(url) {
-    open(url);
+globalThis.openSync = function (url, initCfi) {
+    open(url, initCfi);
 }
 
 const getCSS = ({
@@ -369,8 +368,9 @@ class Reader {
         hyphenate: true,
         invert: false,
     }
-    constructor(book) {
+    constructor(book, initCfi) {
         this.book = book
+        this.initCfi = initCfi;
         if (book.metadata?.description)
             book.metadata.description = toPangoMarkup(book.metadata.description)
         this.pageTotal = book.pageList
@@ -420,10 +420,11 @@ class Reader {
         console.log('window.innerHeight', window.innerHeight)
         this.view.height = window.innerHeight;
         this.view.width = window.innerWidth;
-        this.#handleEvents()
-        await this.view.open(this.book)
         document.body.append(this.view)
         this.sectionFractions = this.view.getSectionFractions()
+        await this.view.open(this.book)
+        await this.view.init({ lastLocation: this.initCfi })
+        this.#handleEvents()
     }
     setAppearance({ style, layout, autohideCursor }) {
         Object.assign(this.style, style)
@@ -486,7 +487,7 @@ class Reader {
                     pageItem: e.detail.pageItem,
                     cfi: e.detail.cfi
                 }
-            });        
+            });
         })
         this.view.addEventListener('create-overlay', e =>
             dispatch({ type: 'create-overlay', payload: e.detail }))
