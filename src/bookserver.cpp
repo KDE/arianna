@@ -11,7 +11,11 @@ using namespace Qt::StringLiterals;
 BookServer::BookServer()
 {
     server.route(u"/book"_s, [](const QHttpServerRequest &request) {
-        const auto fileName = QUrl::fromPercentEncoding(request.query().queryItemValue(u"url"_s).toUtf8()).replace(QLatin1Char('+'), QLatin1Char(' '));
+        // + is an standing for %20
+        // fromPercentEncoded doesn't handle it but it needs to come first
+        // otherwise we end up with %2B -> + -> ' ' which won't be the correct path
+        const QByteArray spaceReplaced = request.query().queryItemValue(u"url"_s).toUtf8().replace('+', ' ');
+        const auto fileName = QUrl::fromPercentEncoding(spaceReplaced);
         if (!fileName.endsWith(u".epub"_s)) {
             return QHttpServerResponse{QHttpServerResponder::StatusCode::Unauthorized};
         }
