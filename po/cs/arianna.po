@@ -150,12 +150,12 @@ msgstr ""
 #: content/ui/EpubViewerPage.qml:356
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Zavřít"
 
 #: content/ui/EpubViewerPage.qml:358
 #, kde-format
 msgid "Footnote"
-msgstr ""
+msgstr "Poznámka pod čarou"
 
 #: content/ui/EpubViewerPage.qml:359
 #, kde-format
@@ -165,7 +165,7 @@ msgstr ""
 #: content/ui/EpubViewerPage.qml:360
 #, kde-format
 msgid "Endnote"
-msgstr ""
+msgstr "Poznámka na konci"
 
 #: content/ui/EpubViewerPage.qml:361
 #, kde-format
@@ -175,7 +175,7 @@ msgstr ""
 #: content/ui/EpubViewerPage.qml:362
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "Poznámka"
 
 #: content/ui/EpubViewerPage.qml:363
 #, kde-format
@@ -183,20 +183,19 @@ msgid "Go to Note"
 msgstr ""
 
 #: content/ui/EpubViewerPage.qml:364
-#, fuzzy, kde-format
-#| msgid "Description:"
+#, kde-format
 msgid "Definition"
-msgstr "Popis:"
+msgstr "Definice"
 
 #: content/ui/EpubViewerPage.qml:365
 #, kde-format
 msgid "Go to Definition"
-msgstr ""
+msgstr "Přejít na definici"
 
 #: content/ui/EpubViewerPage.qml:366
 #, kde-format
 msgid "Bibliography"
-msgstr ""
+msgstr "Seznam použité literatury"
 
 #: content/ui/EpubViewerPage.qml:367
 #, kde-format
