@@ -134,7 +134,7 @@ public:
 
     Q_INVOKABLE static QString getMimetype(const QString &filePath);
 
-    Q_INVOKABLE void addFile(const QUrl &filePath);
+    Q_INVOKABLE void addFiles(const QList<QUrl> &filePaths);
 
 private:
     bool isComplete() const;

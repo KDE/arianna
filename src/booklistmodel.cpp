@@ -179,9 +179,13 @@ ContentList *BookListModel::contentModel() const
 void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int last)
 {
     d->initializeSubModels(this);
-    int role = ContentList::FilePathRole;
+
+    // Process items in batches for better performance
+    QList<BookEntry> newEntries;
+    newEntries.reserve(last - first + 1);
+
     for (int i = first; i < last + 1; ++i) {
-        QVariant filePath = d->contentModel->data(d->contentModel->index(first, 0, index), role);
+        QVariant filePath = d->contentModel->data(d->contentModel->index(first, 0, index), ContentList::FilePathRole);
         BookEntry entry;
         entry.filename = filePath.toUrl().toLocalFile();
         QStringList splitName = entry.filename.split(QLatin1Char('/'));
@@ -252,9 +256,15 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
             }
         }
 
+        newEntries.append(entry);
+    }
+
+    // Batch process the entries
+    for (const BookEntry &entry : std::as_const(newEntries)) {
         d->addEntry(this, entry);
         BookDatabase::self().addEntry(entry);
     }
+
     Q_EMIT countChanged();
 }
 

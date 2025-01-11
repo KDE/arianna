@@ -291,9 +291,11 @@ void ContentList::Private::replace(QueryListProperty *property, qsizetype index,
     }
 }
 
-void ContentList::addFile(const QUrl &filePath)
+void ContentList::addFiles(const QList<QUrl> &filePaths)
 {
-    d->manualContentLister->addFile(filePath);
+    if (d->manualContentLister) {
+        d->manualContentLister->addFiles(filePaths);
+    }
 }
 
 #include "moc_contentlist.cpp"

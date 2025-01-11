@@ -337,16 +337,16 @@ Kirigami.ApplicationWindow {
 
     Kirigami.Action {
         id: addBookAction
-        text: i18nc("@action:button", "Add Book…")
+        text: i18nc("@action:button", "Add Book(s)…")
         icon.name: "list-add"
         onTriggered: {
             const fileDialog = openFileDialog.createObject(QQC2.ApplicationWindow.overlay)
             fileDialog.accepted.connect(() => {
-                const file = fileDialog.file;
-                if (!file) {
+                const files = fileDialog.files;
+                if (!files || files.length === 0) {
                     return;
                 }
-                contentList.addFile(file)
+                contentList.addFiles(files)
             })
             fileDialog.open();
         }
@@ -358,8 +358,9 @@ Kirigami.ApplicationWindow {
         FileDialog {
             id: root
             parentWindow: applicationWindow()
-            title: i18n("Please choose a file")
+            title: i18n("Please choose files")
             nameFilters: [i18nc("Name filter for EPUB files", "eBook files (*.epub *.cb* *.fb2 *.fb2zip)")]
+            fileMode: FileDialog.OpenFiles // Changed to support multiple files
         }
     }
 

@@ -15,7 +15,7 @@ public:
 
     void startSearch(const QList<ContentQuery *> &queries) override;
 
-    bool addFile(const QUrl &filePath);
+    bool addFiles(const QList<QUrl> &filePaths);
 
 private:
     class Private;

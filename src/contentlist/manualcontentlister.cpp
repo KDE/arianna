@@ -33,24 +33,31 @@ void ManualContentLister::startSearch(const QList<ContentQuery *> &queries)
     d->queries = queries;
 }
 
-bool ManualContentLister::addFile(const QUrl &filePath)
+bool ManualContentLister::addFiles(const QList<QUrl> &filePaths)
 {
-    const auto &mimeType = d->mimeDatabase.mimeTypeForFile(filePath.toLocalFile()).name();
-    bool mimeTypeAccepted = false;
-    for (const auto &query : std::as_const(d->queries)) {
-        if (query->mimeTypes().contains(mimeType)) {
-            mimeTypeAccepted = true;
+    bool allSucceeded = true;
+
+    for (const QUrl &filePath : filePaths) {
+        const auto &mimeType = d->mimeDatabase.mimeTypeForFile(filePath.toLocalFile()).name();
+        bool mimeTypeAccepted = false;
+
+        for (const auto &query : std::as_const(d->queries)) {
+            if (query->mimeTypes().contains(mimeType)) {
+                mimeTypeAccepted = true;
+                break;
+            }
         }
+
+        if (!mimeTypeAccepted) {
+            allSucceeded = false;
+            continue;
+        }
+
+        auto metadata = ContentListerBase::metaDataForFile(filePath.toLocalFile());
+        Q_EMIT fileFound(filePath.toLocalFile(), metadata);
     }
-    if (!mimeTypeAccepted) {
-        return false;
-    }
 
-    auto metadata = ContentListerBase::metaDataForFile(filePath.toLocalFile());
-
-    Q_EMIT fileFound(filePath.toLocalFile(), metadata);
-
-    return true;
+    return allSucceeded;
 }
 
 #include "moc_manualcontentlister.cpp"
