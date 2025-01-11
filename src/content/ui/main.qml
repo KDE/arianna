@@ -337,7 +337,7 @@ Kirigami.ApplicationWindow {
 
     Kirigami.Action {
         id: addBookAction
-        text: i18nc("@action:button", "Add Book(s)…")
+        text: i18nc("@action:button", "Add Books…")
         icon.name: "list-add"
         onTriggered: {
             const fileDialog = openFileDialog.createObject(QQC2.ApplicationWindow.overlay)
