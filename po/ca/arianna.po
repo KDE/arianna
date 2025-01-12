@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-06 00:39+0000\n"
+"POT-Creation-Date: 2025-01-12 00:39+0000\n"
 "PO-Revision-Date: 2024-12-06 09:59+0100\n"
 "Last-Translator: Josep M. Ferrer <txemaq@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -88,7 +88,7 @@ msgstr "No hi ha cap llibre seleccionat"
 msgid "Open file"
 msgstr "Obre un fitxer"
 
-#: content/ui/EpubViewerPage.qml:177 content/ui/main.qml:361
+#: content/ui/EpubViewerPage.qml:177
 #, kde-format
 msgid "Please choose a file"
 msgstr "Trieu un fitxer"
@@ -308,10 +308,18 @@ msgid "Settings"
 msgstr "Configuració"
 
 #: content/ui/main.qml:340
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Add Book…"
 msgctxt "@action:button"
-msgid "Add Book…"
+msgid "Add Books…"
 msgstr "Afegeix un llibre…"
+
+#: content/ui/main.qml:361
+#, fuzzy, kde-format
+#| msgid "Please choose a file"
+msgid "Please choose files"
+msgstr "Trieu un fitxer"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format

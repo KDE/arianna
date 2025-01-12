@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-06 00:39+0000\n"
+"POT-Creation-Date: 2025-01-12 00:39+0000\n"
 "PO-Revision-Date: 2024-12-06 15:53+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -86,7 +86,7 @@ msgstr "Не позначено жодної книги"
 msgid "Open file"
 msgstr "Відкрити файл"
 
-#: content/ui/EpubViewerPage.qml:177 content/ui/main.qml:361
+#: content/ui/EpubViewerPage.qml:177
 #, kde-format
 msgid "Please choose a file"
 msgstr "Будь ласка, виберіть файл"
@@ -306,10 +306,18 @@ msgid "Settings"
 msgstr "Параметри"
 
 #: content/ui/main.qml:340
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Add Book…"
 msgctxt "@action:button"
-msgid "Add Book…"
+msgid "Add Books…"
 msgstr "Додати книгу…"
+
+#: content/ui/main.qml:361
+#, fuzzy, kde-format
+#| msgid "Please choose a file"
+msgid "Please choose files"
+msgstr "Будь ласка, виберіть файл"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format

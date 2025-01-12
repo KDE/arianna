@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-06 00:39+0000\n"
+"POT-Creation-Date: 2025-01-12 00:39+0000\n"
 "PO-Revision-Date: 2024-09-27 13:37+0200\n"
 "Last-Translator: Frank Steinmetzger <dev-kde@felsenfleischer.de>\n"
 "Language-Team: English <kde-i18n-de@kde.org>\n"
@@ -89,7 +89,7 @@ msgstr "Kein Buch ausgewählt"
 msgid "Open file"
 msgstr "Datei öffnen"
 
-#: content/ui/EpubViewerPage.qml:177 content/ui/main.qml:361
+#: content/ui/EpubViewerPage.qml:177
 #, kde-format
 msgid "Please choose a file"
 msgstr "Bitte wählen Sie eine Datei"
@@ -310,10 +310,18 @@ msgid "Settings"
 msgstr "Einstellungen"
 
 #: content/ui/main.qml:340
-#, kde-format
+#, fuzzy, kde-format
+#| msgctxt "@action:button"
+#| msgid "Add Book…"
 msgctxt "@action:button"
-msgid "Add Book…"
+msgid "Add Books…"
 msgstr "Buch hinzufügen …"
+
+#: content/ui/main.qml:361
+#, fuzzy, kde-format
+#| msgid "Please choose a file"
+msgid "Please choose files"
+msgstr "Bitte wählen Sie eine Datei"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format
