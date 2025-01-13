@@ -1,13 +1,13 @@
 # Copyright (C) YEAR This file is copyright:
 # This file is distributed under the same license as the arianna package.
 #
-# Yuri Chornoivan <yurchor@ukr.net>, 2022, 2023, 2024.
+# Yuri Chornoivan <yurchor@ukr.net>, 2022, 2023, 2024, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-12 00:39+0000\n"
-"PO-Revision-Date: 2024-12-06 15:53+0200\n"
+"PO-Revision-Date: 2025-01-12 19:19+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
 "Language: uk\n"
@@ -306,18 +306,15 @@ msgid "Settings"
 msgstr "Параметри"
 
 #: content/ui/main.qml:340
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
-msgstr "Додати книгу…"
+msgstr "Додати книги…"
 
 #: content/ui/main.qml:361
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
-msgstr "Будь ласка, виберіть файл"
+msgstr "Будь ласка, виберіть файли"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format

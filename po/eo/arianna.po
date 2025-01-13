@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-12 00:39+0000\n"
-"PO-Revision-Date: 2024-12-26 21:43+0100\n"
+"PO-Revision-Date: 2025-01-12 08:09+0100\n"
 "Last-Translator: Oliver Kellogg <olivermkellogg@gmail.com>\n"
 "Language-Team: Esperanto <kde-i18n-eo@kde.org>\n"
 "Language: eo\n"
@@ -306,18 +306,15 @@ msgid "Settings"
 msgstr "Agordoj"
 
 #: content/ui/main.qml:340
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
-msgstr "Aldoni Libron…"
+msgstr "Aldoni Librojn…"
 
 #: content/ui/main.qml:361
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
-msgstr "Bonvolu elekti dosieron"
+msgstr "Bonvolu elekti dosierojn"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format

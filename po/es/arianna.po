@@ -1,12 +1,12 @@
 # Translation of arianna to Spanish
 #
-# SPDX-FileCopyrightText: 2022, 2023, 2024 Eloy Cuadra <ecuadra@eloihr.net>
+# SPDX-FileCopyrightText: 2022, 2023, 2024, 2025 Eloy Cuadra <ecuadra@eloihr.net>
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-12 00:39+0000\n"
-"PO-Revision-Date: 2024-12-06 02:35+0100\n"
+"PO-Revision-Date: 2025-01-12 13:08+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -14,7 +14,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 24.08.3\n"
+"X-Generator: Lokalize 24.12.0\n"
 
 #: content/ui/BookDetailsPage.qml:16
 #, kde-format
@@ -304,18 +304,15 @@ msgid "Settings"
 msgstr "Preferencias"
 
 #: content/ui/main.qml:340
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
-msgstr "Añadir libro..."
+msgstr "Añadir libros..."
 
 #: content/ui/main.qml:361
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
-msgstr "Escoja un archivo"
+msgstr "Escoja archivos"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format

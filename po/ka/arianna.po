@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-12 00:39+0000\n"
-"PO-Revision-Date: 2024-12-06 03:59+0100\n"
+"PO-Revision-Date: 2025-01-12 05:19+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -306,18 +306,15 @@ msgid "Settings"
 msgstr "მორგება"
 
 #: content/ui/main.qml:340
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
 msgstr "წიგნის დამატება…"
 
 #: content/ui/main.qml:361
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
-msgstr "გთხოვთ, აირჩიოთ ფაილი"
+msgstr "გთხოვთ, აირჩიოთ ფაილები"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format

@@ -305,18 +305,15 @@ msgid "Settings"
 msgstr "设置"
 
 #: content/ui/main.qml:340
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
-msgstr "添加图书"
+msgstr ""
 
 #: content/ui/main.qml:361
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
-msgstr "请选择一个文件"
+msgstr ""
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format
