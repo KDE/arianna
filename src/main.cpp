@@ -126,10 +126,10 @@ int main(int argc, char *argv[])
 
                                  if (arguments.count() > 1) {
                                      const auto entry = BookDatabase::self().loadEntry(arguments[1]);
-                                     if (auto book = entry) {
-                                         Q_EMIT navigation.openBook(arguments[1], book->locations, book->currentLocation);
+                                     if (entry) {
+                                         Q_EMIT navigation.openBook(arguments[1], entry->locations, entry->currentLocation, *entry);
                                      } else {
-                                         Q_EMIT navigation.openBook(arguments[1], {}, {});
+                                         Q_EMIT navigation.openBook(arguments[1], {}, {}, BookEntry{});
                                      }
                                  }
                                  return;
@@ -140,10 +140,10 @@ int main(int argc, char *argv[])
     const QStringList args = parser.positionalArguments();
     if (!args.isEmpty()) {
         const auto entry = BookDatabase::self().loadEntry(args[0]);
-        if (const auto book = entry) {
-            Q_EMIT navigation.openBook(args[0], book->locations, book->currentLocation);
+        if (entry) {
+            Q_EMIT navigation.openBook(args[0], entry->locations, entry->currentLocation, *entry);
         } else {
-            Q_EMIT navigation.openBook(args[0], {}, {});
+            Q_EMIT navigation.openBook(args[0], {}, {}, BookEntry{});
         }
     }
 

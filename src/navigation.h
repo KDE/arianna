@@ -15,7 +15,7 @@ public:
     explicit Navigation(QObject *parent = nullptr);
 
 Q_SIGNALS:
-    void openBook(const QString &fileName, const QString &locations, const QString &currentLocation);
+    void openBook(const QString &fileName, const QString &locations, const QString &currentLocation, const BookEntry &entry);
 
     void openLibrary(const QString &title, CategoryEntriesModel *model, bool replace);
 

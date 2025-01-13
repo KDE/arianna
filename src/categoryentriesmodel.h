@@ -9,9 +9,8 @@
 #include <optional>
 
 class CategoryEntriesModel;
-/**
- * \brief A struct for an Entry to the Book Database.
- */
+
+/// \brief A struct for an Entry to the Book Database.
 struct BookEntry {
     Q_GADGET
     Q_PROPERTY(QString filename MEMBER filename CONSTANT)
@@ -128,7 +127,8 @@ public:
         GenreRole, /// For getting a stringlist with genres assigned to this book.
         KeywordRole, /// For getting a stringlist with keywords assigned to this book. Where tags are user assigned, keywords come from the book itself.
         CharacterRole, /// For getting a stringlist with names of characters in this book.
-        LocationsRole /// Epub locations cache
+        LocationsRole, /// Epub locations cache
+        EntryRole,
     };
     Q_ENUM(Roles)
 

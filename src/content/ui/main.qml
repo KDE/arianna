@@ -140,11 +140,12 @@ Kirigami.ApplicationWindow {
                         required property string filename
                         required property string locations
                         required property string currentLocation
+                        required property var entry
 
                         highlighted: activeFocus
 
                         onClicked: {
-                            Navigation.openBook(filename, locations, currentLocation);
+                            Navigation.openBook(filename, locations, currentLocation, entry);
                             searchDialog.close();
                         }
 
@@ -274,11 +275,12 @@ Kirigami.ApplicationWindow {
     Connections {
         target: Navigation
 
-        function onOpenBook(filename, locations, currentLocation) {
+        function onOpenBook(filename, locations, currentLocation, entry) {
             const epubViewer = root.pageStack.layers.push('./EpubViewerPage.qml', {
                 currentLocation: currentLocation,
                 locations: locations,
                 filename: filename,
+                entry: entry,
                 // url change is a loading trigger so put this last
                 url: 'file://' + filename
             });

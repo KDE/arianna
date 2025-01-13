@@ -6,7 +6,8 @@ import QtQuick.Controls 2.15 as QQC2
 import QtWebEngine 1.4
 import QtWebChannel 1.4
 import QtQuick.Layouts 1.15
-import org.kde.kirigami 2.13 as Kirigami
+import org.kde.kirigami as Kirigami
+import org.kde.kirigamiaddons.components as Components
 import org.kde.quickcharts 1.0 as Charts
 import org.kde.arianna 1.0
 
@@ -51,6 +52,7 @@ Kirigami.ScrollablePage {
             required property string title
             required property string filename
             required property var author
+            required property var entry
             required property var locations
             required property var currentLocation
             required property int categoryEntriesCount
@@ -74,7 +76,29 @@ Kirigami.ScrollablePage {
             onClicked: if (categoryEntriesModel) {
                 Navigation.openLibrary(title, categoryEntriesModel, false);
             } else {
-                Navigation.openBook(filename, locations, currentLocation);
+                Navigation.openBook(filename, locations, currentLocation, entry);
+            }
+
+            TapHandler {
+                acceptedButtons: Qt.RightButton
+                onTapped: {
+                    menu.entry = bookDelegate.entry;
+                    menu.popup();
+                }
+            }
+        }
+
+        Components.ConvergentContextMenu {
+            id: menu
+
+            property var entry: null
+
+            QQC2.Action {
+                icon.name: 'documentinfo-symbolic'
+                text: i18nc("@action:inmenu", "Book Details")
+                onTriggered: applicationWindow().pageStack.pushDialogLayer(Qt.resolvedUrl("./BookDetailsPage.qml"), {
+                    metadata: menu.entry,
+                })
             }
         }
 

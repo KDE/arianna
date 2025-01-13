@@ -18,6 +18,7 @@ Kirigami.Page {
     property string filename
     property string locations
     property string currentLocation
+    property var entry: null
     readonly property color readerTheme: Kirigami.Theme.backgroundColor
     readonly property bool hideSidebar: true
 
@@ -133,7 +134,7 @@ Kirigami.Page {
             enabled: backend.metadata
             onTriggered: {
                 applicationWindow().pageStack.pushDialogLayer(Qt.resolvedUrl("./BookDetailsPage.qml"), {
-                    metadata: backend.metadata,
+                    metadata: root.entry,
                 })
             }
         }
@@ -387,7 +388,6 @@ Kirigami.Page {
                 if (metadata) {
                     backend.metadata = metadata;
                     root.bookReady(backend.metadata.title);
-                    //Database.addBook(backend.file, JSON.stringify(metadata));
                 } else {
                     view.runJavaScript('reader.view.next()');
                 }

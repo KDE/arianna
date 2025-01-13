@@ -61,6 +61,7 @@ QHash<int, QByteArray> CategoryEntriesModel::roleNames() const
         {TagsRole, "tags"},
         {RatingRole, "rating"},
         {LocationsRole, "locations"},
+        {EntryRole, "entry"},
     };
 }
 
@@ -97,6 +98,8 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
     } else {
         const BookEntry &entry = d->entries[index.row() - d->categoryModels.count()];
         switch (role) {
+        case EntryRole:
+            return QVariant::fromValue(entry);
         case Qt::DisplayRole:
         case FilenameRole:
             return entry.filename;
