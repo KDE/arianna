@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-14 00:39+0000\n"
-"PO-Revision-Date: 2025-01-12 05:19+0100\n"
+"PO-Revision-Date: 2025-01-14 05:21+0100\n"
 "Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
 "Language-Team: Georgian <kde-i18n-doc@kde.org>\n"
 "Language: ka\n"
@@ -215,8 +215,7 @@ msgid "Library"
 msgstr "ბიბლიოთეკა"
 
 #: content/ui/LibraryPage.qml:98
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "წიგნის დეტალები"

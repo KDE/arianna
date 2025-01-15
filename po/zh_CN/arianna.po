@@ -214,8 +214,7 @@ msgid "Library"
 msgstr "图书馆"
 
 #: content/ui/LibraryPage.qml:98
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "图书详情"

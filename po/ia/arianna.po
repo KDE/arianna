@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-14 00:39+0000\n"
-"PO-Revision-Date: 2025-01-13 12:01+0100\n"
+"PO-Revision-Date: 2025-01-14 18:11+0100\n"
 "Last-Translator: giovanni <g.sora@tiscali.it>\n"
 "Language-Team: Interlingua <kde-i18n-doc@kde.org>\n"
 "Language: ia\n"
@@ -214,8 +214,7 @@ msgid "Library"
 msgstr "Libreria"
 
 #: content/ui/LibraryPage.qml:98
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "Detalios de libro"
