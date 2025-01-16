@@ -7,6 +7,7 @@ SPDX-License-Identifier: LGPL-3.0-or-later
     <file>content/ui/main.qml</file>
     <file>content/ui/BookDetailsPage.qml</file>
     <file>content/ui/SettingsPage.qml</file>
+    <file>content/ui/ColorScheme.qml</file>
     <file>content/ui/LibraryPage.qml</file>
     <file>content/ui/EpubViewerPage.qml</file>
     <file>content/ui/TableOfContentDrawer.qml</file>

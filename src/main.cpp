@@ -28,6 +28,7 @@
 #include "booklistmodel.h"
 #include "bookserver.h"
 #include "clipboard.h"
+#include "colorschemer.h"
 #include "config.h"
 #include "contentlist/contentlist.h"
 #include "contentlist/contentquery.h"
@@ -90,6 +91,7 @@ int main(int argc, char *argv[])
     about.processCommandLine(&parser);
 
     Clipboard clipboard;
+    ColorSchemer colorScheme;
     Format format;
     Navigation navigation;
     qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Config", Config::self());

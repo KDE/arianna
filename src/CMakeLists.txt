@@ -23,6 +23,8 @@ target_sources(arianna_static PRIVATE
     bookserver.h
     categoryentriesmodel.cpp
     categoryentriesmodel.h
+    colorschemer.cpp
+    colorschemer.h
     propertycontainer.cpp
     propertycontainer.h
     booklistmodel.cpp
@@ -31,10 +33,8 @@ target_sources(arianna_static PRIVATE
     epubcontainer.h
     tableofcontentmodel.cpp
     tableofcontentmodel.h
-
     navigation.cpp
     navigation.h
-
     contentlist/contentlist.cpp
     contentlist/contentlist.h
     contentlist/contentquery.cpp
@@ -72,6 +72,7 @@ target_link_libraries(arianna_static PUBLIC
     KF6::Archive
     KF6::CoreAddons
     KF6::Crash
+    KF6::ColorScheme
 )
 
 target_link_libraries(arianna_static PUBLIC Qt::WebEngineQuick)

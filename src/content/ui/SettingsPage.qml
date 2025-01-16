@@ -164,6 +164,13 @@ FormCard.FormCardPage {
                 Config.save();
             }
         }
+
+        Loader {
+            id: colorSchemeDelegate
+            sourceComponent: Qt.createComponent('ColorScheme.qml')
+            Layout.fillWidth: true
+        }
+
     }
 
     FormCard.FormCard {
