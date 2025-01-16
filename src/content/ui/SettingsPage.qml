@@ -165,12 +165,9 @@ FormCard.FormCardPage {
             }
         }
 
-        Loader {
-            id: colorSchemeDelegate
-            sourceComponent: Qt.createComponent('ColorScheme.qml')
-            Layout.fillWidth: true
-        }
+        FormCard.FormDelegateSeparator {}
 
+        ColorSchemeDelegate {}
     }
 
     FormCard.FormCard {
