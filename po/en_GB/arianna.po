@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-01-14 00:39+0000\n"
+"POT-Creation-Date: 2025-01-17 00:39+0000\n"
 "PO-Revision-Date: 2024-09-07 12:23+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -53,8 +53,13 @@ msgstr "Publishing date:"
 msgid "Copyright:"
 msgstr "Copyright:"
 
-#: content/ui/EpubViewerPage.qml:79 content/ui/EpubViewerPage.qml:279
-#: content/ui/EpubViewerPage.qml:283
+#: content/ui/ColorSchemeDelegate.qml:13
+#, kde-format
+msgid "Color theme"
+msgstr ""
+
+#: content/ui/EpubViewerPage.qml:79 content/ui/EpubViewerPage.qml:280
+#: content/ui/EpubViewerPage.qml:284
 #, kde-format
 msgid "Loading"
 msgstr "Loading"
@@ -106,99 +111,99 @@ msgstr "Copy"
 msgid "Find"
 msgstr "Find"
 
-#: content/ui/EpubViewerPage.qml:258
+#: content/ui/EpubViewerPage.qml:259
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1%"
 
-#: content/ui/EpubViewerPage.qml:278
+#: content/ui/EpubViewerPage.qml:279
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "Time left in chapter:"
 
-#: content/ui/EpubViewerPage.qml:282
+#: content/ui/EpubViewerPage.qml:283
 #, kde-format
 msgid "Time left in book:"
 msgstr "Time left in book:"
 
-#: content/ui/EpubViewerPage.qml:293
+#: content/ui/EpubViewerPage.qml:294
 #, kde-format
 msgid "Previous Page"
 msgstr "Previous Page"
 
-#: content/ui/EpubViewerPage.qml:319
+#: content/ui/EpubViewerPage.qml:320
 #, kde-format
 msgid "Next Page"
 msgstr "Next Page"
 
-#: content/ui/EpubViewerPage.qml:354
+#: content/ui/EpubViewerPage.qml:355
 #, kde-format
 msgid "Loc. %s of %s"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:355
+#: content/ui/EpubViewerPage.qml:356
 #, kde-format
 msgid "Page %s of %s"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:356
+#: content/ui/EpubViewerPage.qml:357
 #, kde-format
 msgid "Page %s"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:357
+#: content/ui/EpubViewerPage.qml:358
 #, kde-format
 msgid "Close"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:359
+#: content/ui/EpubViewerPage.qml:360
 #, kde-format
 msgid "Footnote"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:360
+#: content/ui/EpubViewerPage.qml:361
 #, kde-format
 msgid "Go to Footnote"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:361
+#: content/ui/EpubViewerPage.qml:362
 #, kde-format
 msgid "Endnote"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:362
+#: content/ui/EpubViewerPage.qml:363
 #, kde-format
 msgid "Go to Endnote"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:363
+#: content/ui/EpubViewerPage.qml:364
 #, kde-format
 msgid "Note"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:364
+#: content/ui/EpubViewerPage.qml:365
 #, kde-format
 msgid "Go to Note"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:365
+#: content/ui/EpubViewerPage.qml:366
 #, fuzzy, kde-format
 #| msgid "Description:"
 msgid "Definition"
 msgstr "Description:"
 
-#: content/ui/EpubViewerPage.qml:366
+#: content/ui/EpubViewerPage.qml:367
 #, kde-format
 msgid "Go to Definition"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:367
+#: content/ui/EpubViewerPage.qml:368
 #, kde-format
 msgid "Bibliography"
 msgstr ""
 
-#: content/ui/EpubViewerPage.qml:368
+#: content/ui/EpubViewerPage.qml:369
 #, kde-format
 msgid "Go to Bibliography"
 msgstr ""
@@ -227,7 +232,7 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Add some books"
 
-#: content/ui/main.qml:18 content/ui/main.qml:302 main.cpp:64
+#: content/ui/main.qml:18 content/ui/main.qml:302 main.cpp:65
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
@@ -351,7 +356,7 @@ msgstr "Show progress"
 msgid "Font"
 msgstr "Font"
 
-#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:190
+#: content/ui/SettingsPage.qml:72 content/ui/SettingsPage.qml:194
 #, kde-format
 msgid "Change default font"
 msgstr "Change default font"
@@ -396,12 +401,12 @@ msgstr "Colours"
 msgid "Invert colors"
 msgstr "Invert colours"
 
-#: content/ui/SettingsPage.qml:173
+#: content/ui/SettingsPage.qml:177
 #, kde-format
 msgid "About Arianna"
 msgstr "About Arianna"
 
-#: content/ui/SettingsPage.qml:181
+#: content/ui/SettingsPage.qml:185
 #, kde-format
 msgid "About KDE"
 msgstr "About KDE"
@@ -424,49 +429,49 @@ msgctxt "@info:title"
 msgid "Table of Contents"
 msgstr "Table of Contents"
 
-#: main.cpp:66
+#: main.cpp:67
 #, kde-format
 msgid "EPub Reader"
 msgstr "EPub Reader"
 
-#: main.cpp:68
+#: main.cpp:69
 #, kde-format
 msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 
-#: main.cpp:69
+#: main.cpp:70
 #, kde-format
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:69 main.cpp:70
+#: main.cpp:70 main.cpp:71
 #, kde-format
 msgid "Maintainer"
 msgstr "Maintainer"
 
-#: main.cpp:70
+#: main.cpp:71
 #, kde-format
 msgid "Carl Schwan"
 msgstr "Carl Schwan"
 
-#: main.cpp:71
+#: main.cpp:72
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Steve Allewell"
 
-#: main.cpp:71
+#: main.cpp:72
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "steve.allewell@gmail.com"
 
-#: main.cpp:85
+#: main.cpp:86
 #, kde-format
 msgid "Epub reader"
 msgstr "EPub reader"
 
-#: main.cpp:86
+#: main.cpp:87
 #, kde-format
 msgid "Epub file to open"
 msgstr "EPub file to open"
