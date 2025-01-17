@@ -241,6 +241,7 @@ Kirigami.Page {
     // Allows the user to move pages by rotating the wheel
     MouseArea {
         anchors.fill: view
+        acceptedButtons: Qt.NoButton
         onWheel: (event) => {
             if (event.angleDelta.y > 0) {
                 view.prev()
