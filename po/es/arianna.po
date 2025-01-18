@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-17 00:39+0000\n"
-"PO-Revision-Date: 2025-01-14 11:58+0100\n"
+"PO-Revision-Date: 2025-01-17 23:30+0100\n"
 "Last-Translator: Eloy Cuadra <ecuadra@eloihr.net>\n"
 "Language-Team: Spanish <kde-l10n-es@kde.org>\n"
 "Language: es\n"
@@ -55,7 +55,7 @@ msgstr "Derechos de autor:"
 #: content/ui/ColorSchemeDelegate.qml:13
 #, kde-format
 msgid "Color theme"
-msgstr ""
+msgstr "Tema de color"
 
 #: content/ui/EpubViewerPage.qml:79 content/ui/EpubViewerPage.qml:280
 #: content/ui/EpubViewerPage.qml:284
