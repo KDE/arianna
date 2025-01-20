@@ -68,7 +68,7 @@ msgstr "无搜索结果"
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Search"
-msgstr ""
+msgstr "搜索"
 
 #: content/ui/EpubViewerPage.qml:125
 #, kde-format
