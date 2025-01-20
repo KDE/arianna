@@ -72,6 +72,7 @@
   <summary xml:lang="tr">E-kitap Okuyucusu</summary>
   <summary xml:lang="uk">Читання електронних книг</summary>
   <summary xml:lang="x-test">xxEBook readerxx</summary>
+  <summary xml:lang="zh-CN">电子书阅读器</summary>
   <description>
     <p>An ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sorts them by categories, genres and authors.</p>
     <p xml:lang="ar">قارئ كُتب إلكترونية ومدير للمكتبة وداعم لملفات ".epub". أريانا يكتشف كتبك تلقائيا ويرتبها بواسطة التصنيفات والأنواع والكتاب</p>
