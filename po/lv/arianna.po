@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-17 00:39+0000\n"
-"PO-Revision-Date: 2025-01-04 17:57+0200\n"
+"PO-Revision-Date: 2025-01-20 12:43+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
-"X-Generator: Lokalize 24.12.0\n"
+"X-Generator: Lokalize 24.12.1\n"
 
 #: content/ui/BookDetailsPage.qml:16
 #, kde-format
@@ -57,7 +57,7 @@ msgstr "Autortiesības:"
 #: content/ui/ColorSchemeDelegate.qml:13
 #, kde-format
 msgid "Color theme"
-msgstr ""
+msgstr "Krāsu motīvs"
 
 #: content/ui/EpubViewerPage.qml:79 content/ui/EpubViewerPage.qml:280
 #: content/ui/EpubViewerPage.qml:284
@@ -220,8 +220,7 @@ msgid "Library"
 msgstr "Bibliotēka"
 
 #: content/ui/LibraryPage.qml:98
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "Vairāk par grāmatu"
@@ -318,18 +317,15 @@ msgid "Settings"
 msgstr "Iestatījumi"
 
 #: content/ui/main.qml:342
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
-msgstr "Pievienot grāmatu..."
+msgstr "Pievienot grāmatas…"
 
 #: content/ui/main.qml:363
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
-msgstr "Izvēlieties datni"
+msgstr "Izvēlieties datnes"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format
