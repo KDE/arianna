@@ -3,7 +3,7 @@
 
 #include "tableofcontentmodel.h"
 #include <QAbstractItemModelTester>
-#include <QtTest/QtTest>
+#include <QTest>
 
 class TableOfContentTest : public QObject
 {

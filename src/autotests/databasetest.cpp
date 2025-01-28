@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LGPL-2.0-or-later
 
 #include "database.h"
-#include <QtTest/QtTest>
+#include <QTest>
 #include <qstringliteral.h>
 
 class TestDatabase : public Database
