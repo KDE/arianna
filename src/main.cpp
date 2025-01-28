@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
 
     QCommandLineParser parser;
     parser.setApplicationDescription(i18n("Epub reader"));
-    parser.addPositionalArgument(QLatin1String("file"), i18n("Epub file to open"));
+    parser.addPositionalArgument(QStringLiteral("file"), i18n("Epub file to open"));
 
     about.setupCommandLine(&parser);
     parser.process(app);

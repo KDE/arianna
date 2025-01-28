@@ -435,8 +435,8 @@ QString BookEntry::saveCover(const QImage &image, const QString &path) const
     }
 
     QDir dir(cacheLocation);
-    if (!dir.exists(QLatin1String("covers"))) {
-        dir.mkdir(QLatin1String("covers"));
+    if (!dir.exists(QStringLiteral("covers"))) {
+        dir.mkdir(QStringLiteral("covers"));
     }
     if (!image.save(fileName)) {
         qCWarning(ARIANNA_LOG) << "Error saving image" << fileName;

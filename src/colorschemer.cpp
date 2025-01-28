@@ -28,7 +28,7 @@ void ColorSchemer::apply(int idx)
 {
     KColorSchemeManager::instance()->activateScheme(KColorSchemeManager::instance()->model()->index(idx, 0));
     auto config = KSharedConfig::openConfig();
-    KConfigGroup group(config, QLatin1String("UiSettings"));
+    KConfigGroup group(config, QStringLiteral("UiSettings"));
     group.writeEntry("ColorScheme", KColorSchemeManager::instance()->activeSchemeId());
     group.sync();
 }
@@ -41,7 +41,7 @@ int ColorSchemer::indexForCurrentScheme()
 void ColorSchemer::loadSavedScheme()
 {
     auto config = KSharedConfig::openConfig();
-    KConfigGroup group(config, QLatin1String("UiSettings"));
+    KConfigGroup group(config, QStringLiteral("UiSettings"));
     QString savedScheme = group.readEntry("ColorScheme", QString());
 
     if (!savedScheme.isEmpty()) {

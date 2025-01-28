@@ -164,7 +164,11 @@ bool EPubContainer::parseContentFile(const QString &filepath)
     }
     QScopedPointer<QIODevice> ioDevice(rootFile->createDevice());
     QDomDocument document;
+#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
+    document.setContent(ioDevice.data(), QDomDocument::ParseOption::UseNamespaceProcessing); // turn on namespace processing
+#else
     document.setContent(ioDevice.data(), true); // turn on namespace processing
+#endif
 
     QDomNodeList metadataNodeList = document.elementsByTagName(QStringLiteral("metadata"));
     for (int i = 0; i < metadataNodeList.count(); i++) {

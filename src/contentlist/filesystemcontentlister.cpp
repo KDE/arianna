@@ -34,7 +34,7 @@ public:
         if (locations.isEmpty())
             locations.append(QDir::homePath());
 
-        for (const auto &location : locations) {
+        for (const auto &location : std::as_const(locations)) {
             QDirIterator it(location, QDirIterator::Subdirectories);
             while (it.hasNext()) {
                 auto filePath = it.next();

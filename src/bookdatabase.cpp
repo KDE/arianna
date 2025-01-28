@@ -150,7 +150,6 @@ QList<BookEntry> BookDatabase::loadEntries()
     }
 
     QList<BookEntry> entries;
-    QStringList entryNames = d->fieldNames;
     QSqlQuery allEntries(QStringLiteral("SELECT ") + d->fieldNames.join(QStringLiteral(", ")) + QStringLiteral(" FROM books"));
 
     while (allEntries.next()) {
@@ -168,7 +167,7 @@ std::optional<BookEntry> BookDatabase::loadEntry(const QString &fileName)
     }
     QSqlQuery entry;
     entry.prepare(QStringLiteral("SELECT ") + d->fieldNames.join(QStringLiteral(", ")) + QStringLiteral(" FROM books WHERE fileName = :fileName LIMIT 1"));
-    entry.bindValue(QLatin1String(":fileName"), fileName);
+    entry.bindValue(QStringLiteral(":fileName"), fileName);
     if (entry.exec()) {
         entry.first();
         return d->fromSqlQuery(entry);

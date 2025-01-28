@@ -19,7 +19,6 @@ BookServer::BookServer()
         if (!fileName.endsWith(u".epub"_s)) {
             return QHttpServerResponse{QHttpServerResponder::StatusCode::Unauthorized};
         }
-        QFileInfo fileInfo(fileName.mid(7));
         return QHttpServerResponse::fromFile(fileName.mid(7));
     });
 
