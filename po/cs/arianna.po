@@ -219,11 +219,10 @@ msgid "Library"
 msgstr "Knihovna"
 
 #: content/ui/LibraryPage.qml:98
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
-msgstr "Podrobnosti knihy"
+msgstr ""
 
 #: content/ui/LibraryPage.qml:110
 #, kde-format
@@ -317,18 +316,15 @@ msgid "Settings"
 msgstr "Nastavení"
 
 #: content/ui/main.qml:342
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
-msgstr "Přidat knihu…"
+msgstr ""
 
 #: content/ui/main.qml:363
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
-msgstr "Prosím, vyberte soubor"
+msgstr ""
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format
