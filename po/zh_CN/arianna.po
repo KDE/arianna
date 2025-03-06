@@ -416,7 +416,7 @@ msgstr ""
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
-msgstr ""
+msgstr "关闭目录"
 
 #: content/ui/TableOfContentDrawer.qml:45
 #, kde-format

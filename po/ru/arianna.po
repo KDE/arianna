@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the arianna package.
 #
-# SPDX-FileCopyrightText: 2023, 2024 Olesya Gerasimenko <translation-team@basealt.ru>
+# SPDX-FileCopyrightText: 2023, 2024, 2025 Olesya Gerasimenko <translation-team@basealt.ru>
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-17 00:39+0000\n"
-"PO-Revision-Date: 2024-10-10 12:13+0300\n"
+"PO-Revision-Date: 2025-03-05 15:57+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
@@ -74,7 +74,7 @@ msgstr "Поиск не принёс результатов"
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Search"
-msgstr ""
+msgstr "Поиск"
 
 #: content/ui/EpubViewerPage.qml:131
 #, kde-format
@@ -190,7 +190,6 @@ msgstr ""
 
 #: content/ui/EpubViewerPage.qml:366
 #, fuzzy, kde-format
-#| msgid "Description:"
 msgid "Definition"
 msgstr "Описание:"
 
@@ -222,7 +221,6 @@ msgstr "Библиотека"
 
 #: content/ui/LibraryPage.qml:98
 #, fuzzy, kde-format
-#| msgid "Book Details"
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "Сведения о книге"
@@ -320,15 +318,12 @@ msgstr "Настройка"
 
 #: content/ui/main.qml:342
 #, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
 msgctxt "@action:button"
 msgid "Add Books…"
 msgstr "Добавить книгу…"
 
 #: content/ui/main.qml:363
 #, fuzzy, kde-format
-#| msgid "Please choose a file"
 msgid "Please choose files"
 msgstr "Выберите файл"
 
