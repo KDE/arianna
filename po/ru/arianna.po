@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-17 00:39+0000\n"
-"PO-Revision-Date: 2025-03-05 15:57+0300\n"
+"PO-Revision-Date: 2025-03-17 12:36+0300\n"
 "Last-Translator: Olesya Gerasimenko <translation-team@basealt.ru>\n"
 "Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
@@ -57,7 +57,7 @@ msgstr "Авторское право:"
 #: content/ui/ColorSchemeDelegate.qml:13
 #, kde-format
 msgid "Color theme"
-msgstr ""
+msgstr "Цветовая схема"
 
 #: content/ui/EpubViewerPage.qml:79 content/ui/EpubViewerPage.qml:280
 #: content/ui/EpubViewerPage.qml:284
@@ -141,72 +141,72 @@ msgstr "Следующая страница"
 #: content/ui/EpubViewerPage.qml:355
 #, kde-format
 msgid "Loc. %s of %s"
-msgstr ""
+msgstr "Место %s из %s"
 
 #: content/ui/EpubViewerPage.qml:356
 #, kde-format
 msgid "Page %s of %s"
-msgstr ""
+msgstr "Страница %s из %s"
 
 #: content/ui/EpubViewerPage.qml:357
 #, kde-format
 msgid "Page %s"
-msgstr ""
+msgstr "Страница %s"
 
 #: content/ui/EpubViewerPage.qml:358
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Закрыть"
 
 #: content/ui/EpubViewerPage.qml:360
 #, kde-format
 msgid "Footnote"
-msgstr ""
+msgstr "Сноска"
 
 #: content/ui/EpubViewerPage.qml:361
 #, kde-format
 msgid "Go to Footnote"
-msgstr ""
+msgstr "Перейти к сноске"
 
 #: content/ui/EpubViewerPage.qml:362
 #, kde-format
 msgid "Endnote"
-msgstr ""
+msgstr "Концевая сноска"
 
 #: content/ui/EpubViewerPage.qml:363
 #, kde-format
 msgid "Go to Endnote"
-msgstr ""
+msgstr "Перейти к концевой сноске"
 
 #: content/ui/EpubViewerPage.qml:364
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "Примечание"
 
 #: content/ui/EpubViewerPage.qml:365
 #, kde-format
 msgid "Go to Note"
-msgstr ""
+msgstr "Перейти к примечанию"
 
 #: content/ui/EpubViewerPage.qml:366
-#, fuzzy, kde-format
+#, kde-format
 msgid "Definition"
-msgstr "Описание:"
+msgstr "Определение"
 
 #: content/ui/EpubViewerPage.qml:367
 #, kde-format
 msgid "Go to Definition"
-msgstr ""
+msgstr "Перейти к определению"
 
 #: content/ui/EpubViewerPage.qml:368
 #, kde-format
 msgid "Bibliography"
-msgstr ""
+msgstr "Библиография"
 
 #: content/ui/EpubViewerPage.qml:369
 #, kde-format
 msgid "Go to Bibliography"
-msgstr ""
+msgstr "Перейти к библиографии"
 
 #: content/ui/GridBrowserDelegate.qml:146
 #, kde-format
@@ -220,7 +220,7 @@ msgid "Library"
 msgstr "Библиотека"
 
 #: content/ui/LibraryPage.qml:98
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "Сведения о книге"
@@ -317,15 +317,15 @@ msgid "Settings"
 msgstr "Настройка"
 
 #: content/ui/main.qml:342
-#, fuzzy, kde-format
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
-msgstr "Добавить книгу…"
+msgstr "Добавить книги…"
 
 #: content/ui/main.qml:363
-#, fuzzy, kde-format
+#, kde-format
 msgid "Please choose files"
-msgstr "Выберите файл"
+msgstr "Выберите файлы"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format
