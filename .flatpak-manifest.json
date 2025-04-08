@@ -2,10 +2,10 @@
     "id": "org.kde.arianna",
     "branch": "master",
     "runtime": "org.kde.Platform",
-    "runtime-version": "6.7",
+    "runtime-version": "6.8",
     "sdk": "org.kde.Sdk",
     "base": "io.qt.qtwebengine.BaseApp",
-    "base-version": "6.7",
+    "base-version": "6.8",
     "command": "arianna",
     "tags": [
         "nightly"
@@ -28,8 +28,8 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://download.qt.io/official_releases/qt/6.7/6.7.3/submodules/qthttpserver-everywhere-src-6.7.3.tar.xz",
-                    "sha256": "7f2317c7e52b6b634a5be9a9c917066fb707b905ec618f047cc57b8093f4deff"
+                    "url": "https://download.qt.io/official_releases/qt/6.8/6.8.3/submodules/qthttpserver-everywhere-src-6.8.3.tar.xz",
+                    "sha256": "792be98dd979a3f1cf42477139321a8999a648b7e7ad041ae133965c3cc35f65"
                 }
             ]
         },
@@ -72,7 +72,7 @@
                 {
                     "type": "git",
                     "url": "https://invent.kde.org/frameworks/baloo.git",
-                    "tag": "v6.7.0"
+                    "tag": "v6.12.0"
                 }
             ]
         },
