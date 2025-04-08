@@ -1,13 +1,13 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the arianna package.
 #
-# SPDX-FileCopyrightText: 2023, 2024 Kisaragi Hiu <mail@kisaragi-hiu.com>
+# SPDX-FileCopyrightText: 2023, 2024, 2025 Kisaragi Hiu <mail@kisaragi-hiu.com>
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-17 00:39+0000\n"
-"PO-Revision-Date: 2024-09-10 01:06+0900\n"
+"PO-Revision-Date: 2025-04-07 15:14+0900\n"
 "Last-Translator: Kisaragi Hiu <mail@kisaragi-hiu.com>\n"
 "Language-Team: Traditional Chinese <zh-l10n@lists.slat.org>\n"
 "Language: zh_TW\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Lokalize 24.12.3\n"
 
 #: content/ui/BookDetailsPage.qml:16
 #, kde-format
@@ -56,7 +56,7 @@ msgstr "版權："
 #: content/ui/ColorSchemeDelegate.qml:13
 #, kde-format
 msgid "Color theme"
-msgstr ""
+msgstr "顏色主題"
 
 #: content/ui/EpubViewerPage.qml:79 content/ui/EpubViewerPage.qml:280
 #: content/ui/EpubViewerPage.qml:284
@@ -140,73 +140,72 @@ msgstr "下一頁"
 #: content/ui/EpubViewerPage.qml:355
 #, kde-format
 msgid "Loc. %s of %s"
-msgstr ""
+msgstr "位置 %s/%s"
 
 #: content/ui/EpubViewerPage.qml:356
 #, kde-format
 msgid "Page %s of %s"
-msgstr ""
+msgstr "頁面 %s/%s"
 
 #: content/ui/EpubViewerPage.qml:357
 #, kde-format
 msgid "Page %s"
-msgstr ""
+msgstr "第 %s 頁"
 
 #: content/ui/EpubViewerPage.qml:358
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "關閉"
 
 #: content/ui/EpubViewerPage.qml:360
 #, kde-format
 msgid "Footnote"
-msgstr ""
+msgstr "註腳"
 
 #: content/ui/EpubViewerPage.qml:361
 #, kde-format
 msgid "Go to Footnote"
-msgstr ""
+msgstr "前往註腳"
 
 #: content/ui/EpubViewerPage.qml:362
 #, kde-format
 msgid "Endnote"
-msgstr ""
+msgstr "尾註"
 
 #: content/ui/EpubViewerPage.qml:363
 #, kde-format
 msgid "Go to Endnote"
-msgstr ""
+msgstr "前往尾註"
 
 #: content/ui/EpubViewerPage.qml:364
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "筆記"
 
 #: content/ui/EpubViewerPage.qml:365
 #, kde-format
 msgid "Go to Note"
-msgstr ""
+msgstr "前往筆記"
 
 #: content/ui/EpubViewerPage.qml:366
-#, fuzzy, kde-format
-#| msgid "Description:"
+#, kde-format
 msgid "Definition"
-msgstr "描述："
+msgstr "定義"
 
 #: content/ui/EpubViewerPage.qml:367
 #, kde-format
 msgid "Go to Definition"
-msgstr ""
+msgstr "前往定義"
 
 #: content/ui/EpubViewerPage.qml:368
 #, kde-format
 msgid "Bibliography"
-msgstr ""
+msgstr "書目"
 
 #: content/ui/EpubViewerPage.qml:369
 #, kde-format
 msgid "Go to Bibliography"
-msgstr ""
+msgstr "前往書目"
 
 #: content/ui/GridBrowserDelegate.qml:146
 #, kde-format
@@ -220,8 +219,7 @@ msgid "Library"
 msgstr "收藏庫"
 
 #: content/ui/LibraryPage.qml:98
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "書本詳細資料"
@@ -318,16 +316,13 @@ msgid "Settings"
 msgstr "設定"
 
 #: content/ui/main.qml:342
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
 msgstr "新增書本…"
 
 #: content/ui/main.qml:363
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
 msgstr "請選擇檔案"
 
