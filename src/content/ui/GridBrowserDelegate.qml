@@ -5,17 +5,17 @@
    SPDX-License-Identifier: LGPL-3.0-or-later
  */
 
-import QtQuick 2.15
-import QtQuick.Controls 2.15 as QQC2
-import QtQuick.Window 2.2
-import QtQml.Models 2.1
-import QtQuick.Layouts 1.2
+import QtQuick
+import QtQuick.Controls as QQC2
+import QtQuick.Window
+import QtQml.Models
+import QtQuick.Layouts
 import QtQuick.Effects
 
-import org.kde.kirigami 2.19 as Kirigami
-import org.kde.kirigamiaddons.delegates 1.0 as Delegates
-import org.kde.quickcharts 1.0 as Charts
-import org.kde.arianna 1.0
+import org.kde.kirigami as Kirigami
+import org.kde.kirigamiaddons.delegates as Delegates
+import org.kde.quickcharts as Charts
+import org.kde.arianna
 
 Delegates.RoundedItemDelegate {
     id: gridEntry

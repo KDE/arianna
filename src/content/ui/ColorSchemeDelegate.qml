@@ -5,7 +5,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import org.kde.kirigamiaddons.formcard as FormCard
-import org.kde.arianna 1.0
+import org.kde.arianna
 
 FormCard.FormComboBoxDelegate {
     id: root

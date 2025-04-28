@@ -7,7 +7,7 @@ import QtQuick.Layouts
 
 import org.kde.kirigami 2 as Kirigami
 import org.kde.kirigamiaddons.delegates 1 as Delegates
-import org.kde.kirigamiaddons.treeview 1.0 as Tree
+import org.kde.kirigamiaddons.treeview as Tree
 import org.kde.kitemmodels 1
 import org.kde.arianna
 
