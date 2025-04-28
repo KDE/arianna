@@ -53,19 +53,19 @@ bool EPubContainer::openFile(const QString &path)
     return true;
 }
 
-QSharedPointer<QIODevice> EPubContainer::getIoDevice(const QString &path)
+QSharedPointer<QIODevice> EPubContainer::ioDevice(const QString &path)
 {
-    const KArchiveFile *file = getFile(path);
-    if (!file) {
+    const KArchiveFile *archive = file(path);
+    if (!archive) {
         qWarning() << QStringLiteral("Unable to open file %1").arg(path.left(100));
         Q_EMIT errorOccured(tr("Unable to open file %1").arg(path.left(100)));
         return QSharedPointer<QIODevice>();
     }
 
-    return QSharedPointer<QIODevice>(file->createDevice());
+    return QSharedPointer<QIODevice>(archive->createDevice());
 }
 
-QImage EPubContainer::getImage(const QString &id)
+QImage EPubContainer::image(const QString &id)
 {
     if (!m_items.contains(id)) {
         qWarning() << "Asked for unknown item" << id << m_items.keys();
@@ -79,16 +79,16 @@ QImage EPubContainer::getImage(const QString &id)
         return {};
     }
 
-    QSharedPointer<QIODevice> ioDevice = getIoDevice(item.path);
+    QSharedPointer<QIODevice> device = ioDevice(item.path);
 
-    if (!ioDevice) {
+    if (!device) {
         return {};
     }
 
-    return QImage::fromData(ioDevice->readAll());
+    return QImage::fromData(device->readAll());
 }
 
-QStringList EPubContainer::getMetadata(const QString &key)
+QStringList EPubContainer::metadata(const QStringView &key)
 {
     return m_metadata.value(key);
 }
@@ -117,7 +117,7 @@ bool EPubContainer::parseContainer()
 {
     Q_ASSERT(m_rootFolder);
 
-    const KArchiveFile *containerFile = getFile(CONTAINER_FILE);
+    const KArchiveFile *containerFile = file(CONTAINER_FILE);
     if (!containerFile) {
         qWarning() << "no container file";
         Q_EMIT errorOccured(tr("Unable to find container information"));
@@ -157,7 +157,7 @@ bool EPubContainer::parseContainer()
 
 bool EPubContainer::parseContentFile(const QString &filepath)
 {
-    const KArchiveFile *rootFile = getFile(filepath);
+    const KArchiveFile *rootFile = file(filepath);
     if (!rootFile) {
         Q_EMIT errorOccured(tr("Malformed metadata, unable to get content metadata path"));
         return false;
@@ -413,7 +413,7 @@ bool EPubContainer::parseGuideItem(const QDomNode &guideItem)
     return true;
 }
 
-const KArchiveFile *EPubContainer::getFile(const QString &path)
+const KArchiveFile *EPubContainer::file(const QString &path)
 {
     if (path.isEmpty()) {
         return nullptr;

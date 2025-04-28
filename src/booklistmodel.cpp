@@ -234,19 +234,19 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
         if (mimetype == QStringLiteral("application/epub+zip")) {
             EPubContainer epub(nullptr);
             epub.openFile(entry.filename);
-            const auto titles = epub.getMetadata(QStringLiteral("title"));
+            const auto titles = epub.metadata(QStringLiteral("title"));
             if (!titles.isEmpty()) {
                 entry.title = titles[0];
             }
-            entry.author = epub.getMetadata(QStringLiteral("creator"));
-            entry.rights = epub.getMetadata(QStringLiteral("rights")).join(QStringLiteral(", "));
-            entry.source = epub.getMetadata(QStringLiteral("source")).join(QStringLiteral(", "));
-            entry.identifier = epub.getMetadata(QStringLiteral("identifier")).join(QStringLiteral(", "));
-            entry.language = epub.getMetadata(QStringLiteral("language")).join(QStringLiteral(", "));
-            entry.genres = epub.getMetadata(QStringLiteral("subject"));
-            entry.publisher = epub.getMetadata(QStringLiteral("publisher")).join(QStringLiteral(", "));
+            entry.author = epub.metadata(QStringLiteral("creator"));
+            entry.rights = epub.metadata(QStringLiteral("rights")).join(QStringLiteral(", "));
+            entry.source = epub.metadata(QStringLiteral("source")).join(QStringLiteral(", "));
+            entry.identifier = epub.metadata(QStringLiteral("identifier")).join(QStringLiteral(", "));
+            entry.language = epub.metadata(QStringLiteral("language")).join(QStringLiteral(", "));
+            entry.genres = epub.metadata(QStringLiteral("subject"));
+            entry.publisher = epub.metadata(QStringLiteral("publisher")).join(QStringLiteral(", "));
 
-            auto image = epub.getImage(epub.getMetadata(QStringLiteral("cover")).join(QChar()));
+            auto image = epub.image(epub.metadata(QStringLiteral("cover")).join(QChar()));
             entry.thumbnail = entry.saveCover(image);
 
             const auto collections = epub.collections();

@@ -147,7 +147,7 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
             QFile file(entry.thumbnail);
             EPubContainer epub(nullptr);
             epub.openFile(entry.filename);
-            auto image = epub.getImage(epub.getMetadata(QStringLiteral("cover")).join(QChar()));
+            auto image = epub.image(epub.metadata(QStringLiteral("cover")).join(QChar()));
             entry.saveCover(image, entry.thumbnail);
             return entry.thumbnail;
         }

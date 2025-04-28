@@ -70,21 +70,21 @@ public:
 
     bool openFile(const QString &path);
 
-    EpubItem getEpubItem(const QString &id) const
+    EpubItem epubItem(const QString &id) const
     {
         return m_items.value(id);
     }
 
-    QSharedPointer<QIODevice> getIoDevice(const QString &path);
-    QImage getImage(const QString &id);
+    QSharedPointer<QIODevice> ioDevice(const QString &path);
+    QImage image(const QString &id);
     QList<Collection> collections() const;
-    QStringList getMetadata(const QString &key);
-    QStringList getItems()
+    QStringList metadata(const QStringView &key);
+    QStringList items() const
     {
         return m_orderedItems;
     }
 
-    QString getStandardPage(EpubPageReference::StandardType type)
+    QString standardPage(EpubPageReference::StandardType type) const
     {
         return m_standardReferences.value(type).target;
     }
@@ -102,7 +102,7 @@ private:
     bool parseSpineItem(const QDomNode &spineNode);
     bool parseGuideItem(const QDomNode &guideItem);
 
-    const KArchiveFile *getFile(const QString &path);
+    const KArchiveFile *file(const QString &path);
 
     std::unique_ptr<KZip> m_archive;
     const KArchiveDirectory *m_rootFolder;
