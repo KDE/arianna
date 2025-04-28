@@ -46,12 +46,13 @@ Kirigami.Page {
     signal bookReady(title: var)
     signal bookClosed()
 
-    function reloadBook() {
+    function reloadBook(): void {
         if (!root.url || view.loading) {
             return;
         }
-        const renderTo = layouts['auto'].renderTo;
-        const options = JSON.stringify(layouts['auto'].options);
+        // HACK: renderTo and options are the value of layouts.auto, but referencing layouts.auto here crashes
+        const renderTo = "'viewer'";
+        const options = JSON.stringify({ width: '100%', flow: 'paginated', maxSpreadColumns: 2 });
         const urlNormalized = JSON.stringify('http://127.0.0.1:45961/book?url=' + encodeURIComponent(root.url));
         const initCfi = currentLocation ? JSON.stringify(currentLocation) : "null";
         console.info("opening book", root.url, " to ", initCfi);
