@@ -3,6 +3,58 @@
 
 add_library(arianna_static STATIC)
 
+ecm_add_qml_module(arianna_static
+    GENERATE_PLUGIN_SOURCE
+    OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/src/org/kde/arianna # Shuts up an annoying upstream Qt warning
+    URI org.kde.arianna
+)
+
+qt_target_qml_sources(arianna_static
+    QML_FILES
+        qml/Main.qml
+        qml/BookDetailsPage.qml
+        qml/SettingsPage.qml
+        qml/ColorSchemeDelegate.qml
+        qml/LibraryPage.qml
+        qml/EpubViewerPage.qml
+        qml/TableOfContentDrawer.qml
+        qml/GridBrowserDelegate.qml
+        qml/SearchModel.qml
+    RESOURCES
+        qml/main.html
+        qml/reader.js
+        qml/foliate-js/reader.html
+        qml/markup.js
+
+        qml/foliate-js/vendor/pdfjs/pdf.js
+        qml/foliate-js/vendor/pdfjs/pdf.worker.js
+        qml/foliate-js/vendor/fflate.js
+        qml/foliate-js/vendor/zip.js
+
+        qml/foliate-js/comic-book.js
+        qml/foliate-js/dict.js
+        qml/foliate-js/epub.js
+        qml/foliate-js/epubcfi.js
+        qml/foliate-js/fb2.js
+        qml/foliate-js/fixed-layout.js
+        qml/foliate-js/footnotes.js
+        qml/foliate-js/mobi.js
+        qml/foliate-js/opds.js
+        qml/foliate-js/overlayer.js
+        qml/foliate-js/paginator.js
+        qml/foliate-js/pdf.js
+        qml/foliate-js/progress.js
+        qml/foliate-js/reader.js
+        qml/foliate-js/search.js
+        qml/foliate-js/text-walker.js
+        qml/foliate-js/tts.js
+        qml/foliate-js/uri-template.js
+        qml/foliate-js/view.js
+
+        qml/jszip.min.js
+        qml/utils.js
+)
+
 ecm_qt_declare_logging_category(arianna_static
     HEADER arianna_debug.h
     IDENTIFIER ARIANNA_LOG
@@ -87,10 +139,9 @@ endif()
 
 add_executable(arianna
     main.cpp
-    resources.qrc
 )
 
 target_include_directories(arianna PRIVATE ${CMAKE_BINARY_DIR})
-target_link_libraries(arianna PRIVATE arianna_static)
+target_link_libraries(arianna PUBLIC arianna_static arianna_staticplugin)
 
 install(TARGETS arianna ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

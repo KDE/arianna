@@ -4,12 +4,15 @@
 #pragma once
 
 #include <QObject>
+#include <qqmlintegration.h>
 
 #include "categoryentriesmodel.h"
 
 class Navigation : public QObject
 {
     Q_OBJECT
+    QML_SINGLETON
+    QML_ELEMENT
 
 public:
     explicit Navigation(QObject *parent = nullptr);

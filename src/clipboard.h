@@ -5,6 +5,7 @@
 
 #include <QImage>
 #include <QObject>
+#include <qqmlintegration.h>
 
 class QClipboard;
 
@@ -14,6 +15,9 @@ class QClipboard;
 class Clipboard : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
+
     Q_PROPERTY(bool hasImage READ hasImage NOTIFY imageChanged)
     Q_PROPERTY(QImage image READ image NOTIFY imageChanged)
 

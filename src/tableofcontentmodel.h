@@ -6,6 +6,7 @@
 #include <QAbstractListModel>
 #include <memory>
 #include <qabstractitemmodel.h>
+#include <qqmlintegration.h>
 
 class TreeItem
 {
@@ -35,6 +36,7 @@ private:
 class TableOfContentModel : public QAbstractItemModel
 {
     Q_OBJECT
+    QML_ELEMENT
 
 public:
     explicit TableOfContentModel(QObject *parent = nullptr);

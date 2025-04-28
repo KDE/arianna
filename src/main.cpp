@@ -25,16 +25,8 @@
 
 #include "arianna-version.h"
 #include "bookdatabase.h"
-#include "booklistmodel.h"
 #include "bookserver.h"
-#include "clipboard.h"
-#include "colorschemer.h"
-#include "config.h"
-#include "contentlist/contentlist.h"
-#include "contentlist/contentquery.h"
-#include "format.h"
 #include "navigation.h"
-#include "tableofcontentmodel.h"
 
 int main(int argc, char *argv[])
 {
@@ -90,35 +82,19 @@ int main(int argc, char *argv[])
     parser.process(app);
     about.processCommandLine(&parser);
 
-    Clipboard clipboard;
-    ColorSchemer colorScheme;
-    Format format;
-    Navigation navigation;
-    qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Config", Config::self());
-    qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Clipboard", &clipboard);
-    qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Format", &format);
-    qmlRegisterSingletonInstance("org.kde.arianna", 1, 0, "Navigation", &navigation);
-    qmlRegisterType<BookListModel>("org.kde.arianna", 1, 0, "BookListModel");
-    qmlRegisterType<ContentList>("org.kde.arianna", 1, 0, "ContentList");
-    qmlRegisterType<QSortFilterProxyModel>("org.kde.arianna", 1, 0, "SortFilterProxyModel");
-    qmlRegisterType<ContentQuery>("org.kde.arianna", 1, 0, "ContentQuery");
-    qmlRegisterType<TableOfContentModel>("org.kde.arianna", 1, 0, "TableOfContentModel");
-    qmlRegisterType<CategoryEntriesModel>("org.kde.arianna", 1, 0, "CategoryEntriesModel");
-    qmlRegisterSingletonType("org.kde.arianna", 1, 0, "About", [](QQmlEngine *engine, QJSEngine *) -> QJSValue {
-        return engine->toScriptValue(KAboutData::applicationData());
-    });
-
     BookServer bookServer;
 
-    engine.load(QUrl(QStringLiteral("qrc:/content/ui/main.qml")));
+    engine.loadFromModule("org.kde.arianna", "Main");
     if (engine.rootObjects().isEmpty()) {
         return -1;
     }
 
+    auto navigation = engine.singletonInstance<Navigation *>("org.kde.arianna", "Navigation");
+
     QObject::connect(&service,
                      &KDBusService::activateRequested,
                      &engine,
-                     [&engine, &navigation](const QStringList &arguments, const QString & /*workingDirectory*/) {
+                     [&engine, navigation](const QStringList &arguments, const QString & /*workingDirectory*/) {
                          const auto rootObjects = engine.rootObjects();
                          for (auto obj : rootObjects) {
                              auto view = qobject_cast<QQuickWindow *>(obj);
@@ -129,9 +105,9 @@ int main(int argc, char *argv[])
                                  if (arguments.count() > 1) {
                                      const auto entry = BookDatabase::self().loadEntry(arguments[1]);
                                      if (entry) {
-                                         Q_EMIT navigation.openBook(arguments[1], entry->locations, entry->currentLocation, *entry);
+                                         Q_EMIT navigation->openBook(arguments[1], entry->locations, entry->currentLocation, *entry);
                                      } else {
-                                         Q_EMIT navigation.openBook(arguments[1], {}, {}, BookEntry{});
+                                         Q_EMIT navigation->openBook(arguments[1], {}, {}, BookEntry{});
                                      }
                                  }
                                  return;
@@ -143,9 +119,9 @@ int main(int argc, char *argv[])
     if (!args.isEmpty()) {
         const auto entry = BookDatabase::self().loadEntry(args[0]);
         if (entry) {
-            Q_EMIT navigation.openBook(args[0], entry->locations, entry->currentLocation, *entry);
+            Q_EMIT navigation->openBook(args[0], entry->locations, entry->currentLocation, *entry);
         } else {
-            Q_EMIT navigation.openBook(args[0], {}, {}, BookEntry{});
+            Q_EMIT navigation->openBook(args[0], {}, {}, BookEntry{});
         }
     }
 

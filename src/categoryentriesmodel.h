@@ -7,6 +7,7 @@
 #include <QDateTime>
 #include <memory>
 #include <optional>
+#include <qqmlintegration.h>
 
 class CategoryEntriesModel;
 
@@ -92,6 +93,8 @@ bool operator==(const BookEntry &a1, const BookEntry &a2) noexcept;
 class CategoryEntriesModel : public QAbstractListModel
 {
     Q_OBJECT
+    QML_ELEMENT
+
     /**
      * \brief count holds how many entries there are in the model - equivalent to rowCount, except as a property
      */

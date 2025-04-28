@@ -1,4 +1,4 @@
-// SPDX-FileCopyrightText: 2022 Carl Schwan <carl@carlschwan.eu>
+// SPDX-FileCopgrightText: 2022 Carl Schwan <carl@carlschwan.eu>
 // SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accepted-LGPL
 
 import QtQuick
@@ -6,6 +6,7 @@ import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import Qt.labs.platform
 import org.kde.arianna
+import org.kde.kitemmodels as KItemModels
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.delegates as Delegates
 import org.kde.config as KConfig
@@ -124,7 +125,7 @@ Kirigami.ApplicationWindow {
                         searchFilterProxyModel.setFilterFixedString(text)
                     }
 
-                    model: SortFilterProxyModel {
+                    model: KItemModels.KSortFilterProxyModel {
                         id: searchFilterProxyModel
                         sourceModel: root.bookListModel
                         filterRole: CategoryEntriesModel.TitleRole

@@ -5,10 +5,13 @@
 
 #include <KFormat>
 #include <QObject>
+#include <qqmlintegration.h>
 
 class Format : public QObject
 {
     Q_OBJECT
+    QML_ELEMENT
+    QML_SINGLETON
 
 public:
     Q_INVOKABLE QString formatDuration(quint64 msecs) const;

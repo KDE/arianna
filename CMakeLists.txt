@@ -11,7 +11,7 @@ set(RELEASE_SERVICE_VERSION "${RELEASE_SERVICE_VERSION_MAJOR}.${RELEASE_SERVICE_
 
 project(arianna VERSION ${RELEASE_SERVICE_VERSION})
 
-set(KF_MIN_VERSION "6.3.0")
+set(KF_MIN_VERSION "6.12.0")
 set(QT_MIN_VERSION "6.6.0")
 
 find_package(ECM ${KF_MIN_VERSION} REQUIRED NO_MODULE)
@@ -36,7 +36,6 @@ include(ECMAddTests)
 include(ECMCheckOutboundLicense)
 include(KDEClangFormat)
 
-
 ecm_setup_version(${PROJECT_VERSION}
     VARIABLE_PREFIX ARIANNA
     SOVERSION ${PROJECT_VERSION_MAJOR}
@@ -48,6 +47,8 @@ set_package_properties(Qt6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
 )
+qt_policy(SET QTP0001 NEW)
+qt_policy(SET QTP0004 NEW)
 find_package(KF6 ${KF_MIN_VERSION} COMPONENTS Kirigami I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Archive QuickCharts Crash ColorScheme)
 set_package_properties(KF6 PROPERTIES
     TYPE REQUIRED
