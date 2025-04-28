@@ -25,8 +25,6 @@ target_sources(arianna_static PRIVATE
     categoryentriesmodel.h
     colorschemer.cpp
     colorschemer.h
-    propertycontainer.cpp
-    propertycontainer.h
     booklistmodel.cpp
     booklistmodel.h
     epubcontainer.cpp
