@@ -18,17 +18,22 @@ SPDX-FileCopyrightText = "Tobias Fella"
 SPDX-License-Identifier = "CC0-1.0"
 
 [[annotations]]
-path = "src/content/ui/jszip.min.js"
+path = "src/qml/jszip.min.js"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "JsZip contributors <https://github.com/Stuk/jszip/graphs/contributors>"
 SPDX-License-Identifier = "MIT or GPL-3.0-only"
 
 [[annotations]]
-path = "src/content/ui/foliate-js/**"
+path = [ "src/qml/foliate-js/vendor/pdfjs/pdf.js", "src/qml/foliate-js/vendor/pdfjs/pdf.worker.js" ]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "PDF.js contributors"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
+path = "src/qml/foliate-js/**"
 precedence = "aggregate"
 SPDX-FileCopyrightText = "John Factotum"
 SPDX-License-Identifier = "MIT"
-
 
 [[annotations]]
 path = ["README.md", "screenshots/library.png", "screenshots/reader.png", "src/autotests/data/**"]
