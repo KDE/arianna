@@ -30,6 +30,7 @@ const getViewport = (doc, viewport) => {
 }
 
 export class FixedLayout extends HTMLElement {
+    static observedAttributes = ['zoom']
     #root = this.attachShadow({ mode: 'closed' })
     #observer = new ResizeObserver(() => this.#render())
     #spreads
@@ -41,6 +42,7 @@ export class FixedLayout extends HTMLElement {
     #right
     #center
     #side
+    #zoom
     constructor() {
         super()
 
@@ -52,11 +54,24 @@ export class FixedLayout extends HTMLElement {
             display: flex;
             justify-content: center;
             align-items: center;
+            overflow: auto;
         }`)
 
         this.#observer.observe(this)
     }
-    async #createFrame({ index, src }) {
+    attributeChangedCallback(name, _, value) {
+        switch (name) {
+            case 'zoom':
+                this.#zoom = value !== 'fit-width' && value !== 'fit-page'
+                    ? parseFloat(value) : value
+                this.#render()
+                break
+        }
+    }
+    async #createFrame({ index, src: srcOption }) {
+        const srcOptionIsString = typeof srcOption === 'string'
+        const src = srcOptionIsString ? srcOption : srcOption?.src
+        const onZoom = srcOptionIsString ? null : srcOption?.onZoom
         const element = document.createElement('div')
         const iframe = document.createElement('iframe')
         element.append(iframe)
@@ -73,8 +88,7 @@ export class FixedLayout extends HTMLElement {
         this.#root.append(element)
         if (!src) return { blank: true, element, iframe }
         return new Promise(resolve => {
-            const onload = () => {
-                iframe.removeEventListener('load', onload)
+            iframe.addEventListener('load', () => {
                 const doc = iframe.contentDocument
                 this.dispatchEvent(new CustomEvent('load', { detail: { doc, index } }))
                 const { width, height } = getViewport(doc, this.defaultViewport)
@@ -82,9 +96,9 @@ export class FixedLayout extends HTMLElement {
                     element, iframe,
                     width: parseFloat(width),
                     height: parseFloat(height),
+                    onZoom,
                 })
-            }
-            iframe.addEventListener('load', onload)
+            }, { once: true })
             iframe.src = src
         })
     }
@@ -100,22 +114,29 @@ export class FixedLayout extends HTMLElement {
         const blankWidth = left.width ?? right.width
         const blankHeight = left.height ?? right.height
 
-        const scale = portrait || this.#center
-            ? Math.min(
-                width / (target.width ?? blankWidth),
-                height / (target.height ?? blankHeight))
-            : Math.min(
-                width / ((left.width ?? blankWidth) + (right.width ?? blankWidth)),
-                height / Math.max(
-                    left.height ?? blankHeight,
-                    right.height ?? blankHeight))
+        const scale = typeof this.#zoom === 'number' && !isNaN(this.#zoom)
+            ? this.#zoom
+            : this.#zoom === 'fit-width' ? (portrait || this.#center
+                ? width / (target.width ?? blankWidth)
+                : width / ((left.width ?? blankWidth) + (right.width ?? blankWidth)))
+            : (portrait || this.#center
+                ? Math.min(
+                    width / (target.width ?? blankWidth),
+                    height / (target.height ?? blankHeight))
+                : Math.min(
+                    width / ((left.width ?? blankWidth) + (right.width ?? blankWidth)),
+                    height / Math.max(
+                        left.height ?? blankHeight,
+                        right.height ?? blankHeight)))
 
         const transform = frame => {
-            const { element, iframe, width, height, blank } = frame
+            let { element, iframe, width, height, blank, onZoom } = frame
+            if (onZoom) onZoom({ doc: frame.iframe.contentDocument, scale })
+            const iframeScale = onZoom ? scale : 1
             Object.assign(iframe.style, {
-                width: `${width}px`,
-                height: `${height}px`,
-                transform: `scale(${scale})`,
+                width: `${width * iframeScale}px`,
+                height: `${height * iframeScale}px`,
+                transform: onZoom ? 'none' : `scale(${scale})`,
                 transformOrigin: 'top left',
                 display: blank ? 'none' : 'block',
             })
@@ -124,6 +145,8 @@ export class FixedLayout extends HTMLElement {
                 height: `${(height ?? blankHeight) * scale}px`,
                 overflow: 'hidden',
                 display: 'block',
+                flexShrink: '0',
+                marginBlock: 'auto',
             })
             if (portrait && frame !== target) {
                 element.style.display = 'none'
@@ -183,10 +206,9 @@ export class FixedLayout extends HTMLElement {
 
         if (rendition?.spread === 'none')
             this.#spreads = book.sections.map(section => ({ center: section }))
-        else this.#spreads = book.sections.reduce((arr, section) => {
+        else this.#spreads = book.sections.reduce((arr, section, i) => {
             const last = arr[arr.length - 1]
-            const { linear, pageSpread } = section
-            if (linear === 'no') return arr
+            const { pageSpread } = section
             const newSpread = () => {
                 const spread = {}
                 arr.push(spread)
@@ -197,21 +219,21 @@ export class FixedLayout extends HTMLElement {
                 spread.center = section
             }
             else if (pageSpread === 'left') {
-                const spread = last.center || last.left || ltr ? newSpread() : last
+                const spread = last.center || last.left || ltr && i ? newSpread() : last
                 spread.left = section
             }
             else if (pageSpread === 'right') {
-                const spread = last.center || last.right || rtl ? newSpread() : last
+                const spread = last.center || last.right || rtl && i ? newSpread() : last
                 spread.right = section
             }
             else if (ltr) {
                 if (last.center || last.right) newSpread().left = section
-                else if (last.left) last.right = section
+                else if (last.left || !i) last.right = section
                 else last.left = section
             }
             else {
                 if (last.center || last.left) newSpread().right = section
-                else if (last.right) last.left = section
+                else if (last.right || !i) last.left = section
                 else last .right = section
             }
             return arr

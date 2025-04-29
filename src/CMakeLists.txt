@@ -50,6 +50,7 @@ qt_target_qml_sources(arianna_static
         qml/foliate-js/tts.js
         qml/foliate-js/uri-template.js
         qml/foliate-js/view.js
+        qml/foliate-js/quote-image.js
 
         qml/jszip.min.js
         qml/utils.js

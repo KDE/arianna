@@ -627,6 +627,7 @@ export class MOBI extends PDB {
             description: unescapeHTML(exth?.description),
             subject: exth?.subject?.map(unescapeHTML),
             rights: unescapeHTML(exth?.rights),
+            contributor: exth?.contributor,
         }
     }
     async getCover() {
@@ -720,7 +721,7 @@ class MOBI6 {
                     .reduce((arr, a) => {
                         const indent = getIndent(a)
                         const item = {
-                            label: a.innerText?.trim(),
+                            label: a.innerText?.trim() ?? '',
                             href: `filepos:${a.getAttribute('filepos')}`,
                         }
                         const level = indent > lastIndent ? lastLevel + 1
@@ -1153,7 +1154,7 @@ class KF8 {
 
         // by default, type is XHTML; change to HTML if it's not valid XHTML
         let doc = this.parser.parseFromString(replaced, this.#type)
-        if (doc.querySelector('parsererror')) {
+        if (doc.querySelector('parsererror') || !doc.documentElement?.namespaceURI) {
             this.#type = MIME.HTML
             doc = this.parser.parseFromString(replaced, this.#type)
         }

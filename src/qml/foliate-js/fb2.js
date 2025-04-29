@@ -27,9 +27,10 @@ const STYLE = {
 }
 
 const TABLE = {
-    'tr': ['tr', ['align']],
-    'th': ['th', ['colspan', 'rowspan', 'align', 'valign']],
-    'td': ['td', ['colspan', 'rowspan', 'align', 'valign']],
+    'tr': ['tr', {
+        'th': ['th', STYLE, ['colspan', 'rowspan', 'align', 'valign']],
+        'td': ['td', STYLE, ['colspan', 'rowspan', 'align', 'valign']],
+    }, ['align']],
 }
 
 const POEM = {
@@ -69,25 +70,30 @@ const BODY = {
     'section': ['section', SECTION],
 }
 
-const getImageSrc = el => {
-    const href = el.getAttributeNS(NS.XLINK, 'href')
-    const [, id] = href.split('#')
-    const bin = el.getRootNode().getElementById(id)
-    return bin
-        ? `data:${bin.getAttribute('content-type')};base64,${bin.textContent}`
-        : href
-}
-
 class FB2Converter {
     constructor(fb2) {
         this.fb2 = fb2
         this.doc = document.implementation.createDocument(NS.XHTML, 'html')
+        // use this instead of `getElementById` to allow images like
+        // `<image l:href="#img1.jpg" id="img1.jpg" />`
+        this.bins = new Map(Array.from(this.fb2.getElementsByTagName('binary'),
+            el => [el.id, el]))
+    }
+    getImageSrc(el) {
+        const href = el.getAttributeNS(NS.XLINK, 'href')
+        if (!href) return 'data:,'
+        const [, id] = href.split('#')
+        if (!id) return href
+        const bin = this.bins.get(id)
+        return bin
+            ? `data:${bin.getAttribute('content-type')};base64,${bin.textContent}`
+            : href
     }
     image(node) {
         const el = this.doc.createElement('img')
         el.alt = node.getAttribute('alt')
         el.title = node.getAttribute('title')
-        el.setAttribute('src', getImageSrc(node))
+        el.setAttribute('src', this.getImageSrc(node))
         return el
     }
     anchor(node) {
@@ -123,7 +129,7 @@ class FB2Converter {
         if (!d) return null
         if (typeof d === 'string') return this[d](node)
 
-        const [name, opts] = d
+        const [name, opts, attrs] = d
         const el = this.doc.createElement(name)
 
         // copy the ID, and set class name from original element name
@@ -131,11 +137,13 @@ class FB2Converter {
         el.classList.add(node.nodeName)
 
         // copy attributes
-        if (Array.isArray(opts)) for (const attr of opts)
-            el.setAttribute(attr, node.getAttribute(attr))
+        if (Array.isArray(attrs)) for (const attr of attrs) {
+            const value = node.getAttribute(attr)
+            if (value) el.setAttribute(attr, value)
+        }
 
         // process child elements recursively
-        const childDef = opts === 'self' ? def : Array.isArray(opts) ? null : opts
+        const childDef = opts === 'self' ? def : opts
         let child = node.firstChild
         while (child) {
             const childEl = this.convert(child, childDef)
@@ -248,8 +256,12 @@ export const makeFB2 = async blob => {
         language: getElementText($('title-info lang')),
         author: $$('title-info author').map(getPerson),
         translator: $$('title-info translator').map(getPerson),
-        producer: $$('document-info author').map(getPerson)
-            .concat($$('document-info program-used').map(getElementText)),
+        contributor: $$('document-info author').map(getPerson)
+            // techincially the program probably shouldn't get the `bkp` role
+            // but it has been so used by calibre, so ¯\_(ツ)_/¯
+            .concat($$('document-info program-used').map(getElementText))
+            .map(x => Object.assign(typeof x === 'string' ? { name: x } : x,
+                { role: 'bkp' })),
         publisher: getElementText($('publish-info publisher')),
         published: getDate($('title-info date')),
         modified: getDate($('document-info date')),
@@ -258,7 +270,7 @@ export const makeFB2 = async blob => {
         subject: $$('title-info genre').map(getElementText),
     }
     if ($('coverpage image')) {
-        const src = getImageSrc($('coverpage image'))
+        const src = converter.getImageSrc($('coverpage image'))
         book.getCover = () => fetch(src).then(res => res.blob())
     } else book.getCover = () => null
 

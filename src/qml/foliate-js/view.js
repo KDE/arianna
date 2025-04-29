@@ -5,6 +5,155 @@ import { textWalker } from './text-walker.js'
 
 const SEARCH_PREFIX = 'foliate-search:'
 
+const isZip = async file => {
+    const arr = new Uint8Array(await file.slice(0, 4).arrayBuffer())
+    return arr[0] === 0x50 && arr[1] === 0x4b && arr[2] === 0x03 && arr[3] === 0x04
+}
+
+const isPDF = async file => {
+    const arr = new Uint8Array(await file.slice(0, 5).arrayBuffer())
+    return arr[0] === 0x25
+        && arr[1] === 0x50 && arr[2] === 0x44 && arr[3] === 0x46
+        && arr[4] === 0x2d
+}
+
+const isCBZ = ({ name, type }) =>
+    type === 'application/vnd.comicbook+zip' || name.endsWith('.cbz')
+
+const isFB2 = ({ name, type }) =>
+    type === 'application/x-fictionbook+xml' || name.endsWith('.fb2')
+
+const isFBZ = ({ name, type }) =>
+    type === 'application/x-zip-compressed-fb2'
+    || name.endsWith('.fb2.zip') || name.endsWith('.fbz')
+
+const makeZipLoader = async file => {
+    const { configure, ZipReader, BlobReader, TextWriter, BlobWriter } =
+        await import('./vendor/zip.js')
+    configure({ useWebWorkers: false })
+    const reader = new ZipReader(new BlobReader(file))
+    const entries = await reader.getEntries()
+    const map = new Map(entries.map(entry => [entry.filename, entry]))
+    const load = f => (name, ...args) =>
+        map.has(name) ? f(map.get(name), ...args) : null
+    const loadText = load(entry => entry.getData(new TextWriter()))
+    const loadBlob = load((entry, type) => entry.getData(new BlobWriter(type)))
+    const getSize = name => map.get(name)?.uncompressedSize ?? 0
+    return { entries, loadText, loadBlob, getSize }
+}
+
+const getFileEntries = async entry => entry.isFile ? entry
+    : (await Promise.all(Array.from(
+        await new Promise((resolve, reject) => entry.createReader()
+            .readEntries(entries => resolve(entries), error => reject(error))),
+        getFileEntries))).flat()
+
+const makeDirectoryLoader = async entry => {
+    const entries = await getFileEntries(entry)
+    const files = await Promise.all(
+        entries.map(entry => new Promise((resolve, reject) =>
+            entry.file(file => resolve([file, entry.fullPath]),
+                error => reject(error)))))
+    const map = new Map(files.map(([file, path]) =>
+        [path.replace(entry.fullPath + '/', ''), file]))
+    const decoder = new TextDecoder()
+    const decode = x => x ? decoder.decode(x) : null
+    const getBuffer = name => map.get(name)?.arrayBuffer() ?? null
+    const loadText = async name => decode(await getBuffer(name))
+    const loadBlob = name => map.get(name)
+    const getSize = name => map.get(name)?.size ?? 0
+    return { loadText, loadBlob, getSize }
+}
+
+export class ResponseError extends Error {}
+export class NotFoundError extends Error {}
+export class UnsupportedTypeError extends Error {}
+
+const fetchFile = async url => {
+    const res = await fetch(url)
+    if (!res.ok) throw new ResponseError(
+        `${res.status} ${res.statusText}`, { cause: res })
+    return new File([await res.blob()], new URL(res.url).pathname)
+}
+
+export const makeBook = async file => {
+    if (typeof file === 'string') file = await fetchFile(file)
+    let book
+    if (file.isDirectory) {
+        const loader = await makeDirectoryLoader(file)
+        const { EPUB } = await import('./epub.js')
+        book = await new EPUB(loader).init()
+    }
+    else if (!file.size) throw new NotFoundError('File not found')
+    else if (await isZip(file)) {
+        const loader = await makeZipLoader(file)
+        if (isCBZ(file)) {
+            const { makeComicBook } = await import('./comic-book.js')
+            book = makeComicBook(loader, file)
+        }
+        else if (isFBZ(file)) {
+            const { makeFB2 } = await import('./fb2.js')
+            const { entries } = loader
+            const entry = entries.find(entry => entry.filename.endsWith('.fb2'))
+            const blob = await loader.loadBlob((entry ?? entries[0]).filename)
+            book = await makeFB2(blob)
+        }
+        else {
+            const { EPUB } = await import('./epub.js')
+            book = await new EPUB(loader).init()
+        }
+    }
+    else if (await isPDF(file)) {
+        const { makePDF } = await import('./pdf.js')
+        book = await makePDF(file)
+    }
+    else {
+        const { isMOBI, MOBI } = await import('./mobi.js')
+        if (await isMOBI(file)) {
+            const fflate = await import('./vendor/fflate.js')
+            book = await new MOBI({ unzlib: fflate.unzlibSync }).open(file)
+        }
+        else if (isFB2(file)) {
+            const { makeFB2 } = await import('./fb2.js')
+            book = await makeFB2(file)
+        }
+    }
+    if (!book) throw new UnsupportedTypeError('File type not supported')
+    return book
+}
+
+class CursorAutohider {
+    #timeout
+    #el
+    #check
+    #state
+    constructor(el, check, state = {}) {
+        this.#el = el
+        this.#check = check
+        this.#state = state
+        if (this.#state.hidden) this.hide()
+        this.#el.addEventListener('mousemove', ({ screenX, screenY }) => {
+            // check if it actually moved
+            if (screenX === this.#state.x && screenY === this.#state.y) return
+            this.#state.x = screenX, this.#state.y = screenY
+            this.show()
+            if (this.#timeout) clearTimeout(this.#timeout)
+            if (check()) this.#timeout = setTimeout(this.hide.bind(this), 1000)
+        }, false)
+    }
+    cloneFor(el) {
+        return new CursorAutohider(el, this.#check, this.#state)
+    }
+    hide() {
+        this.#el.style.cursor = 'none'
+        this.#state.hidden = true
+    }
+    show() {
+        this.#el.style.removeProperty('cursor')
+        this.#state.hidden = false
+    }
+}
+
 class History extends EventTarget {
     #arr = []
     #index = -1
@@ -67,6 +216,8 @@ export class View extends HTMLElement {
     #tocProgress
     #pageProgress
     #searchResults = new Map()
+    #cursorAutohider = new CursorAutohider(this, () =>
+        this.hasAttribute('autohide-cursor'))
     isFixedLayout = false
     lastLocation
     history = new History()
@@ -78,6 +229,9 @@ export class View extends HTMLElement {
         })
     }
     async open(book) {
+        if (typeof book === 'string'
+        || typeof book.arrayBuffer === 'function'
+        || book.isDirectory) book = await makeBook(book)
         this.book = book
         this.language = languageInfo(book.metadata?.language)
 
@@ -111,8 +265,8 @@ export class View extends HTMLElement {
         this.#root.append(this.renderer)
 
         if (book.sections.some(section => section.mediaOverlay)) {
-            book.media.activeClass ||= '-epub-media-overlay-active'
             const activeClass = book.media.activeClass
+            const playbackActiveClass = book.media.playbackActiveClass
             this.mediaOverlay = book.getMediaOverlay()
             let lastActive
             this.mediaOverlay.addEventListener('highlight', e => {
@@ -123,11 +277,18 @@ export class View extends HTMLElement {
                             .find(x => x.index = resolved.index)
                         const el = resolved.anchor(doc)
                         el.classList.add(activeClass)
+                        if (playbackActiveClass) el.ownerDocument
+                            .documentElement.classList.add(playbackActiveClass)
                         lastActive = new WeakRef(el)
                     })
             })
             this.mediaOverlay.addEventListener('unhighlight', () => {
-                lastActive?.deref()?.classList?.remove(activeClass)
+                const el = lastActive?.deref()
+                if (el) {
+                    el.classList.remove(activeClass)
+                    if (playbackActiveClass) el.ownerDocument
+                        .documentElement.classList.remove(playbackActiveClass)
+                }
             })
         }
     }
@@ -180,25 +341,27 @@ export class View extends HTMLElement {
             doc.documentElement.dir ||= this.language.direction ?? ''
 
         this.#handleLinks(doc, index)
+        this.#cursorAutohider.cloneFor(doc.documentElement)
 
         this.#emit('load', { doc, index })
     }
     #handleLinks(doc, index) {
         const { book } = this
         const section = book.sections[index]
-        for (const a of doc.querySelectorAll('a[href]'))
-            a.addEventListener('click', e => {
-                e.preventDefault()
-                const href_ = a.getAttribute('href')
-                const href = section?.resolveHref?.(href_) ?? href_
-                if (book?.isExternal?.(href))
-                    Promise.resolve(this.#emit('external-link', { a, href }, true))
-                        .then(x => x ? globalThis.open(href, '_blank') : null)
-                        .catch(e => console.error(e))
-                else Promise.resolve(this.#emit('link', { a, href }, true))
-                    .then(x => x ? this.goTo(href) : null)
+        doc.addEventListener('click', e => {
+            const a = e.target.closest('a[href]')
+            if (!a) return
+            e.preventDefault()
+            const href_ = a.getAttribute('href')
+            const href = section?.resolveHref?.(href_) ?? href_
+            if (book?.isExternal?.(href))
+                Promise.resolve(this.#emit('external-link', { a, href }, true))
+                    .then(x => x ? globalThis.open(href, '_blank') : null)
                     .catch(e => console.error(e))
-            })
+            else Promise.resolve(this.#emit('link', { a, href }, true))
+                .then(x => x ? this.goTo(href) : null)
+                .catch(e => console.error(e))
+        })
     }
     async addAnnotation(annotation, remove) {
         const { value } = annotation
@@ -414,12 +577,12 @@ export class View extends HTMLElement {
             for (const item of list) this.deleteAnnotation(item)
         this.#searchResults.clear()
     }
-    async initTTS() {
+    async initTTS(granularity = 'word') {
         const doc = this.renderer.getContents()[0].doc
         if (this.tts && this.tts.doc === doc) return
         const { TTS } = await import('./tts.js')
         this.tts = new TTS(doc, textWalker, range =>
-            this.renderer.scrollToAnchor(range, true))
+            this.renderer.scrollToAnchor(range, true), granularity)
     }
     startMediaOverlay() {
         const { index } = this.renderer.getContents()[0]
