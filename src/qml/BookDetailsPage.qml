@@ -24,7 +24,7 @@ FormCard.FormCardPage {
             id: authorField
 
             text: i18n("Author:")
-            description: root.metadata.author
+            description: root.metadata.author.join(', ')
             visible: description.length > 0
         }
 
