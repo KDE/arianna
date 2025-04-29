@@ -5,7 +5,15 @@
 
 #include "bookdatabase.h"
 
+#include <kfilemetadata_version.h>
+#if KFILEMETADATA_VERSION < QT_VERSION_CHECK(6, 14, 0)
+#include "epubcontainer.h"
+#else
+#include <KFileMetaData/ExtractorCollection>
+#include <KFileMetaData/Properties>
 #include <KFileMetaData/UserMetaData>
+#endif
+#include <KFileMetaData/ExtractionResult>
 
 #include <QCoreApplication>
 #include <QDir>
@@ -16,11 +24,93 @@
 #include <QUrl>
 #include <QUuid>
 
-#include "epubcontainer.h"
-
 #include <arianna_debug.h>
-#include <qchar.h>
-#include <qloggingcategory.h>
+
+using namespace Qt::StringLiterals;
+
+#if KFILEMETADATA_VERSION >= QT_VERSION_CHECK(6, 14, 0)
+class AriannaExtractionResult : public KFileMetaData::ExtractionResult
+{
+public:
+    AriannaExtractionResult(const QString &url, const QString &mimetype)
+        : KFileMetaData::ExtractionResult(url, mimetype, KFileMetaData::ExtractionResult::ExtractMetaData | KFileMetaData::ExtractionResult::ExtractImageData)
+    {
+    }
+
+    void add(KFileMetaData::Property::Property property, const QVariant &value) override
+    {
+        if (property == KFileMetaData::Property::Title) {
+            title = value.toString();
+        }
+
+        if (property == KFileMetaData::Property::Author) {
+            authors.append(value.toString());
+        }
+
+        if (property == KFileMetaData::Property::Publisher) {
+            publishers.append(value.toString());
+        }
+
+        if (property == KFileMetaData::Property::Subject) {
+            genres.append(value.toString());
+        }
+
+        if (property == KFileMetaData::Property::Identifier) {
+            identifiers.append(value.toString());
+        }
+
+        if (property == KFileMetaData::Property::Language) {
+            languages.append(value.toString());
+        }
+
+        if (property == KFileMetaData::Property::Description) {
+            descriptions.append(value.toString());
+        }
+
+        if (property == KFileMetaData::Property::License) {
+            rights.append(value.toString());
+        }
+
+        if (property == KFileMetaData::Property::CreationDate) {
+            creation = value.toDateTime();
+        }
+
+        if (property == KFileMetaData::Property::OriginUrl) {
+            sources.append(value.toString());
+        }
+
+        if (property == KFileMetaData::Property::Serie) {
+            series.append(value.toString());
+        }
+
+        if (property == KFileMetaData::Property::VolumeNumber) {
+            volumeNumbers.append(QString::number(value.toInt()));
+        }
+    }
+
+    void addType(KFileMetaData::Type::Type) override
+    {
+    }
+
+    void append(const QString &) override
+    {
+    }
+
+    QString title;
+    QStringList identifiers;
+    QStringList authors;
+    QStringList rights;
+    QStringList languages;
+    QStringList publishers;
+    QStringList genres;
+    QStringList sources;
+    QStringList descriptions;
+    QStringList series;
+    QStringList volumeNumbers;
+    QDateTime creation;
+    QImage cover;
+};
+#endif
 
 class BookListModel::Private
 {
@@ -229,8 +319,40 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
                 entry.rating = it.value().toInt();
             }
         }
-        QMimeDatabase db;
-        QString mimetype = db.mimeTypeForFile(entry.filename).name();
+        static QMimeDatabase db;
+        const QString mimetype = db.mimeTypeForFile(entry.filename).name();
+
+#if KFILEMETADATA_VERSION >= QT_VERSION_CHECK(6, 14, 0)
+        static KFileMetaData::ExtractorCollection extractorCollection;
+        const auto extractors = extractorCollection.fetchExtractors(mimetype);
+
+        if (!extractors.isEmpty()) {
+            const auto &extractor = extractors.at(0);
+            AriannaExtractionResult result(entry.filename, mimetype);
+            extractor->extract(&result);
+
+            entry.title = result.title;
+            entry.author = result.authors;
+            entry.publisher = result.publishers.join(u", "_s);
+            entry.genres = result.genres;
+            entry.language = result.languages.join(u", "_s);
+            entry.source = result.sources.join(u", "_s);
+            entry.identifier = result.identifiers.join(u", "_s);
+            entry.rights = result.rights.join(u", "_s);
+            entry.description = result.descriptions;
+            entry.created = result.creation;
+            const auto cover = result.imageData().value(KFileMetaData::EmbeddedImageData::FrontCover);
+            if (!cover.isEmpty()) {
+                const QImage image = image.fromData(cover);
+                if (!image.isNull()) {
+                    entry.thumbnail = entry.saveCover(image);
+                }
+            }
+
+            entry.series = result.series;
+            entry.seriesVolumes = result.volumeNumbers;
+        }
+#else
         if (mimetype == QStringLiteral("application/epub+zip")) {
             EPubContainer epub(nullptr);
             epub.openFile(entry.filename);
@@ -255,6 +377,7 @@ void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int 
                 entry.seriesVolumes.append(QString::number(collection.position));
             }
         }
+#endif
 
         newEntries.append(entry);
     }

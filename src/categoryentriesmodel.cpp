@@ -5,7 +5,15 @@
 #include "arianna_debug.h"
 #include "epubcontainer.h"
 
+#include <kfilemetadata_version.h>
+#if KFILEMETADATA_VERSION < QT_VERSION_CHECK(6, 14, 0)
+#include "epubcontainer.h"
+#else
+#include <KFileMetaData/ExtractorCollection>
+#include <KFileMetaData/SimpleExtractionResult>
 #include <KFileMetaData/UserMetaData>
+#endif
+#include <KFileMetaData/ExtractionResult>
 
 #include <QDir>
 #include <QFileInfo>
@@ -144,11 +152,31 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
                 return entry.thumbnail;
             }
 
+            // TODO this whole bloc, this is the wrong place to do this
+#if KFILEMETADATA_VERSION >= QT_VERSION_CHECK(6, 14, 0)
+            static QMimeDatabase db;
+            const QString mimetype = db.mimeTypeForFile(entry.filename).name();
+            static KFileMetaData::ExtractorCollection extractorCollection;
+            const auto extractors = extractorCollection.fetchExtractors(mimetype);
+            if (!extractors.isEmpty()) {
+                const auto &extractor = extractors.at(0);
+                KFileMetaData::SimpleExtractionResult result(entry.filename, mimetype, KFileMetaData::ExtractionResult::ExtractImageData);
+                extractor->extract(&result);
+                const auto cover = result.imageData().value(KFileMetaData::EmbeddedImageData::FrontCover);
+                if (!cover.isEmpty()) {
+                    const QImage image = image.fromData(cover);
+                    if (!image.isNull()) {
+                        entry.saveCover(image);
+                    }
+                }
+            }
+#else
             QFile file(entry.thumbnail);
             EPubContainer epub(nullptr);
             epub.openFile(entry.filename);
             auto image = epub.image(epub.metadata(QStringLiteral("cover")).join(QChar()));
             entry.saveCover(image, entry.thumbnail);
+#endif
             return entry.thumbnail;
         }
         case DescriptionRole:
