@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-29 00:39+0000\n"
+"POT-Creation-Date: 2025-04-30 00:40+0000\n"
 "PO-Revision-Date: 2024-09-07 12:23+0100\n"
 "Last-Translator: Steve Allewell <steve.allewell@gmail.com>\n"
 "Language-Team: British English\n"
@@ -110,152 +110,152 @@ msgstr "Copyright:"
 msgid "Color theme"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:79 qml/EpubViewerPage.qml:280
-#: qml/EpubViewerPage.qml:284
+#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:281
+#: qml/EpubViewerPage.qml:285
 #, kde-format
 msgid "Loading"
 msgstr "Loading"
 
-#: qml/EpubViewerPage.qml:81 qml/Main.qml:168
+#: qml/EpubViewerPage.qml:82 qml/Main.qml:168
 #, kde-format
 msgid "No search results"
 msgstr "No search results"
 
-#: qml/EpubViewerPage.qml:125
+#: qml/EpubViewerPage.qml:126
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Search"
 msgstr "Search"
 
-#: qml/EpubViewerPage.qml:131
+#: qml/EpubViewerPage.qml:132
 #, kde-format
 msgid "Book Details"
 msgstr "Book Details"
 
-#: qml/EpubViewerPage.qml:154
+#: qml/EpubViewerPage.qml:155
 #, kde-format
 msgid "No book selected"
 msgstr "No book selected"
 
-#: qml/EpubViewerPage.qml:157
+#: qml/EpubViewerPage.qml:158
 #, kde-format
 msgid "Open file"
 msgstr "Open file"
 
-#: qml/EpubViewerPage.qml:178
+#: qml/EpubViewerPage.qml:179
 #, kde-format
 msgid "Please choose a file"
 msgstr "Please choose a file"
 
-#: qml/EpubViewerPage.qml:179 qml/Main.qml:365
+#: qml/EpubViewerPage.qml:180 qml/Main.qml:365
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
 msgstr "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
 
-#: qml/EpubViewerPage.qml:228
+#: qml/EpubViewerPage.qml:229
 #, kde-format
 msgid "Copy"
 msgstr "Copy"
 
-#: qml/EpubViewerPage.qml:234
+#: qml/EpubViewerPage.qml:235
 #, kde-format
 msgid "Find"
 msgstr "Find"
 
-#: qml/EpubViewerPage.qml:259
+#: qml/EpubViewerPage.qml:260
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1%"
 
-#: qml/EpubViewerPage.qml:279
+#: qml/EpubViewerPage.qml:280
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "Time left in chapter:"
 
-#: qml/EpubViewerPage.qml:283
+#: qml/EpubViewerPage.qml:284
 #, kde-format
 msgid "Time left in book:"
 msgstr "Time left in book:"
 
-#: qml/EpubViewerPage.qml:294
+#: qml/EpubViewerPage.qml:295
 #, kde-format
 msgid "Previous Page"
 msgstr "Previous Page"
 
-#: qml/EpubViewerPage.qml:320
+#: qml/EpubViewerPage.qml:321
 #, kde-format
 msgid "Next Page"
 msgstr "Next Page"
 
-#: qml/EpubViewerPage.qml:355
+#: qml/EpubViewerPage.qml:356
 #, kde-format
 msgid "Loc. %s of %s"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:356
+#: qml/EpubViewerPage.qml:357
 #, kde-format
 msgid "Page %s of %s"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:357
+#: qml/EpubViewerPage.qml:358
 #, kde-format
 msgid "Page %s"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:358
+#: qml/EpubViewerPage.qml:359
 #, kde-format
 msgid "Close"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:360
+#: qml/EpubViewerPage.qml:361
 #, kde-format
 msgid "Footnote"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:361
+#: qml/EpubViewerPage.qml:362
 #, kde-format
 msgid "Go to Footnote"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:362
+#: qml/EpubViewerPage.qml:363
 #, kde-format
 msgid "Endnote"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:363
+#: qml/EpubViewerPage.qml:364
 #, kde-format
 msgid "Go to Endnote"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:364
+#: qml/EpubViewerPage.qml:365
 #, kde-format
 msgid "Note"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:365
+#: qml/EpubViewerPage.qml:366
 #, kde-format
 msgid "Go to Note"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:366
+#: qml/EpubViewerPage.qml:367
 #, fuzzy, kde-format
 #| msgid "Description:"
 msgid "Definition"
 msgstr "Description:"
 
-#: qml/EpubViewerPage.qml:367
+#: qml/EpubViewerPage.qml:368
 #, kde-format
 msgid "Go to Definition"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:368
+#: qml/EpubViewerPage.qml:369
 #, kde-format
 msgid "Bibliography"
 msgstr ""
 
-#: qml/EpubViewerPage.qml:369
+#: qml/EpubViewerPage.qml:370
 #, kde-format
 msgid "Go to Bibliography"
 msgstr ""
