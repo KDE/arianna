@@ -100,6 +100,12 @@ Kirigami.ScrollablePage {
                     metadata: menu.entry,
                 })
             }
+
+            QQC2.Action {
+                icon.name: 'edit-delete-symbolic'
+                text: i18nc("@action:inmenu", "Delete Book")
+                onTriggered: bookListModel.removeBook(menu.entry.filename, false);
+            }
         }
 
         Kirigami.PlaceholderMessage {
