@@ -4,6 +4,7 @@
 # Frederik Schwarzer <schwarzer@kde.org>, 2023.
 # SPDX-FileCopyrightText: 2023 Johannes Obermayr <johannesobermayr@gmx.de>
 # SPDX-FileCopyrightText: 2024 Frank Steinmetzger <dev-kde@felsenfleischer.de>
+# SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
 #
 # Automatically generated, 2023.
 msgid ""
@@ -11,15 +12,15 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-17 00:39+0000\n"
-"PO-Revision-Date: 2024-09-27 13:37+0200\n"
-"Last-Translator: Frank Steinmetzger <dev-kde@felsenfleischer.de>\n"
+"PO-Revision-Date: 2025-06-09 08:18+0200\n"
+"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
 "Language-Team: English <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.1\n"
+"X-Generator: Lokalize 25.04.1\n"
 
 #: content/ui/BookDetailsPage.qml:16
 #, kde-format
@@ -60,7 +61,7 @@ msgstr "Copyright:"
 #: content/ui/ColorSchemeDelegate.qml:13
 #, kde-format
 msgid "Color theme"
-msgstr ""
+msgstr "Farbschema"
 
 #: content/ui/EpubViewerPage.qml:79 content/ui/EpubViewerPage.qml:280
 #: content/ui/EpubViewerPage.qml:284
@@ -149,68 +150,67 @@ msgstr ""
 #: content/ui/EpubViewerPage.qml:356
 #, kde-format
 msgid "Page %s of %s"
-msgstr ""
+msgstr "Seite %s von %s"
 
 #: content/ui/EpubViewerPage.qml:357
 #, kde-format
 msgid "Page %s"
-msgstr ""
+msgstr "Seite %s"
 
 #: content/ui/EpubViewerPage.qml:358
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
 #: content/ui/EpubViewerPage.qml:360
 #, kde-format
 msgid "Footnote"
-msgstr ""
+msgstr "Fußnote"
 
 #: content/ui/EpubViewerPage.qml:361
 #, kde-format
 msgid "Go to Footnote"
-msgstr ""
+msgstr "Zur Fußnote gehen"
 
 #: content/ui/EpubViewerPage.qml:362
 #, kde-format
 msgid "Endnote"
-msgstr ""
+msgstr "Endnote"
 
 #: content/ui/EpubViewerPage.qml:363
 #, kde-format
 msgid "Go to Endnote"
-msgstr ""
+msgstr "Zur Endnote gehen"
 
 #: content/ui/EpubViewerPage.qml:364
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "Notiz"
 
 #: content/ui/EpubViewerPage.qml:365
 #, kde-format
 msgid "Go to Note"
-msgstr ""
+msgstr "Zur Notiz gehen"
 
 #: content/ui/EpubViewerPage.qml:366
-#, fuzzy, kde-format
-#| msgid "Description:"
+#, kde-format
 msgid "Definition"
-msgstr "Beschreibung:"
+msgstr "Definition"
 
 #: content/ui/EpubViewerPage.qml:367
 #, kde-format
 msgid "Go to Definition"
-msgstr ""
+msgstr "Zur Definition gehen"
 
 #: content/ui/EpubViewerPage.qml:368
 #, kde-format
 msgid "Bibliography"
-msgstr ""
+msgstr "Literaturverzeichnis"
 
 #: content/ui/EpubViewerPage.qml:369
 #, kde-format
 msgid "Go to Bibliography"
-msgstr ""
+msgstr "Zum Literaturverzeichnis gehen"
 
 #: content/ui/GridBrowserDelegate.qml:146
 #, kde-format
@@ -224,8 +224,7 @@ msgid "Library"
 msgstr "Bibliothek"
 
 #: content/ui/LibraryPage.qml:98
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "Buchdetails"
@@ -322,18 +321,15 @@ msgid "Settings"
 msgstr "Einstellungen"
 
 #: content/ui/main.qml:342
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
-msgstr "Buch hinzufügen …"
+msgstr "Bücher hinzufügen …"
 
 #: content/ui/main.qml:363
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
-msgstr "Bitte wählen Sie eine Datei"
+msgstr "Bitte wählen Sie Dateien aus"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format
@@ -473,7 +469,7 @@ msgstr "kde-i18n-de@kde.org"
 #: main.cpp:86
 #, kde-format
 msgid "Epub reader"
-msgstr "EPub-Lesegerät"
+msgstr "EPub-Reader-Anwendung"
 
 #: main.cpp:87
 #, kde-format
