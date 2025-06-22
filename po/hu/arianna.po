@@ -2,13 +2,13 @@
 # This file is distributed under the same license as the arianna package.
 #
 # K. Áron <aronkvh@gmail.com>, 2023.
-# SPDX-FileCopyrightText: 2024 Kristof Kiszel <ulysses@fsf.hu>
+# SPDX-FileCopyrightText: 2024, 2025 Kristof Kiszel <ulysses@fsf.hu>
 msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-01-17 00:39+0000\n"
-"PO-Revision-Date: 2024-09-09 20:33+0200\n"
+"PO-Revision-Date: 2025-06-21 15:38+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
 "Language: hu\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.08.0\n"
+"X-Generator: Lokalize 25.04.2\n"
 
 #: content/ui/BookDetailsPage.qml:16
 #, kde-format
@@ -57,7 +57,7 @@ msgstr "Copyright:"
 #: content/ui/ColorSchemeDelegate.qml:13
 #, kde-format
 msgid "Color theme"
-msgstr ""
+msgstr "Színtéma"
 
 #: content/ui/EpubViewerPage.qml:79 content/ui/EpubViewerPage.qml:280
 #: content/ui/EpubViewerPage.qml:284
@@ -94,7 +94,7 @@ msgstr "Fájl megnyitása"
 #: content/ui/EpubViewerPage.qml:178
 #, kde-format
 msgid "Please choose a file"
-msgstr "Kérjük válasszon egy fájlt"
+msgstr "Válasszon egy fájlt"
 
 #: content/ui/EpubViewerPage.qml:179 content/ui/main.qml:364
 #, kde-format
@@ -110,7 +110,7 @@ msgstr "Másolás"
 #: content/ui/EpubViewerPage.qml:234
 #, kde-format
 msgid "Find"
-msgstr "Megkeresés"
+msgstr "Keresés"
 
 #: content/ui/EpubViewerPage.qml:259
 #, kde-format
@@ -141,73 +141,72 @@ msgstr "Következő oldal"
 #: content/ui/EpubViewerPage.qml:355
 #, kde-format
 msgid "Loc. %s of %s"
-msgstr ""
+msgstr "%s / %s hely"
 
 #: content/ui/EpubViewerPage.qml:356
 #, kde-format
 msgid "Page %s of %s"
-msgstr ""
+msgstr "%s / %s oldal"
 
 #: content/ui/EpubViewerPage.qml:357
 #, kde-format
 msgid "Page %s"
-msgstr ""
+msgstr "%s. oldal"
 
 #: content/ui/EpubViewerPage.qml:358
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Bezárás"
 
 #: content/ui/EpubViewerPage.qml:360
 #, kde-format
 msgid "Footnote"
-msgstr ""
+msgstr "Lábjegyzet"
 
 #: content/ui/EpubViewerPage.qml:361
 #, kde-format
 msgid "Go to Footnote"
-msgstr ""
+msgstr "Ugrás a lábjegyzetre"
 
 #: content/ui/EpubViewerPage.qml:362
 #, kde-format
 msgid "Endnote"
-msgstr ""
+msgstr "Végjegyzet"
 
 #: content/ui/EpubViewerPage.qml:363
 #, kde-format
 msgid "Go to Endnote"
-msgstr ""
+msgstr "Ugrás a végjegyzetre"
 
 #: content/ui/EpubViewerPage.qml:364
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "Jegyzet"
 
 #: content/ui/EpubViewerPage.qml:365
 #, kde-format
 msgid "Go to Note"
-msgstr ""
+msgstr "Ugrás a jegyzetre"
 
 #: content/ui/EpubViewerPage.qml:366
-#, fuzzy, kde-format
-#| msgid "Description:"
+#, kde-format
 msgid "Definition"
-msgstr "Leírás:"
+msgstr "Definíció"
 
 #: content/ui/EpubViewerPage.qml:367
 #, kde-format
 msgid "Go to Definition"
-msgstr ""
+msgstr "Ugrás a definícióra"
 
 #: content/ui/EpubViewerPage.qml:368
 #, kde-format
 msgid "Bibliography"
-msgstr ""
+msgstr "Bibliográfia"
 
 #: content/ui/EpubViewerPage.qml:369
 #, kde-format
 msgid "Go to Bibliography"
-msgstr ""
+msgstr "Ugrás a bibliográfiára"
 
 #: content/ui/GridBrowserDelegate.qml:146
 #, kde-format
@@ -221,8 +220,7 @@ msgid "Library"
 msgstr "Könyvtár"
 
 #: content/ui/LibraryPage.qml:98
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "Könyv adatai"
@@ -319,18 +317,15 @@ msgid "Settings"
 msgstr "Beállítások"
 
 #: content/ui/main.qml:342
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
-msgstr "Könyv hozzáadása..."
+msgstr "Könyvek hozzáadása…"
 
 #: content/ui/main.qml:363
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
-msgstr "Kérjük válasszon egy fájlt"
+msgstr "Válasszon fájlokat"
 
 #: content/ui/SettingsPage.qml:19
 #, kde-format
