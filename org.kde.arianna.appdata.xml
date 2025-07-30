@@ -68,6 +68,7 @@
   <summary xml:lang="lv">E-grāmatu lasītājs</summary>
   <summary xml:lang="nl">E-book-lezer</summary>
   <summary xml:lang="pl">Czytnik Ebooków</summary>
+  <summary xml:lang="pt-BR">Leitor de ebook</summary>
   <summary xml:lang="ru">Приложение для чтения электронных книг</summary>
   <summary xml:lang="sa">ईपुस्तक पाठक</summary>
   <summary xml:lang="sl">Bralnik elektronskih knjig</summary>
@@ -103,6 +104,7 @@
     <p xml:lang="nl">Een e-boeklezer en toepassing voor bibliotheekbeheer die ".epub"-bestanden ondersteunt. Arianna ontdekt uw boeken automatisch en sorteert ze op categorieën, genres en auteurs.</p>
     <p xml:lang="pl">Czytnik ebooków i zarządzanie biblioteką z obsługą plików ".epub". Arianna wykryje twoje książki samodzielnie i pogrupuje je po kategoriach, gatunkach i autorach.</p>
     <p xml:lang="pt">Um leitor de e-books e de gestão de bibliotecas de ficheiros ".epub". O Arianna descobre automaticamente os seus livros, ordenando-os por categorias, géneros e autores.</p>
+    <p xml:lang="pt-BR">Um leitor de e-books e aplicativo de gerenciamento de biblioteca com suporte para arquivos ".epub". O Arianna descobre seus livros automaticamente e os classifica por categorias, gêneros e autores.</p>
     <p xml:lang="ro">Cititor de cărți electronice și aplicație de gestiune a bibliotecii cu suport pentru fișiere „.epub”. Arianna vă descoperă automat cărțile și le sortează pe categorii, genuri și autori.</p>
     <p xml:lang="ru">Приложение для чтения электронных книг и управления библиотекой с поддержкой файлов «.epub». Arianna автоматически обнаруживает книги и сортирует их по категориям, жанрам и авторам.</p>
     <p xml:lang="sa">".epub" सञ्चिकानां समर्थनं कुर्वन् एकः ईपुस्तकपाठकः पुस्तकालयप्रबन्धन-अनुप्रयोगः च । एरियाना भवतः पुस्तकानि स्वयमेव आविष्करोति, श्रेणीभिः, विधैः, लेखकैः च क्रमेण क्रमयति ।</p>
