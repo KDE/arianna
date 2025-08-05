@@ -5,6 +5,7 @@
 # SPDX-FileCopyrightText: 2023 Johannes Obermayr <johannesobermayr@gmx.de>
 # SPDX-FileCopyrightText: 2024 Frank Steinmetzger <dev-kde@felsenfleischer.de>
 # SPDX-FileCopyrightText: 2025 Alois Spitzbart <spitz234@hotmail.com>
+# SPDX-FileCopyrightText: 2025 Alexander Becker <alex-at-kde-l10n-de@freenet.de>
 #
 # Automatically generated, 2023.
 msgid ""
@@ -12,15 +13,15 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-04-30 00:40+0000\n"
-"PO-Revision-Date: 2025-06-09 08:18+0200\n"
-"Last-Translator: Alois Spitzbart <spitz234@hotmail.com>\n"
+"PO-Revision-Date: 2025-07-30 19:44+0200\n"
+"Last-Translator: Alexander Becker <alex-at-kde-l10n-de@freenet.de>\n"
 "Language-Team: English <kde-i18n-de@kde.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 25.04.1\n"
+"X-Generator: Lokalize 24.12.3\n"
 
 #: main.cpp:57 qml/Main.qml:19 qml/Main.qml:303
 #, kde-format
@@ -197,7 +198,7 @@ msgstr "Nächste Seite"
 #: qml/EpubViewerPage.qml:356
 #, kde-format
 msgid "Loc. %s of %s"
-msgstr ""
+msgstr "Pos. %s von %s"
 
 #: qml/EpubViewerPage.qml:357
 #, kde-format
@@ -310,7 +311,7 @@ msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
 "touch devices)"
 msgid "Open Other..."
-msgstr "Weitere öffnen ..."
+msgstr "Weitere öffnen …"
 
 #: qml/Main.qml:225
 #, kde-format
@@ -371,7 +372,7 @@ msgstr "Einstellungen"
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
-msgstr "Bücher hinzufügen …"
+msgstr "Bücher hinzufügen …"
 
 #: qml/Main.qml:364
 #, kde-format
