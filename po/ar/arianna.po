@@ -41,7 +41,7 @@ msgstr "نيكولو فينيراندي"
 #: main.cpp:62 main.cpp:63
 #, kde-format
 msgid "Maintainer"
-msgstr "المصين"
+msgstr "الصائن"
 
 #: main.cpp:63
 #, kde-format
@@ -402,7 +402,7 @@ msgstr "الخط"
 #: qml/SettingsPage.qml:72 qml/SettingsPage.qml:194
 #, kde-format
 msgid "Change default font"
-msgstr "تغيير الخط الافتراضي"
+msgstr "تغيير الخط المبدئي"
 
 #: qml/SettingsPage.qml:77
 #, kde-format
