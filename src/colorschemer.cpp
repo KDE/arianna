@@ -6,7 +6,6 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 #include <QAbstractItemModel>
-#include <QQmlEngine>
 
 ColorSchemer::ColorSchemer(QObject *parent)
     : QObject(parent)
