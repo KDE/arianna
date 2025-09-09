@@ -44,7 +44,6 @@
   <name xml:lang="sv">Arianna</name>
   <name xml:lang="tr">Arianna</name>
   <name xml:lang="uk">Arianna</name>
-  <name xml:lang="x-test">xxAriannaxx</name>
   <name xml:lang="zh-CN">Arianna</name>
   <name xml:lang="zh-TW">Arianna</name>
   <summary>EBook reader</summary>
@@ -75,7 +74,6 @@
   <summary xml:lang="sv">E-bokläsare</summary>
   <summary xml:lang="tr">E-kitap Okuyucusu</summary>
   <summary xml:lang="uk">Читання електронних книг</summary>
-  <summary xml:lang="x-test">xxEBook readerxx</summary>
   <summary xml:lang="zh-CN">电子书阅读器</summary>
   <summary xml:lang="zh-TW">電子書閱讀器</summary>
   <description>
@@ -113,7 +111,6 @@
     <p xml:lang="sv">En e-bokläsare och bibliotekshanterare som stöder ".epub"-filer. Arianna upptäcker dina böcker automatiskt och sorterar dem efter kategorier, genrer och författare.</p>
     <p xml:lang="tr">“.epub” dosyalarını destekleyen bir e-kitap okuyucusu ve kitaplık yönetim uygulaması. Arianna kitaplarınızı kendiliğinden bulur ve onları kategoriye, türe ve yazarlara göre sıralar.</p>
     <p xml:lang="uk">Програма для читання та керування бібліотекою з підтримкою файлів «.epub». Arianna автоматично виявить ваші книги і упорядкує їх за категоріями, жанрами та авторами.</p>
-    <p xml:lang="x-test">xxAn ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sorts them by categories, genres and authors.xx</p>
     <p xml:lang="zh-CN">支持“.epub”文件的电子书阅读器和书库管理。Arianna 可以自动索引您的书籍，并按照类别、体裁或作者整理。</p>
     <p xml:lang="zh-TW">一個電子書閱讀器與書庫管理應用程式，支援 ".epub" 檔案。Arianna 會自動探索您的書本，並依分類、風格與作者排序。</p>
   </description>
@@ -158,7 +155,6 @@
   <developer_name xml:lang="sv">KDE-gemenskapen</developer_name>
   <developer_name xml:lang="tr">KDE Topluluğu</developer_name>
   <developer_name xml:lang="uk">Спільнота KDE</developer_name>
-  <developer_name xml:lang="x-test">xxThe KDE Communityxx</developer_name>
   <developer_name xml:lang="zh-CN">KDE 社区</developer_name>
   <developer_name xml:lang="zh-TW">KDE 社群</developer_name>
   <supports>
