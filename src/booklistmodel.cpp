@@ -18,9 +18,9 @@
 
 #include "epubcontainer.h"
 
+#include <QChar>
+#include <QLoggingCategory>
 #include <arianna_debug.h>
-#include <qchar.h>
-#include <qloggingcategory.h>
 
 class BookListModel::Private
 {

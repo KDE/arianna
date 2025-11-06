@@ -21,7 +21,7 @@
 #include <KLocalizedString>
 #include <KWindowConfig>
 #include <KWindowSystem>
-#include <qstringliteral.h>
+#include <QStringLiteral>
 
 #include "arianna-version.h"
 #include "bookdatabase.h"

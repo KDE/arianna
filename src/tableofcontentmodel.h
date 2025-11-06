@@ -3,9 +3,9 @@
 
 #pragma once
 
+#include <QAbstractItemModel>
 #include <QAbstractListModel>
 #include <memory>
-#include <qabstractitemmodel.h>
 #include <qqmlintegration.h>
 
 class TreeItem
