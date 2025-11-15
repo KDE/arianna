@@ -6,6 +6,7 @@
 
 #include <KArchiveDirectory>
 #include <KArchiveFile>
+#include <KLocalizedString>
 
 #include <QDebug>
 #include <QDir>
@@ -31,14 +32,14 @@ bool EPubContainer::openFile(const QString &path)
     m_archive = std::make_unique<KZip>(path);
 
     if (!m_archive->open(QIODevice::ReadOnly)) {
-        Q_EMIT errorOccured(tr("Failed to open %1").arg(path));
+        Q_EMIT errorOccured(i18n("Failed to open %1", path));
 
         return false;
     }
 
     m_rootFolder = m_archive->directory();
     if (!m_rootFolder) {
-        Q_EMIT errorOccured(tr("Failed to read %1").arg(path));
+        Q_EMIT errorOccured(i18n("Failed to read %1", path));
         return false;
     }
 
@@ -58,7 +59,7 @@ QSharedPointer<QIODevice> EPubContainer::ioDevice(const QString &path)
     const KArchiveFile *archive = file(path);
     if (!archive) {
         qWarning() << QStringLiteral("Unable to open file %1").arg(path.left(100));
-        Q_EMIT errorOccured(tr("Unable to open file %1").arg(path.left(100)));
+        Q_EMIT errorOccured(i18n("Unable to open file %1", path.left(100)));
         return QSharedPointer<QIODevice>();
     }
 
@@ -100,7 +101,7 @@ bool EPubContainer::parseMimetype()
     const KArchiveFile *mimetypeFile = m_rootFolder->file(MIMETYPE_FILE);
 
     if (!mimetypeFile) {
-        Q_EMIT errorOccured(tr("Unable to find mimetype in file"));
+        Q_EMIT errorOccured(i18n("Unable to find mimetype in file"));
         return false;
     }
 
@@ -120,7 +121,7 @@ bool EPubContainer::parseContainer()
     const KArchiveFile *containerFile = file(CONTAINER_FILE);
     if (!containerFile) {
         qWarning() << "no container file";
-        Q_EMIT errorOccured(tr("Unable to find container information"));
+        Q_EMIT errorOccured(i18n("Unable to find container information"));
         return false;
     }
 
@@ -151,7 +152,7 @@ bool EPubContainer::parseContainer()
     //     - rights.xml (reserved for DRM, not standardized)
     //     - signatures.xml (signatures for files, standardized)
 
-    Q_EMIT errorOccured(tr("Unable to find and use any content files"));
+    Q_EMIT errorOccured(i18n("Unable to find and use any content files"));
     return false;
 }
 
@@ -159,7 +160,7 @@ bool EPubContainer::parseContentFile(const QString &filepath)
 {
     const KArchiveFile *rootFile = file(filepath);
     if (!rootFile) {
-        Q_EMIT errorOccured(tr("Malformed metadata, unable to get content metadata path"));
+        Q_EMIT errorOccured(i18n("Malformed metadata, unable to get content metadata path"));
         return false;
     }
     QScopedPointer<QIODevice> ioDevice(rootFile->createDevice());
@@ -204,7 +205,7 @@ bool EPubContainer::parseContentFile(const QString &filepath)
         QString tocId = spineElement.attribute(QStringLiteral("toc"));
         if (!tocId.isEmpty() && m_items.contains(tocId)) {
             EpubPageReference tocReference;
-            tocReference.title = tr("Table of Contents");
+            tocReference.title = i18n("Table of Contents");
             tocReference.target = tocId;
             m_standardReferences.insert(EpubPageReference::TableOfContents, tocReference);
         }
