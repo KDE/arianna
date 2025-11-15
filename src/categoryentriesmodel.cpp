@@ -324,8 +324,9 @@ std::optional<BookEntry> CategoryEntriesModel::getBookEntry(int index)
 
 int CategoryEntriesModel::indexOfFile(const QString &filename)
 {
-    int index = -1, i = 0;
+    int index = -1;
     if (QFile::exists(filename)) {
+        int i = 0;
         for (const BookEntry &entry : std::as_const(d->entries)) {
             if (entry.filename == filename) {
                 index = i;
