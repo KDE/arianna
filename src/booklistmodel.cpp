@@ -114,7 +114,7 @@ public:
     void loadCache(BookListModel *q)
     {
         QList<BookEntry> entries = BookDatabase::self().loadEntries();
-        if (entries.count() > 0) {
+        if (!entries.isEmpty()) {
             initializeSubModels(q);
         }
         int i = 0;
