@@ -18,6 +18,7 @@
 #include <KCrash>
 #include <KDBusService>
 #include <KLocalizedContext>
+#include <KLocalizedQmlContext>
 #include <KLocalizedString>
 #include <KWindowConfig>
 #include <KWindowSystem>
@@ -72,7 +73,7 @@ int main(int argc, char *argv[])
 
     KDBusService service(KDBusService::Unique);
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextObject(new KLocalizedContext(&engine));
+    engine.rootContext()->setContextObject(new KLocalizedQmlContext(&engine));
 
     QCommandLineParser parser;
     parser.setApplicationDescription(i18n("Epub reader"));
