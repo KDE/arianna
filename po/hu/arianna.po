@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-04-30 00:40+0000\n"
+"POT-Creation-Date: 2025-11-16 00:39+0000\n"
 "PO-Revision-Date: 2025-06-21 15:38+0200\n"
 "Last-Translator: Kristof Kiszel <ulysses@fsf.hu>\n"
 "Language-Team: Hungarian <kde-l10n-hu@kde.org>\n"
@@ -18,54 +18,97 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 25.04.2\n"
 
-#: main.cpp:57 qml/Main.qml:19 qml/Main.qml:303
+#: epubcontainer.cpp:35
+#, fuzzy, kde-format
+#| msgid "Epub file to open"
+msgid "Failed to open %1"
+msgstr "Megnyitandó Epub fájl kiválasztása"
+
+#: epubcontainer.cpp:42
+#, kde-format
+msgid "Failed to read %1"
+msgstr ""
+
+#: epubcontainer.cpp:62
+#, kde-format
+msgid "Unable to open file %1"
+msgstr ""
+
+#: epubcontainer.cpp:104
+#, kde-format
+msgid "Unable to find mimetype in file"
+msgstr ""
+
+#: epubcontainer.cpp:124
+#, kde-format
+msgid "Unable to find container information"
+msgstr ""
+
+#: epubcontainer.cpp:155
+#, kde-format
+msgid "Unable to find and use any content files"
+msgstr ""
+
+#: epubcontainer.cpp:163
+#, kde-format
+msgid "Malformed metadata, unable to get content metadata path"
+msgstr ""
+
+#: epubcontainer.cpp:208
+#, fuzzy, kde-format
+#| msgctxt "@info:title"
+#| msgid "Table of Contents"
+msgid "Table of Contents"
+msgstr "Tartalomjegyzék"
+
+#: main.cpp:58 qml/Main.qml:19 qml/Main.qml:303
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
 
-#: main.cpp:59
+#: main.cpp:60
 #, kde-format
 msgid "EPub Reader"
 msgstr "EPub olvasó"
 
-#: main.cpp:61
+#: main.cpp:62
 #, kde-format
 msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 
-#: main.cpp:62
+#: main.cpp:63
 #, kde-format
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:62 main.cpp:63
+#: main.cpp:63 main.cpp:64
 #, kde-format
 msgid "Maintainer"
 msgstr "Karbantartó"
 
-#: main.cpp:63
+#: main.cpp:64
 #, kde-format
 msgid "Carl Schwan"
 msgstr "Carl Schwan"
 
-#: main.cpp:64
+#: main.cpp:65
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Kovács Áron"
 
-#: main.cpp:64
+#: main.cpp:65
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "aron.kovacs@kde.org"
 
-#: main.cpp:78
+#: main.cpp:79
 #, kde-format
 msgid "Epub reader"
 msgstr "Epub olvasó"
 
-#: main.cpp:79
+#: main.cpp:80
 #, kde-format
 msgid "Epub file to open"
 msgstr "Megnyitandó Epub fájl kiválasztása"
