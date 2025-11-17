@@ -53,11 +53,9 @@ msgid "Malformed metadata, unable to get content metadata path"
 msgstr ""
 
 #: epubcontainer.cpp:208
-#, fuzzy, kde-format
-#| msgctxt "@info:tooltip"
-#| msgid "Close table of contents"
+#, kde-format
 msgid "Table of Contents"
-msgstr "关闭目录"
+msgstr ""
 
 #: main.cpp:58 qml/Main.qml:19 qml/Main.qml:303
 #, kde-format
