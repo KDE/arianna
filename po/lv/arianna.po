@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:50+0000\n"
-"PO-Revision-Date: 2025-01-20 12:43+0200\n"
+"PO-Revision-Date: 2025-11-18 19:18+0200\n"
 "Last-Translator: Toms Trasuns <toms.trasuns@posteo.net>\n"
 "Language-Team: Latvian <kde-i18n-doc@kde.org>\n"
 "Language: lv\n"
@@ -16,48 +16,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
 "2);\n"
-"X-Generator: Lokalize 24.12.1\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #: epubcontainer.cpp:35
-#, fuzzy, kde-format
-#| msgid "Epub file to open"
+#, kde-format
 msgid "Failed to open %1"
-msgstr "Atveramā „Epub“ datne"
+msgstr "Neizdevās atvērt „%1“"
 
 #: epubcontainer.cpp:42
 #, kde-format
 msgid "Failed to read %1"
-msgstr ""
+msgstr "Neizdevās nolasīt „%1“"
 
 #: epubcontainer.cpp:62
 #, kde-format
 msgid "Unable to open file %1"
-msgstr ""
+msgstr "Neizdevās atvērt datni „%1“"
 
 #: epubcontainer.cpp:104
 #, kde-format
 msgid "Unable to find mimetype in file"
-msgstr ""
+msgstr "Neizdevās datnē atrast MIME tipu"
 
 #: epubcontainer.cpp:124
 #, kde-format
 msgid "Unable to find container information"
-msgstr ""
+msgstr "Neizdevās atrast informāciju par konteineru"
 
 #: epubcontainer.cpp:155
 #, kde-format
 msgid "Unable to find and use any content files"
-msgstr ""
+msgstr "Neizdevās atrast un izmantot satura datnes"
 
 #: epubcontainer.cpp:163
 #, kde-format
 msgid "Malformed metadata, unable to get content metadata path"
-msgstr ""
+msgstr "Nekorekti metadati — neizdodas iegūt ceļu uz satura metadatiem"
 
 #: epubcontainer.cpp:208
-#, fuzzy, kde-format
-#| msgctxt "@info:title"
-#| msgid "Table of Contents"
+#, kde-format
 msgid "Table of Contents"
 msgstr "Satura rādītājs"
 

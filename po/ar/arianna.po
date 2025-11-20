@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:50+0000\n"
-"PO-Revision-Date: 2025-01-17 23:15+0400\n"
+"PO-Revision-Date: 2025-11-19 20:46+0400\n"
 "Last-Translator: Zayed Al-Saidi <zayed.alsaidi@gmail.com>\n"
 "Language-Team: ar\n"
 "Language: ar\n"
@@ -19,20 +19,19 @@ msgstr ""
 "X-Generator: Lokalize 23.08.5\n"
 
 #: epubcontainer.cpp:35
-#, fuzzy, kde-format
-#| msgid "Epub file to open"
+#, kde-format
 msgid "Failed to open %1"
-msgstr "ملف Epub للفتح"
+msgstr "فشل في فتح %1"
 
 #: epubcontainer.cpp:42
 #, kde-format
 msgid "Failed to read %1"
-msgstr ""
+msgstr "فشل في قراءة %1"
 
 #: epubcontainer.cpp:62
 #, kde-format
 msgid "Unable to open file %1"
-msgstr ""
+msgstr "تعذّر فتح الملفّ %1"
 
 #: epubcontainer.cpp:104
 #, kde-format
@@ -55,9 +54,7 @@ msgid "Malformed metadata, unable to get content metadata path"
 msgstr ""
 
 #: epubcontainer.cpp:208
-#, fuzzy, kde-format
-#| msgctxt "@info:title"
-#| msgid "Table of Contents"
+#, kde-format
 msgid "Table of Contents"
 msgstr "جدول المحتويات"
 
