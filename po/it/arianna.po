@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:50+0000\n"
-"PO-Revision-Date: 2025-01-18 02:14+0100\n"
+"PO-Revision-Date: 2025-11-18 10:14+0100\n"
 "Last-Translator: Vincenzo Reale <smart2128vr@gmail.com>\n"
 "Language-Team: Italian <kde-i18n-it@kde.org>\n"
 "Language: it\n"
@@ -15,48 +15,47 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 24.12.1\n"
+"X-Generator: Lokalize 25.08.3\n"
 
 #: epubcontainer.cpp:35
-#, fuzzy, kde-format
-#| msgid "Epub file to open"
+#, kde-format
 msgid "Failed to open %1"
-msgstr "File epub da aprire"
+msgstr "Apertura di %1 non riuscita"
 
 #: epubcontainer.cpp:42
 #, kde-format
 msgid "Failed to read %1"
-msgstr ""
+msgstr "Impossibile leggere %1"
 
 #: epubcontainer.cpp:62
 #, kde-format
 msgid "Unable to open file %1"
-msgstr ""
+msgstr "Impossibile aprire il file %1"
 
 #: epubcontainer.cpp:104
 #, kde-format
 msgid "Unable to find mimetype in file"
-msgstr ""
+msgstr "Impossibile trovare il tipo MIME nel file"
 
 #: epubcontainer.cpp:124
 #, kde-format
 msgid "Unable to find container information"
-msgstr ""
+msgstr "Impossibile trovare le informazioni sul contenitore"
 
 #: epubcontainer.cpp:155
 #, kde-format
 msgid "Unable to find and use any content files"
-msgstr ""
+msgstr "Impossibile trovare e utilizzare alcun file di contenuto"
 
 #: epubcontainer.cpp:163
 #, kde-format
 msgid "Malformed metadata, unable to get content metadata path"
 msgstr ""
+"Metadati non validi, impossibile ottenere il percorso dei metadati del "
+"contenuto"
 
 #: epubcontainer.cpp:208
-#, fuzzy, kde-format
-#| msgctxt "@info:title"
-#| msgid "Table of Contents"
+#, kde-format
 msgid "Table of Contents"
 msgstr "Indice"
 
