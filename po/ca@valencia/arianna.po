@@ -148,7 +148,7 @@ msgstr "Obri un fitxer"
 #: qml/EpubViewerPage.qml:179
 #, kde-format
 msgid "Please choose a file"
-msgstr "Seleccioneu un fitxer"
+msgstr "Trieu un fitxer"
 
 #: qml/EpubViewerPage.qml:180 qml/Main.qml:365
 #, kde-format
@@ -374,7 +374,7 @@ msgstr "Afig llibres…"
 #: qml/Main.qml:364
 #, kde-format
 msgid "Please choose files"
-msgstr "Seleccioneu fitxers"
+msgstr "Trieu els fitxers"
 
 #: qml/SettingsPage.qml:19
 #, kde-format
