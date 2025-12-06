@@ -64,7 +64,7 @@
                         "type": "anitya",
                         "project-id": 6974,
                         "stable-only": true,
-                        "url-template": "https://github.com/LMDB/lmdb/archive/refs/tags/LMDB_$version.tar.gz"
+                        "url-template": "https://git.openldap.org/openldap/openldap/-/archive/LMDB_$version/openldap-LMDB_$version.tar.gz"
                     }
                 }
             ],
