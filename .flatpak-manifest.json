@@ -83,8 +83,7 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "https://invent.kde.org/frameworks/baloo.git",
-                    "tag": "v6.12.0"
+                    "url": "https://invent.kde.org/frameworks/baloo.git"
                 }
             ]
         },
