@@ -51,7 +51,7 @@
                     "type": "git",
                     "url": "https://invent.kde.org/libraries/kirigami-addons.git"
                 }
-	    ]
+            ]
         },
         {
             "name": "lmdb",
