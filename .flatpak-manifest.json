@@ -37,7 +37,12 @@
             "name": "kirigamiaddons",
             "config-opts": [ "-DBUILD_TESTING=OFF" ],
             "buildsystem": "cmake-ninja",
-            "sources": [ { "type": "git", "url": "https://invent.kde.org/libraries/kirigami-addons.git" } ]
+            "sources": [
+		{
+		    "type": "git",
+		    "url": "https://invent.kde.org/libraries/kirigami-addons.git"
+		}
+	    ]
         },
         {
             "name": "lmdb",
