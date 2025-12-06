@@ -28,8 +28,15 @@
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://download.qt.io/official_releases/qt/6.8/6.8.3/submodules/qthttpserver-everywhere-src-6.8.3.tar.xz",
-                    "sha256": "792be98dd979a3f1cf42477139321a8999a648b7e7ad041ae133965c3cc35f65"
+                    "url": "https://download.qt.io/official_releases/qt/6.10/6.10.0/submodules/qthttpserver-everywhere-src-6.10.0.tar.xz",
+                    "sha256": "e4705701db5f425e8f7025b3f74bf87b43af83742a615a20d4aa171d03251fc5",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 7927,
+                        "stable-only": true,
+                        "url-template": "https://download.qt.io/official_releases/qt/${major}.${minor}/$version/submodules/qthttpserver-everywhere-src-$version.tar.xz"
+                    }
+
                 }
             ]
         },
