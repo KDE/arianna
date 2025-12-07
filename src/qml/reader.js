@@ -221,7 +221,7 @@ const getCSS = ({
         ${theme.light.bg !== '#ffffff' ? `
         html, body {
             color: ${theme.light.fg} !important;
-            background: none !important;
+            background: ${theme.light.bg} !important;
         }
         body * {
             color: inherit !important;
@@ -245,7 +245,7 @@ const getCSS = ({
         ${invert ? '' : `
         html, body {
             color: ${theme.dark.fg} !important;
-            background: none !important;
+            background: ${theme.dark.bg} !important;
         }
         body * {
             color: inherit !important;
