@@ -136,8 +136,7 @@ public:
 
     /// Delete a book from the model, and optionally delete the entry from file storage.
     /// \param fileName The filename of the book to remove.
-    /// \param deleteFile Whether to also delete the file from the disk.
-    Q_INVOKABLE void removeBook(const QString &fileName, bool deleteFile = false);
+    Q_INVOKABLE void trashBook(const QString &fileName);
 
     /// \brief A list of the files currently known by the applications
     /// \returns a QStringList with paths to known books.

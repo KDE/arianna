@@ -125,6 +125,7 @@ target_link_libraries(arianna_static PUBLIC
     KF6::Crash
     KF6::ColorScheme
     KF6::I18nQml
+    KF6::KIOCore
 )
 
 target_link_libraries(arianna_static PUBLIC Qt::WebEngineQuick)

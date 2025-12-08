@@ -6,6 +6,7 @@
 #include "bookdatabase.h"
 
 #include <KFileMetaData/UserMetaData>
+#include <KIO/CopyJob>
 
 #include <QCoreApplication>
 #include <QDir>
@@ -342,12 +343,10 @@ void BookListModel::setBookData(const QString &fileName, const QString &property
     }
 }
 
-void BookListModel::removeBook(const QString &fileName, bool deleteFile)
+void BookListModel::trashBook(const QString &fileName)
 {
-    if (deleteFile) {
-        // KIO::DeleteJob *job = KIO::del(QUrl::fromLocalFile(fileName), KIO::HideProgressInfo);
-        // job->start();
-    }
+    auto job = KIO::trash(QUrl::fromLocalFile(fileName), KIO::HideProgressInfo);
+    job->start();
 
     for (const BookEntry &entry : std::as_const(d->entries)) {
         if (entry.filename == fileName) {

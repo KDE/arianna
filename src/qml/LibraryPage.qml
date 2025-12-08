@@ -102,9 +102,9 @@ Kirigami.ScrollablePage {
             }
 
             QQC2.Action {
-                icon.name: 'edit-delete-symbolic'
-                text: i18nc("@action:inmenu", "Delete Book")
-                onTriggered: bookListModel.removeBook(menu.entry.filename, false);
+                icon.name: 'trash-empty-symbolic'
+                text: i18nc("@action:inmenu", "Move to trash")
+                onTriggered: bookListModel.trashBook(menu.entry.filename, true);
             }
         }
 
