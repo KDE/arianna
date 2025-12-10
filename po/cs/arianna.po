@@ -18,10 +18,9 @@ msgstr ""
 "X-Generator: Lokalize 23.08.2\n"
 
 #: epubcontainer.cpp:35
-#, fuzzy, kde-format
-#| msgid "Epub file to open"
+#, kde-format
 msgid "Failed to open %1"
-msgstr "Soubor epub k otevření"
+msgstr "Otevření %1 selhalo"
 
 #: epubcontainer.cpp:42
 #, kde-format
@@ -31,7 +30,7 @@ msgstr ""
 #: epubcontainer.cpp:62
 #, kde-format
 msgid "Unable to open file %1"
-msgstr ""
+msgstr "Nelze otevřít soubor %1"
 
 #: epubcontainer.cpp:104
 #, kde-format
@@ -54,9 +53,7 @@ msgid "Malformed metadata, unable to get content metadata path"
 msgstr ""
 
 #: epubcontainer.cpp:208
-#, fuzzy, kde-format
-#| msgctxt "@info:title"
-#| msgid "Table of Contents"
+#, kde-format
 msgid "Table of Contents"
 msgstr "Obsah"
 
