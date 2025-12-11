@@ -41,6 +41,8 @@ parts:
     plugin: cmake
     source: .
     source-type: local
+    build-packages:
+      - libduktape207
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/usr
       - -DCMAKE_BUILD_TYPE=Release
