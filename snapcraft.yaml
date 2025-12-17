@@ -41,6 +41,9 @@ parts:
     plugin: cmake
     source: .
     source-type: local
+    build-snaps:
+      - kde-qt6-core24-sdk/latest/beta
+      - kf6-core24-sdk/latest/beta
     build-packages:
       - libduktape207
     cmake-parameters:
