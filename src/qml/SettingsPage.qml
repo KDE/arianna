@@ -196,9 +196,9 @@ FormCard.FormCardPage {
         currentFont: Config.defaultFont
 
         onAccepted: {
-            Config.defaultFont = font;
+            Config.defaultFont = fontDialog.selectedFont;
             Config.save();
         }
-        onRejected: font = Config.defaultFont;
+        onRejected: fontDialog.currentFont = Config.defaultFont;
     }
 }
