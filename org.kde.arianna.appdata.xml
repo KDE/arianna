@@ -50,6 +50,7 @@
   <summary xml:lang="ar">قارئ كتب إلكترونية</summary>
   <summary xml:lang="ca">Lector de llibres electrònics</summary>
   <summary xml:lang="ca-valencia">Lector de llibres electrònics</summary>
+  <summary xml:lang="cs">Čtečka e-knih</summary>
   <summary xml:lang="de">EBook-Reader-Anwendung</summary>
   <summary xml:lang="eo">Bitlibra legilo</summary>
   <summary xml:lang="es">Lector de eBook</summary>
@@ -82,6 +83,7 @@
     <p xml:lang="ar">قارئ كُتب إلكترونية ومدير للمكتبة وداعم لملفات ".epub". أريانا يكتشف كتبك آليّا ويرتبها بواسطة التصنيفات والأنواع والكتاب</p>
     <p xml:lang="ca">Una aplicació de lectura de llibres electrònics i gestió de biblioteques que permet fitxers «.epub». L'Arianna descobreix automàticament els vostres llibres, i els ordena per categories, gèneres i autors.</p>
     <p xml:lang="ca-valencia">Una aplicació de lectura de llibres electrònics i gestió de biblioteques que permet fitxers «.epub». Arianna descobrix automàticament els vostres llibres, i els ordena per categories, gèneres i autors.</p>
+    <p xml:lang="cs">Čtečka elektronických knih a aplikace pro správu knihovny podporující soubory „.epub“. Arianna automaticky vyhledává vaše knihy a třídí je podle kategorií, žánrů a autorů.</p>
     <p xml:lang="de">EBook-Reader-Anwendung und Bibliotheksverwaltung mit Unterstützung für „.epub“-Dateien. Arianna findet Ihre Bücher automatisch und sortiert sie nach Kategorien, Genres und Autoren.</p>
     <p xml:lang="en-GB">An ebook reader and library management app supporting ".epub" files. Arianna discovers your books automatically, and sorts them by categories, genres and authors.</p>
     <p xml:lang="eo">Ebook-legilo kaj biblioteka administradprogramo subtenanta ".epub" dosierojn. Arianna malkovras viajn librojn aŭtomate, kaj ordigas ilin laŭ kategorioj, ĝenroj kaj aŭtoroj.</p>
