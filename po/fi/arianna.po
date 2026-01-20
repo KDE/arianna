@@ -1,6 +1,6 @@
 # Copyright (C) 2024 This file is copyright:
 # This file is distributed under the same license as the arianna package.
-# SPDX-FileCopyrightText: 2023, 2024, 2025 Tommi Nieminen <translator@legisign.org>
+# SPDX-FileCopyrightText: 2023, 2024, 2025, 2026 Tommi Nieminen <translator@legisign.org>
 # Tommi Nieminen <translator@legisign.org>, 2024.
 #
 msgid ""
@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:50+0000\n"
-"PO-Revision-Date: 2025-02-16 09:57+0200\n"
+"PO-Revision-Date: 2026-01-05 15:38+0200\n"
 "Last-Translator: Tommi Nieminen <translator@legisign.org>\n"
 "Language-Team: Finnish <kde-i18n-doc@kde.org>\n"
 "Language: fi\n"
@@ -16,48 +16,45 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 23.08.5\n"
+"X-Generator: Lokalize 25.04.0\n"
 
 #: epubcontainer.cpp:35
-#, fuzzy, kde-format
-#| msgid "Epub file to open"
+#, kde-format
 msgid "Failed to open %1"
-msgstr "Avattava EPub-tiedosto"
+msgstr "Ei voitu avata: %1"
 
 #: epubcontainer.cpp:42
 #, kde-format
 msgid "Failed to read %1"
-msgstr ""
+msgstr "Ei voitu lukea: %1"
 
 #: epubcontainer.cpp:62
 #, kde-format
 msgid "Unable to open file %1"
-msgstr ""
+msgstr "Tiedostoa %1 ei voitu avata"
 
 #: epubcontainer.cpp:104
 #, kde-format
 msgid "Unable to find mimetype in file"
-msgstr ""
+msgstr "Tiedostosta ei löytynyt MIME-tyyppiä"
 
 #: epubcontainer.cpp:124
 #, kde-format
 msgid "Unable to find container information"
-msgstr ""
+msgstr "Säilön tietoa ei löytynyt"
 
 #: epubcontainer.cpp:155
 #, kde-format
 msgid "Unable to find and use any content files"
-msgstr ""
+msgstr "Sisältötiedostoja ei löytynyt eikä voitu käyttää"
 
 #: epubcontainer.cpp:163
 #, kde-format
 msgid "Malformed metadata, unable to get content metadata path"
-msgstr ""
+msgstr "Metatieto on virheellistä: sisällön metatietoon ei saatu polkua"
 
 #: epubcontainer.cpp:208
-#, fuzzy, kde-format
-#| msgctxt "@info:title"
-#| msgid "Table of Contents"
+#, kde-format
 msgid "Table of Contents"
 msgstr "Sisällysluettelo"
 
