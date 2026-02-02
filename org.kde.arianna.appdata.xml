@@ -31,6 +31,7 @@
   <name xml:lang="it">Arianna</name>
   <name xml:lang="ka">არიანა</name>
   <name xml:lang="ko">Arianna</name>
+  <name xml:lang="lt">Arianna</name>
   <name xml:lang="lv">Arianna</name>
   <name xml:lang="nl">Arianna</name>
   <name xml:lang="pl">Arianna</name>
@@ -66,6 +67,7 @@
   <summary xml:lang="it">Lettore EBook</summary>
   <summary xml:lang="ka">ელწიგნების მკითხველი</summary>
   <summary xml:lang="ko">전자책 리더</summary>
+  <summary xml:lang="lt">El. knygų skaitytuvė</summary>
   <summary xml:lang="lv">E-grāmatu lasītājs</summary>
   <summary xml:lang="nl">E-book-lezer</summary>
   <summary xml:lang="pl">Czytnik Ebooków</summary>
@@ -101,6 +103,7 @@
     <p xml:lang="it">Un lettore di ebook e gestore di libreria che supporta file «.epub». Arianna individua automaticamente i libri e li ordina per categorie, generi e autori.</p>
     <p xml:lang="ka">ელწიგნების წასაკითხი და ბიბლიოთეკების მმართველი აპლიკაცია ".epub" ფაილების მხარდაჭერით. Arianna ავტომატურად აღმოაჩენს თქვენს წიგნებს და მათ კატეგორიების, ჟანრების და ავტორების მიხედვით დაალაგებს.</p>
     <p xml:lang="ko">".epub" 파일을 지원하는 전자책 리더 및 관리 앱입니다. Arianna는 책을 자동으로 발견하여 분류, 장르, 저자별로 정렬합니다.</p>
+    <p xml:lang="lt">El. knygų skaitytuvė ir bibliotekos tvarkymo programa, palaikanti „.epub“ failus. Arianna automatiškai atranda knygas ir surikiuoja jas pagal kategorijas, žanrus bei autorius.</p>
     <p xml:lang="lv">E-grāmatu lasītājs un bibliotēkas pārvaldīšanas rīks, kas atbalsta „epub“ formāta datnes. „Arianna“ automātiski atrod ierīcē esošās grāmatas un tās sašķiro pēc kategorijas, žanra un autora.</p>
     <p xml:lang="nl">Een e-boeklezer en toepassing voor bibliotheekbeheer die ".epub"-bestanden ondersteunt. Arianna ontdekt uw boeken automatisch en sorteert ze op categorieën, genres en auteurs.</p>
     <p xml:lang="pl">Czytnik ebooków i zarządzanie biblioteką z obsługą plików ".epub". Arianna wykryje twoje książki samodzielnie i pogrupuje je po kategoriach, gatunkach i autorach.</p>
