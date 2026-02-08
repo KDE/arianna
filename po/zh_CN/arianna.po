@@ -20,42 +20,42 @@ msgstr ""
 #: epubcontainer.cpp:35
 #, kde-format
 msgid "Failed to open %1"
-msgstr ""
+msgstr "打开 %1 失败"
 
 #: epubcontainer.cpp:42
 #, kde-format
 msgid "Failed to read %1"
-msgstr ""
+msgstr "读取 %1 失败"
 
 #: epubcontainer.cpp:62
 #, kde-format
 msgid "Unable to open file %1"
-msgstr ""
+msgstr "无法打开文件 %1"
 
 #: epubcontainer.cpp:104
 #, kde-format
 msgid "Unable to find mimetype in file"
-msgstr ""
+msgstr "无法在文件中找到 MIME 类型"
 
 #: epubcontainer.cpp:124
 #, kde-format
 msgid "Unable to find container information"
-msgstr ""
+msgstr "无法找到容器信息"
 
 #: epubcontainer.cpp:155
 #, kde-format
 msgid "Unable to find and use any content files"
-msgstr ""
+msgstr "无法找到并使用任何内容文件"
 
 #: epubcontainer.cpp:163
 #, kde-format
 msgid "Malformed metadata, unable to get content metadata path"
-msgstr ""
+msgstr "元数据格式错误，无法获取内容元数据路径"
 
 #: epubcontainer.cpp:208
 #, kde-format
 msgid "Table of Contents"
-msgstr ""
+msgstr "目录"
 
 #: main.cpp:58 qml/Main.qml:19 qml/Main.qml:303
 #, kde-format
@@ -91,13 +91,13 @@ msgstr "Carl Schwan"
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
-msgstr ""
+msgstr "KDE 中国, Eric Zhao, Si Heng Tang, EasternLi, dringsim, 嗨皮重生锚"
 
 #: main.cpp:65
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
-msgstr ""
+msgstr "kde-china@kde.org, zhaojiale20060708@outlook.com, , , ,"
 
 #: main.cpp:79
 #, kde-format
@@ -107,7 +107,7 @@ msgstr "EPub 阅读器"
 #: main.cpp:80
 #, kde-format
 msgid "Epub file to open"
-msgstr ""
+msgstr "要打开的 Epub 文件"
 
 #: qml/BookDetailsPage.qml:16
 #, kde-format
@@ -431,7 +431,7 @@ msgstr "页边距："
 #: qml/SettingsPage.qml:53
 #, kde-format
 msgid "Show progress"
-msgstr ""
+msgstr "显示进度条"
 
 #: qml/SettingsPage.qml:64
 #, kde-format
@@ -451,17 +451,17 @@ msgstr "使用出版字体"
 #: qml/SettingsPage.qml:88
 #, kde-format
 msgid "Text flow"
-msgstr ""
+msgstr "文本流"
 
 #: qml/SettingsPage.qml:94
 #, kde-format
 msgid "Justify text"
-msgstr ""
+msgstr "两端对齐文本"
 
 #: qml/SettingsPage.qml:107
 #, kde-format
 msgid "Hyphenate text"
-msgstr ""
+msgstr "启用连字符"
 
 #: qml/SettingsPage.qml:119
 #, kde-format
@@ -497,7 +497,7 @@ msgstr "关于 KDE"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
-msgstr ""
+msgstr "打开目录"
 
 #: qml/TableOfContentDrawer.qml:24
 #, kde-format
@@ -509,4 +509,4 @@ msgstr "关闭目录"
 #, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
-msgstr ""
+msgstr "目录"
