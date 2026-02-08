@@ -25,7 +25,6 @@ include(FeatureSummary)
 include(ECMSetupVersion)
 include(KDEInstallDirs)
 include(ECMFindQmlModule)
-include(KDEClangFormat)
 include(ECMQtDeclareLoggingCategory)
 include(KDECMakeSettings)
 include(ECMDeprecationSettings)
@@ -47,7 +46,7 @@ set_package_properties(Qt6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
 )
-qt_policy(SET QTP0001 NEW)
+include(ECMQmlModule)
 qt_policy(SET QTP0004 NEW)
 find_package(KF6 ${KF_MIN_VERSION} COMPONENTS Kirigami I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Archive QuickCharts Crash ColorScheme)
 set_package_properties(KF6 PROPERTIES
