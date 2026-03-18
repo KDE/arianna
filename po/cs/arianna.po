@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2025-11-17 11:50+0000\n"
-"PO-Revision-Date: 2026-01-09 09:21+0100\n"
+"PO-Revision-Date: 2026-03-16 11:34+0100\n"
 "Last-Translator:  Vít Pelčák <vit@pelcak.org>\n"
 "Language-Team: Czech <kde-i18n-doc@kde.org>\n"
 "Language: cs\n"
@@ -15,7 +15,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Lokalize 25.12.0\n"
+"X-Generator: Lokalize 25.12.3\n"
 
 #: epubcontainer.cpp:35
 #, kde-format
@@ -40,17 +40,17 @@ msgstr "V souboru nelze najít typ MIME"
 #: epubcontainer.cpp:124
 #, kde-format
 msgid "Unable to find container information"
-msgstr ""
+msgstr "Nelze najít informace o kontejneru"
 
 #: epubcontainer.cpp:155
 #, kde-format
 msgid "Unable to find and use any content files"
-msgstr ""
+msgstr "Nelze najít a použít žádné soubory s obsahem"
 
 #: epubcontainer.cpp:163
 #, kde-format
 msgid "Malformed metadata, unable to get content metadata path"
-msgstr ""
+msgstr "Chybně formátovaná metadata, nelze získat cestu k metadatům obsahu"
 
 #: epubcontainer.cpp:208
 #, kde-format
