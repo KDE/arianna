@@ -96,7 +96,6 @@ target_sources(arianna_static PRIVATE
     contentlist/filesystemcontentlister.h
     contentlist/manualcontentlister.cpp
     contentlist/manualcontentlister.h
-    ${debug_files_SRCS}
 )
 
 kconfig_add_kcfg_files(arianna_static GENERATE_MOC config.kcfgc)
