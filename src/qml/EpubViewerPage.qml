@@ -244,10 +244,18 @@ Kirigami.Page {
         anchors.fill: view
         acceptedButtons: Qt.NoButton
         onWheel: (event) => {
-            if (event.angleDelta.y > 0) {
-                view.prev()
+            let dx = event.angleDelta.x;
+            let dy = event.angleDelta.y;
+
+            // ignore tiny movements
+            if (Math.abs(dx) < 1 && Math.abs(dy) < 1) return;
+
+            if (Math.abs(dx) > Math.abs(dy)) {
+                if (dx > 0) view.prev();
+                else if (dx < 0) view.next();
             } else {
-                view.next()
+                if (dy > 0) view.prev();
+                else if (dy < 0) view.next();
             }
         }
     }
