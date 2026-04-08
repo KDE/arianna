@@ -13,49 +13,46 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Lokalize 21.12.3\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Lokalize 21.12.3\n"
 
 #: epubcontainer.cpp:35
-#, fuzzy, kde-format
-#| msgid "Epub file to open"
+#, kde-format
 msgid "Failed to open %1"
-msgstr "Súbor Epub, ktorý sa má otvoriť"
+msgstr "Nepodarilo sa otvoriť %1"
 
 #: epubcontainer.cpp:42
 #, kde-format
 msgid "Failed to read %1"
-msgstr ""
+msgstr "Nepodarilo sa prečítať %1"
 
 #: epubcontainer.cpp:62
 #, kde-format
 msgid "Unable to open file %1"
-msgstr ""
+msgstr "Nepodarilo sa otvoriť súbor %1"
 
 #: epubcontainer.cpp:104
 #, kde-format
 msgid "Unable to find mimetype in file"
-msgstr ""
+msgstr "Nepodarilo sa nájsť typ MIME v súbore"
 
 #: epubcontainer.cpp:124
 #, kde-format
 msgid "Unable to find container information"
-msgstr ""
+msgstr "Nepodarilo sa nájsť informácie o kontajneri"
 
 #: epubcontainer.cpp:155
 #, kde-format
 msgid "Unable to find and use any content files"
-msgstr ""
+msgstr "Nepodarilo sa nájsť a použiť žiadne obsahové súbory"
 
 #: epubcontainer.cpp:163
 #, kde-format
 msgid "Malformed metadata, unable to get content metadata path"
-msgstr ""
+msgstr "Nesprávne metadáta, nepodarilo sa získať cestu k metadátam obsahu"
 
 #: epubcontainer.cpp:208
-#, fuzzy, kde-format
-#| msgctxt "@info:title"
-#| msgid "Table of Contents"
+#, kde-format
 msgid "Table of Contents"
 msgstr "Obsah"
 
@@ -150,7 +147,7 @@ msgstr "Autorské práva:"
 #: qml/ColorSchemeDelegate.qml:13
 #, kde-format
 msgid "Color theme"
-msgstr ""
+msgstr "Farebná téma"
 
 #: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:281
 #: qml/EpubViewerPage.qml:285
@@ -167,7 +164,7 @@ msgstr "Žiadne výsledky hľadania"
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Search"
-msgstr ""
+msgstr "Hľadať"
 
 #: qml/EpubViewerPage.qml:132
 #, kde-format
@@ -234,73 +231,72 @@ msgstr "Nasledujúca stránka"
 #: qml/EpubViewerPage.qml:356
 #, kde-format
 msgid "Loc. %s of %s"
-msgstr ""
+msgstr "Umiestnenie %s z %s"
 
 #: qml/EpubViewerPage.qml:357
 #, kde-format
 msgid "Page %s of %s"
-msgstr ""
+msgstr "Strana %s z %s"
 
 #: qml/EpubViewerPage.qml:358
 #, kde-format
 msgid "Page %s"
-msgstr ""
+msgstr "Strana %s"
 
 #: qml/EpubViewerPage.qml:359
 #, kde-format
 msgid "Close"
-msgstr ""
+msgstr "Zavrieť"
 
 #: qml/EpubViewerPage.qml:361
 #, kde-format
 msgid "Footnote"
-msgstr ""
+msgstr "Poznámka pod čiarou"
 
 #: qml/EpubViewerPage.qml:362
 #, kde-format
 msgid "Go to Footnote"
-msgstr ""
+msgstr "Prejsť na poznámku pod čiarou"
 
 #: qml/EpubViewerPage.qml:363
 #, kde-format
 msgid "Endnote"
-msgstr ""
+msgstr "Záverečná poznámka"
 
 #: qml/EpubViewerPage.qml:364
 #, kde-format
 msgid "Go to Endnote"
-msgstr ""
+msgstr "Prejsť na záverečnú poznámku"
 
 #: qml/EpubViewerPage.qml:365
 #, kde-format
 msgid "Note"
-msgstr ""
+msgstr "Poznámka"
 
 #: qml/EpubViewerPage.qml:366
 #, kde-format
 msgid "Go to Note"
-msgstr ""
+msgstr "Prejsť na poznámku"
 
 #: qml/EpubViewerPage.qml:367
-#, fuzzy, kde-format
-#| msgid "Description:"
+#, kde-format
 msgid "Definition"
-msgstr "Popis:"
+msgstr "Definícia"
 
 #: qml/EpubViewerPage.qml:368
 #, kde-format
 msgid "Go to Definition"
-msgstr ""
+msgstr "Prejsť na definíciu"
 
 #: qml/EpubViewerPage.qml:369
 #, kde-format
 msgid "Bibliography"
-msgstr ""
+msgstr "Bibliografia"
 
 #: qml/EpubViewerPage.qml:370
 #, kde-format
 msgid "Go to Bibliography"
-msgstr ""
+msgstr "Prejsť na bibliografiu"
 
 #: qml/GridBrowserDelegate.qml:146
 #, kde-format
@@ -314,8 +310,7 @@ msgid "Library"
 msgstr "Knižnica"
 
 #: qml/LibraryPage.qml:98
-#, fuzzy, kde-format
-#| msgid "Book Details"
+#, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "Podrobnosti o knihe"
@@ -407,16 +402,13 @@ msgid "Settings"
 msgstr "Nastavenia"
 
 #: qml/Main.qml:343
-#, fuzzy, kde-format
-#| msgctxt "@action:button"
-#| msgid "Add Book…"
+#, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
 msgstr "Pridať knihu..."
 
 #: qml/Main.qml:364
-#, fuzzy, kde-format
-#| msgid "Please choose a file"
+#, kde-format
 msgid "Please choose files"
 msgstr "Prosím, vyberte súbor"
 
@@ -519,7 +511,5 @@ msgid "Table of Contents"
 msgstr "Obsah"
 
 #, fuzzy
-#~| msgctxt "EMAIL OF TRANSLATORS"
-#~| msgid "Your emails"
 #~ msgid "Book details"
 #~ msgstr "wizzardsk@gmail.com"
