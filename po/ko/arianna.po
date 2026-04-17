@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:50+0000\n"
+"POT-Creation-Date: 2026-04-17 00:41+0000\n"
 "PO-Revision-Date: 2025-04-06 21:41+0200\n"
 "Last-Translator: Shinjo Park <kde@peremen.name>\n"
 "Language-Team: Korean <kde-kr@kde.org>\n"
@@ -153,8 +153,8 @@ msgstr "저작권:"
 msgid "Color theme"
 msgstr "색 테마"
 
-#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:281
-#: qml/EpubViewerPage.qml:285
+#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:289
+#: qml/EpubViewerPage.qml:293
 #, kde-format
 msgid "Loading"
 msgstr "불러오는 중"
@@ -206,98 +206,98 @@ msgstr "복사"
 msgid "Find"
 msgstr "찾기"
 
-#: qml/EpubViewerPage.qml:260
+#: qml/EpubViewerPage.qml:268
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1%"
 
-#: qml/EpubViewerPage.qml:280
+#: qml/EpubViewerPage.qml:288
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "이 장에 남은 시간:"
 
-#: qml/EpubViewerPage.qml:284
+#: qml/EpubViewerPage.qml:292
 #, kde-format
 msgid "Time left in book:"
 msgstr "이 책에 남은 시간:"
 
-#: qml/EpubViewerPage.qml:295
+#: qml/EpubViewerPage.qml:303
 #, kde-format
 msgid "Previous Page"
 msgstr "이전 쪽"
 
-#: qml/EpubViewerPage.qml:321
+#: qml/EpubViewerPage.qml:329
 #, kde-format
 msgid "Next Page"
 msgstr "다음 쪽"
 
-#: qml/EpubViewerPage.qml:356
+#: qml/EpubViewerPage.qml:364
 #, kde-format
 msgid "Loc. %s of %s"
 msgstr "위치 %s/%s"
 
-#: qml/EpubViewerPage.qml:357
+#: qml/EpubViewerPage.qml:365
 #, kde-format
 msgid "Page %s of %s"
 msgstr "페이지 %s/%s"
 
-#: qml/EpubViewerPage.qml:358
+#: qml/EpubViewerPage.qml:366
 #, kde-format
 msgid "Page %s"
 msgstr "페이지 %s"
 
-#: qml/EpubViewerPage.qml:359
+#: qml/EpubViewerPage.qml:367
 #, kde-format
 msgid "Close"
 msgstr "닫기"
 
-#: qml/EpubViewerPage.qml:361
+#: qml/EpubViewerPage.qml:369
 #, kde-format
 msgid "Footnote"
 msgstr "각주"
 
-#: qml/EpubViewerPage.qml:362
+#: qml/EpubViewerPage.qml:370
 #, kde-format
 msgid "Go to Footnote"
 msgstr "각주로 이동"
 
-#: qml/EpubViewerPage.qml:363
+#: qml/EpubViewerPage.qml:371
 #, kde-format
 msgid "Endnote"
 msgstr "미주"
 
-#: qml/EpubViewerPage.qml:364
+#: qml/EpubViewerPage.qml:372
 #, kde-format
 msgid "Go to Endnote"
 msgstr "미주로 이동"
 
-#: qml/EpubViewerPage.qml:365
+#: qml/EpubViewerPage.qml:373
 #, kde-format
 msgid "Note"
 msgstr "메모"
 
-#: qml/EpubViewerPage.qml:366
+#: qml/EpubViewerPage.qml:374
 #, kde-format
 msgid "Go to Note"
 msgstr "메모로 이동"
 
-#: qml/EpubViewerPage.qml:367
+#: qml/EpubViewerPage.qml:375
 #, kde-format
 msgid "Definition"
 msgstr "정의"
 
-#: qml/EpubViewerPage.qml:368
+#: qml/EpubViewerPage.qml:376
 #, kde-format
 msgid "Go to Definition"
 msgstr "정의로 이동"
 
-#: qml/EpubViewerPage.qml:369
+#: qml/EpubViewerPage.qml:377
 #, kde-format
 msgid "Bibliography"
 msgstr "서지 정보"
 
-#: qml/EpubViewerPage.qml:370
+#: qml/EpubViewerPage.qml:378
 #, kde-format
 msgid "Go to Bibliography"
 msgstr "서지 정보로 이동"

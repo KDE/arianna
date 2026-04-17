@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:50+0000\n"
+"POT-Creation-Date: 2026-04-17 00:41+0000\n"
 "PO-Revision-Date: 2025-11-21 01:34+0100\n"
 "Last-Translator: Stefan Asserhäll <stefan.asserhall@gmail.com>\n"
 "Language-Team: Swedish <kde-i18n-doc@kde.org>\n"
@@ -150,8 +150,8 @@ msgstr "Copyright:"
 msgid "Color theme"
 msgstr "Färgtema"
 
-#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:281
-#: qml/EpubViewerPage.qml:285
+#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:289
+#: qml/EpubViewerPage.qml:293
 #, kde-format
 msgid "Loading"
 msgstr "Läser in"
@@ -203,98 +203,98 @@ msgstr "Kopiera"
 msgid "Find"
 msgstr "Sök"
 
-#: qml/EpubViewerPage.qml:260
+#: qml/EpubViewerPage.qml:268
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1 %"
 
-#: qml/EpubViewerPage.qml:280
+#: qml/EpubViewerPage.qml:288
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "Återstående tid i kapitel:"
 
-#: qml/EpubViewerPage.qml:284
+#: qml/EpubViewerPage.qml:292
 #, kde-format
 msgid "Time left in book:"
 msgstr "Återstående tid i bok:"
 
-#: qml/EpubViewerPage.qml:295
+#: qml/EpubViewerPage.qml:303
 #, kde-format
 msgid "Previous Page"
 msgstr "Föregående sida"
 
-#: qml/EpubViewerPage.qml:321
+#: qml/EpubViewerPage.qml:329
 #, kde-format
 msgid "Next Page"
 msgstr "Nästa sida"
 
-#: qml/EpubViewerPage.qml:356
+#: qml/EpubViewerPage.qml:364
 #, kde-format
 msgid "Loc. %s of %s"
 msgstr "Pos. %s av %s"
 
-#: qml/EpubViewerPage.qml:357
+#: qml/EpubViewerPage.qml:365
 #, kde-format
 msgid "Page %s of %s"
 msgstr "Sida %s of %s"
 
-#: qml/EpubViewerPage.qml:358
+#: qml/EpubViewerPage.qml:366
 #, kde-format
 msgid "Page %s"
 msgstr "Sida %s"
 
-#: qml/EpubViewerPage.qml:359
+#: qml/EpubViewerPage.qml:367
 #, kde-format
 msgid "Close"
 msgstr "Stäng"
 
-#: qml/EpubViewerPage.qml:361
+#: qml/EpubViewerPage.qml:369
 #, kde-format
 msgid "Footnote"
 msgstr "Fotnot"
 
-#: qml/EpubViewerPage.qml:362
+#: qml/EpubViewerPage.qml:370
 #, kde-format
 msgid "Go to Footnote"
 msgstr "Gå till fotnot"
 
-#: qml/EpubViewerPage.qml:363
+#: qml/EpubViewerPage.qml:371
 #, kde-format
 msgid "Endnote"
 msgstr "Slutnot"
 
-#: qml/EpubViewerPage.qml:364
+#: qml/EpubViewerPage.qml:372
 #, kde-format
 msgid "Go to Endnote"
 msgstr "Gå till slutnot"
 
-#: qml/EpubViewerPage.qml:365
+#: qml/EpubViewerPage.qml:373
 #, kde-format
 msgid "Note"
 msgstr "Not"
 
-#: qml/EpubViewerPage.qml:366
+#: qml/EpubViewerPage.qml:374
 #, kde-format
 msgid "Go to Note"
 msgstr "Gå till not"
 
-#: qml/EpubViewerPage.qml:367
+#: qml/EpubViewerPage.qml:375
 #, kde-format
 msgid "Definition"
 msgstr "Definition"
 
-#: qml/EpubViewerPage.qml:368
+#: qml/EpubViewerPage.qml:376
 #, kde-format
 msgid "Go to Definition"
 msgstr "Gå till definition"
 
-#: qml/EpubViewerPage.qml:369
+#: qml/EpubViewerPage.qml:377
 #, kde-format
 msgid "Bibliography"
 msgstr "Bibliografi"
 
-#: qml/EpubViewerPage.qml:370
+#: qml/EpubViewerPage.qml:378
 #, kde-format
 msgid "Go to Bibliography"
 msgstr "Gå till bibliografi"

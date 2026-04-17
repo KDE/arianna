@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:50+0000\n"
+"POT-Creation-Date: 2026-04-17 00:41+0000\n"
 "PO-Revision-Date: 2025-11-16 12:06+0200\n"
 "Last-Translator: Yuri Chornoivan <yurchor@ukr.net>\n"
 "Language-Team: Ukrainian <trans-uk@lists.fedoraproject.org>\n"
@@ -152,8 +152,8 @@ msgstr "Авторські права:"
 msgid "Color theme"
 msgstr "Тема кольорів"
 
-#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:281
-#: qml/EpubViewerPage.qml:285
+#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:289
+#: qml/EpubViewerPage.qml:293
 #, kde-format
 msgid "Loading"
 msgstr "Завантаження"
@@ -205,98 +205,98 @@ msgstr "Копіювати"
 msgid "Find"
 msgstr "Знайти"
 
-#: qml/EpubViewerPage.qml:260
+#: qml/EpubViewerPage.qml:268
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1%"
 
-#: qml/EpubViewerPage.qml:280
+#: qml/EpubViewerPage.qml:288
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "Лишилося часу на главу:"
 
-#: qml/EpubViewerPage.qml:284
+#: qml/EpubViewerPage.qml:292
 #, kde-format
 msgid "Time left in book:"
 msgstr "Лишилося часу на книгу:"
 
-#: qml/EpubViewerPage.qml:295
+#: qml/EpubViewerPage.qml:303
 #, kde-format
 msgid "Previous Page"
 msgstr "Попередня сторінка"
 
-#: qml/EpubViewerPage.qml:321
+#: qml/EpubViewerPage.qml:329
 #, kde-format
 msgid "Next Page"
 msgstr "Наступна сторінка"
 
-#: qml/EpubViewerPage.qml:356
+#: qml/EpubViewerPage.qml:364
 #, kde-format
 msgid "Loc. %s of %s"
 msgstr "Місце %s з %s"
 
-#: qml/EpubViewerPage.qml:357
+#: qml/EpubViewerPage.qml:365
 #, kde-format
 msgid "Page %s of %s"
 msgstr "Сторінка %s з %s"
 
-#: qml/EpubViewerPage.qml:358
+#: qml/EpubViewerPage.qml:366
 #, kde-format
 msgid "Page %s"
 msgstr "Сторінка %s"
 
-#: qml/EpubViewerPage.qml:359
+#: qml/EpubViewerPage.qml:367
 #, kde-format
 msgid "Close"
 msgstr "Закрити"
 
-#: qml/EpubViewerPage.qml:361
+#: qml/EpubViewerPage.qml:369
 #, kde-format
 msgid "Footnote"
 msgstr "Підрядкова примітка"
 
-#: qml/EpubViewerPage.qml:362
+#: qml/EpubViewerPage.qml:370
 #, kde-format
 msgid "Go to Footnote"
 msgstr "Перейти до підрядкової примітки"
 
-#: qml/EpubViewerPage.qml:363
+#: qml/EpubViewerPage.qml:371
 #, kde-format
 msgid "Endnote"
 msgstr "Кінцева примітка"
 
-#: qml/EpubViewerPage.qml:364
+#: qml/EpubViewerPage.qml:372
 #, kde-format
 msgid "Go to Endnote"
 msgstr "Перейти до кінцевої примітки"
 
-#: qml/EpubViewerPage.qml:365
+#: qml/EpubViewerPage.qml:373
 #, kde-format
 msgid "Note"
 msgstr "Нотатка"
 
-#: qml/EpubViewerPage.qml:366
+#: qml/EpubViewerPage.qml:374
 #, kde-format
 msgid "Go to Note"
 msgstr "Перейти до нотатки"
 
-#: qml/EpubViewerPage.qml:367
+#: qml/EpubViewerPage.qml:375
 #, kde-format
 msgid "Definition"
 msgstr "Визначення"
 
-#: qml/EpubViewerPage.qml:368
+#: qml/EpubViewerPage.qml:376
 #, kde-format
 msgid "Go to Definition"
 msgstr "Перейти до визначення"
 
-#: qml/EpubViewerPage.qml:369
+#: qml/EpubViewerPage.qml:377
 #, kde-format
 msgid "Bibliography"
 msgstr "Бібліографія"
 
-#: qml/EpubViewerPage.qml:370
+#: qml/EpubViewerPage.qml:378
 #, kde-format
 msgid "Go to Bibliography"
 msgstr "Перейти до бібліографії"

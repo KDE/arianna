@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2025-11-17 11:50+0000\n"
+"POT-Creation-Date: 2026-04-17 00:41+0000\n"
 "PO-Revision-Date: 2026-01-31 14:57+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -152,8 +152,8 @@ msgstr "Autorių teisės:"
 msgid "Color theme"
 msgstr "Spalvų rinkinys"
 
-#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:281
-#: qml/EpubViewerPage.qml:285
+#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:289
+#: qml/EpubViewerPage.qml:293
 #, kde-format
 msgid "Loading"
 msgstr "Įkeliama"
@@ -205,98 +205,98 @@ msgstr "Kopijuoti"
 msgid "Find"
 msgstr "Rasti"
 
-#: qml/EpubViewerPage.qml:260
+#: qml/EpubViewerPage.qml:268
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1%"
 
-#: qml/EpubViewerPage.qml:280
+#: qml/EpubViewerPage.qml:288
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "Liko laiko skyriui:"
 
-#: qml/EpubViewerPage.qml:284
+#: qml/EpubViewerPage.qml:292
 #, kde-format
 msgid "Time left in book:"
 msgstr "Liko laiko knygai:"
 
-#: qml/EpubViewerPage.qml:295
+#: qml/EpubViewerPage.qml:303
 #, kde-format
 msgid "Previous Page"
 msgstr "Ankstesnis puslapis"
 
-#: qml/EpubViewerPage.qml:321
+#: qml/EpubViewerPage.qml:329
 #, kde-format
 msgid "Next Page"
 msgstr "Kitas puslapis"
 
-#: qml/EpubViewerPage.qml:356
+#: qml/EpubViewerPage.qml:364
 #, kde-format
 msgid "Loc. %s of %s"
 msgstr "Vieta %s iš %s"
 
-#: qml/EpubViewerPage.qml:357
+#: qml/EpubViewerPage.qml:365
 #, kde-format
 msgid "Page %s of %s"
 msgstr "Puslapis %s iš %s"
 
-#: qml/EpubViewerPage.qml:358
+#: qml/EpubViewerPage.qml:366
 #, kde-format
 msgid "Page %s"
 msgstr "Puslapis %s"
 
-#: qml/EpubViewerPage.qml:359
+#: qml/EpubViewerPage.qml:367
 #, kde-format
 msgid "Close"
 msgstr "Užverti"
 
-#: qml/EpubViewerPage.qml:361
+#: qml/EpubViewerPage.qml:369
 #, kde-format
 msgid "Footnote"
 msgstr "Išnaša"
 
-#: qml/EpubViewerPage.qml:362
+#: qml/EpubViewerPage.qml:370
 #, kde-format
 msgid "Go to Footnote"
 msgstr "Eiti į išnašą"
 
-#: qml/EpubViewerPage.qml:363
+#: qml/EpubViewerPage.qml:371
 #, kde-format
 msgid "Endnote"
 msgstr "Galinė išnaša"
 
-#: qml/EpubViewerPage.qml:364
+#: qml/EpubViewerPage.qml:372
 #, kde-format
 msgid "Go to Endnote"
 msgstr "Eiti į galinę išnašą"
 
-#: qml/EpubViewerPage.qml:365
+#: qml/EpubViewerPage.qml:373
 #, kde-format
 msgid "Note"
 msgstr "Pastaba"
 
-#: qml/EpubViewerPage.qml:366
+#: qml/EpubViewerPage.qml:374
 #, kde-format
 msgid "Go to Note"
 msgstr "Eiti į pastabą"
 
-#: qml/EpubViewerPage.qml:367
+#: qml/EpubViewerPage.qml:375
 #, kde-format
 msgid "Definition"
 msgstr "Apibrėžimas"
 
-#: qml/EpubViewerPage.qml:368
+#: qml/EpubViewerPage.qml:376
 #, kde-format
 msgid "Go to Definition"
 msgstr "Eiti į apibrėžimą"
 
-#: qml/EpubViewerPage.qml:369
+#: qml/EpubViewerPage.qml:377
 #, kde-format
 msgid "Bibliography"
 msgstr "Bibliografija"
 
-#: qml/EpubViewerPage.qml:370
+#: qml/EpubViewerPage.qml:378
 #, kde-format
 msgid "Go to Bibliography"
 msgstr "Eiti į bibliografiją"
