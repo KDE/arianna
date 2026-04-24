@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QObject>
+#include <QString>
 #include <qqmlintegration.h>
 
 #include "categoryentriesmodel.h"
@@ -14,8 +15,12 @@ class Navigation : public QObject
     QML_SINGLETON
     QML_ELEMENT
 
+    Q_PROPERTY(QString bookServerToken READ bookServerToken CONSTANT)
+
 public:
     explicit Navigation(QObject *parent = nullptr);
+
+    QString bookServerToken() const;
 
 Q_SIGNALS:
     void openBook(const QString &fileName, const QString &locations, const QString &currentLocation, const BookEntry &entry);
@@ -23,4 +28,7 @@ Q_SIGNALS:
     void openLibrary(const QString &title, CategoryEntriesModel *model, bool replace);
 
     void openSettings();
+
+private:
+    QString m_bookServerToken;
 };
