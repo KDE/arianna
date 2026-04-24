@@ -8,9 +8,12 @@ using namespace Qt::StringLiterals;
 #include <QFileInfo>
 #include <QTcpServer>
 
-BookServer::BookServer()
+BookServer::BookServer(const QString &token)
 {
-    server.route(u"/book"_s, [](const QHttpServerRequest &request) {
+    server.route(u"/book"_s, [token](const QHttpServerRequest &request) {
+        if (request.query().queryItemValue(u"token"_s) != token) {
+            return QHttpServerResponse{QHttpServerResponder::StatusCode::Unauthorized};
+        }
         // + is an standing for %20
         // fromPercentEncoded doesn't handle it but it needs to come first
         // otherwise we end up with %2B -> + -> ' ' which won't be the correct path

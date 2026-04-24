@@ -5,11 +5,12 @@
 
 #include <QHttpServer>
 #include <QHttpServerResponse>
+#include <QString>
 
 class BookServer
 {
 public:
-    BookServer();
+    explicit BookServer(const QString &token);
 
 private:
     QHttpServer server;

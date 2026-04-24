@@ -3,9 +3,17 @@
 
 #include "navigation.h"
 
+#include <QUuid>
+
 Navigation::Navigation(QObject *parent)
     : QObject(parent)
+    , m_bookServerToken(QUuid::createUuid().toString(QUuid::WithoutBraces))
 {
+}
+
+QString Navigation::bookServerToken() const
+{
+    return m_bookServerToken;
 }
 
 #include "moc_navigation.cpp"

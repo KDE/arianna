@@ -83,14 +83,14 @@ int main(int argc, char *argv[])
     parser.process(app);
     about.processCommandLine(&parser);
 
-    BookServer bookServer;
-
     engine.loadFromModule("org.kde.arianna", "Main");
     if (engine.rootObjects().isEmpty()) {
         return -1;
     }
 
     auto navigation = engine.singletonInstance<Navigation *>("org.kde.arianna", "Navigation");
+
+    BookServer bookServer(navigation->bookServerToken());
 
     QObject::connect(&service,
                      &KDBusService::activateRequested,
