@@ -64,8 +64,8 @@ if (NOT WIN32)
 endif()
 
 ecm_find_qmlmodule(QtWebChannel)
-ecm_set_disabled_deprecation_versions(QT 6.10.0
-    KF 6.23.0
+ecm_set_disabled_deprecation_versions(QT 6.11.0
+    KF 6.26.0
 )
 
 add_definitions(-DQT_NO_FOREACH -DQT_NO_KEYWORDS)
