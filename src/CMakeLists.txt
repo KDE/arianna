@@ -61,7 +61,6 @@ ecm_qt_declare_logging_category(arianna_static
     IDENTIFIER ARIANNA_LOG
     CATEGORY_NAME org.kde.arianna
     DESCRIPTION "arianna"
-    DEFAULT_SEVERITY Warning
     EXPORT ARIANNA
 )
 
