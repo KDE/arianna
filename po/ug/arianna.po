@@ -1,0 +1,512 @@
+# Uyghur translation for arianna.
+# Copyright (C) YEAR This file is copyright:
+# This file is distributed under the same license as the arianna package.
+# Abduqadir Abliz <sahranbay@gmail.com>, 2026., YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: arianna\n"
+"Report-Msgid-Bugs-To: https://bugs.kde.org\n"
+"POT-Creation-Date: 2026-04-17 00:41+0000\n"
+"PO-Revision-Date: 2026-05-28 17:03-0400\n"
+"Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
+"Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
+"Language: ug\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.9\n"
+
+#: epubcontainer.cpp:35
+#, kde-format
+msgid "Failed to open %1"
+msgstr "%1‎‏ نى ئاچالمىدى"
+
+#: epubcontainer.cpp:42
+#, kde-format
+msgid "Failed to read %1"
+msgstr ""
+
+#: epubcontainer.cpp:62
+#, kde-format
+msgid "Unable to open file %1"
+msgstr ""
+
+#: epubcontainer.cpp:104
+#, kde-format
+msgid "Unable to find mimetype in file"
+msgstr ""
+
+#: epubcontainer.cpp:124
+#, kde-format
+msgid "Unable to find container information"
+msgstr ""
+
+#: epubcontainer.cpp:155
+#, kde-format
+msgid "Unable to find and use any content files"
+msgstr ""
+
+#: epubcontainer.cpp:163
+#, kde-format
+msgid "Malformed metadata, unable to get content metadata path"
+msgstr ""
+
+#: epubcontainer.cpp:208
+#, kde-format
+msgid "Table of Contents"
+msgstr "مەزمۇن مۇندەرىجىسى"
+
+#: main.cpp:58 qml/Main.qml:19 qml/Main.qml:303
+#, kde-format
+msgid "Arianna"
+msgstr "Arianna"
+
+#: main.cpp:60
+#, kde-format
+msgid "EPub Reader"
+msgstr "EPub ئوقۇغۇچ"
+
+#: main.cpp:62
+#, kde-format
+msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
+msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
+
+#: main.cpp:63
+#, kde-format
+msgid "Niccolò Venerandi"
+msgstr "Niccolò Venerandi"
+
+#: main.cpp:63 main.cpp:64
+#, kde-format
+msgid "Maintainer"
+msgstr "ئاسرىغۇچى"
+
+#: main.cpp:64
+#, kde-format
+msgid "Carl Schwan"
+msgstr "Carl Schwan"
+
+#: main.cpp:65
+#, kde-format
+msgctxt "NAME OF TRANSLATORS"
+msgid "Your names"
+msgstr "ئابدۇقادىر ئابلىز، غەيرەت كەنجى"
+
+#: main.cpp:65
+#, kde-format
+msgctxt "EMAIL OF TRANSLATORS"
+msgid "Your emails"
+msgstr "sahranbay@gmail.com, gheyret@gmail.com"
+
+#: main.cpp:79
+#, kde-format
+msgid "Epub reader"
+msgstr "EPub ئوقۇغۇچ"
+
+#: main.cpp:80
+#, kde-format
+msgid "Epub file to open"
+msgstr ""
+
+#: qml/BookDetailsPage.qml:16
+#, kde-format
+msgctxt "@info:title"
+msgid "Book Details"
+msgstr ""
+
+#: qml/BookDetailsPage.qml:26
+#, kde-format
+msgid "Author:"
+msgstr "يازغۇچى:"
+
+#: qml/BookDetailsPage.qml:38
+#, kde-format
+msgid "Description:"
+msgstr "چۈشەندۈرۈش:"
+
+#: qml/BookDetailsPage.qml:50
+#, kde-format
+msgid "Publisher:"
+msgstr "تارقاتقۇچى:"
+
+#: qml/BookDetailsPage.qml:62
+#, kde-format
+msgid "Language:"
+msgstr "تىل:"
+
+#: qml/BookDetailsPage.qml:74
+#, kde-format
+msgid "Publishing date:"
+msgstr ""
+
+#: qml/BookDetailsPage.qml:85
+#, kde-format
+msgid "Copyright:"
+msgstr "نەشر ھوقۇقى:"
+
+#: qml/ColorSchemeDelegate.qml:13
+#, kde-format
+msgid "Color theme"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:289
+#: qml/EpubViewerPage.qml:293
+#, kde-format
+msgid "Loading"
+msgstr "يۈكلەۋاتىدۇ"
+
+#: qml/EpubViewerPage.qml:82 qml/Main.qml:168
+#, kde-format
+msgid "No search results"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:126
+#, kde-format
+msgctxt "@action:intoolbar"
+msgid "Search"
+msgstr "ئىزدە"
+
+#: qml/EpubViewerPage.qml:132
+#, kde-format
+msgid "Book Details"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:155
+#, kde-format
+msgid "No book selected"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:158
+#, kde-format
+msgid "Open file"
+msgstr "ھۆججەت ئاچ"
+
+#: qml/EpubViewerPage.qml:179
+#, kde-format
+msgid "Please choose a file"
+msgstr "بىر ھۆججەت تاللاڭ"
+
+#: qml/EpubViewerPage.qml:180 qml/Main.qml:365
+#, kde-format
+msgctxt "Name filter for EPUB files"
+msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:229
+#, kde-format
+msgid "Copy"
+msgstr "كۆچۈر"
+
+#: qml/EpubViewerPage.qml:235
+#, kde-format
+msgid "Find"
+msgstr "ئىزدە"
+
+#: qml/EpubViewerPage.qml:268
+#, kde-format
+msgctxt "Book reading progress"
+msgid "%1%"
+msgstr "%1%"
+
+#: qml/EpubViewerPage.qml:288
+#, kde-format
+msgid "Time left in chapter:"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:292
+#, kde-format
+msgid "Time left in book:"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:303
+#, kde-format
+msgid "Previous Page"
+msgstr "ئالدىنقى بەت"
+
+#: qml/EpubViewerPage.qml:329
+#, kde-format
+msgid "Next Page"
+msgstr "كېيىنكى بەت"
+
+#: qml/EpubViewerPage.qml:364
+#, kde-format
+msgid "Loc. %s of %s"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:365
+#, kde-format
+msgid "Page %s of %s"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:366
+#, kde-format
+msgid "Page %s"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:367
+#, kde-format
+msgid "Close"
+msgstr "ياپ"
+
+#: qml/EpubViewerPage.qml:369
+#, kde-format
+msgid "Footnote"
+msgstr "بەت ئاستى ئىزاھاتى"
+
+#: qml/EpubViewerPage.qml:370
+#, kde-format
+msgid "Go to Footnote"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:371
+#, kde-format
+msgid "Endnote"
+msgstr "ئاخىرقى ئىزاھات"
+
+#: qml/EpubViewerPage.qml:372
+#, kde-format
+msgid "Go to Endnote"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:373
+#, kde-format
+msgid "Note"
+msgstr "ئىزاھات"
+
+#: qml/EpubViewerPage.qml:374
+#, kde-format
+msgid "Go to Note"
+msgstr ""
+
+#: qml/EpubViewerPage.qml:375
+#, kde-format
+msgid "Definition"
+msgstr "ئېنىقلىما"
+
+#: qml/EpubViewerPage.qml:376
+#, kde-format
+msgid "Go to Definition"
+msgstr "ئېنىقلىمىغا يۆتكەل"
+
+#: qml/EpubViewerPage.qml:377
+#, kde-format
+msgid "Bibliography"
+msgstr "كىتابلار مۇندەرىجىسى"
+
+#: qml/EpubViewerPage.qml:378
+#, kde-format
+msgid "Go to Bibliography"
+msgstr ""
+
+#: qml/GridBrowserDelegate.qml:146
+#, kde-format
+msgctxt "should be keep short, inside a label. Will be in uppercase"
+msgid "New"
+msgstr "يېڭى"
+
+#: qml/LibraryPage.qml:19
+#, kde-format
+msgid "Library"
+msgstr ""
+
+#: qml/LibraryPage.qml:98
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Book Details"
+msgstr ""
+
+#: qml/LibraryPage.qml:110
+#, kde-format
+msgctxt "@info placeholder"
+msgid "Add some books"
+msgstr ""
+
+#: qml/Main.qml:204
+#, kde-format
+msgctxt "Switch to the listing page showing the most recently read books"
+msgid "Home"
+msgstr "باش بەت"
+
+#: qml/Main.qml:208
+#, kde-format
+msgid "Home"
+msgstr "باش بەت"
+
+#: qml/Main.qml:211
+#, kde-format
+msgctxt "Switch to the listing page showing the most recently discovered books"
+msgid "Recently Added Books"
+msgstr ""
+
+#: qml/Main.qml:217
+#, kde-format
+msgctxt ""
+"Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
+"touch devices)"
+msgid "Open Other..."
+msgstr ""
+
+#: qml/Main.qml:225
+#, kde-format
+msgctxt "Open the settings page"
+msgid "Settings"
+msgstr "تەڭشەك"
+
+#: qml/Main.qml:234
+#, kde-format
+msgctxt ""
+"Heading for switching to listing page showing items grouped by some "
+"properties"
+msgid "Group By"
+msgstr "گۇرۇپپىلاش"
+
+#: qml/Main.qml:237
+#, kde-format
+msgctxt "Switch to the listing page showing items grouped by author"
+msgid "Author"
+msgstr "يازغۇچى"
+
+#: qml/Main.qml:243
+#, kde-format
+msgctxt "Switch to the listing page showing items grouped by series"
+msgid "Series"
+msgstr "يۈرۈشلۈك"
+
+#: qml/Main.qml:245
+#, kde-format
+msgctxt "Title of the page with books grouped by what series they are in"
+msgid "Group by Series"
+msgstr ""
+
+#: qml/Main.qml:249
+#, kde-format
+msgctxt "Switch to the listing page showing items grouped by publisher"
+msgid "Publisher"
+msgstr "تارقاتقۇچى"
+
+#: qml/Main.qml:255
+#, kde-format
+msgctxt "Switch to the listing page showing items grouped by genres"
+msgid "Keywords"
+msgstr "ئاچقۇچلۇق سۆز"
+
+#: qml/Main.qml:257
+#, kde-format
+msgctxt "Title of the page with books grouped by genres"
+msgid "Group by Genres"
+msgstr ""
+
+#: qml/Main.qml:335 qml/SettingsPage.qml:16
+#, kde-format
+msgid "Settings"
+msgstr "تەڭشەك"
+
+#: qml/Main.qml:343
+#, kde-format
+msgctxt "@action:button"
+msgid "Add Books…"
+msgstr ""
+
+#: qml/Main.qml:364
+#, kde-format
+msgid "Please choose files"
+msgstr ""
+
+#: qml/SettingsPage.qml:19
+#, kde-format
+msgid "Appearance"
+msgstr "قىياپەت"
+
+#: qml/SettingsPage.qml:24
+#, kde-format
+msgid "Maximum width:"
+msgstr "ئەڭ چوڭ كەڭلىكى:"
+
+#: qml/SettingsPage.qml:38
+#, kde-format
+msgid "Margin:"
+msgstr "گىرۋەك:"
+
+#: qml/SettingsPage.qml:53
+#, kde-format
+msgid "Show progress"
+msgstr ""
+
+#: qml/SettingsPage.qml:64
+#, kde-format
+msgid "Font"
+msgstr "خەت نۇسخا"
+
+#: qml/SettingsPage.qml:72 qml/SettingsPage.qml:194
+#, kde-format
+msgid "Change default font"
+msgstr ""
+
+#: qml/SettingsPage.qml:77
+#, kde-format
+msgid "Use publisher font"
+msgstr ""
+
+#: qml/SettingsPage.qml:88
+#, kde-format
+msgid "Text flow"
+msgstr ""
+
+#: qml/SettingsPage.qml:94
+#, kde-format
+msgid "Justify text"
+msgstr ""
+
+#: qml/SettingsPage.qml:107
+#, kde-format
+msgid "Hyphenate text"
+msgstr ""
+
+#: qml/SettingsPage.qml:119
+#, kde-format
+msgid "Line height:"
+msgstr ""
+
+#: qml/SettingsPage.qml:136
+#, kde-format
+msgid "Brightness:"
+msgstr "يورۇقلۇق:"
+
+#: qml/SettingsPage.qml:154
+#, kde-format
+msgid "Colors"
+msgstr "رەڭ"
+
+#: qml/SettingsPage.qml:159
+#, kde-format
+msgid "Invert colors"
+msgstr "ئەكس رەڭ"
+
+#: qml/SettingsPage.qml:177
+#, kde-format
+msgid "About Arianna"
+msgstr ""
+
+#: qml/SettingsPage.qml:185
+#, kde-format
+msgid "About KDE"
+msgstr "KDE ھەققىدە"
+
+#: qml/TableOfContentDrawer.qml:23
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Open table of contents"
+msgstr ""
+
+#: qml/TableOfContentDrawer.qml:24
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Close table of contents"
+msgstr ""
+
+#: qml/TableOfContentDrawer.qml:45
+#, kde-format
+msgctxt "@info:title"
+msgid "Table of Contents"
+msgstr "مەزمۇن مۇندەرىجىسى"
