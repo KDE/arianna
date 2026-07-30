@@ -54,7 +54,7 @@ set_package_properties(KF6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
 )
-find_package(KF6KirigamiAddons 1.4.0 REQUIRED)
+find_package(KF6KirigamiAddons 1.12.0 REQUIRED)
 find_package(KF6QQC2DesktopStyle REQUIRED)
 
 find_package(Qt6 ${QT_MIN_VERSION} NO_MODULE COMPONENTS WebEngineQuick)

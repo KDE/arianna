@@ -22,6 +22,7 @@
 #include <KLocalizedString>
 #include <KWindowConfig>
 #include <KWindowSystem>
+#include <KirigamiAddons/App/KirigamiAppDefaults>
 #include <QStringLiteral>
 
 #include "arianna-version.h"
@@ -35,22 +36,8 @@ int main(int argc, char *argv[])
     QtWebEngineQuick::initialize();
 
     QApplication app(argc, argv);
-    // Default to org.kde.desktop style unless the user forces another style
-    if (qEnvironmentVariableIsEmpty("QT_QUICK_CONTROLS_STYLE")) {
-        QQuickStyle::setStyle(QStringLiteral("org.kde.desktop"));
-    }
 
-#ifdef Q_OS_WINDOWS
-    if (AttachConsole(ATTACH_PARENT_PROCESS)) {
-        freopen("CONOUT$", "w", stdout);
-        freopen("CONOUT$", "w", stderr);
-    }
-
-    QApplication::setStyle(QStringLiteral("breeze"));
-    auto font = app.font();
-    font.setPointSize(10);
-    app.setFont(font);
-#endif
+    KirigamiAppDefaults::apply(&app);
 
     KLocalizedString::setApplicationDomain(QByteArrayLiteral("arianna"));
 
@@ -67,7 +54,6 @@ int main(int argc, char *argv[])
     about.setBugAddress("https://bugs.kde.org/describecomponents.cgi?product=arianna");
 
     KAboutData::setApplicationData(about);
-    KCrash::initialize();
 
     QGuiApplication::setWindowIcon(QIcon::fromTheme(QStringLiteral("org.kde.arianna")));
 
