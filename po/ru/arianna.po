@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-04-17 00:41+0000\n"
+"POT-Creation-Date: 2026-07-31 00:42+0000\n"
 "PO-Revision-Date: 2026-02-13 16:35+0200\n"
 "Last-Translator: Alexander Yavorskiy <kekcuha@gmail.com>\n"
 "Language-Team: Russian <kde-russian@lists.kde.ru>\n"
@@ -59,54 +59,54 @@ msgstr "Ошибка метаданных: не удалось получить 
 msgid "Table of Contents"
 msgstr "Содержание"
 
-#: main.cpp:58 qml/Main.qml:19 qml/Main.qml:303
+#: main.cpp:45 qml/Main.qml:19 qml/Main.qml:303
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
 
-#: main.cpp:60
+#: main.cpp:47
 #, kde-format
 msgid "EPub Reader"
 msgstr "Программа для чтения EPub"
 
-#: main.cpp:62
+#: main.cpp:49
 #, kde-format
 msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
 msgstr "Niccolò Venerandi <niccolo@venerandi.com>, 2022"
 
-#: main.cpp:63
+#: main.cpp:50
 #, kde-format
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:63 main.cpp:64
+#: main.cpp:50 main.cpp:51
 #, kde-format
 msgid "Maintainer"
 msgstr "Сопровождающий"
 
-#: main.cpp:64
+#: main.cpp:51
 #, kde-format
 msgid "Carl Schwan"
 msgstr "Carl Schwan"
 
-#: main.cpp:65
+#: main.cpp:52
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "Олеся Герасименко"
 
-#: main.cpp:65
+#: main.cpp:52
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "translation-team@basealt.ru"
 
-#: main.cpp:79
+#: main.cpp:65
 #, kde-format
 msgid "Epub reader"
 msgstr "Программа для чтения EPub"
 
-#: main.cpp:80
+#: main.cpp:66
 #, kde-format
 msgid "Epub file to open"
 msgstr "Файл EPub, который следует открыть"
