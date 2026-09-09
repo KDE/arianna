@@ -38,6 +38,7 @@ parts:
     build-packages:
       - libduktape207
       - libdrm2
+      - libpodofo-dev
     cmake-parameters:
       - -DCMAKE_INSTALL_PREFIX=/usr
       - -DCMAKE_BUILD_TYPE=Release

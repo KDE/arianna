@@ -6,6 +6,7 @@
 #include "categoryentriesmodel.h"
 #include "contentlist/contentlist.h"
 #include <QQmlParserStatus>
+#include <QVariantMap>
 #include <qqmlintegration.h>
 
 /**
@@ -50,6 +51,9 @@ class BookListModel : public CategoryEntriesModel, public QQmlParserStatus
 
     /// \brief The "keyword" category entries model managed the sorting of entry by keyword.
     Q_PROPERTY(QObject *keywordCategoryModel READ keywordCategoryModel NOTIFY keywordCategoryModelChanged)
+
+    /// \brief The "subject" category entries model managed the sorting of entries by EPUB subject.
+    Q_PROPERTY(QObject *subjectCategoryModel READ subjectCategoryModel NOTIFY subjectCategoryModelChanged)
     /**
      * \brief The "folder" category entries model managed the sorting of entry by file system folder.
      */
@@ -57,6 +61,9 @@ class BookListModel : public CategoryEntriesModel, public QQmlParserStatus
 
     /// \brief cacheLoaded holds whether the database cache has been loaded..
     Q_PROPERTY(bool cacheLoaded READ cacheLoaded NOTIFY cacheLoadedChanged)
+
+    /// \brief Whether the deferred EPUB subject category model has finished populating.
+    Q_PROPERTY(bool subjectCategoryModelPopulated READ subjectCategoryModelPopulated NOTIFY subjectCategoryModelPopulatedChanged)
     Q_INTERFACES(QQmlParserStatus)
 public:
     explicit BookListModel(QObject *parent = nullptr);
@@ -116,8 +123,14 @@ public:
     CategoryEntriesModel *publisherCategoryModel() const;
 
     /// \return The categoryEntriesModel that manages the sorting of entries
-    /// by keywords, names and genres.
+    /// by EPUB subject.
+    CategoryEntriesModel *subjectCategoryModel() const;
+
+    /// \return Deprecated alias for subjectCategoryModel().
     CategoryEntriesModel *keywordCategoryModel() const;
+
+    /// \return Whether the deferred EPUB subject category model has finished populating.
+    bool subjectCategoryModelPopulated() const;
 
     /// \return The categoryEntriesModel that manages the sorting of entries by folder.
     CategoryEntriesModel *folderCategoryModel() const;
@@ -134,11 +147,24 @@ public:
     /// \param value The value to set it to.
     Q_INVOKABLE void setBookData(const QString &fileName, const QString &property, const QString &value);
 
+    /// \brief Populate the EPUB subject category model after the main book list is visible.
+    Q_INVOKABLE void populateSubjectCategoryModel();
+
     /// \brief Refresh an existing book entry from the current EPUB file contents.
     ///
     /// This updates metadata and cover data for books that are already in the
     /// library. Files that are not in the library are left untouched.
+    Q_INVOKABLE BookEntry addBookFromFile(const QString &fileName, bool refreshCover = true);
+    Q_INVOKABLE QVariantMap importCalibreLibrary(const QString &folderName, bool refreshCover = true);
     Q_INVOKABLE BookEntry refreshBookFromFile(const QString &fileName, bool refreshCover = true);
+    Q_INVOKABLE QVariantMap checkAndRefreshBookFromFile(const QString &fileName, bool refreshCover = true);
+    Q_INVOKABLE QVariantMap checkEpubFile(const QString &fileName, const QString &command) const;
+    Q_INVOKABLE QVariantMap checkPdfFile(const QString &fileName, const QString &command) const;
+    Q_INVOKABLE QVariantMap createWatermarkFreePdf(const QString &fileName, const QString &pattern);
+    Q_INVOKABLE QVariantMap replaceBookFileWithWatermarkFreePdf(const QString &fileName, const QString &replacementFileName, bool refreshCover = true);
+    Q_INVOKABLE void discardWatermarkFreePdf(const QString &replacementFileName);
+    Q_INVOKABLE QVariantMap setPdfVersion20(const QString &fileName, bool refreshCover = true);
+    Q_INVOKABLE QString bookVersionFromFile(const QString &fileName) const;
 
     /// Delete a book from the model, and optionally delete the entry from file storage.
     /// \param fileName The filename of the book to remove.
@@ -165,8 +191,14 @@ Q_SIGNALS:
     void contentModelChanged();
     /// \brief Fires when the keywordCategoryModel has changed or finished initializing.
     void keywordCategoryModelChanged();
+    /// \brief Fires when the subjectCategoryModel has changed or finished initializing.
+    void subjectCategoryModelChanged();
+    /// \brief Fires when the deferred subject category model has finished populating.
+    void subjectCategoryModelPopulatedChanged();
     /// \brief Fires when the authorCategoryModel has changed or finished initializing.
     void authorCategoryModelChanged();
+    /// \brief Fires before a book entry is removed and re-added during metadata refresh.
+    void bookRefreshAboutToUpdate(const QString &fileName);
 
 private:
     class Private;

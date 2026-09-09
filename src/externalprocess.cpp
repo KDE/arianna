@@ -2,9 +2,11 @@
 
 #include "externalprocess.h"
 
+#include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QLoggingCategory>
+#include <QStandardPaths>
 
 ExternalProcess::ExternalProcess(QObject *parent)
     : QObject(parent)
@@ -27,28 +29,80 @@ ExternalProcess::ExternalProcess(QObject *parent)
 
         if (!file.isEmpty()) {
             Q_EMIT editedFileChanged(file);
+            if (!currentEditorSessionId.isEmpty()) {
+                Q_EMIT editorSessionFileChanged(currentEditorSessionId, file);
+            }
         }
     });
 }
 
 void ExternalProcess::start(const QString &program, const QStringList &arguments)
 {
-    if (arguments.isEmpty()) {
+    QString editorProgram = program.trimmed();
+    QStringList editorArguments = arguments;
+    if (editorProgram.isEmpty() || editorArguments.isEmpty() || process->state() != QProcess::NotRunning) {
         return;
+    }
+
+    if (!QFileInfo::exists(editorProgram) && editorProgram.contains(QLatin1Char(' '))) {
+        const QStringList command = QProcess::splitCommand(editorProgram);
+        if (command.isEmpty()) {
+            return;
+        }
+
+        editorProgram = command.first();
+        editorArguments = command.mid(1) + editorArguments;
     }
 
     watchFile(arguments.first());
 
-    process->start(program, arguments);
+    process->start(editorProgram, editorArguments);
+}
+
+bool ExternalProcess::startEditorSession(const QString &sessionId, const QString &program, const QStringList &arguments)
+{
+    if (sessionId.isEmpty() || program.isEmpty() || arguments.isEmpty()) {
+        return false;
+    }
+
+    if (process->state() != QProcess::NotRunning) {
+        if (currentEditorSessionId == sessionId) {
+            activateWindowForFile(arguments.first());
+            return true;
+        }
+
+        qWarning() << "Cannot start editor session while another external process is running:" << currentEditorSessionId;
+        return false;
+    }
+
+    currentEditorSessionId = sessionId;
+    start(program, arguments);
+    const bool started = process->state() != QProcess::NotRunning;
+    if (!started) {
+        currentEditorSessionId.clear();
+    }
+    return started;
 }
 
 bool ExternalProcess::startDetached(const QString &program, const QStringList &arguments)
 {
-    if (program.isEmpty()) {
+    QString detachedProgram = program.trimmed();
+    QStringList detachedArguments = arguments;
+    if (detachedProgram.isEmpty()) {
         return false;
     }
 
-    return QProcess::startDetached(program, arguments);
+    if (!QFileInfo::exists(detachedProgram) && detachedProgram.contains(QLatin1Char(' '))) {
+        const QStringList command = QProcess::splitCommand(detachedProgram);
+        if (command.isEmpty()) {
+            return false;
+        }
+
+        detachedProgram = command.first();
+        detachedArguments = command.mid(1) + detachedArguments;
+    }
+
+    return QProcess::startDetached(detachedProgram, detachedArguments);
 }
 
 void ExternalProcess::stop()
@@ -63,11 +117,52 @@ void ExternalProcess::stop()
     }
 }
 
+bool ExternalProcess::isEditorSessionRunning(const QString &sessionId) const
+{
+    return !sessionId.isEmpty() && currentEditorSessionId == sessionId && process->state() != QProcess::NotRunning;
+}
+
+bool ExternalProcess::activateWindowForFile(const QString &filePath) const
+{
+    const QString fileName = QFileInfo(filePath).fileName();
+    if (fileName.isEmpty()) {
+        return false;
+    }
+
+    const QString helper =
+        QStandardPaths::findExecutable(QStringLiteral("kwin_wmgmt_helper"),
+                                       {QDir::home().filePath(QStringLiteral("bin")), QStringLiteral("/usr/local/bin"), QStringLiteral("/usr/bin")});
+    if (helper.isEmpty()) {
+        return false;
+    }
+
+    QProcess activator;
+    activator.setProgram(helper);
+    activator.setArguments({fileName});
+    activator.setProcessChannelMode(QProcess::MergedChannels);
+    activator.start();
+    if (!activator.waitForFinished(1500)) {
+        activator.kill();
+        activator.waitForFinished();
+        return false;
+    }
+
+    return activator.exitStatus() == QProcess::NormalExit && activator.exitCode() == 0;
+}
+
 void ExternalProcess::clearWatchedFile()
+{
+    clearWatchedFileState(true);
+}
+
+void ExternalProcess::clearWatchedFileState(const bool clearEditorSession)
 {
     editedFileChangedTimer->stop();
     pendingEditedFile.clear();
     watchedFilePath.clear();
+    if (clearEditorSession) {
+        currentEditorSessionId.clear();
+    }
     watchedFileLastModified = {};
     watchedFileSize = -1;
 
@@ -93,16 +188,29 @@ QByteArray ExternalProcess::readAllStandardError()
 void ExternalProcess::handleStarted()
 {
     Q_EMIT processStarted();
+    if (!currentEditorSessionId.isEmpty()) {
+        Q_EMIT editorSessionProcessStarted(currentEditorSessionId, process->processId());
+    }
 }
 
 void ExternalProcess::handleFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
+    const QString finishedEditorSessionId = currentEditorSessionId;
     Q_EMIT processFinished(exitCode, exitStatus);
+    if (!finishedEditorSessionId.isEmpty()) {
+        Q_EMIT editorSessionFinished(finishedEditorSessionId, exitCode, exitStatus);
+    }
+    clearWatchedFile();
 }
 
 void ExternalProcess::handleErrorOccurred(QProcess::ProcessError error)
 {
+    const QString failedEditorSessionId = currentEditorSessionId;
     Q_EMIT processErrorOccurred(error);
+    if (error == QProcess::FailedToStart && !failedEditorSessionId.isEmpty()) {
+        Q_EMIT editorSessionFinished(failedEditorSessionId, -1, QProcess::CrashExit);
+        clearWatchedFile();
+    }
 }
 
 void ExternalProcess::handleEditedFileChanged(const QString &file)
@@ -153,7 +261,7 @@ void ExternalProcess::watchFile(const QString &filePath)
     }
 
     if (absoluteFilePath != watchedFilePath) {
-        clearWatchedFile();
+        clearWatchedFileState(false);
     }
 
     watchedFilePath = absoluteFilePath;

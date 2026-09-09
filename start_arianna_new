@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+pick_arianna_binary() {
+    if command -v arianna >/dev/null 2>&1; then
+        command -v arianna
+        return 0
+    fi
+
+    return 1
+}
+
+kill_existing_arianna() {
+    local -a pids=()
+    local pid
+
+    while IFS= read -r pid; do
+        [[ -n "$pid" ]] && pids+=("$pid")
+    done < <(pgrep -x arianna || true)
+
+    if ((${#pids[@]} == 0)); then
+        printf '0\n'
+        return 0
+    fi
+
+    printf 'Stopping existing Arianna instance(s):\n' >&2
+    ps -o pid=,args= -p "$(IFS=,; printf '%s' "${pids[*]}")" >&2 || true
+    kill "${pids[@]}" 2>/dev/null || true
+
+    for _ in {1..30}; do
+        sleep 0.1
+        if ! pgrep -x arianna >/dev/null 2>&1; then
+            break
+        fi
+    done
+
+    while IFS= read -r pid; do
+        [[ -n "$pid" ]] || continue
+        printf 'Force stopping remaining Arianna instance: %s\n' "$pid"
+        kill -KILL "$pid" 2>/dev/null || true
+    done < <(pgrep -x arianna || true)
+
+    printf '%s\n' "${#pids[@]}"
+}
+
+cleanup_bookserver_discovery_file() {
+    local runtime_dir="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+    local discovery_file="$runtime_dir/arianna-bookserver.json"
+    if [[ -e "$discovery_file" ]]; then
+        printf 'Cleaning the bookserver launch pad: %s\n' "$discovery_file" >&2
+        rm -f -- "$discovery_file"
+    fi
+}
+
+ARIANNA_BIN="$(pick_arianna_binary)" || {
+    printf 'Unable to find installed arianna binary in PATH.\n' >&2
+    exit 127
+}
+
+ROCKET_COUNT="$(kill_existing_arianna)"
+cleanup_bookserver_discovery_file
+
+printf 'Starting %s after shooting %s rocket%s before.\n' "$ARIANNA_BIN" "$ROCKET_COUNT" "$([[ "$ROCKET_COUNT" == "1" ]] && printf '' || printf 's')"
+exec "$ARIANNA_BIN" "$@"

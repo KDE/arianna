@@ -2,9 +2,14 @@
 // SPDX-License-Identifier: LGPL-2.0-or-later
 
 #include "bookserver.h"
+#include "ariannatrace.h"
 #include "bookdatabase.h"
+#include "bookserverconfig.h"
+#include "booktruthstore.h"
 #include "categoryentriesmodel.h"
 #include "config.h"
+#include "okularpdfsupport.h"
+#include "pdfwatermarkfilter.h"
 #include "referencestore.h"
 
 #include <QAbstractSocket>
@@ -21,14 +26,17 @@
 #include <QDebug>
 #include <QDir>
 #include <QDomDocument>
+#include <QDomElement>
+#include <QDomNode>
+#include <QElapsedTimer>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QRegularExpression>
 #include <QScopedPointer>
 #include <QSet>
 #include <QStandardPaths>
+#include <QTemporaryFile>
 #include <QTimer>
 #include <QUrl>
 #include <QUuid>
@@ -36,6 +44,8 @@
 #include <qdeadlinetimer.h>
 #include <qdebug.h>
 #include <qdir.h>
+
+#include <KLocalizedString>
 
 #include <algorithm>
 
@@ -56,7 +66,7 @@ static void writeDiscoveryFile(quint16 port, const QString &serverToken)
     const QString path = discoveryFilePath();
 
     QJsonObject obj;
-    obj.insert(QStringLiteral("baseUrl"), QStringLiteral("http://127.0.0.1:%1").arg(port));
+    obj.insert(QStringLiteral("baseUrl"), BookServerConfig::baseUrl(port));
     obj.insert(QStringLiteral("serverToken"), serverToken);
     obj.insert(QStringLiteral("pid"), QCoreApplication::applicationPid());
 
@@ -72,21 +82,15 @@ static void writeDiscoveryFile(quint16 port, const QString &serverToken)
     QFile::setPermissions(path, QFileDevice::ReadOwner | QFileDevice::WriteOwner);
 
     qWarning() << "BookServer discovery file:" << path;
+    AriannaTrace::event(QStringLiteral("bookserver.discovery_file.written"),
+                        {{QStringLiteral("path"), path},
+                         {QStringLiteral("host"), BookServerConfig::listenAddress().toString()},
+                         {QStringLiteral("port"), port},
+                         {QStringLiteral("baseUrl"), BookServerConfig::baseUrl(port)}});
 }
 
-static QString anchoredEpubPath(const QString &filename, const QString &bookId)
-{
-    QFileInfo fileInfo(filename);
-    QString fileStem = bookId.trimmed();
-    if (fileStem.isEmpty()) {
-        fileStem = fileInfo.completeBaseName();
-    }
-
-    fileStem.replace(QRegularExpression(QStringLiteral("[/\\\\]")), QStringLiteral("_"));
-    return fileInfo.dir().filePath(fileStem + QStringLiteral(".anchored.epub"));
-}
-
-static QString manualBookrefAnchorOpenTag(const QString &sourceAnchorId, const QString &targetLocation, const bool isCrossReference)
+static QString
+manualBookrefAnchorOpenTag(const QString &sourceAnchorId, const QString &targetLocation, const bool isCrossReference, const QString &sourceAnchorTitle)
 {
     QString tag = QStringLiteral("<a id=\"%1\" data-role=\"anchor\"").arg(sourceAnchorId.toHtmlEscaped());
     if (isCrossReference) {
@@ -94,18 +98,34 @@ static QString manualBookrefAnchorOpenTag(const QString &sourceAnchorId, const Q
     } else if (!targetLocation.isEmpty()) {
         tag += QStringLiteral(" href=\"%1\"").arg(targetLocation.toHtmlEscaped());
     }
+    if (!sourceAnchorTitle.trimmed().isEmpty()) {
+        tag += QStringLiteral(" title=\"%1\"").arg(sourceAnchorTitle.trimmed().toHtmlEscaped());
+    }
     tag += QStringLiteral(">");
     return tag;
 }
 
+static QString fragmentFromLocation(const QString &location)
+{
+    const int fragmentIndex = location.indexOf(QLatin1Char('#'));
+    if (fragmentIndex < 0) {
+        return {};
+    }
+
+    return QUrl::fromPercentEncoding(location.mid(fragmentIndex + 1).toUtf8()).trimmed();
+}
+
 static bool findReferenceableTarget(const std::shared_ptr<EPubContainer> &container, const QString &refOrLocation, TargetAnchorInfo *target)
 {
-    if (!container || refOrLocation.isEmpty()) {
+    const QString lookup = refOrLocation.trimmed();
+    if (!container || lookup.isEmpty()) {
         return false;
     }
 
+    const QString lookupFragment = fragmentFromLocation(lookup);
     for (const TargetAnchorInfo &candidate : container->referenceableTargets()) {
-        if (candidate.ref == refOrLocation || candidate.location == refOrLocation) {
+        if (candidate.ref == lookup || candidate.location == lookup || candidate.cfiLocation == lookup
+            || (!lookupFragment.isEmpty() && candidate.ref == lookupFragment)) {
             if (target) {
                 *target = candidate;
             }
@@ -114,6 +134,26 @@ static bool findReferenceableTarget(const std::shared_ptr<EPubContainer> &contai
     }
 
     return false;
+}
+
+static bool isFragmentPreciseLocation(const QString &location)
+{
+    const QString trimmedLocation = location.trimmed();
+    return trimmedLocation.startsWith(QStringLiteral("epubcfi(")) || trimmedLocation.contains(QLatin1Char('#'));
+}
+
+static bool isCfiLocation(const QString &location)
+{
+    return location.trimmed().startsWith(QStringLiteral("epubcfi("));
+}
+
+static QString readerLocationForTarget(const TargetAnchorInfo &target)
+{
+    if (!target.location.trimmed().isEmpty() && !isCfiLocation(target.location)) {
+        return target.location;
+    }
+
+    return target.cfiLocation.isEmpty() ? target.location : target.cfiLocation;
 }
 
 static QString deliveryQueryValue(const QHttpServerRequest &request, const QStringList &names, const QString &fallback)
@@ -162,8 +202,8 @@ static QVector<EpubReference> epubReferencesFromVariantList(const QVariantList &
         const QVariantMap map = value.toMap();
         EpubReference reference;
         reference.sourceAnchorId = map.value(QStringLiteral("sourceAnchorId")).toString();
+        reference.sourceAnchorTitle = map.value(QStringLiteral("sourceAnchorTitle")).toString();
         reference.targetBookId = map.value(QStringLiteral("targetBookId")).toString();
-        reference.targetAnchorId = map.value(QStringLiteral("targetAnchorId")).toString();
         reference.targetLocation = map.value(QStringLiteral("targetLocation")).toString();
         reference.targetPreviewHtml = map.value(QStringLiteral("targetPreviewHtml")).toString();
         if (!reference.sourceAnchorId.isEmpty()) {
@@ -172,6 +212,304 @@ static QVector<EpubReference> epubReferencesFromVariantList(const QVariantList &
     }
 
     return references;
+}
+
+static QString uuidString(const QUuid &uuid)
+{
+    return uuid.isNull() ? QString() : uuid.toString(QUuid::WithoutBraces);
+}
+
+static QJsonArray anchorValidationIssuesToJson(const QList<BookAnchorValidationIssue> &issues)
+{
+    QJsonArray array;
+    for (const BookAnchorValidationIssue &issue : issues) {
+        QJsonObject object;
+        object.insert(QStringLiteral("type"), issue.type);
+        object.insert(QStringLiteral("bookId"), issue.bookId);
+        object.insert(QStringLiteral("anchorId"), issue.anchorId);
+        object.insert(QStringLiteral("objectId"), issue.objectId);
+        object.insert(QStringLiteral("message"), issue.message);
+        array.append(object);
+    }
+    return array;
+}
+
+static void appendUniqueString(QStringList &values, const QString &value)
+{
+    if (!value.isEmpty() && !values.contains(value)) {
+        values.append(value);
+    }
+}
+
+static QJsonArray stringListToJsonArray(const QStringList &values)
+{
+    QJsonArray array;
+    for (const QString &value : values) {
+        array.append(value);
+    }
+    return array;
+}
+
+static QString pdfLocationForPage(int page)
+{
+    QJsonObject location;
+    location.insert(QStringLiteral("format"), QStringLiteral("pdf"));
+    location.insert(QStringLiteral("page"), page);
+    location.insert(QStringLiteral("pageNumber"), page + 1);
+    return QString::fromUtf8(QJsonDocument(location).toJson(QJsonDocument::Compact));
+}
+
+static bool isPdfLocation(const QString &location)
+{
+    const QString trimmedLocation = location.trimmed();
+    if (!trimmedLocation.startsWith(QLatin1Char('{'))) {
+        return false;
+    }
+
+    const QJsonDocument document = QJsonDocument::fromJson(trimmedLocation.toUtf8());
+    if (!document.isObject()) {
+        return false;
+    }
+
+    const QJsonObject object = document.object();
+    return object.value(QStringLiteral("format")).toString().compare(QStringLiteral("pdf"), Qt::CaseInsensitive) == 0
+        && (object.contains(QStringLiteral("page")) || object.contains(QStringLiteral("pageNumber")));
+}
+
+static QString pdfSynopsisAttributeValue(const QDomElement &element, const QString &firstName, const QString &secondName)
+{
+    if (element.hasAttribute(firstName)) {
+        return element.attribute(firstName);
+    }
+    return element.attribute(secondName);
+}
+
+static Okular::DocumentViewport viewportForPdfSynopsisElement(Okular::Document *document, const QDomElement &element)
+{
+    QString viewportString = pdfSynopsisAttributeValue(element, QStringLiteral("Viewport"), QStringLiteral("Destination"));
+    if (viewportString.isEmpty()) {
+        const QString viewportName = pdfSynopsisAttributeValue(element, QStringLiteral("ViewportName"), QStringLiteral("DestinationName"));
+        if (!viewportName.isEmpty()) {
+            viewportString = document->metaData(QStringLiteral("NamedViewport"), viewportName).toString();
+        }
+    }
+
+    return viewportString.isEmpty() ? Okular::DocumentViewport() : Okular::DocumentViewport(viewportString);
+}
+
+static void appendPdfTargetLocation(QJsonArray &targetLocations,
+                                    QJsonArray &locationStrings,
+                                    const QString &id,
+                                    const QString &title,
+                                    int page,
+                                    int tocDepth,
+                                    const QStringList &tocPath)
+{
+    if (page < 0) {
+        return;
+    }
+
+    const QString normalizedTitle = title.simplified();
+    const QString label = normalizedTitle.isEmpty() ? i18nc("@item:inlistbox PDF page target", "Page %1", page + 1) : normalizedTitle;
+    const QString location = pdfLocationForPage(page);
+
+    QJsonObject item;
+    item.insert(QStringLiteral("id"), id);
+    item.insert(QStringLiteral("location"), location);
+    item.insert(QStringLiteral("readerLocation"), location);
+    item.insert(QStringLiteral("hrefLocation"), location);
+    item.insert(QStringLiteral("cfiLocation"), QString());
+    item.insert(QStringLiteral("file"), QString());
+    item.insert(QStringLiteral("previewHtml"), label);
+    item.insert(QStringLiteral("title"), label);
+    item.insert(QStringLiteral("type"), QStringLiteral("navigation"));
+    item.insert(QStringLiteral("tocTitle"), label);
+    item.insert(QStringLiteral("tocDepth"), tocDepth);
+    item.insert(QStringLiteral("tocPath"), stringListToJsonArray(tocPath.isEmpty() ? QStringList{label} : tocPath));
+
+    targetLocations.append(item);
+    locationStrings.append(location);
+}
+
+static void appendPdfSynopsisTargetLocations(Okular::Document *document,
+                                             const QDomNode &parentNode,
+                                             int pageCount,
+                                             QStringList tocPath,
+                                             int tocDepth,
+                                             int &idCounter,
+                                             QJsonArray &targetLocations,
+                                             QJsonArray &locationStrings)
+{
+    for (QDomNode node = parentNode.firstChild(); !node.isNull(); node = node.nextSibling()) {
+        const QDomElement element = node.toElement();
+        if (element.isNull()) {
+            continue;
+        }
+
+        const QString label = element.tagName().simplified();
+        QStringList itemPath = tocPath;
+        if (!label.isEmpty()) {
+            itemPath.append(label);
+        }
+
+        const Okular::DocumentViewport viewport = viewportForPdfSynopsisElement(document, element);
+        if (viewport.isValid() && viewport.pageNumber >= 0 && viewport.pageNumber < pageCount) {
+            appendPdfTargetLocation(targetLocations,
+                                    locationStrings,
+                                    QStringLiteral("pdf-toc-%1").arg(++idCounter),
+                                    label,
+                                    viewport.pageNumber,
+                                    tocDepth,
+                                    itemPath);
+        }
+
+        appendPdfSynopsisTargetLocations(document, element, pageCount, itemPath, tocDepth + 1, idCounter, targetLocations, locationStrings);
+    }
+}
+
+static bool pdfTargetLocationsForFile(const QString &fileName, QJsonArray &targetLocations, QJsonArray &locationStrings)
+{
+    Arianna::initializeOkularPdfSupport();
+    Okular::Document document(nullptr);
+    const QFileInfo fileInfo(fileName);
+    const QUrl url = QUrl::fromLocalFile(fileInfo.absoluteFilePath());
+    const Okular::Document::OpenResult result = Arianna::openOkularPdfDocument(document, fileInfo.absoluteFilePath(), url);
+    if (result != Okular::Document::OpenSuccess || !document.isOpened()) {
+        return false;
+    }
+
+    const int pageCount = static_cast<int>(document.pages());
+    const Okular::DocumentSynopsis *synopsis = document.documentSynopsis();
+    if (synopsis) {
+        int idCounter = 0;
+        appendPdfSynopsisTargetLocations(&document, *synopsis, pageCount, QStringList(), 0, idCounter, targetLocations, locationStrings);
+    }
+
+    if (targetLocations.isEmpty()) {
+        for (int page = 0; page < pageCount; ++page) {
+            const QString label = i18nc("@item:inlistbox PDF page target", "Page %1", page + 1);
+            appendPdfTargetLocation(targetLocations, locationStrings, QStringLiteral("pdf-page-%1").arg(page + 1), label, page, 0, QStringList{label});
+        }
+    }
+
+    document.closeDocument();
+    return true;
+}
+
+static QJsonObject activeFileImportObject(const QString &bookId, const BookCommitResult &result)
+{
+    QJsonObject object;
+    object.insert(QStringLiteral("bookId"), bookId);
+    object.insert(QStringLiteral("status"), result.unchanged ? QStringLiteral("unchanged") : QStringLiteral("imported"));
+    object.insert(QStringLiteral("message"), result.errorMessage);
+    object.insert(QStringLiteral("previousStateId"), uuidString(result.oldStateId));
+    object.insert(QStringLiteral("newStateId"), uuidString(result.newStateId));
+    object.insert(QStringLiteral("textContentHash"), QString::fromLatin1(result.textContentHash));
+    object.insert(QStringLiteral("documentStateHash"), QString::fromLatin1(result.documentStateHash));
+    object.insert(QStringLiteral("epubFileHash"), QString::fromLatin1(result.epubFileHash));
+    object.insert(QStringLiteral("anchorValidationIssues"), anchorValidationIssuesToJson(result.anchorValidationIssues));
+    return object;
+}
+
+static QHttpServerResponse activeFileImportConflictResponse(const QString &bookId, const BookCommitResult &result)
+{
+    QJsonObject object = activeFileImportObject(bookId, result);
+    object.insert(QStringLiteral("status"), QStringLiteral("anchor-validation-failed"));
+    return QHttpServerResponse(QByteArrayLiteral("application/json"),
+                               QJsonDocument(object).toJson(QJsonDocument::Compact),
+                               QHttpServerResponder::StatusCode::Conflict);
+}
+
+static void refreshBookStateAfterFileMutation(const QStringList &bookIds)
+{
+    BookTruthStore truthStore;
+    for (const QString &bookId : bookIds) {
+        if (bookId.trimmed().isEmpty()) {
+            continue;
+        }
+        const BookCommitResult result = truthStore.commitActiveFileChangeIfNeeded(bookId, true);
+        if (!result.success) {
+            qWarning() << "Unable to refresh EPUB state after file mutation:" << bookId << result.errorMessage;
+        }
+    }
+}
+
+static QStringList targetAnchorCandidateIds(const QVariantMap &reference)
+{
+    QStringList candidates;
+    auto append = [&candidates](QString value) {
+        value = value.trimmed();
+        if (value.isEmpty() || candidates.contains(value)) {
+            return;
+        }
+
+        candidates.append(value);
+    };
+
+    const QString targetLocation = reference.value(QStringLiteral("targetLocation")).toString().trimmed();
+    if (!targetLocation.contains(QLatin1Char('/')) && !targetLocation.contains(QLatin1Char('#')) && !targetLocation.startsWith(QStringLiteral("epubcfi("))) {
+        append(targetLocation);
+    }
+    append(fragmentFromLocation(targetLocation));
+    return candidates;
+}
+
+static bool isSameReference(const QVariantMap &reference, const QVariantMap &other)
+{
+    return reference.value(QStringLiteral("sourceBookId")).toString() == other.value(QStringLiteral("sourceBookId")).toString()
+        && reference.value(QStringLiteral("sourceAnchorId")).toString() == other.value(QStringLiteral("sourceAnchorId")).toString();
+}
+
+static bool referenceTargetsAnchor(const QVariantMap &reference, const QString &bookId, const QString &anchorId)
+{
+    if (reference.value(QStringLiteral("targetBookId")).toString() != bookId) {
+        return false;
+    }
+
+    const QString targetLocation = reference.value(QStringLiteral("targetLocation")).toString().trimmed();
+    return targetLocation == anchorId || fragmentFromLocation(targetLocation) == anchorId;
+}
+
+static bool annotationUsesAnchor(const QVariantMap &annotation, const QString &anchorId)
+{
+    const QString annotationAnchorId = annotation.value(QStringLiteral("anchorId")).toString().trimmed();
+    return annotationAnchorId == anchorId || annotationAnchorId + QStringLiteral("_begin") == anchorId
+        || annotationAnchorId + QStringLiteral("_end") == anchorId;
+}
+
+static bool anchorHasOtherDatabaseUsers(const QString &bookId, const QString &anchorId, const QVariantMap &deletedReference)
+{
+    if (bookId.isEmpty() || anchorId.isEmpty()) {
+        return true;
+    }
+
+    for (const QVariant &referenceValue : BookDatabase::self().loadReferencesTargeting(bookId)) {
+        const QVariantMap reference = referenceValue.toMap();
+        if (isSameReference(reference, deletedReference)) {
+            continue;
+        }
+        if (referenceTargetsAnchor(reference, bookId, anchorId)) {
+            return true;
+        }
+    }
+
+    for (const QVariant &referenceValue : BookDatabase::self().loadReferences(bookId)) {
+        const QVariantMap reference = referenceValue.toMap();
+        if (isSameReference(reference, deletedReference)) {
+            continue;
+        }
+        if (reference.value(QStringLiteral("sourceAnchorId")).toString().trimmed() == anchorId) {
+            return true;
+        }
+    }
+
+    for (const QVariant &annotationValue : BookDatabase::self().loadAnnotations(bookId)) {
+        if (annotationUsesAnchor(annotationValue.toMap(), anchorId)) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 static bool isServerServedMimeType(const QByteArray &mime)
@@ -289,7 +627,7 @@ static void copyDirectoryStripped(KZip &outZip, const KArchiveDirectory *dir, co
 }
 static QString makeResourceUrl(const QString &identifier, const QString &resourceUuid)
 {
-    return QStringLiteral("http://127.0.0.1:45961/") + QString::fromUtf8(QUrl::toPercentEncoding(identifier)) + QStringLiteral("/res/")
+    return BookServerConfig::baseUrl() + QStringLiteral("/") + QString::fromUtf8(QUrl::toPercentEncoding(identifier)) + QStringLiteral("/res/")
         + QString::fromUtf8(QUrl::toPercentEncoding(resourceUuid));
 }
 
@@ -331,7 +669,6 @@ static void addCorsHeaders(const QHttpServerRequest &request, QHttpServerRespons
         return;
     }
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     auto headers = response.headers();
     headers.replaceOrAppend("Access-Control-Allow-Origin", origin);
     headers.replaceOrAppend("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
@@ -340,13 +677,6 @@ static void addCorsHeaders(const QHttpServerRequest &request, QHttpServerRespons
                             "Accept-Ranges, Content-Length, Content-Range, X-Arianna-Resource-Mode, X-Arianna-Referencing-Mode");
     headers.replaceOrAppend("Vary", "Origin");
     response.setHeaders(headers);
-#else
-    response.setHeader("Access-Control-Allow-Origin", origin);
-    response.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
-    response.setHeader("Access-Control-Allow-Headers", "X-Arianna-Session-Token, X-Arianna-Server-Token, Range, Content-Type");
-    response.setHeader("Access-Control-Expose-Headers", "Accept-Ranges, Content-Length, Content-Range, X-Arianna-Resource-Mode, X-Arianna-Referencing-Mode");
-    response.setHeader("Vary", "Origin");
-#endif
 }
 
 static QHttpServerResponse corsPreflightResponse(const QHttpServerRequest &request)
@@ -356,42 +686,98 @@ static QHttpServerResponse corsPreflightResponse(const QHttpServerRequest &reque
     return response;
 }
 
-static void addBookResponseHeaders(QHttpServerResponse &response, qint64 contentLength)
+static void addBookResponseHeaders(QHttpServerResponse &response, qint64 contentLength, const QByteArray &inlineFilename = QByteArrayLiteral("book.epub"))
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     auto headers = response.headers();
-    headers.replaceOrAppend("Content-Disposition", "inline; filename=\"book.epub\"");
+    headers.replaceOrAppend("Content-Disposition", QByteArrayLiteral("inline; filename=\"") + inlineFilename + QByteArrayLiteral("\""));
     if (contentLength >= 0) {
         headers.replaceOrAppend("Content-Length", QByteArray::number(contentLength));
     }
     headers.replaceOrAppend("Cache-Control", "no-store");
     response.setHeaders(headers);
-#else
-    response.setHeader("Content-Disposition", "inline; filename=\"book.epub\"");
-    if (contentLength >= 0) {
-        response.setHeader("Content-Length", QByteArray::number(contentLength));
-    }
-    response.setHeader("Cache-Control", "no-store");
-#endif
 }
 
 static void addBookDeliveryHeaders(QHttpServerResponse &response, const QString &resourceMode, const QString &referencingMode)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     auto headers = response.headers();
     headers.replaceOrAppend("X-Arianna-Resource-Mode", resourceMode.toUtf8());
     headers.replaceOrAppend("X-Arianna-Referencing-Mode", referencingMode.toUtf8());
     response.setHeaders(headers);
-#else
-    response.setHeader("X-Arianna-Resource-Mode", resourceMode.toUtf8());
-    response.setHeader("X-Arianna-Referencing-Mode", referencingMode.toUtf8());
-#endif
 }
 
-static QHttpServerResponse bookFileResponse(const QString &filename)
+static QHttpServerResponse bookFileResponse(const QString &filename, const QByteArray &inlineFilename = QByteArrayLiteral("book.epub"))
 {
     QHttpServerResponse response = QHttpServerResponse::fromFile(filename);
-    addBookResponseHeaders(response, QFileInfo(filename).size());
+    addBookResponseHeaders(response, QFileInfo(filename).size(), inlineFilename);
+    return response;
+}
+
+static QString pdfWatermarkFilterMode()
+{
+    const QString mode = Config::pdfWatermarkFilterMode();
+    if (mode == QStringLiteral("permanent") || mode == QStringLiteral("temporary")) {
+        return mode;
+    }
+    if (Config::pdfWatermarkFilterEnabled()) {
+        return QStringLiteral("temporary");
+    }
+    return QStringLiteral("never");
+}
+
+static QHttpServerResponse pdfFileResponse(const QString &filename)
+{
+    if (pdfWatermarkFilterMode() != QStringLiteral("temporary")) {
+        return bookFileResponse(filename, QByteArrayLiteral("book.pdf"));
+    }
+
+    const QString pattern = Config::pdfWatermarkFilterPattern().trimmed();
+    if (pattern.isEmpty()) {
+        return bookFileResponse(filename, QByteArrayLiteral("book.pdf"));
+    }
+
+    QTemporaryFile filteredFile(QDir::temp().filePath(QStringLiteral("arianna-server-pdf-XXXXXX.pdf")));
+    filteredFile.setAutoRemove(true);
+    if (!filteredFile.open()) {
+        qWarning() << "Unable to create temporary server PDF for watermark filtering:" << filename;
+        return bookFileResponse(filename, QByteArrayLiteral("book.pdf"));
+    }
+
+    const QString filteredFileName = filteredFile.fileName();
+    filteredFile.close();
+    if (!QFile::remove(filteredFileName)) {
+        qWarning() << "Unable to prepare temporary server PDF for watermark filtering:" << filteredFileName;
+        return bookFileResponse(filename, QByteArrayLiteral("book.pdf"));
+    }
+
+    const PdfWatermarkFilterResult filterResult = PdfWatermarkFilter::filterFile(filename, filteredFileName, pattern);
+    if (!filterResult.filtered) {
+        QFile::remove(filteredFileName);
+        if (!filterResult.errorString.isEmpty()) {
+            qWarning() << "Server PDF watermark filter not applied:" << filterResult.errorString;
+        } else {
+            qDebug() << "Server PDF watermark marker not found:" << filename;
+        }
+        return bookFileResponse(filename, QByteArrayLiteral("book.pdf"));
+    }
+
+    QFile filteredPdf(filteredFileName);
+    if (!filteredPdf.open(QIODevice::ReadOnly)) {
+        QFile::remove(filteredFileName);
+        qWarning() << "Unable to read temporary server PDF after watermark filtering:" << filteredFileName;
+        return bookFileResponse(filename, QByteArrayLiteral("book.pdf"));
+    }
+
+    const QByteArray data = filteredPdf.readAll();
+    filteredPdf.close();
+    QFile::remove(filteredFileName);
+    if (data.isEmpty()) {
+        qWarning() << "Temporary server PDF after watermark filtering is empty:" << filteredFileName;
+        return bookFileResponse(filename, QByteArrayLiteral("book.pdf"));
+    }
+
+    qDebug() << "Server PDF watermark filter removed" << filterResult.occurrences << "object(s):" << filename;
+    QHttpServerResponse response(QByteArrayLiteral("application/pdf"), data);
+    addBookResponseHeaders(response, data.size(), QByteArrayLiteral("book.pdf"));
     return response;
 }
 
@@ -454,10 +840,15 @@ void BookServer::releaseReaderSessionResources(const QString &sessionToken)
         m_readOnlyFilesByIdentifier.remove(identifier);
 
         qDebug() << "BookServer cache removed for inactive identifier:" << identifier;
+        AriannaTrace::event(QStringLiteral("bookserver.container.cache_removed"),
+                            {{QStringLiteral("bookId"), identifier},
+                             {QStringLiteral("reason"), QStringLiteral("inactive-reader")},
+                             {QStringLiteral("reader"), AriannaTrace::shortId(sessionToken)},
+                             {QStringLiteral("cachedBooks"), m_containerCache.size()}});
     }
 }
 
-std::shared_ptr<EPubContainer> BookServer::containerForIdentifier(const QString &identifier)
+std::shared_ptr<EPubContainer> BookServer::containerForIdentifier(const QString &identifier, const QString &cacheVersion)
 {
     QString bookFileName = m_readOnlyFilesByIdentifier.value(identifier);
     if (bookFileName.isEmpty()) {
@@ -465,6 +856,7 @@ std::shared_ptr<EPubContainer> BookServer::containerForIdentifier(const QString 
 
         if (!entry) {
             qWarning() << "Kein BookEntry für Identifier:" << identifier;
+            AriannaTrace::event(QStringLiteral("bookserver.container.missing_entry"), {{QStringLiteral("bookId"), identifier}});
             m_containerCache.remove(identifier);
             clearServedResourcesForIdentifier(identifier);
             return {};
@@ -473,16 +865,12 @@ std::shared_ptr<EPubContainer> BookServer::containerForIdentifier(const QString 
         bookFileName = entry->filename;
     }
 
-    const QString anchoredBookFileName = anchoredEpubPath(bookFileName, identifier);
-    if (QFileInfo::exists(anchoredBookFileName)) {
-        qDebug() << "Using anchored EPUB for identifier:" << identifier << anchoredBookFileName;
-        bookFileName = anchoredBookFileName;
-    }
-
     const QFileInfo fileInfo(bookFileName);
 
     if (!fileInfo.exists() || !fileInfo.isFile()) {
         qWarning() << "EPUB-Datei existiert nicht mehr:" << bookFileName;
+        AriannaTrace::event(QStringLiteral("bookserver.container.missing_file"),
+                            {{QStringLiteral("bookId"), identifier}, {QStringLiteral("file"), bookFileName}});
         m_containerCache.remove(identifier);
         clearServedResourcesForIdentifier(identifier);
         m_readOnlyFilesByIdentifier.remove(identifier);
@@ -496,13 +884,31 @@ std::shared_ptr<EPubContainer> BookServer::containerForIdentifier(const QString 
     const auto cachedIt = m_containerCache.constFind(identifier);
     if (cachedIt != m_containerCache.constEnd()) {
         const CachedContainer &cached = cachedIt.value();
-        if (cached.container && cached.filename == filename && cached.lastModified == lastModified && cached.size == size) {
+        const bool cacheVersionMatches = cacheVersion.isEmpty() || cached.cacheVersion == cacheVersion;
+        if (cached.container && cached.filename == filename && cached.lastModified == lastModified && cached.size == size && cacheVersionMatches) {
             qDebug() << "Container aus Cache:" << identifier;
+            AriannaTrace::event(QStringLiteral("bookserver.container.cache_hit"),
+                                {{QStringLiteral("bookId"), identifier},
+                                 {QStringLiteral("file"), filename},
+                                 {QStringLiteral("cacheVersion"), cached.cacheVersion},
+                                 {QStringLiteral("cachedBooks"), m_containerCache.size()}});
             return cached.container;
         }
 
-        qDebug() << "Container cache stale:" << identifier << filename << "old mtime:" << cached.lastModified << "new mtime:" << lastModified
-                 << "old size:" << cached.size << "new size:" << size;
+        AriannaTrace::event(QStringLiteral("bookserver.container.cache_stale"),
+                            {{QStringLiteral("bookId"), identifier},
+                             {QStringLiteral("file"), filename},
+                             {QStringLiteral("oldMTime"), cached.lastModified.toString(Qt::ISODateWithMs)},
+                             {QStringLiteral("newMTime"), lastModified.toString(Qt::ISODateWithMs)},
+                             {QStringLiteral("oldSize"), cached.size},
+                             {QStringLiteral("newSize"), size},
+                             {QStringLiteral("oldCacheVersion"), cached.cacheVersion},
+                             {QStringLiteral("newCacheVersion"), cacheVersion}});
+        QDebug debug = qDebug() << "Container cache stale:" << identifier << filename << "old mtime:" << cached.lastModified << "new mtime:" << lastModified
+                                << "old size:" << cached.size << "new size:" << size;
+        if (!cached.cacheVersion.isEmpty() || !cacheVersion.isEmpty()) {
+            debug << "old cache version:" << cached.cacheVersion << "new cache version:" << cacheVersion;
+        }
         m_containerCache.remove(identifier);
         clearServedResourcesForIdentifier(identifier);
     }
@@ -511,14 +917,52 @@ std::shared_ptr<EPubContainer> BookServer::containerForIdentifier(const QString 
 
     if (!container->openFile(filename)) {
         qWarning() << "EPUB konnte nicht geöffnet werden:" << filename;
+        AriannaTrace::event(QStringLiteral("bookserver.container.open_failed"), {{QStringLiteral("bookId"), identifier}, {QStringLiteral("file"), filename}});
         return {};
     }
 
-    m_containerCache.insert(identifier, CachedContainer{container, filename, lastModified, size});
+    m_containerCache.insert(identifier, CachedContainer{container, filename, cacheVersion, lastModified, size});
+    AriannaTrace::event(QStringLiteral("bookserver.container.cache_put"),
+                        {{QStringLiteral("bookId"), identifier},
+                         {QStringLiteral("file"), filename},
+                         {QStringLiteral("mtime"), lastModified.toString(Qt::ISODateWithMs)},
+                         {QStringLiteral("size"), size},
+                         {QStringLiteral("cacheVersion"), cacheVersion},
+                         {QStringLiteral("cachedBooks"), m_containerCache.size()}});
 
-    qDebug() << "Container aus DB geladen:" << identifier << filename << "mtime:" << lastModified << "size:" << size;
+    QDebug debug = qDebug() << "Container aus DB geladen:" << identifier << filename << "mtime:" << lastModified << "size:" << size;
+    if (!cacheVersion.isEmpty()) {
+        debug << "cache version:" << cacheVersion;
+    }
 
     return container;
+}
+
+QString BookServer::pdfFileForIdentifier(const QString &identifier) const
+{
+    QString bookFileName = m_readOnlyFilesByIdentifier.value(identifier);
+    if (bookFileName.isEmpty()) {
+        const auto entry = BookDatabase::self().loadEntryByUniqueIdentifier(identifier);
+        if (!entry) {
+            qWarning() << "No BookEntry for PDF identifier:" << identifier;
+            return {};
+        }
+        bookFileName = entry->filename;
+    }
+
+    const QFileInfo fileInfo(bookFileName);
+    if (!fileInfo.exists() || !fileInfo.isFile()) {
+        qWarning() << "PDF file no longer exists:" << bookFileName;
+        return {};
+    }
+
+    QMimeDatabase db;
+    if (db.mimeTypeForFile(fileInfo).name() != QStringLiteral("application/pdf")) {
+        qWarning() << "Requested PDF identifier does not point to a PDF:" << identifier << bookFileName;
+        return {};
+    }
+
+    return fileInfo.absoluteFilePath();
 }
 
 static QString serverTokenFromRequest(const QHttpServerRequest &request)
@@ -550,13 +994,9 @@ auto serveStaticFile = [](QString filePath) -> QHttpServerResponse {
 
     QHttpServerResponse response(mimeType.isEmpty() ? QByteArrayLiteral("application/octet-stream") : mimeType, data);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     auto headers = response.headers();
     headers.append("Cache-Control", "no-store");
     response.setHeaders(headers);
-#else
-    response.setHeader("Cache-Control", "no-store");
-#endif
     qDebug() << "Serving static file:" << filePath << "mime type:" << mimeType;
     return response;
 };
@@ -649,6 +1089,10 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
         obj.insert(QStringLiteral("identifier"), identifier);
 
         qDebug() << "BookServer read-only book registered:" << identifier << fileInfo.absoluteFilePath();
+        AriannaTrace::event(QStringLiteral("bookserver.readonly_book.registered"),
+                            {{QStringLiteral("bookId"), identifier},
+                             {QStringLiteral("file"), fileInfo.absoluteFilePath()},
+                             {QStringLiteral("reader"), AriannaTrace::shortId(sessionToken)}});
 
         return QHttpServerResponse(QByteArrayLiteral("application/json"), QJsonDocument(obj).toJson(QJsonDocument::Compact));
     });
@@ -661,6 +1105,8 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
                  });
 
     server.route(QStringLiteral("/<arg>/book.epub"), [this](const QString &identifier, const QHttpServerRequest &request) {
+        QElapsedTimer deliveryTimer;
+        deliveryTimer.start();
         qDebug() << "Request for book URL:" << request.url() << "request token" << requestToken(request);
         const QString token = requestToken(request);
         const QString requestedResourceMode = normalizeResourceMode(
@@ -671,8 +1117,19 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
             deliveryQueryValue(request,
                                {QStringLiteral("referencingMode"), QStringLiteral("referenceMode"), QStringLiteral("referencing-mode")},
                                QStringLiteral("reader")));
+        const QString deliveryVersion = deliveryQueryValue(request, {QStringLiteral("v"), QStringLiteral("version")}, QString());
+
+        AriannaTrace::event(QStringLiteral("bookserver.book.request"),
+                            {{QStringLiteral("bookId"), identifier},
+                             {QStringLiteral("url"), request.url().toString()},
+                             {QStringLiteral("reader"), AriannaTrace::shortId(token)},
+                             {QStringLiteral("resourceMode"), requestedResourceMode},
+                             {QStringLiteral("referencingMode"), referencingMode},
+                             {QStringLiteral("version"), deliveryVersion}});
 
         if (!isValidToken(token)) {
+            AriannaTrace::event(QStringLiteral("bookserver.book.rejected"),
+                                {{QStringLiteral("bookId"), identifier}, {QStringLiteral("reason"), QStringLiteral("unauthorized")}});
             return QHttpServerResponse{QHttpServerResponder::StatusCode::Unauthorized};
         }
 
@@ -682,8 +1139,32 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
             registerReaderSessionForIdentifier(token, identifier);
         }
 
-        auto container = containerForIdentifier(identifier);
+        QString effectiveDeliveryVersion = deliveryVersion;
+        if (!m_readOnlyFilesByIdentifier.contains(identifier)) {
+            BookTruthStore truthStore;
+            const BookCommitResult activeFileImport = truthStore.commitActiveFileChangeIfNeeded(identifier);
+            if (!activeFileImport.success) {
+                if (activeFileImport.validationFailed) {
+                    return activeFileImportConflictResponse(identifier, activeFileImport);
+                }
+
+                qWarning() << "Unable to import externally changed active EPUB before delivery:" << identifier << activeFileImport.errorMessage;
+                return QHttpServerResponse{activeFileImport.invalidCandidate ? QHttpServerResponder::StatusCode::BadRequest
+                                                                             : QHttpServerResponder::StatusCode::InternalServerError};
+            }
+
+            if (!activeFileImport.unchanged) {
+                m_containerCache.remove(identifier);
+                clearServedResourcesForIdentifier(identifier);
+                effectiveDeliveryVersion = uuidString(activeFileImport.newStateId);
+                qDebug() << "Imported externally changed active EPUB before delivery:" << identifier << effectiveDeliveryVersion;
+            }
+        }
+
+        auto container = containerForIdentifier(identifier, effectiveDeliveryVersion);
         if (!container) {
+            AriannaTrace::event(QStringLiteral("bookserver.book.rejected"),
+                                {{QStringLiteral("bookId"), identifier}, {QStringLiteral("reason"), QStringLiteral("container-not-found")}});
             return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
         }
         const bool outsourceResources = requestedResourceMode != QStringLiteral("include");
@@ -698,6 +1179,19 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
         if (servedFiles.isEmpty() && !includeReferences && requestedResourceMode != QStringLiteral("outsource")) {
             m_containerCache.remove(identifier);
             qDebug() << "Serving original EPUB directly:" << container->filename();
+            AriannaTrace::event(QStringLiteral("bookserver.book.served"),
+                                {{QStringLiteral("bookId"), identifier},
+                                 {QStringLiteral("file"), container->filename()},
+                                 {QStringLiteral("resourceMode"), requestedResourceMode},
+                                 {QStringLiteral("effectiveResourceMode"), effectiveResourceMode},
+                                 {QStringLiteral("referencingMode"), referencingMode},
+                                 {QStringLiteral("version"), effectiveDeliveryVersion},
+                                 {QStringLiteral("bytes"), QFileInfo(container->filename()).size()},
+                                 {QStringLiteral("resources"), 0},
+                                 {QStringLiteral("references"), 0},
+                                 {QStringLiteral("cachedBooks"), m_containerCache.size()},
+                                 {QStringLiteral("directOriginal"), true},
+                                 {QStringLiteral("durationMs"), deliveryTimer.elapsed()}});
             QHttpServerResponse response = bookFileResponse(container->filename());
             addBookDeliveryHeaders(response, effectiveResourceMode, referencingMode);
             return response;
@@ -717,6 +1211,10 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
         qDebug() << "Served files map for identifier:" << identifier << resourceMap << "referencing mode:" << referencingMode;
 
         if (data.isEmpty()) {
+            AriannaTrace::event(QStringLiteral("bookserver.book.failed"),
+                                {{QStringLiteral("bookId"), identifier},
+                                 {QStringLiteral("reason"), QStringLiteral("server-ready-empty")},
+                                 {QStringLiteral("durationMs"), deliveryTimer.elapsed()}});
             return QHttpServerResponse{QHttpServerResponder::StatusCode::InternalServerError};
         }
 
@@ -724,8 +1222,140 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
         addBookResponseHeaders(response, data.size());
         addBookDeliveryHeaders(response, effectiveResourceMode, referencingMode);
 
+        AriannaTrace::event(QStringLiteral("bookserver.book.served"),
+                            {{QStringLiteral("bookId"), identifier},
+                             {QStringLiteral("file"), container->filename()},
+                             {QStringLiteral("resourceMode"), requestedResourceMode},
+                             {QStringLiteral("effectiveResourceMode"), effectiveResourceMode},
+                             {QStringLiteral("referencingMode"), referencingMode},
+                             {QStringLiteral("version"), effectiveDeliveryVersion},
+                             {QStringLiteral("bytes"), data.size()},
+                             {QStringLiteral("resources"), resourceMap.size()},
+                             {QStringLiteral("references"), deliveryOptions.references.size()},
+                             {QStringLiteral("cachedBooks"), m_containerCache.size()},
+                             {QStringLiteral("directOriginal"), false},
+                             {QStringLiteral("durationMs"), deliveryTimer.elapsed()}});
         return response;
     });
+
+    /* Route for PDF files */
+    server.route(QStringLiteral("/<arg>/book.pdf"), QHttpServerRequest::Method::Options, [](const QString & /*identifier*/, const QHttpServerRequest &request) {
+        return corsPreflightResponse(request);
+    });
+
+    server.route(QStringLiteral("/<arg>/book.pdf"), [this](const QString &identifier, const QHttpServerRequest &request) {
+        qDebug() << "Request for PDF book URL:" << request.url() << "request token" << requestToken(request);
+        const QString token = requestToken(request);
+        if (!isValidToken(token)) {
+            return QHttpServerResponse{QHttpServerResponder::StatusCode::Unauthorized};
+        }
+
+        if (m_readerSessionRefCount.contains(token)) {
+            registerReaderSessionForIdentifier(token, identifier);
+        }
+
+        const QString pdfFileName = pdfFileForIdentifier(identifier);
+        if (pdfFileName.isEmpty()) {
+            return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
+        }
+
+        QHttpServerResponse response = pdfFileResponse(pdfFileName);
+        addBookDeliveryHeaders(response, QStringLiteral("include"), QStringLiteral("reader"));
+        return response;
+    });
+
+    server.route(QStringLiteral("/<arg>/state/import-active-file"),
+                 QHttpServerRequest::Method::Options,
+                 [](const QString & /*identifier*/, const QHttpServerRequest &request) {
+                     return corsPreflightResponse(request);
+                 });
+
+    server.route(QStringLiteral("/<arg>/state/import-active-file"),
+                 QHttpServerRequest::Method::Post,
+                 [this](const QString &identifier, const QHttpServerRequest &request) {
+                     const QString token = requestToken(request);
+                     if (!isValidToken(token)) {
+                         return QHttpServerResponse{QHttpServerResponder::StatusCode::Unauthorized};
+                     }
+                     if (m_readOnlyFilesByIdentifier.contains(identifier)) {
+                         return QHttpServerResponse{QHttpServerResponder::StatusCode::BadRequest};
+                     }
+
+                     const QJsonDocument document = QJsonDocument::fromJson(request.body());
+                     const bool allowInvalidAnchors = document.object().value(QStringLiteral("allowInvalidAnchors")).toBool(false)
+                         || request.query().queryItemValue(QStringLiteral("allowInvalidAnchors")).compare(QStringLiteral("true"), Qt::CaseInsensitive) == 0;
+
+                     BookTruthStore truthStore;
+                     const BookCommitResult result = truthStore.commitActiveFileChangeIfNeeded(identifier, allowInvalidAnchors);
+                     if (!result.success) {
+                         if (result.validationFailed) {
+                             return activeFileImportConflictResponse(identifier, result);
+                         }
+
+                         qWarning() << "Unable to import active EPUB state:" << identifier << result.errorMessage;
+                         return QHttpServerResponse{result.invalidCandidate ? QHttpServerResponder::StatusCode::BadRequest
+                                                                            : QHttpServerResponder::StatusCode::InternalServerError};
+                     }
+
+                     if (!result.unchanged) {
+                         m_containerCache.remove(identifier);
+                         clearServedResourcesForIdentifier(identifier);
+                     }
+
+                     const QJsonObject root = activeFileImportObject(identifier, result);
+                     return QHttpServerResponse(QByteArrayLiteral("application/json"), QJsonDocument(root).toJson(QJsonDocument::Compact));
+                 });
+
+    server.route(QStringLiteral("/<arg>/image/not-inverse"),
+                 QHttpServerRequest::Method::Options,
+                 [](const QString & /*identifier*/, const QHttpServerRequest &request) {
+                     return corsPreflightResponse(request);
+                 });
+
+    server.route(QStringLiteral("/<arg>/image/not-inverse"),
+                 QHttpServerRequest::Method::Post,
+                 [this](const QString &identifier, const QHttpServerRequest &request) {
+                     const QString token = requestToken(request);
+                     if (!isValidToken(token)) {
+                         return QHttpServerResponse{QHttpServerResponder::StatusCode::Unauthorized};
+                     }
+                     if (m_readOnlyFilesByIdentifier.contains(identifier)) {
+                         return QHttpServerResponse{QHttpServerResponder::StatusCode::BadRequest};
+                     }
+
+                     const QJsonDocument document = QJsonDocument::fromJson(request.body());
+                     const QJsonObject object = document.object();
+                     const QString cfi = object.value(QStringLiteral("cfi")).toString().trimmed();
+                     const QString src = object.value(QStringLiteral("src")).toString().trimmed();
+                     if (cfi.isEmpty()) {
+                         return QHttpServerResponse{QHttpServerResponder::StatusCode::BadRequest};
+                     }
+
+                     const auto container = containerForIdentifier(identifier);
+                     if (!container) {
+                         return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
+                     }
+
+                     bool changed = false;
+                     if (!container->setImageNotInverse(cfi, src, &changed)) {
+                         return QHttpServerResponse{QHttpServerResponder::StatusCode::BadRequest};
+                     }
+
+                     QStringList modifiedBookIds;
+                     if (changed) {
+                         m_containerCache.remove(identifier);
+                         clearServedResourcesForIdentifier(identifier);
+                         appendUniqueString(modifiedBookIds, identifier);
+                         refreshBookStateAfterFileMutation(modifiedBookIds);
+                     }
+
+                     QJsonObject root;
+                     root.insert(QStringLiteral("bookId"), identifier);
+                     root.insert(QStringLiteral("status"), changed ? QStringLiteral("updated") : QStringLiteral("unchanged"));
+                     root.insert(QStringLiteral("changed"), changed);
+                     root.insert(QStringLiteral("modifiedBookIds"), stringListToJsonArray(modifiedBookIds));
+                     return QHttpServerResponse(QByteArrayLiteral("application/json"), QJsonDocument(root).toJson(QJsonDocument::Compact));
+                 });
 
     server.route(QStringLiteral("/<arg>/refs"), QHttpServerRequest::Method::Options, [](const QString & /*identifier*/, const QHttpServerRequest &request) {
         return corsPreflightResponse(request);
@@ -768,6 +1398,37 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
                          return QHttpServerResponse{QHttpServerResponder::StatusCode::Unauthorized};
                      }
 
+                     QString bookFileName = m_readOnlyFilesByIdentifier.value(identifier);
+                     if (bookFileName.isEmpty()) {
+                         const auto entry = BookDatabase::self().loadEntryByUniqueIdentifier(identifier);
+                         if (entry) {
+                             bookFileName = entry->filename;
+                         }
+                     }
+                     if (!bookFileName.isEmpty()) {
+                         const QFileInfo fileInfo(bookFileName);
+                         QMimeDatabase db;
+                         if (fileInfo.exists() && fileInfo.isFile() && db.mimeTypeForFile(fileInfo).name() == QStringLiteral("application/pdf")) {
+                             QJsonArray targetLocations;
+                             QJsonArray locationStrings;
+                             if (!pdfTargetLocationsForFile(fileInfo.absoluteFilePath(), targetLocations, locationStrings)) {
+                                 return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
+                             }
+
+                             QJsonObject root;
+                             root.insert(QStringLiteral("bookId"), identifier);
+                             root.insert(QStringLiteral("targetLocations"), targetLocations);
+                             root.insert(QStringLiteral("locations"), locationStrings);
+
+                             QJsonDocument doc(root);
+                             QHttpServerResponse response("application/json", doc.toJson(QJsonDocument::Compact), QHttpServerResponder::StatusCode::Ok);
+                             QHttpHeaders headers;
+                             headers.append("Cache-Control", "no-cache");
+                             response.setHeaders(headers);
+                             return response;
+                         }
+                     }
+
                      const auto container = containerForIdentifier(identifier);
                      if (!container) {
                          return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
@@ -780,15 +1441,26 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
                              continue;
                          }
 
+                         const QString readerLocation = readerLocationForTarget(target);
                          QJsonObject item;
                          item.insert(QStringLiteral("id"), target.ref);
-                         item.insert(QStringLiteral("location"), target.location);
+                         item.insert(QStringLiteral("location"), readerLocation);
+                         item.insert(QStringLiteral("readerLocation"), readerLocation);
+                         item.insert(QStringLiteral("hrefLocation"), target.location);
+                         item.insert(QStringLiteral("cfiLocation"), target.cfiLocation);
                          item.insert(QStringLiteral("file"), target.file);
                          item.insert(QStringLiteral("previewHtml"), target.previewHtml);
                          item.insert(QStringLiteral("title"), target.title);
                          item.insert(QStringLiteral("type"), target.type);
+                         item.insert(QStringLiteral("tocTitle"), target.tocTitle);
+                         item.insert(QStringLiteral("tocDepth"), target.tocDepth);
+                         QJsonArray tocPath;
+                         for (const QString &tocSegment : target.tocPath) {
+                             tocPath.append(tocSegment);
+                         }
+                         item.insert(QStringLiteral("tocPath"), tocPath);
                          targetLocations.append(item);
-                         locationStrings.append(target.location);
+                         locationStrings.append(readerLocation);
                      }
 
                      QJsonObject root;
@@ -825,23 +1497,29 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
                          return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
                      }
 
-                     const QString targetAnchorId = container->createAnchor(cfi, QString());
-                     if (targetAnchorId.isEmpty()) {
+                     const QString targetId = container->createAnchor(cfi, QString());
+                     if (targetId.isEmpty()) {
                          return QHttpServerResponse{QHttpServerResponder::StatusCode::BadRequest};
                      }
 
                      m_containerCache.remove(identifier);
                      clearServedResourcesForIdentifier(identifier);
+                     refreshBookStateAfterFileMutation({identifier});
 
                      QJsonObject root;
-                     root.insert(QStringLiteral("targetAnchorId"), targetAnchorId);
-                     root.insert(QStringLiteral("id"), targetAnchorId);
+                     root.insert(QStringLiteral("id"), targetId);
+                     root.insert(QStringLiteral("anchorCreated"), true);
+                     root.insert(QStringLiteral("modifiedBookIds"), stringListToJsonArray({identifier}));
 
                      const auto anchoredContainer = containerForIdentifier(identifier);
                      if (anchoredContainer) {
                          anchoredContainer->extractTargetAnchors();
-                         if (const TargetAnchorInfo *anchor = anchoredContainer->targetAnchorByRef(targetAnchorId)) {
-                             root.insert(QStringLiteral("location"), anchor->location);
+                         if (const TargetAnchorInfo *anchor = anchoredContainer->targetAnchorByRef(targetId)) {
+                             const QString readerLocation = readerLocationForTarget(*anchor);
+                             root.insert(QStringLiteral("location"), readerLocation);
+                             root.insert(QStringLiteral("readerLocation"), readerLocation);
+                             root.insert(QStringLiteral("hrefLocation"), anchor->location);
+                             root.insert(QStringLiteral("cfiLocation"), anchor->cfiLocation);
                              root.insert(QStringLiteral("previewHtml"), anchor->previewHtml);
                              root.insert(QStringLiteral("file"), anchor->file);
                              root.insert(QStringLiteral("title"), anchor->title);
@@ -941,7 +1619,6 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
                                      body,
                                      partial ? QHttpServerResponder::StatusCode::PartialContent : QHttpServerResponder::StatusCode::Ok);
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
         auto headers = response.headers();
         headers.append("Accept-Ranges", "bytes");
         headers.append("Cache-Control", "public, max-age=3600");
@@ -953,22 +1630,16 @@ BookServer::BookServer(const QString &serverToken, bool quitWhenUnused)
         }
 
         response.setHeaders(headers);
-#else
-response.setHeader("Accept-Ranges", "bytes");
-response.setHeader("Cache-Control", "public, max-age=3600");
-response.setHeader("Content-Length", QByteArray::number(body.size()));
-
-if (partial) {
-    response.setHeader(
-        "Content-Range",
-        QByteArray("bytes ")
-            + QByteArray::number(start)
-            + "-"
-            + QByteArray::number(end)
-            + "/"
-            + QByteArray::number(totalSize));
-}
-#endif
+        AriannaTrace::event(QStringLiteral("bookserver.resource.served"),
+                            {{QStringLiteral("bookId"), identifier},
+                             {QStringLiteral("resource"), AriannaTrace::shortId(resourceUuid)},
+                             {QStringLiteral("path"), cleanPath},
+                             {QStringLiteral("mime"), mime},
+                             {QStringLiteral("bytes"), body.size()},
+                             {QStringLiteral("totalBytes"), totalSize},
+                             {QStringLiteral("partial"), partial},
+                             {QStringLiteral("rangeStart"), start},
+                             {QStringLiteral("rangeEnd"), end}});
 
         return response;
     });
@@ -995,46 +1666,65 @@ if (partial) {
                          return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
                      }
                      // Resolve target anchor details if we don't already have location or preview metadata.
-                     QJsonArray result;
                      QJsonObject obj;
-                     const QString targetAnchorId = ref.value(QStringLiteral("targetAnchorId")).toString();
                      const QString targetBookId = ref.value(QStringLiteral("targetBookId")).toString();
                      const QString targetLocation = ref.value(QStringLiteral("targetLocation")).toString();
                      const QString targetPreviewHtml = ref.value(QStringLiteral("targetPreviewHtml")).toString();
+                     const QString sourceAnchorTitle = ref.value(QStringLiteral("sourceAnchorTitle")).toString();
                      TargetAnchorInfo resolvedTarget;
                      bool hasResolvedTarget = false;
-                     const bool needsAnchorLookup = (targetLocation.isEmpty() || targetPreviewHtml.isEmpty()) && !targetBookId.isEmpty();
+                     QString resolvedTargetLocation = targetLocation;
+                     QString resolvedTargetPreviewHtml = targetPreviewHtml;
+                     const bool targetLocationIsPdf = isPdfLocation(targetLocation);
+                     const bool requiredAnchorLookup = !targetLocationIsPdf && (targetLocation.isEmpty() || targetPreviewHtml.isEmpty());
+                     const bool locationPrefersHref = !targetLocationIsPdf && !targetLocation.isEmpty() && isCfiLocation(targetLocation);
+                     const bool needsAnchorLookup = (requiredAnchorLookup || locationPrefersHref) && !targetBookId.isEmpty();
                      if (needsAnchorLookup) {
                          const auto targetContainer = containerForIdentifier(targetBookId);
                          if (!targetContainer) {
                              return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
                          }
-                         const QString lookupValue = !targetAnchorId.isEmpty() ? targetAnchorId : targetLocation;
-                         hasResolvedTarget = findReferenceableTarget(targetContainer, lookupValue, &resolvedTarget);
+                         hasResolvedTarget = findReferenceableTarget(targetContainer, targetLocation, &resolvedTarget);
                          if (!hasResolvedTarget) {
-                             return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
+                             if (requiredAnchorLookup) {
+                                 return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
+                             }
                          }
 
-                         qDebug() << "Found target in EPUB:" << resolvedTarget.ref << "Location:" << resolvedTarget.location
-                                  << "preview:" << resolvedTarget.previewHtml;
-                         const QString bookTitle = targetContainer->metadata(QStringLiteral("title")).value(0, QStringLiteral("Unbekannter Titel"));
-                         const QString targetLabel = targetAnchorId.isEmpty() ? resolvedTarget.ref : targetAnchorId;
-                         const QString shortName = bookTitle + QStringLiteral(" (") + targetLabel + QStringLiteral(")");
-                         obj.insert(QStringLiteral("shortName"), shortName);
+                         if (hasResolvedTarget) {
+                             qDebug() << "Found target in EPUB:" << resolvedTarget.ref << "Location:" << resolvedTarget.location
+                                      << "CFI:" << resolvedTarget.cfiLocation << "preview:" << resolvedTarget.previewHtml;
+                             const QString bookTitle = targetContainer->metadata(QStringLiteral("title")).value(0, QStringLiteral("Unbekannter Titel"));
+                             const QString shortName = bookTitle + QStringLiteral(" (") + resolvedTarget.ref + QStringLiteral(")");
+                             obj.insert(QStringLiteral("shortName"), shortName);
 
-                         if (targetLocation.isEmpty() || targetPreviewHtml.isEmpty()) {
-                             qDebug() << "Target location or preview HTML is empty, updating reference store with target details";
-                             ref.insert(QStringLiteral("targetLocation"), resolvedTarget.location);
-                             ref.insert(QStringLiteral("targetPreviewHtml"), resolvedTarget.previewHtml);
-                             referenceStore.saveReference(ref);
+                             const QString resolvedReaderLocation = readerLocationForTarget(resolvedTarget);
+                             if ((targetLocation.isEmpty() || locationPrefersHref || resolvedReaderLocation != targetLocation)
+                                 && !resolvedReaderLocation.isEmpty()) {
+                                 resolvedTargetLocation = resolvedReaderLocation;
+                             }
+                             if (targetPreviewHtml.isEmpty() && !resolvedTarget.previewHtml.isEmpty()) {
+                                 resolvedTargetPreviewHtml = resolvedTarget.previewHtml;
+                             }
+
+                             if (resolvedTargetLocation != targetLocation || resolvedTargetPreviewHtml != targetPreviewHtml) {
+                                 qDebug() << "Updating reference store with resolved target details";
+                                 ref.insert(QStringLiteral("targetLocation"), resolvedTargetLocation);
+                                 ref.insert(QStringLiteral("targetPreviewHtml"), resolvedTargetPreviewHtml);
+                                 referenceStore.saveReference(ref);
+                             }
                          }
                      }
 
                      // obj[QStringLiteral("sourceBookId")] = sourceBookId;
                      // obj[QStringLiteral("targetBookId")] = targetBookId;
-                     obj[QStringLiteral("location")] = !targetLocation.isEmpty() ? targetLocation : (hasResolvedTarget ? resolvedTarget.location : QString());
-                     obj[QStringLiteral("previewHtml")] =
-                         !targetPreviewHtml.isEmpty() ? targetPreviewHtml : (hasResolvedTarget ? resolvedTarget.previewHtml : QString());
+                     obj[QStringLiteral("targetBookId")] = targetBookId;
+                     obj[QStringLiteral("location")] = resolvedTargetLocation;
+                     if (hasResolvedTarget) {
+                         obj[QStringLiteral("hrefLocation")] = resolvedTarget.location;
+                         obj[QStringLiteral("cfiLocation")] = resolvedTarget.cfiLocation;
+                     }
+                     obj[QStringLiteral("previewHtml")] = resolvedTargetPreviewHtml;
 
                      QJsonObject entryObj;
                      const auto targetEntry = BookDatabase::self().loadEntryByUniqueIdentifier(targetBookId);
@@ -1047,14 +1737,30 @@ if (partial) {
                          entryObj.insert(QStringLiteral("uniqueIdentifier"), targetEntry->uniqueIdentifier);
                          entryObj.insert(QStringLiteral("identifier"), targetEntry->identifier);
                          entryObj.insert(QStringLiteral("zoomLevel"), targetEntry->zoomLevel);
+                         entryObj.insert(QStringLiteral("pageMode"), targetEntry->pageMode);
                      } else if (m_readOnlyFilesByIdentifier.contains(targetBookId)) {
                          entryObj.insert(QStringLiteral("filename"), m_readOnlyFilesByIdentifier.value(targetBookId));
                          entryObj.insert(QStringLiteral("uniqueIdentifier"), targetBookId);
                      }
                      obj.insert(QStringLiteral("entry"), entryObj);
                      obj.insert(QStringLiteral("readOnly"), m_readOnlyFilesByIdentifier.contains(targetBookId));
+                     qDebug() << "opening referenced book at referenced location"
+                              << "sourceBookId:" << sourceBookId << "sourceAnchorId:" << sourceAnchorId << "targetBookId:" << targetBookId
+                              << "targetLocation:" << resolvedTargetLocation << "targetEntryFilename:" << entryObj.value(QStringLiteral("filename")).toString()
+                              << "targetLocationIsPdf:" << targetLocationIsPdf << "lookupRequired:" << requiredAnchorLookup
+                              << "locationPrefersHref:" << locationPrefersHref << "targetResolved:" << hasResolvedTarget;
 
                      QJsonObject root;
+                     root.insert(QStringLiteral("sourceBookId"), sourceBookId);
+                     root.insert(QStringLiteral("sourceAnchorId"), sourceAnchorId);
+                     root.insert(QStringLiteral("sourceAnchorTitle"), sourceAnchorTitle);
+                     root.insert(QStringLiteral("targetBookId"), targetBookId);
+                     root.insert(QStringLiteral("targetLocation"), resolvedTargetLocation);
+                     if (hasResolvedTarget) {
+                         root.insert(QStringLiteral("targetHrefLocation"), resolvedTarget.location);
+                         root.insert(QStringLiteral("targetCfiLocation"), resolvedTarget.cfiLocation);
+                     }
+                     root.insert(QStringLiteral("targetPreviewHtml"), resolvedTargetPreviewHtml);
                      root[QStringLiteral("target")] = obj;
 
                      QJsonDocument doc(root);
@@ -1062,7 +1768,98 @@ if (partial) {
                      QHttpHeaders headers;
                      headers.append("Cache-Control", "no-cache");
                      response.setHeaders(headers);
+                     AriannaTrace::event(QStringLiteral("bookserver.crossref.served"),
+                                         {{QStringLiteral("sourceBookId"), sourceBookId},
+                                          {QStringLiteral("sourceAnchorId"), sourceAnchorId},
+                                          {QStringLiteral("sourceAnchorTitle"), sourceAnchorTitle},
+                                          {QStringLiteral("targetBookId"), targetBookId},
+                                          {QStringLiteral("targetLocation"), resolvedTargetLocation},
+                                          {QStringLiteral("targetEntryFilename"), entryObj.value(QStringLiteral("filename")).toString()},
+                                          {QStringLiteral("targetLocationIsPdf"), targetLocationIsPdf},
+                                          {QStringLiteral("lookupRequired"), requiredAnchorLookup},
+                                          {QStringLiteral("locationPrefersHref"), locationPrefersHref},
+                                          {QStringLiteral("targetResolved"), hasResolvedTarget}});
                      return response;
+                 });
+
+    server.route(QStringLiteral("/<arg>/ref/<arg>"),
+                 QHttpServerRequest::Method::Delete,
+                 [this](const QString &sourceBookId, const QString &sourceAnchorId, const QHttpServerRequest &request) {
+                     const QString token = requestToken(request);
+                     qDebug() << "Processing request to delete reference from book:" << sourceBookId << "anchor:" << sourceAnchorId;
+                     if (!isValidToken(token)) {
+                         return QHttpServerResponse{QHttpServerResponder::StatusCode::Unauthorized};
+                     }
+
+                     ReferenceStore referenceStore;
+                     const QVariantMap ref = referenceStore.loadReferenceBySource(sourceBookId, sourceAnchorId);
+                     if (ref.isEmpty()) {
+                         return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
+                     }
+
+                     const auto sourceContainer = containerForIdentifier(sourceBookId);
+                     if (!sourceContainer) {
+                         return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
+                     }
+
+                     if (!sourceContainer->deleteReferenceAnchor(sourceAnchorId)) {
+                         QJsonObject root;
+                         root.insert(QStringLiteral("error"), QStringLiteral("referenceAnchorDeleteFailed"));
+                         root.insert(QStringLiteral("sourceBookId"), sourceBookId);
+                         root.insert(QStringLiteral("sourceAnchorId"), sourceAnchorId);
+                         return QHttpServerResponse(QByteArrayLiteral("application/json"),
+                                                    QJsonDocument(root).toJson(QJsonDocument::Compact),
+                                                    QHttpServerResponder::StatusCode::InternalServerError);
+                     }
+
+                     m_containerCache.remove(sourceBookId);
+                     clearServedResourcesForIdentifier(sourceBookId);
+
+                     QStringList modifiedBookIds;
+                     appendUniqueString(modifiedBookIds, sourceBookId);
+                     bool targetAnchorDeleted = false;
+                     const QString targetBookId = ref.value(QStringLiteral("targetBookId")).toString();
+                     if (!targetBookId.isEmpty() && !isPdfLocation(ref.value(QStringLiteral("targetLocation")).toString())) {
+                         for (const QString &candidateAnchorId : targetAnchorCandidateIds(ref)) {
+                             if (!candidateAnchorId.startsWith(QStringLiteral("uuid_"))) {
+                                 qDebug() << "Keeping target anchor because it is not an Arianna-generated range anchor:" << targetBookId << candidateAnchorId;
+                                 continue;
+                             }
+                             if (anchorHasOtherDatabaseUsers(targetBookId, candidateAnchorId, ref)) {
+                                 qDebug() << "Keeping target anchor because it is still used:" << targetBookId << candidateAnchorId;
+                                 continue;
+                             }
+
+                             m_containerCache.remove(targetBookId);
+                             const auto targetContainer = containerForIdentifier(targetBookId);
+                             if (!targetContainer) {
+                                 qWarning() << "Unable to open target book for unused target anchor cleanup:" << targetBookId << candidateAnchorId;
+                                 continue;
+                             }
+                             if (!targetContainer->deleteTargetRangeAnchor(candidateAnchorId)) {
+                                 qWarning() << "Unable to clean unused target range anchor:" << targetBookId << candidateAnchorId;
+                                 continue;
+                             }
+
+                             m_containerCache.remove(targetBookId);
+                             clearServedResourcesForIdentifier(targetBookId);
+                             targetAnchorDeleted = true;
+                             appendUniqueString(modifiedBookIds, targetBookId);
+                             break;
+                         }
+                     }
+
+                     referenceStore.removeReference(sourceBookId, sourceAnchorId);
+
+                     QJsonObject root;
+                     root.insert(QStringLiteral("deleted"), true);
+                     root.insert(QStringLiteral("sourceAnchorDeleted"), true);
+                     root.insert(QStringLiteral("sourceBookId"), sourceBookId);
+                     root.insert(QStringLiteral("sourceAnchorId"), sourceAnchorId);
+                     root.insert(QStringLiteral("targetAnchorDeleted"), targetAnchorDeleted);
+                     root.insert(QStringLiteral("modifiedBookIds"), stringListToJsonArray(modifiedBookIds));
+                     refreshBookStateAfterFileMutation(modifiedBookIds);
+                     return QHttpServerResponse(QByteArrayLiteral("application/json"), QJsonDocument(root).toJson(QJsonDocument::Compact));
                  });
     /* route for all books*/
     server.route(QStringLiteral("/books"), QHttpServerRequest::Method::Options, [](const QHttpServerRequest &request) {
@@ -1133,27 +1930,29 @@ if (partial) {
         ReferenceStore referenceStore;
         QVariantMap ref;
         QString sourceAnchorId = obj.value(QStringLiteral("sourceAnchorId")).toString().trimmed();
+        const QString sourceAnchorTitle = obj.value(QStringLiteral("sourceAnchorTitle")).toString().trimmed();
         const QString sourceCfi = obj.value(QStringLiteral("cfi")).toString().trimmed();
         if (sourceCfi.isEmpty() && sourceAnchorId.isEmpty()) {
             return QHttpServerResponse{QHttpServerResponder::StatusCode::BadRequest};
         }
-
         const QString targetBookId = obj.value(QStringLiteral("targetBookId")).toString();
 
-        QString targetAnchorId = obj.value(QStringLiteral("targetAnchorId")).toString();
         QString targetLocation = obj.value(QStringLiteral("targetLocation")).toString();
         QString targetPreviewHtml = obj.value(QStringLiteral("targetPreviewHtml")).toString();
+        const bool targetPreviewHtmlEdited = obj.value(QStringLiteral("targetPreviewHtmlEdited")).toBool(false);
 
         const QString targetCFI = obj.value(QStringLiteral("targetCFI")).toString().trimmed();
-        const bool hasSelectedTargetLocation = !targetAnchorId.isEmpty() || !targetLocation.isEmpty();
+        const bool hasSelectedTargetLocation = !targetLocation.isEmpty();
         if (targetBookId.isEmpty() || (!hasSelectedTargetLocation && targetCFI.isEmpty())) {
             return QHttpServerResponse{QHttpServerResponder::StatusCode::BadRequest};
         }
         const bool isCrossReference = targetBookId != sourceBookId;
+        QStringList modifiedBookIds;
+        bool targetAnchorCreated = false;
+        bool sourceAnchorCreated = false;
+        bool sourceAnchorChanged = false;
 
-        if (targetAnchorId.isEmpty() && !targetLocation.isEmpty()) {
-            targetAnchorId = targetLocation;
-        }
+        const bool targetLocationIsPdf = isPdfLocation(targetLocation);
 
         if (!targetBookId.isEmpty() && !targetCFI.isEmpty() && !hasSelectedTargetLocation) {
             const auto targetContainer = containerForIdentifier(targetBookId);
@@ -1166,34 +1965,38 @@ if (partial) {
                 return QHttpServerResponse{QHttpServerResponder::StatusCode::BadRequest};
             }
 
-            targetAnchorId = createdTargetAnchorId;
+            targetAnchorCreated = true;
+            appendUniqueString(modifiedBookIds, targetBookId);
             m_containerCache.remove(targetBookId);
             clearServedResourcesForIdentifier(targetBookId);
 
             const auto anchoredTargetContainer = containerForIdentifier(targetBookId);
             if (anchoredTargetContainer) {
                 anchoredTargetContainer->extractTargetAnchors();
-                if (const TargetAnchorInfo *anchor = anchoredTargetContainer->targetAnchorByRef(targetAnchorId)) {
-                    targetLocation = anchor->location;
-                    targetPreviewHtml = anchor->previewHtml;
+                if (const TargetAnchorInfo *anchor = anchoredTargetContainer->targetAnchorByRef(createdTargetAnchorId)) {
+                    targetLocation = isCrossReference ? readerLocationForTarget(*anchor) : anchor->location;
+                    if (targetPreviewHtml.isEmpty() && !targetPreviewHtmlEdited) {
+                        targetPreviewHtml = anchor->previewHtml;
+                    }
                 }
             }
-        } else if (targetPreviewHtml.isEmpty()) {
+        } else if (!targetLocationIsPdf) {
             const auto targetContainer = containerForIdentifier(targetBookId);
             TargetAnchorInfo target;
-            const QString lookupValue = !targetAnchorId.isEmpty() ? targetAnchorId : targetLocation;
-            if (findReferenceableTarget(targetContainer, lookupValue, &target)) {
-                if (targetAnchorId.isEmpty()) {
-                    targetAnchorId = target.ref;
+            if (findReferenceableTarget(targetContainer, targetLocation, &target)) {
+                const QString preferredTargetLocation = isCrossReference ? readerLocationForTarget(target) : target.location;
+                if (!preferredTargetLocation.isEmpty()
+                    && (targetLocation.isEmpty() || !isFragmentPreciseLocation(targetLocation)
+                        || (isCrossReference && targetLocation != preferredTargetLocation))) {
+                    targetLocation = preferredTargetLocation;
                 }
-                if (targetLocation.isEmpty()) {
-                    targetLocation = target.location;
+                if (targetPreviewHtml.isEmpty() && !targetPreviewHtmlEdited) {
+                    targetPreviewHtml = target.previewHtml;
                 }
-                targetPreviewHtml = target.previewHtml;
             }
         }
 
-        if (targetAnchorId.isEmpty() || targetLocation.isEmpty()) {
+        if (targetLocation.isEmpty()) {
             return QHttpServerResponse{QHttpServerResponder::StatusCode::BadRequest};
         }
 
@@ -1203,14 +2006,14 @@ if (partial) {
                 return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
             }
 
-            sourceAnchorId = sourceContainer->createBookrefAnchor(sourceCfi, targetLocation, isCrossReference);
+            sourceAnchorId = sourceContainer->createBookrefAnchor(sourceCfi, targetLocation, isCrossReference, sourceAnchorTitle);
             if (sourceAnchorId.isEmpty()) {
                 sourceAnchorId = QStringLiteral("uuid_") + QUuid::createUuidV7().toString(QUuid::WithoutBraces);
 
                 ref.insert(QStringLiteral("sourceBookId"), sourceBookId);
                 ref.insert(QStringLiteral("sourceAnchorId"), sourceAnchorId);
+                ref.insert(QStringLiteral("sourceAnchorTitle"), sourceAnchorTitle);
                 ref.insert(QStringLiteral("targetBookId"), targetBookId);
-                ref.insert(QStringLiteral("targetAnchorId"), targetAnchorId);
                 ref.insert(QStringLiteral("targetLocation"), targetLocation);
                 ref.insert(QStringLiteral("targetPreviewHtml"), targetPreviewHtml);
                 referenceStore.saveReference(ref);
@@ -1223,10 +2026,16 @@ if (partial) {
                 root.insert(QStringLiteral("cfi"), sourceCfi);
                 root.insert(QStringLiteral("text"), selectedText);
                 root.insert(QStringLiteral("sourceAnchorId"), sourceAnchorId);
+                root.insert(QStringLiteral("sourceAnchorTitle"), sourceAnchorTitle);
                 root.insert(QStringLiteral("referenceStored"), true);
                 root.insert(QStringLiteral("isCrossReference"), isCrossReference);
-                root.insert(QStringLiteral("anchorOpenTag"), manualBookrefAnchorOpenTag(sourceAnchorId, targetLocation, isCrossReference));
+                root.insert(QStringLiteral("targetBookId"), targetBookId);
+                root.insert(QStringLiteral("sourceAnchorCreated"), false);
+                root.insert(QStringLiteral("targetAnchorCreated"), targetAnchorCreated);
+                root.insert(QStringLiteral("modifiedBookIds"), stringListToJsonArray(modifiedBookIds));
+                root.insert(QStringLiteral("anchorOpenTag"), manualBookrefAnchorOpenTag(sourceAnchorId, targetLocation, isCrossReference, sourceAnchorTitle));
                 root.insert(QStringLiteral("anchorCloseTag"), QStringLiteral("</a>"));
+                refreshBookStateAfterFileMutation(modifiedBookIds);
                 return QHttpServerResponse(QByteArrayLiteral("application/json"),
                                            QJsonDocument(root).toJson(QJsonDocument::Compact),
                                            QHttpServerResponder::StatusCode::Conflict);
@@ -1234,8 +2043,22 @@ if (partial) {
 
             m_containerCache.remove(sourceBookId);
             clearServedResourcesForIdentifier(sourceBookId);
+            sourceAnchorCreated = true;
+            appendUniqueString(modifiedBookIds, sourceBookId);
         } else {
             qDebug() << "Saving reference for existing source anchor:" << sourceAnchorId << "in book:" << sourceBookId;
+            const auto sourceContainer = containerForIdentifier(sourceBookId);
+            if (!sourceContainer) {
+                return QHttpServerResponse{QHttpServerResponder::StatusCode::NotFound};
+            }
+            if (!sourceContainer->updateReferenceAnchor(sourceAnchorId, targetLocation, isCrossReference, sourceAnchorTitle, &sourceAnchorChanged)) {
+                return QHttpServerResponse{QHttpServerResponder::StatusCode::InternalServerError};
+            }
+            if (sourceAnchorChanged) {
+                m_containerCache.remove(sourceBookId);
+                clearServedResourcesForIdentifier(sourceBookId);
+                appendUniqueString(modifiedBookIds, sourceBookId);
+            }
         }
 
         if (sourceAnchorId.isEmpty()) {
@@ -1245,37 +2068,31 @@ if (partial) {
         ref.clear();
         ref.insert(QStringLiteral("sourceBookId"), sourceBookId);
         ref.insert(QStringLiteral("sourceAnchorId"), sourceAnchorId);
+        ref.insert(QStringLiteral("sourceAnchorTitle"), sourceAnchorTitle);
         ref.insert(QStringLiteral("targetBookId"), targetBookId);
-        ref.insert(QStringLiteral("targetAnchorId"), targetAnchorId);
         ref.insert(QStringLiteral("targetLocation"), targetLocation);
         ref.insert(QStringLiteral("targetPreviewHtml"), targetPreviewHtml);
         referenceStore.saveReference(ref);
 
         QJsonObject root;
         root.insert(QStringLiteral("sourceAnchorId"), sourceAnchorId);
-        root.insert(QStringLiteral("targetAnchorId"), targetAnchorId);
+        root.insert(QStringLiteral("sourceAnchorTitle"), sourceAnchorTitle);
+        root.insert(QStringLiteral("targetBookId"), targetBookId);
         root.insert(QStringLiteral("targetLocation"), targetLocation);
         root.insert(QStringLiteral("targetPreviewHtml"), targetPreviewHtml);
         root.insert(QStringLiteral("isCrossReference"), isCrossReference);
+        root.insert(QStringLiteral("sourceAnchorCreated"), sourceAnchorCreated);
+        root.insert(QStringLiteral("targetAnchorCreated"), targetAnchorCreated);
+        root.insert(QStringLiteral("modifiedBookIds"), stringListToJsonArray(modifiedBookIds));
+        refreshBookStateAfterFileMutation(modifiedBookIds);
         return QHttpServerResponse(QByteArrayLiteral("application/json"), QJsonDocument(root).toJson(QJsonDocument::Compact));
     });
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     server.addAfterRequestHandler(&server, [](const QHttpServerRequest &request, QHttpServerResponse &resp) {
         addCorsHeaders(request, resp);
     });
-#else
-    server.afterRequest([](QHttpServerResponse &&resp) {
-        resp.setHeader("Access-Control-Allow-Origin", "*");
-        resp.setHeader("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
-        resp.setHeader("Access-Control-Allow-Headers", "X-Arianna-Session-Token, X-Arianna-Server-Token, Range, Content-Type");
-        resp.setHeader("Access-Control-Expose-Headers", "Accept-Ranges, Content-Length, Content-Range, X-Arianna-Resource-Mode, X-Arianna-Referencing-Mode");
-        return std::move(resp);
-    });
-#endif
 
-#if QT_VERSION >= QT_VERSION_CHECK(6, 8, 0)
     auto tcpserver = std::make_unique<QTcpServer>();
-    if (!tcpserver->listen(QHostAddress::LocalHost, 45961)) {
+    if (!tcpserver->listen(BookServerConfig::listenAddress(), BookServerConfig::port())) {
         if (tcpserver->serverError() == QAbstractSocket::AddressInUseError) {
             qWarning().noquote() << "BookServer already running";
         } else {
@@ -1290,16 +2107,14 @@ if (partial) {
     quint16 port = tcpserver->serverPort();
     auto s = tcpserver.release();
     Q_UNUSED(s);
-#else
-    const auto port = server.listen(QHostAddress::LocalHost, 45961);
-    if (!port) {
-        qWarning().noquote() << "BookServer already running";
-        return;
-    }
-#endif
 
     m_running = true;
-    qWarning() << QStringLiteral("BookServer running on http://127.0.0.1:%1/ (Press CTRL+C to quit)").arg(port);
+    qWarning() << QStringLiteral("BookServer running on %1/ (Press CTRL+C to quit)").arg(BookServerConfig::baseUrl(port));
+    AriannaTrace::event(QStringLiteral("bookserver.listen"),
+                        {{QStringLiteral("host"), BookServerConfig::listenAddress().toString()},
+                         {QStringLiteral("port"), port},
+                         {QStringLiteral("baseUrl"), BookServerConfig::baseUrl(port)},
+                         {QStringLiteral("discoveryFile"), discoveryFilePath()}});
     writeDiscoveryFile(port, m_serverToken);
 }
 
@@ -1335,6 +2150,7 @@ void BookServer::stop()
     removeDiscoveryFile();
 
     qWarning() << "BookServer stopped";
+    AriannaTrace::event(QStringLiteral("bookserver.stopped"), {{QStringLiteral("reason"), QStringLiteral("stop")}});
 }
 
 void BookServer::addSessionToken(const QString &token)
@@ -1367,6 +2183,8 @@ void BookServer::registerReaderSession(const QString &token)
     m_readerSessionRefCount[token] = m_readerSessionRefCount.value(token) + 1;
 
     qDebug() << "BookServer reader registered:" << token << "registered readers:" << registeredReaderCount();
+    AriannaTrace::event(QStringLiteral("bookserver.reader.registered"),
+                        {{QStringLiteral("reader"), AriannaTrace::shortId(token)}, {QStringLiteral("registeredReaders"), registeredReaderCount()}});
 }
 
 bool BookServer::unregisterReaderSession(const QString &token)
@@ -1385,6 +2203,8 @@ bool BookServer::unregisterReaderSession(const QString &token)
     }
 
     qDebug() << "BookServer reader unregistered:" << token << "registered readers:" << registeredReaderCount();
+    AriannaTrace::event(QStringLiteral("bookserver.reader.unregistered"),
+                        {{QStringLiteral("reader"), AriannaTrace::shortId(token)}, {QStringLiteral("registeredReaders"), registeredReaderCount()}});
     return true;
 }
 
@@ -1456,6 +2276,14 @@ ResourceMap BookServer::makeResourceMap(const QSet<QString> &servedFiles, const 
         m_resourceByUuid.insert(resourceUuid, ServedResource{identifier, cleanPath, sessionToken});
 
         map.insert(cleanPath, makeResourceUrl(identifier, resourceUuid));
+    }
+
+    if (!map.isEmpty()) {
+        AriannaTrace::event(QStringLiteral("bookserver.resource.map_created"),
+                            {{QStringLiteral("bookId"), identifier},
+                             {QStringLiteral("resources"), map.size()},
+                             {QStringLiteral("sessionScoped"), !sessionToken.isEmpty()},
+                             {QStringLiteral("reader"), AriannaTrace::shortId(sessionToken)}});
     }
 
     return map;

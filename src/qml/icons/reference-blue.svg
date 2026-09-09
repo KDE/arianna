@@ -1,0 +1,8 @@
+<!-- SPDX-FileCopyrightText: none -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+  <rect x="3" y="3" width="18" height="18" rx="4" fill="#1D4ED8" opacity=".16"/>
+  <path fill="none" stroke="#1D4ED8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M9.25 8.5l1.45-1.45a4.15 4.15 0 0 1 5.87 5.87l-1.45 1.45"/>
+  <path fill="none" stroke="#1D4ED8" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" d="M14.75 15.5l-1.45 1.45a4.15 4.15 0 0 1-5.87-5.87l1.45-1.45"/>
+  <path fill="none" stroke="#0F5FD7" stroke-width="2.8" stroke-linecap="round" d="M9.25 14.75l5.5-5.5"/>
+</svg>

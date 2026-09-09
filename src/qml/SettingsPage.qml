@@ -14,12 +14,38 @@ FormCard.FormCardPage {
     id: root
 
     title: i18n("Settings")
+    readonly property int readerSettingsTab: 0
+    readonly property int serverSettingsTab: 1
+    readonly property int editorSettingsTab: 2
+    readonly property bool readerSettingsVisible: settingsTabs.currentIndex === readerSettingsTab
+    readonly property bool serverSettingsVisible: settingsTabs.currentIndex === serverSettingsTab
+    readonly property bool editorSettingsVisible: settingsTabs.currentIndex === editorSettingsTab
+
+    QQC2.TabBar {
+        id: settingsTabs
+
+        Layout.fillWidth: true
+
+        QQC2.TabButton {
+            text: i18n("Reader")
+        }
+
+        QQC2.TabButton {
+            text: i18n("Server")
+        }
+
+        QQC2.TabButton {
+            text: i18n("Editor")
+        }
+    }
 
     FormCard.FormHeader {
+        visible: root.readerSettingsVisible
         title: i18n("Appearance")
     }
 
     FormCard.FormCard {
+        visible: root.readerSettingsVisible
         FormCard.FormSpinBoxDelegate {
             label: i18n("Maximum width:")
 
@@ -58,13 +84,32 @@ FormCard.FormCardPage {
                 Config.save();
             }
         }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormComboBoxDelegate {
+            text: i18nc("@label:listbox", "Default page view")
+            textRole: "display"
+            valueRole: "value"
+            model: [
+                { display: i18nc("@item:inlistbox reader page view", "Single page"), value: 0 },
+                { display: i18nc("@item:inlistbox reader page view", "Two pages"), value: 1 }
+            ]
+            currentIndex: Config.readerPageMode
+            onActivated: index => {
+                Config.readerPageMode = model[index].value;
+                Config.save();
+            }
+        }
     }
 
     FormCard.FormHeader {
+        visible: root.readerSettingsVisible
         title: i18n("Font")
     }
 
     FormCard.FormCard {
+        visible: root.readerSettingsVisible
         Layout.topMargin: Kirigami.Units.largeSpacing
         Layout.fillWidth: true
 
@@ -99,10 +144,12 @@ FormCard.FormCardPage {
     }
 
     FormCard.FormHeader {
+        visible: root.readerSettingsVisible
         title: i18n("Text flow")
     }
 
     FormCard.FormCard {
+        visible: root.readerSettingsVisible
         FormCard.FormCheckDelegate {
             id: justifyText
             text: i18n("Justify text")
@@ -165,10 +212,12 @@ FormCard.FormCardPage {
     }
 
     FormCard.FormHeader {
+        visible: root.readerSettingsVisible
         title: i18n("Colors")
     }
 
     FormCard.FormCard {
+        visible: root.readerSettingsVisible
         FormCard.FormComboBoxDelegate {
             text: i18nc("@label:listbox", "Reader theme")
             textRole: "display"
@@ -235,10 +284,12 @@ FormCard.FormCardPage {
     }
 
     FormCard.FormHeader {
+        visible: root.readerSettingsVisible
         title: i18n("Translation")
     }
 
     FormCard.FormCard {
+        visible: root.readerSettingsVisible
         FormCard.FormComboBoxDelegate {
             text: i18n("Translator")
             textRole: "display"
@@ -295,10 +346,84 @@ FormCard.FormCardPage {
     }
 
     FormCard.FormHeader {
+        visible: root.serverSettingsVisible
+        title: i18n("Book server")
+    }
+
+    FormCard.FormCard {
+        visible: root.serverSettingsVisible
+        FormCard.FormTextFieldDelegate {
+            label: i18n("Address")
+            text: Config.bookServerAddress
+            placeholderText: Config.defaultBookServerAddressValue
+            inputMethodHints: Qt.ImhUrlCharactersOnly | Qt.ImhNoPredictiveText
+            onEditingFinished: {
+                Config.bookServerAddress = text.trim() || Config.defaultBookServerAddressValue;
+                text = Config.bookServerAddress;
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormSpinBoxDelegate {
+            label: i18n("Port")
+            from: 1
+            to: 65535
+            value: Config.bookServerPort
+            onValueChanged: {
+                Config.bookServerPort = value;
+                Config.save();
+            }
+        }
+    }
+
+    FormCard.FormHeader {
+        visible: root.serverSettingsVisible
+        title: i18n("Calibre")
+    }
+
+    FormCard.FormCard {
+        visible: root.serverSettingsVisible
+        FormCard.FormTextFieldDelegate {
+            label: i18n("Calibre Library Folder")
+            text: Config.calibreLibraryFolder
+            placeholderText: i18n("No Calibre library folder")
+            onEditingFinished: {
+                Config.calibreLibraryFolder = text.trim();
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormButtonDelegate {
+            text: i18n("Choose Calibre Library Folder…")
+            icon.name: "folder-open"
+            onClicked: calibreLibraryFolderDialog.open()
+        }
+    }
+
+    Dialogs.FolderDialog {
+        id: calibreLibraryFolderDialog
+
+        title: i18n("Choose Calibre Library Folder")
+        onAccepted: {
+            const selectedPath = root.localPathFromUrl(selectedFolder);
+            if (selectedPath.length > 0) {
+                Config.calibreLibraryFolder = selectedPath;
+                Config.save();
+            }
+        }
+    }
+
+    FormCard.FormHeader {
+        visible: root.serverSettingsVisible
         title: i18n("EPUB delivery")
     }
 
     FormCard.FormCard {
+        visible: root.serverSettingsVisible
         FormCard.FormComboBoxDelegate {
             text: i18n("Resource mode")
             textRole: "display"
@@ -335,16 +460,62 @@ FormCard.FormCardPage {
     }
 
     FormCard.FormHeader {
+        visible: root.serverSettingsVisible
+        title: i18n("PDF delivery")
+    }
+
+    FormCard.FormCard {
+        visible: root.serverSettingsVisible
+        FormCard.FormComboBoxDelegate {
+            id: pdfWatermarkFilterMode
+
+            text: i18n("Watermark filter")
+            textRole: "display"
+            valueRole: "value"
+            model: [
+                { display: i18nc("@item:inlistbox PDF watermark filter mode", "Never"), value: "never" },
+                { display: i18nc("@item:inlistbox PDF watermark filter mode", "Permanent when importing and refreshing metadata"), value: "permanent" },
+                { display: i18nc("@item:inlistbox PDF watermark filter mode", "Temporary when exported by the server"), value: "temporary" }
+            ]
+            currentIndex: root.deliveryModeIndex(model, root.pdfWatermarkFilterMode(), "never")
+            onActivated: index => {
+                Config.pdfWatermarkFilterMode = model[index].value;
+                Config.pdfWatermarkFilterEnabled = model[index].value === "temporary";
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator { above: pdfWatermarkFilterMode; below: pdfWatermarkFilterPattern }
+
+        FormCard.FormTextFieldDelegate {
+            id: pdfWatermarkFilterPattern
+
+            label: i18n("Watermark marker")
+            text: Config.pdfWatermarkFilterPattern
+            placeholderText: Config.defaultPdfWatermarkFilterPatternValue
+            enabled: root.pdfWatermarkFilterMode() !== "never"
+            onEditingFinished: {
+                Config.pdfWatermarkFilterPattern = text.trim() || Config.defaultPdfWatermarkFilterPatternValue;
+                text = Config.pdfWatermarkFilterPattern;
+                Config.save();
+            }
+        }
+    }
+
+    FormCard.FormHeader {
+        visible: root.editorSettingsVisible
         title: i18n("Editor")
     }
 
     FormCard.FormCard {
+        visible: root.editorSettingsVisible
         FormCard.FormTextFieldDelegate {
-            label: i18n("Editor executable")
-            text: Config.editorPath
-            placeholderText: i18n("No editor configured")
+            label: i18n("Editor command")
+            text: Config.editorCommand
+            placeholderText: i18n("sigil")
             onEditingFinished: {
-                Config.editorPath = text.trim();
+                Config.editorCommand = text.trim();
+                Config.editorPath = "";
                 Config.save();
             }
         }
@@ -352,18 +523,102 @@ FormCard.FormCardPage {
         FormCard.FormDelegateSeparator {}
 
         FormCard.FormButtonDelegate {
-            text: i18n("Choose editor…")
+            text: i18n("Choose editor command…")
             icon.name: "document-open"
             onClicked: editorDialog.open()
         }
 
         FormCard.FormDelegateSeparator {}
 
+        FormCard.FormTextFieldDelegate {
+            label: i18n("Editor command for selected text")
+            text: Config.editorStartWithTextCommand
+            placeholderText: i18n("/opt/calibre/ebook-edit")
+            onEditingFinished: {
+                Config.editorStartWithTextCommand = text.trim();
+                Config.editorPath = "";
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
         FormCard.FormButtonDelegate {
-            text: i18n("Clear editor")
+            text: i18n("Choose text editor command…")
+            icon.name: "document-open"
+            onClicked: textEditorDialog.open()
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormTextFieldDelegate {
+            label: i18n("PDF editor command")
+            text: Config.pdfEditorCommand
+            placeholderText: i18n("okular")
+            onEditingFinished: {
+                Config.pdfEditorCommand = text.trim();
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormButtonDelegate {
+            text: i18n("Choose PDF editor command…")
+            icon.name: "document-open"
+            onClicked: pdfEditorDialog.open()
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormTextFieldDelegate {
+            label: i18n("EPUB check command")
+            text: Config.epubCheckCommand
+            placeholderText: "epubcheck"
+            onEditingFinished: {
+                Config.epubCheckCommand = text.trim();
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormButtonDelegate {
+            text: i18n("Choose EPUB check command…")
+            icon.name: "document-open"
+            onClicked: epubCheckDialog.open()
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormTextFieldDelegate {
+            label: i18n("PDF check command")
+            text: Config.pdfCheckCommand
+            placeholderText: "arlington-pdf-model-checker"
+            onEditingFinished: {
+                Config.pdfCheckCommand = text.trim();
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormButtonDelegate {
+            text: i18n("Choose PDF check command…")
+            icon.name: "document-open"
+            onClicked: pdfCheckDialog.open()
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormButtonDelegate {
+            text: i18n("Clear editor commands")
             icon.name: "edit-clear"
-            enabled: Config.editorPath.length > 0
+            enabled: Config.editorCommand.length > 0 || Config.editorStartWithTextCommand.length > 0 || Config.pdfEditorCommand.length > 0 || Config.editorPath.length > 0
             onClicked: {
+                Config.editorCommand = "";
+                Config.editorStartWithTextCommand = "";
+                Config.pdfEditorCommand = "";
                 Config.editorPath = "";
                 Config.save();
             }
@@ -373,18 +628,77 @@ FormCard.FormCardPage {
     Dialogs.FileDialog {
         id: editorDialog
 
-        title: i18n("Choose editor")
+        title: i18n("Choose editor command")
         fileMode: Dialogs.FileDialog.OpenFile
         onAccepted: {
             const selectedPath = root.localPathFromUrl(selectedFile);
             if (selectedPath.length > 0) {
-                Config.editorPath = selectedPath;
+                Config.editorCommand = selectedPath;
+                Config.editorPath = "";
+                Config.save();
+            }
+        }
+    }
+
+    Dialogs.FileDialog {
+        id: textEditorDialog
+
+        title: i18n("Choose text editor command")
+        fileMode: Dialogs.FileDialog.OpenFile
+        onAccepted: {
+            const selectedPath = root.localPathFromUrl(selectedFile);
+            if (selectedPath.length > 0) {
+                Config.editorStartWithTextCommand = selectedPath;
+                Config.editorPath = "";
+                Config.save();
+            }
+        }
+    }
+
+    Dialogs.FileDialog {
+        id: pdfEditorDialog
+
+        title: i18n("Choose PDF editor command")
+        fileMode: Dialogs.FileDialog.OpenFile
+        onAccepted: {
+            const selectedPath = root.localPathFromUrl(selectedFile);
+            if (selectedPath.length > 0) {
+                Config.pdfEditorCommand = selectedPath;
+                Config.save();
+            }
+        }
+    }
+
+    Dialogs.FileDialog {
+        id: epubCheckDialog
+
+        title: i18n("Choose EPUB check command")
+        fileMode: Dialogs.FileDialog.OpenFile
+        onAccepted: {
+            const selectedPath = root.localPathFromUrl(selectedFile);
+            if (selectedPath.length > 0) {
+                Config.epubCheckCommand = selectedPath;
+                Config.save();
+            }
+        }
+    }
+
+    Dialogs.FileDialog {
+        id: pdfCheckDialog
+
+        title: i18n("Choose PDF check command")
+        fileMode: Dialogs.FileDialog.OpenFile
+        onAccepted: {
+            const selectedPath = root.localPathFromUrl(selectedFile);
+            if (selectedPath.length > 0) {
+                Config.pdfCheckCommand = selectedPath;
                 Config.save();
             }
         }
     }
 
     FormCard.FormCard {
+        visible: root.readerSettingsVisible
         Layout.topMargin: Kirigami.Units.largeSpacing
 
         FormCard.FormButtonDelegate {
@@ -436,5 +750,16 @@ FormCard.FormCardPage {
             }
         }
         return 0;
+    }
+
+    function pdfWatermarkFilterMode() {
+        const mode = Config.pdfWatermarkFilterMode || "";
+        if (mode === "permanent" || mode === "temporary") {
+            return mode;
+        }
+        if (Config.pdfWatermarkFilterEnabled) {
+            return "temporary";
+        }
+        return "never";
     }
 }

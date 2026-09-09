@@ -10,6 +10,7 @@
 #include <QMimeDatabase>
 #include <QObject>
 #include <QSet>
+#include <QStringList>
 #include <QVector>
 #include <memory>
 
@@ -58,15 +59,19 @@ struct TargetAnchorInfo {
     QString ref;
     QString file;
     QString location;
+    QString cfiLocation;
     QString previewHtml;
     QString title;
     QString type;
+    QString tocTitle;
+    QStringList tocPath;
+    int tocDepth = 0;
 };
 
 struct EpubReference {
     QString sourceAnchorId;
+    QString sourceAnchorTitle;
     QString targetBookId;
-    QString targetAnchorId;
     QString targetLocation;
     QString targetPreviewHtml;
 };
@@ -75,6 +80,15 @@ struct ServerReadyEpubOptions {
     ResourceMap resourceMap;
     bool includeReferences = false;
     QVector<EpubReference> references;
+};
+
+struct EpubNormalizationResult {
+    bool success = true;
+    bool changed = false;
+    int emptyTitlesFixed = 0;
+    int scriptedPropertiesAdded = 0;
+    QStringList messages;
+    QString errorMessage;
 };
 
 struct Collection {
@@ -114,6 +128,9 @@ public:
     }
     QString getFileHash() const;
     QString getContentHash() const;
+    EpubNormalizationResult normalizeForArianna(const QString &fallbackTitle = QString()) const;
+    EpubNormalizationResult updateSubjects(const QStringList &subjects) const;
+    EpubNormalizationResult updateCreators(const QStringList &creators) const;
 
     QStringList manifestItemIds() const
     {
@@ -127,9 +144,12 @@ public:
     QByteArray createServerReadyEpub(const ServerReadyEpubOptions &options) const;
     QString createAnchor(const QString &cfi);
     QString createAnchor(const QString &cfi, const QString &anchorType);
-    QString createBookrefAnchor(const QString &cfi, const QString &targetLocation, bool isCrossReference);
+    QString createBookrefAnchor(const QString &cfi, const QString &targetLocation, bool isCrossReference, const QString &title = QString());
+    bool updateReferenceAnchor(const QString &anchorId, const QString &targetLocation, bool isCrossReference, const QString &title, bool *changed = nullptr);
+    bool deleteReferenceAnchor(const QString &anchorId);
+    bool deleteTargetRangeAnchor(const QString &anchorId);
+    bool setImageNotInverse(const QString &cfi, const QString &src = QString(), bool *changed = nullptr);
     QByteArray createAnnotationAnchoredEpub(const QString &cfi, const QString &anchorId);
-    QString createAnnotationAnchor(const QString &cfi);
     QVector<TargetAnchorInfo> referenceableTargets();
     QVector<TargetAnchorInfo> targetAnchors() const;
     const TargetAnchorInfo *targetAnchorByRef(const QString &ref) const;
@@ -160,10 +180,14 @@ private:
     bool parseGuideItem(const QDomNode &guideItem, const QString &currentFolder);
     void extractNavigationTargetsFromDocument(const QString &itemId, const QString &path, QVector<TargetAnchorInfo> &targets, QSet<QString> &seenLocations);
     void extractNcxTargetsFromDocument(const QString &itemId, const QString &path, QVector<TargetAnchorInfo> &targets, QSet<QString> &seenLocations);
-    void extractReferenceableTargetsFromDocument(const QString &itemId, const QString &path, QVector<TargetAnchorInfo> &targets, QSet<QString> &seenLocations);
+    void extractReferenceableTargetsFromDocument(const QString &itemId,
+                                                 const QString &path,
+                                                 QVector<TargetAnchorInfo> &targets,
+                                                 QSet<QString> &seenLocations,
+                                                 const QHash<QString, TargetAnchorInfo> &tocTargetsByLocation);
     void extractTargetAnchorsFromDocument(const QString &itemId, const QString &path);
 
-    QString createRangeAnchor(const QString &cfi, const QString &anchorType, const QString &href, const QString &debugLabel);
+    QString createRangeAnchor(const QString &cfi, const QString &anchorType, const QString &href, const QString &debugLabel, const QString &title = QString());
     const KArchiveFile *file(const QString &path) const;
     QString itemIdForPath(const QString &path) const;
     QImage imageFromItem(const QString &id);

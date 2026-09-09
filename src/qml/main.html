@@ -121,7 +121,8 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
         }
 
         #reference-dialog,
-        #create-reference-dialog {
+        #create-reference-dialog,
+        #delete-reference-dialog {
             width: 500px;
         }
 
@@ -131,6 +132,10 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
 
         #create-reference-dialog {
             max-height: min(90vh, 600px);
+        }
+
+        #delete-reference-dialog {
+            width: min(420px, 100%);
         }
 
         #footnote-dialog>div {
@@ -173,7 +178,8 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
         }
 
         #reference-dialog main,
-        #create-reference-dialog main {
+        #create-reference-dialog main,
+        #delete-reference-dialog main {
             overflow-y: auto;
             overflow-x: hidden;
             padding: 8px 16px;
@@ -215,14 +221,12 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
         }
 
         #footnote-dialog form button:hover,
-        .reader-dialog footer button:hover,
-        #createReferenceForm button:hover {
+        .reader-dialog footer button:hover {
             background: var(--hover);
         }
 
         #footnote-dialog form button:active,
-        .reader-dialog footer button:active,
-        #createReferenceForm button:active {
+        .reader-dialog footer button:active {
             background: var(--active);
         }
 
@@ -265,12 +269,18 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
             gap: 8px;
         }
 
+        #delete-reference-dialog p {
+            margin: 8px 0;
+            line-height: 1.4;
+        }
+
         #createReferenceForm label {
             font-weight: bold;
         }
 
         #createReferenceForm input[type="text"],
-        #createReferenceForm select {
+        #createReferenceForm select,
+        #createReferenceForm textarea {
             width: 100%;
             box-sizing: border-box;
             border: 1px solid var(--border);
@@ -280,14 +290,10 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
             color: var(--fg);
         }
 
-        #createReferenceForm button {
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            margin-top: 8px;
-            padding: 10px 12px;
-            font-weight: bold;
-            color: inherit;
-            background: none;
+        #createReferenceForm textarea {
+            min-height: 90px;
+            resize: vertical;
+            font: inherit;
         }
 
         @media (max-width: 500px) {
@@ -332,12 +338,17 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
         <footer>
             <button id="closeButton" value="close">Schließen</button>
             <button id="openReferenceButton" value="openRef">Referenz öffnen</button>
+            <button id="editReferenceButton" value="editRef">Referenz bearbeiten</button>
+            <button id="deleteReferenceButton" value="deleteRef">Referenz löschen</button>
         </footer>
     </dialog>
     <dialog id="create-reference-dialog" class="reader-dialog reader-dialog--stacked">
         <header id="createReferenceHeader">Referenz erstellen</header>
         <main>
             <form id="createReferenceForm">
+                <label for="sourceAnchorTitle">Quellanker-Titel:</label>
+                <input type="text" id="sourceAnchorTitle" name="sourceAnchorTitle" value="S.B. Vers 1.1.1">
+
                 <label for="targetBookId">Zielbuch:</label>
                 <select id="targetBookId" name="targetBookId" required>
                     <option value="">-- Bitte wählen --</option>
@@ -351,17 +362,26 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
                 <label for="targetCFI">Zielort-CFI:</label>
                 <input type="text" id="targetCFI" name="targetCFI" placeholder="epubcfi(...)">
 
-                <input type="hidden" id="targetAnchorId" name="targetAnchorId">
+                <label for="targetPreviewHtml">Preview-Text:</label>
+                <textarea id="targetPreviewHtml" name="targetPreviewHtml" rows="4"></textarea>
+
                 <input type="hidden" id="targetLocation" name="targetLocation">
-                <input type="hidden" id="targetPreviewHtml" name="targetPreviewHtml">
-
-
-                <button type="submit">Referenz erstellen</button>
             </form>
         </main>
 
         <footer>
             <button id="closeCreateReferenceButton" value="close">Schließen</button>
+            <button id="submitReferenceButton" type="submit" form="createReferenceForm">Referenz erstellen</button>
+        </footer>
+    </dialog>
+    <dialog id="delete-reference-dialog" class="reader-dialog reader-dialog--stacked">
+        <header>Referenz löschen?</header>
+        <main>
+            <p>Diese Referenz wird aus der Datenbank entfernt. Der Quellanker wird aus dem EPUB entfernt; der sichtbare Text bleibt erhalten.</p>
+        </main>
+        <footer>
+            <button id="cancelDeleteReferenceButton" value="cancel">Abbrechen</button>
+            <button id="confirmDeleteReferenceButton" value="delete">Referenz löschen</button>
         </footer>
     </dialog>
 </body>

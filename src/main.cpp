@@ -3,8 +3,10 @@
 
 #include <QApplication>
 #include <QCommandLineParser>
+#include <QDateTime>
 #include <QDir>
 #include <QEventLoop>
+#include <QFile>
 #include <QFileInfo>
 #include <QFontDatabase>
 #include <QJsonDocument>
@@ -19,8 +21,10 @@
 #include <QQmlContext>
 #include <QQuickStyle>
 #include <QQuickWindow>
+#include <QStandardPaths>
 #include <QThread>
 #include <QUrl>
+#include <QVector>
 #include <QtWebEngineQuick>
 
 #include <KAboutData>
@@ -36,66 +40,31 @@
 
 #include <QCoreApplication>
 #include <QTimer>
+#include <cerrno>
 #include <csignal>
+#include <cstring>
 #include <memory>
 #include <optional>
+
+#ifdef Q_OS_UNIX
+#include <signal.h>
+#include <unistd.h>
+#endif
 
 #include <KConfigGroup>
 #include <QCommandLineOption>
 #include <QUuid>
 
-#include <QWebEngineProfile>
-#include <QWebEngineUrlRequestInfo>
-#include <QWebEngineUrlRequestInterceptor>
-#include <QWebEngineUrlScheme>
-
 #include "arianna-version.h"
+#include "ariannatrace.h"
 #include "bookdatabase.h"
 #include "bookserver.h"
+#include "bookserverconfig.h"
 #include "navigation.h"
 #include <KConfig>
 #include <KConfigGroup>
 #include <QUuid>
 #include <qlogging.h>
-
-class AriannaWebRequestInterceptor : public QWebEngineUrlRequestInterceptor
-{
-public:
-    explicit AriannaWebRequestInterceptor(const QString &sessionToken, QObject *parent = nullptr)
-        : QWebEngineUrlRequestInterceptor(parent)
-        , m_sessionToken(sessionToken)
-    {
-    }
-
-    void interceptRequest(QWebEngineUrlRequestInfo &info) override
-    {
-        const QUrl url = info.requestUrl();
-        const QString scheme = url.scheme();
-
-        if (scheme == QStringLiteral("qrc") || scheme == QStringLiteral("data") || scheme == QStringLiteral("blob") || scheme == QStringLiteral("about")
-            || scheme == QStringLiteral("epub")) {
-            return;
-        }
-
-        const bool localBookServer = (scheme == QStringLiteral("http") || scheme == QStringLiteral("https"))
-            && (url.host() == QStringLiteral("127.0.0.1") || url.host() == QStringLiteral("localhost")) && (url.port() == 45961 || url.port() == 45962);
-
-        if (localBookServer) {
-            info.setHttpHeader(QByteArrayLiteral("X-Arianna-Session-Token"), m_sessionToken.toUtf8());
-            return;
-        }
-
-        if (scheme == QStringLiteral("https") && url.host() == QStringLiteral("cdn.jsdelivr.net")) {
-            return;
-        }
-
-        qWarning() << "Blocked WebEngine request:" << url << "initiator:" << info.initiator();
-        info.block(true);
-    }
-
-private:
-    QString m_sessionToken;
-};
 
 static void handleUnixSignal(int)
 {
@@ -122,12 +91,12 @@ static QString persistentServerToken()
 
 static QUrl bookServerSessionUrl()
 {
-    return QUrl(QStringLiteral("http://127.0.0.1:45961/session"));
+    return QUrl(BookServerConfig::baseUrl() + QStringLiteral("/session"));
 }
 
 static QUrl bookServerReadOnlyBooksUrl()
 {
-    return QUrl(QStringLiteral("http://127.0.0.1:45961/read-only-books"));
+    return QUrl(BookServerConfig::baseUrl() + QStringLiteral("/read-only-books"));
 }
 
 static QByteArray waitForNetworkReply(QNetworkReply *reply, bool *ok, int timeoutMs = 1000, bool warnOnFailure = true)
@@ -237,7 +206,16 @@ static QString registerReadOnlyBook(const QString &sessionToken, const QString &
 
 static bool startDetachedBookServer()
 {
-    const bool started = QProcess::startDetached(QCoreApplication::applicationFilePath(), {QStringLiteral("--bookserver")});
+    qint64 pid = -1;
+    QStringList arguments{QStringLiteral("--bookserver")};
+    if (AriannaTrace::isEnabled()) {
+        arguments.append(QStringLiteral("--flight-log"));
+    }
+
+    AriannaTrace::event(QStringLiteral("bookserver.spawn.requested"),
+                        {{QStringLiteral("executable"), QCoreApplication::applicationFilePath()}, {QStringLiteral("arguments"), arguments}});
+    const bool started = QProcess::startDetached(QCoreApplication::applicationFilePath(), arguments, QString(), &pid);
+    AriannaTrace::event(QStringLiteral("bookserver.spawn.finished"), {{QStringLiteral("started"), started}, {QStringLiteral("pid"), pid}});
     if (!started) {
         qWarning() << "Unable to start detached Arianna BookServer";
     }
@@ -287,6 +265,143 @@ static bool hasBookServerOnlyArgument(int argc, char *argv[])
     return hasOptionArgument(argc, argv, {QStringLiteral("--bookserver")});
 }
 
+static bool hasFlightLogArgument(int argc, char *argv[])
+{
+    return hasOptionArgument(argc, argv, {QStringLiteral("--flight-log")});
+}
+
+static QString bookServerDiscoveryFilePath()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QStringLiteral("/arianna-bookserver.json");
+}
+
+struct AriannaProcessInfo {
+    qint64 pid = -1;
+    QString commandLine;
+};
+
+static QString processCommandLine(const qint64 pid)
+{
+    QFile cmdlineFile(QStringLiteral("/proc/%1/cmdline").arg(pid));
+    if (cmdlineFile.open(QIODevice::ReadOnly)) {
+        QByteArray data = cmdlineFile.readAll();
+        data.replace('\0', ' ');
+        const QString commandLine = QString::fromLocal8Bit(data).simplified();
+        if (!commandLine.isEmpty()) {
+            return commandLine;
+        }
+    }
+
+    return QStringLiteral("arianna");
+}
+
+#ifdef Q_OS_UNIX
+static bool processExists(const qint64 pid)
+{
+    errno = 0;
+    if (::kill(static_cast<pid_t>(pid), 0) == 0) {
+        return true;
+    }
+
+    return errno == EPERM;
+}
+#endif
+
+static QVector<AriannaProcessInfo> runningAriannaProcesses()
+{
+    QVector<AriannaProcessInfo> processes;
+
+#ifdef Q_OS_UNIX
+    const qint64 ownPid = QCoreApplication::applicationPid();
+    const QStringList entries = QDir(QStringLiteral("/proc")).entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+    for (const QString &entry : entries) {
+        bool ok = false;
+        const qint64 pid = entry.toLongLong(&ok);
+        if (!ok || pid <= 0 || pid == ownPid) {
+            continue;
+        }
+
+        QFile commFile(QStringLiteral("/proc/%1/comm").arg(pid));
+        if (!commFile.open(QIODevice::ReadOnly)) {
+            continue;
+        }
+
+        const QString commandName = QString::fromLocal8Bit(commFile.readAll()).trimmed();
+        if (commandName != QStringLiteral("arianna")) {
+            continue;
+        }
+
+        processes.append(AriannaProcessInfo{pid, processCommandLine(pid)});
+    }
+#endif
+
+    return processes;
+}
+
+static int stopExistingAriannaInstances()
+{
+#ifndef Q_OS_UNIX
+    qWarning() << "--start-new is only implemented for Unix-like systems";
+    return 0;
+#else
+    const QVector<AriannaProcessInfo> processes = runningAriannaProcesses();
+    if (processes.isEmpty()) {
+        return 0;
+    }
+
+    qWarning().noquote() << QStringLiteral("Stopping existing Arianna instance(s):");
+    for (const AriannaProcessInfo &process : processes) {
+        qWarning().noquote() << QStringLiteral("  %1 %2").arg(process.pid).arg(process.commandLine);
+        if (::kill(static_cast<pid_t>(process.pid), SIGTERM) != 0 && errno != ESRCH) {
+            qWarning().noquote() << QStringLiteral("Unable to stop Arianna instance %1: %2").arg(process.pid).arg(QString::fromLocal8Bit(strerror(errno)));
+        }
+    }
+
+    for (int attempt = 0; attempt < 30; ++attempt) {
+        bool anyRunning = false;
+        for (const AriannaProcessInfo &process : processes) {
+            if (processExists(process.pid)) {
+                anyRunning = true;
+                break;
+            }
+        }
+
+        if (!anyRunning) {
+            break;
+        }
+
+        QThread::msleep(100);
+    }
+
+    for (const AriannaProcessInfo &process : processes) {
+        if (!processExists(process.pid)) {
+            continue;
+        }
+
+        qWarning().noquote() << QStringLiteral("Force stopping remaining Arianna instance: %1").arg(process.pid);
+        if (::kill(static_cast<pid_t>(process.pid), SIGKILL) != 0 && errno != ESRCH) {
+            qWarning().noquote()
+                << QStringLiteral("Unable to force stop Arianna instance %1: %2").arg(process.pid).arg(QString::fromLocal8Bit(strerror(errno)));
+        }
+    }
+
+    return processes.size();
+#endif
+}
+
+static void cleanupBookServerDiscoveryFile()
+{
+    const QString path = bookServerDiscoveryFilePath();
+    if (!QFileInfo::exists(path)) {
+        return;
+    }
+
+    qWarning().noquote() << QStringLiteral("Cleaning the bookserver launch pad: %1").arg(path);
+    if (!QFile::remove(path)) {
+        qWarning().noquote() << QStringLiteral("Unable to remove BookServer discovery file: %1").arg(path);
+    }
+}
+
 static bool hasEarlyExitArgument(int argc, char *argv[])
 {
     return hasOptionArgument(argc,
@@ -328,7 +443,7 @@ static bool argumentsRequestReadOnly(const QStringList &arguments)
         if (argument == QStringLiteral("--")) {
             return false;
         }
-        if (argument == QStringLiteral("--read-only") || argument == QStringLiteral("--open-read-only")) {
+        if (argument == QStringLiteral("--open-read-only")) {
             return true;
         }
     }
@@ -360,7 +475,7 @@ static QString fileArgumentFromActivationArguments(const QStringList &arguments)
             endOfOptions = true;
             continue;
         }
-        if (!endOfOptions && (argument == QStringLiteral("--read-only") || argument == QStringLiteral("--open-read-only"))) {
+        if (!endOfOptions && argument == QStringLiteral("--open-read-only")) {
             continue;
         }
         if (!endOfOptions && argument.startsWith(QStringLiteral("--"))) {
@@ -423,6 +538,12 @@ openBookArgument(Navigation *navigation, const QString &argument, const QString 
         return;
     }
 
+    const QFileInfo fileInfo(fileName);
+    if (!fileInfo.exists() || !fileInfo.isFile()) {
+        qWarning() << "Book file does not exist:" << fileName;
+        return;
+    }
+
     if (readOnly) {
         const QString identifier = registerReadOnlyBook(sessionToken, fileName);
         if (identifier.isEmpty()) {
@@ -431,7 +552,6 @@ openBookArgument(Navigation *navigation, const QString &argument, const QString 
         }
 
         BookEntry readOnlyEntry;
-        const QFileInfo fileInfo(fileName);
         readOnlyEntry.filename = fileName;
         readOnlyEntry.filetitle = fileInfo.fileName();
         readOnlyEntry.title = fileInfo.completeBaseName();
@@ -451,15 +571,8 @@ openBookArgument(Navigation *navigation, const QString &argument, const QString 
 
 int main(int argc, char *argv[])
 {
-    // QWebEngineUrlScheme scheme("epub");
-    // scheme.setSyntax(QWebEngineUrlScheme::Syntax::Host);
-    // scheme.setFlags(QWebEngineUrlScheme::SecureScheme
-    //               | QWebEngineUrlScheme::LocalScheme
-    //               | QWebEngineUrlScheme::LocalAccessAllowed);
-    // scheme.setDefaultPort(0);
-    // QWebEngineUrlScheme::registerScheme(scheme);
-
     const bool requestedBookServerOnly = hasBookServerOnlyArgument(argc, argv);
+    const bool flightLogRequested = hasFlightLogArgument(argc, argv);
     const bool exitsBeforeOpeningUi = hasEarlyExitArgument(argc, argv);
     if (!requestedBookServerOnly && !exitsBeforeOpeningUi) {
         QtWebEngineQuick::initialize();
@@ -492,6 +605,16 @@ int main(int argc, char *argv[])
         app = std::move(guiApp);
     }
 
+    const QString traceRole = requestedBookServerOnly ? QStringLiteral("bookserver") : exitsBeforeOpeningUi ? QStringLiteral("utility") : QStringLiteral("ui");
+    AriannaTrace::initializeProcess(traceRole, QCoreApplication::arguments(), flightLogRequested);
+    struct ProcessLandingLogger {
+        ~ProcessLandingLogger()
+        {
+            AriannaTrace::land(QStringLiteral("main-return"));
+        }
+    };
+    const ProcessLandingLogger processLandingLogger;
+
     KLocalizedString::setApplicationDomain(QByteArrayLiteral("arianna"));
 
     KAboutData about(QStringLiteral("arianna"),
@@ -512,11 +635,15 @@ int main(int argc, char *argv[])
     QCommandLineParser parser;
     parser.setApplicationDescription(i18n("Epub reader"));
     parser.addPositionalArgument(QStringLiteral("file"), i18n("Epub file to open"));
-    QCommandLineOption bookServerOnlyOption(QStringLiteral("bookserver"), i18n("Start only the local book server without opening the reader UI"));
-    QCommandLineOption readOnlyOption(QStringList{QStringLiteral("read-only"), QStringLiteral("open-read-only")},
-                                      i18n("Open the book without adding it to the library"));
+    QCommandLineOption bookServerOnlyOption(QStringLiteral("bookserver"), i18n("Start only the local BookServer and do not open the reader UI"));
+    QCommandLineOption startNewOption(QStringLiteral("start-new"),
+                                      i18n("Stop existing Arianna instances, remove stale BookServer discovery state, then start normally"));
+    QCommandLineOption flightLogOption(QStringLiteral("flight-log"), i18n("Write persistent diagnostic flight log history"));
+    QCommandLineOption readOnlyOption(QStringLiteral("open-read-only"), i18n("Open the given book read-only without adding it to the library"));
     QCommandLineOption openLastOpenedBookOption(QStringLiteral("open-last-opened-book"), i18n("Open the most recently opened library book"));
     parser.addOption(bookServerOnlyOption);
+    parser.addOption(startNewOption);
+    parser.addOption(flightLogOption);
     parser.addOption(readOnlyOption);
     parser.addOption(openLastOpenedBookOption);
 
@@ -525,6 +652,7 @@ int main(int argc, char *argv[])
     about.processCommandLine(&parser);
 
     const bool bookServerOnly = parser.isSet(bookServerOnlyOption);
+    const bool startNew = parser.isSet(startNewOption);
     const bool readOnly = parser.isSet(readOnlyOption);
     const bool openLastOpenedBookRequested = parser.isSet(openLastOpenedBookOption);
     const QStringList args = parser.positionalArguments();
@@ -532,6 +660,15 @@ int main(int argc, char *argv[])
     const bool startupFileOpenRequested = !startupFileName.isEmpty() && QFileInfo::exists(startupFileName);
     const std::optional<BookEntry> startupLastOpenedEntry = openLastOpenedBookRequested ? lastOpenedBookEntry() : std::optional<BookEntry>();
     const bool startupDirectReaderMode = startupFileOpenRequested || startupLastOpenedEntry.has_value();
+    if (startNew) {
+        const int rocketCount = stopExistingAriannaInstances();
+        cleanupBookServerDiscoveryFile();
+        qWarning().noquote() << QStringLiteral("Starting %1 after shooting %2 rocket%3 before.")
+                                    .arg(QCoreApplication::applicationFilePath())
+                                    .arg(rocketCount)
+                                    .arg(rocketCount == 1 ? QString() : QStringLiteral("s"));
+    }
+
     const QString serverToken = persistentServerToken();
     std::signal(SIGINT, handleUnixSignal);
     std::signal(SIGTERM, handleUnixSignal);
@@ -550,7 +687,6 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    // webProfile->installUrlSchemeHandler("epub", new EpubSchemeHandler(webProfile));
     QObject::connect(app.get(), &QCoreApplication::aboutToQuit, app.get(), [sessionToken] {
         unregisterBookServerSessionToken(sessionToken);
     });
@@ -560,7 +696,9 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("applicationFilePath"), QCoreApplication::applicationFilePath());
     engine.rootContext()->setContextProperty(QStringLiteral("serverToken"), serverToken);
     engine.rootContext()->setContextProperty(QStringLiteral("bookServerSessionToken"), sessionToken);
-    engine.rootContext()->setContextProperty(QStringLiteral("bookServerPort"), 45961);
+    engine.rootContext()->setContextProperty(QStringLiteral("bookServerBaseUrl"), BookServerConfig::baseUrl());
+    engine.rootContext()->setContextProperty(QStringLiteral("bookServerAddress"), BookServerConfig::address());
+    engine.rootContext()->setContextProperty(QStringLiteral("bookServerPort"), BookServerConfig::port());
     engine.rootContext()->setContextProperty(QStringLiteral("startupDirectReaderMode"), startupDirectReaderMode);
     engine.loadFromModule("org.kde.arianna", "Main");
     if (engine.rootObjects().isEmpty()) {

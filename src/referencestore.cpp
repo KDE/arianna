@@ -26,8 +26,8 @@ void ReferenceStore::saveReference(const QVariantMap &reference)
     Q_EMIT referencesChanged(reference.value(QStringLiteral("sourceBookId")).toString());
 }
 
-void ReferenceStore::removeReference(const QString &referenceId, const QString &sourceBookId, const QString &targetBookId, const QString &targetAnchorId)
+void ReferenceStore::removeReference(const QString &sourceBookId, const QString &sourceAnchorId)
 {
-    BookDatabase::self().removeReference(referenceId, sourceBookId, targetBookId, targetAnchorId);
+    BookDatabase::self().removeReference(sourceBookId, sourceAnchorId);
     Q_EMIT referencesChanged(sourceBookId);
 }

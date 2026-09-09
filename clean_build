@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+project_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+build_dir="${project_dir}/build"
+
+remove_build_dir() {
+    if [[ ! -d "${build_dir}" ]]; then
+        return 0
+    fi
+
+    echo "Removing ${build_dir}"
+    if rm -rf -- "${build_dir}"; then
+        return 0
+    fi
+
+    echo
+    echo "Normal removal failed. Some files in build/ are probably owned by another user."
+    if [[ "${build_dir}" != "${project_dir}/build" || ! -f "${project_dir}/CMakeLists.txt" ]]; then
+        echo "Refusing privileged removal because the project/build path sanity check failed."
+        exit 1
+    fi
+    if ! command -v sudo >/dev/null 2>&1; then
+        echo "sudo is not available. Please fix ownership or remove ${build_dir} manually."
+        exit 1
+    fi
+    if [[ ! -t 0 ]]; then
+        echo "Not running interactively. Please run: sudo rm -rf --one-file-system -- '${build_dir}'"
+        exit 1
+    fi
+
+    read -r -p "Retry removing ${build_dir} with sudo? [y/N] " answer
+    case "${answer}" in
+        y|Y|yes|YES)
+            sudo rm -rf --one-file-system -- "${build_dir}"
+            ;;
+        *)
+            echo "Aborted."
+            exit 1
+            ;;
+    esac
+}
+
+remove_build_dir
+
+echo "Configuring ${build_dir}"
+cmake -S "${project_dir}" \
+      -B "${build_dir}" \
+      -G Ninja \
+      -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+echo "Building ${build_dir}"
+cmake --build "${build_dir}"
+
+echo "Linking compile_commands.json"
+ln -sfn "build/compile_commands.json" "${project_dir}/compile_commands.json"
+
+echo "Done."

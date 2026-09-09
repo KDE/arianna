@@ -44,6 +44,66 @@ const uncollapse = range => {
     return range
 }
 
+const isUsableRect = rect => rect
+    && [rect.left, rect.top, rect.right, rect.bottom].every(Number.isFinite)
+    && (rect.width > 0 || rect.height > 0)
+
+const rectForTarget = target => {
+    const rects = target?.getClientRects?.()
+    if (rects) {
+        const rect = Array.from(rects)
+            .find(r => r.width > 0 && r.height > 0) || rects[0]
+        if (isUsableRect(rect)) return rect
+    }
+
+    const rect = target?.getBoundingClientRect?.()
+    if (isUsableRect(rect)) return rect
+    return null
+}
+
+const anchorRect = anchor => rectForTarget(uncollapse(anchor))
+
+const rangeForTextNode = node => {
+    if (!node?.nodeValue?.trim()) return null
+    const range = node.ownerDocument.createRange()
+    range.selectNodeContents(node)
+    return range
+}
+
+const firstLayoutTargetIn = node => {
+    if (node?.nodeType === 3) {
+        const range = rangeForTextNode(node)
+        const rect = rectForTarget(range)
+        return rect ? { target: range, rect } : null
+    }
+    if (node?.nodeType !== 1) return null
+
+    const name = node.localName?.toLowerCase()
+    if (name === 'script' || name === 'style') return null
+
+    const rect = rectForTarget(node)
+    if (rect) return { target: node, rect }
+
+    for (const child of node.childNodes) {
+        const found = firstLayoutTargetIn(child)
+        if (found) return found
+    }
+    return null
+}
+
+const nextLayoutTargetAfter = anchor => {
+    let node = anchor
+    const root = anchor?.ownerDocument?.body ?? anchor?.ownerDocument?.documentElement
+    while (node && node !== root) {
+        for (let sibling = node.nextSibling; sibling; sibling = sibling.nextSibling) {
+            const found = firstLayoutTargetIn(sibling)
+            if (found) return found
+        }
+        node = node.parentNode
+    }
+    return null
+}
+
 const makeRange = (doc, node, start, end = start) => {
     const range = doc.createRange()
     range.setStart(node, start)
@@ -81,6 +141,93 @@ const getBoundingClientRect = target => {
         bottom = Math.max(bottom, rect.bottom)
     }
     return new DOMRect(left, top, right - left, bottom - top)
+}
+
+const uniqueNumbers = values => Array.from(new Set(values
+    .filter(Number.isFinite)
+    .map(value => Math.round(value))))
+
+const rangeFromPoint = (doc, x, y) => {
+    try {
+        const pos = doc.caretPositionFromPoint?.(x, y)
+        if (pos?.offsetNode) {
+            const range = doc.createRange()
+            range.setStart(pos.offsetNode, pos.offset)
+            range.collapse(true)
+            return range
+        }
+
+        return doc.caretRangeFromPoint?.(x, y) ?? null
+    } catch (e) {
+        return null
+    }
+}
+
+const findRangeFromPoints = (doc, xs, ys) => {
+    for (const x of xs) {
+        for (const y of ys) {
+            const range = rangeFromPoint(doc, x, y)
+            if (range) return range
+        }
+    }
+
+    return null
+}
+
+const expandCollapsedRange = range => {
+    if (!range?.collapsed) return range
+
+    const { endContainer, endOffset } = range
+    if (endContainer.nodeType === 3 && endOffset < endContainer.length) {
+        range.setEnd(endContainer, endOffset + 1)
+    } else if (endContainer.nodeType === 1 && endOffset < endContainer.childNodes.length) {
+        range.setEnd(endContainer, endOffset + 1)
+    }
+
+    return range
+}
+
+const getVisibleRangeFromPoints = (doc, start, end, margin) => {
+    if (!doc?.caretRangeFromPoint && !doc?.caretPositionFromPoint) return null
+
+    const docEl = doc.documentElement
+    const body = doc.body
+    const width = Math.max(docEl?.clientWidth ?? 0, docEl?.scrollWidth ?? 0, body?.scrollWidth ?? 0, end)
+    const height = Math.max(docEl?.clientHeight ?? 0, body?.clientHeight ?? 0, body?.scrollHeight ?? 0)
+    if (!(width > 0) || !(height > 0)) return null
+
+    const inset = Math.max(8, Math.min(32, (margin || 0) + 8))
+    const ys = uniqueNumbers([
+        inset,
+        height * 0.25,
+        height * 0.5,
+        height * 0.75,
+        height - inset,
+    ]).filter(y => y >= 0 && y <= height)
+    const startXs = uniqueNumbers([
+        start + inset,
+        start + margin + inset,
+        start + 48,
+        start + 96,
+    ]).filter(x => x >= 0 && x <= width)
+    const endXs = uniqueNumbers([
+        end - inset,
+        end - margin - inset,
+        end - 48,
+        end - 96,
+    ]).filter(x => x >= 0 && x <= width)
+
+    const startRange = findRangeFromPoints(doc, startXs, ys)
+    const endRange = findRangeFromPoints(doc, endXs, ys)
+    if (!startRange || !endRange) return null
+
+    const range = doc.createRange()
+    const startBeforeEnd = startRange.compareBoundaryPoints(Range.START_TO_START, endRange) <= 0
+    const first = startBeforeEnd ? startRange : endRange
+    const last = startBeforeEnd ? endRange : startRange
+    range.setStart(first.startContainer, first.startOffset)
+    range.setEnd(last.startContainer, last.startOffset)
+    return expandCollapsedRange(range)
 }
 
 const getVisibleRange = (doc, start, end, mapRect) => {
@@ -143,7 +290,7 @@ const getVisibleRange = (doc, start, end, mapRect) => {
 }
 
 const selectionIsBackward = sel => {
-    const range = document.createRange()
+    const range = sel.anchorNode?.ownerDocument?.createRange?.() ?? document.createRange()
     range.setStart(sel.anchorNode, sel.anchorOffset)
     range.setEnd(sel.focusNode, sel.focusOffset)
     return range.collapsed
@@ -153,7 +300,7 @@ const setSelectionTo = (target, collapse) => {
     let range
     if (target.startContainer) range = target.cloneRange()
     else if (target.nodeType) {
-        range = document.createRange()
+        range = target.ownerDocument?.createRange?.() ?? document.createRange()
         range.selectNode(target)
     }
     if (range) {
@@ -427,7 +574,8 @@ class View {
         return this.#overlayer
     }
     destroy() {
-        if (this.document) this.#observer.unobserve(this.document.body)
+        const body = this.document?.body
+        if (body instanceof Element) this.#observer.unobserve(body)
     }
 }
 
@@ -460,6 +608,7 @@ export class Paginator extends HTMLElement {
     #touchState
     #touchScrolled
     #lastVisibleRange
+    #renderFrame = 0
     #getReaderBackground() {
         const style = getComputedStyle(this)
         const image = style.getPropertyValue('--arianna-reader-background-image').trim()
@@ -616,12 +765,6 @@ export class Paginator extends HTMLElement {
 
         this.addEventListener('relocate', ({ detail }) => {
             if (detail.reason === 'selection') setSelectionTo(this.#anchor, 0)
-            else if (detail.reason === 'navigation') {
-                if (this.#anchor === 1) setSelectionTo(detail.range, 1)
-                else if (typeof this.#anchor === 'number')
-                    setSelectionTo(detail.range, -1)
-                else setSelectionTo(this.#anchor, -1)
-            }
         })
         const checkPointerSelection = debounce((range, sel) => {
             if (!sel.rangeCount) return
@@ -641,6 +784,7 @@ export class Paginator extends HTMLElement {
             doc.addEventListener('keyup', () => isKeyboardSelecting = false)
             doc.addEventListener('selectionchange', () => {
                 if (this.scrolled) return
+                if (!this.hasAttribute('selection-auto-turn')) return
                 const range = this.#lastVisibleRange
                 if (!range) return
                 const sel = doc.getSelection()
@@ -668,20 +812,27 @@ export class Paginator extends HTMLElement {
     attributeChangedCallback(name, _, value) {
         switch (name) {
             case 'flow':
-                this.render()
+                this.#scheduleRender()
                 break
             case 'gap':
             case 'margin':
             case 'max-block-size':
             case 'max-column-count':
                 this.#top.style.setProperty('--_' + name, value)
+                this.#scheduleRender()
                 break
             case 'max-inline-size':
-                // needs explicit `render()` as it doesn't necessarily resize
                 this.#top.style.setProperty('--_' + name, value)
-                this.render()
+                this.#scheduleRender()
                 break
         }
+    }
+    #scheduleRender() {
+        if (this.#renderFrame) return
+        this.#renderFrame = requestAnimationFrame(() => {
+            this.#renderFrame = 0
+            this.render()
+        })
     }
     open(book) {
         this.bookDir = book.dir
@@ -710,7 +861,11 @@ export class Paginator extends HTMLElement {
         }
         this.#view = new View({
             container: this,
-            onExpand: () => this.#scrollToAnchor(this.#anchor),
+            onExpand: () => this.#scrollToAnchor(this.#anchor)
+                .catch(e => {
+                    console.error(e)
+                    console.error('Could not keep anchor after content expansion')
+                }),
         })
         this.#container.append(this.#view.element)
         return this.#view
@@ -793,11 +948,16 @@ export class Paginator extends HTMLElement {
     }
     render() {
         if (!this.#view) return
+        const anchor = this.#justAnchored ? this.#anchor : (this.#lastVisibleRange ?? this.#anchor)
         this.#view.render(this.#beforeRender({
             vertical: this.#vertical,
             rtl: this.#rtl,
         }))
-        this.#scrollToAnchor(this.#anchor)
+        this.#scrollToAnchor(anchor)
+            .catch(e => {
+                console.error(e)
+                console.error('Could not keep anchor after render')
+            })
     }
     get scrolled() {
         return this.getAttribute('flow') === 'scrolled'
@@ -960,17 +1120,29 @@ export class Paginator extends HTMLElement {
     }
     async #scrollToAnchor(anchor, reason = 'anchor') {
         this.#anchor = anchor
-        const rects = uncollapse(anchor)?.getClientRects?.()
         // if anchor is an element or a range
-        if (rects) {
-            // when the start of the range is immediately after a hyphen in the
-            // previous column, there is an extra zero width rect in that column
-            const rect = Array.from(rects)
-                .find(r => r.width > 0 && r.height > 0) || rects[0]
-            if (!rect) return
+        let rect = anchorRect(anchor)
+        if (!rect) {
+            const fallback = nextLayoutTargetAfter(anchor)
+            if (fallback) rect = fallback.rect
+        }
+        if (rect) {
             await this.#scrollToRect(rect, reason)
             return
         }
+        if (anchor?.scrollIntoView) {
+            try {
+                anchor.scrollIntoView({ block: 'start', inline: 'nearest' })
+            } catch {
+                anchor.scrollIntoView()
+            }
+            const scrolledRect = anchorRect(anchor)
+            if (scrolledRect) {
+                await this.#scrollToRect(scrolledRect, reason)
+                return
+            }
+        }
+        if (typeof anchor !== 'number') return
         // if anchor is a fraction
         if (this.scrolled) {
             await this.#scrollTo(anchor * this.viewSize, reason)
@@ -983,19 +1155,35 @@ export class Paginator extends HTMLElement {
         await this.#scrollToPage(newPage + 1, reason)
     }
     #getVisibleRange() {
-        if (this.scrolled) return getVisibleRange(this.#view.document,
+        const doc = this.#view.document
+        if (this.scrolled) return getVisibleRange(doc,
             this.start + this.#margin, this.end - this.#margin, this.#getRectMapper())
         const size = this.#rtl ? -this.size : this.size
-        return getVisibleRange(this.#view.document,
-            this.start - size, this.end - size, this.#getRectMapper())
+        const start = this.start - size
+        const end = this.end - size
+        if (!this.#vertical && !this.#rtl) {
+            const range = getVisibleRangeFromPoints(doc, start, end, this.#margin)
+            if (range) return range
+        }
+
+        const startTime = performance.now()
+        const range = getVisibleRange(doc, start, end, this.#getRectMapper())
+        const elapsed = performance.now() - startTime
+        if (elapsed > 80) {
+            console.warn(`Slow visible range calculation: ${Math.round(elapsed)}ms`)
+        }
+        return range
     }
     #afterScroll(reason) {
         const range = this.#getVisibleRange()
         this.#lastVisibleRange = range
         // don't set new anchor if relocation was to scroll to anchor
-        if (reason !== 'selection' && reason !== 'navigation' && reason !== 'anchor')
+        if (reason !== 'selection' && reason !== 'navigation' && reason !== 'anchor') {
             this.#anchor = range
-        else this.#justAnchored = true
+            this.#justAnchored = false
+        } else {
+            this.#justAnchored = true
+        }
 
         const index = this.#index
         const detail = { reason, range, index }
@@ -1013,6 +1201,7 @@ export class Paginator extends HTMLElement {
         this.#index = index
         const hasFocus = this.#view?.document?.hasFocus()
         if (src) {
+            this.#lastVisibleRange = null
             const view = this.#createView()
             const afterLoad = doc => {
                 if (doc.head) {
@@ -1100,14 +1289,20 @@ export class Paginator extends HTMLElement {
     async #turnPage(dir, distance) {
         if (this.#locked) return
         this.#locked = true
-        const prev = dir === -1
-        const shouldGo = await (prev ? this.#scrollPrev(distance) : this.#scrollNext(distance))
-        if (shouldGo) await this.#goTo({
-            index: this.#adjacentIndex(dir),
-            anchor: prev ? () => 1 : () => 0,
-        })
-        if (shouldGo || !this.hasAttribute('animated')) await wait(100)
-        this.#locked = false
+        try {
+            const prev = dir === -1
+            const shouldGo = await (prev ? this.#scrollPrev(distance) : this.#scrollNext(distance))
+            if (shouldGo) await this.#goTo({
+                index: this.#adjacentIndex(dir),
+                anchor: prev ? () => 1 : () => 0,
+            })
+            if (shouldGo || !this.hasAttribute('animated')) await wait(100)
+        } catch (e) {
+            console.error(e)
+            console.error(`Could not turn page ${dir}`)
+        } finally {
+            this.#locked = false
+        }
     }
     prev(distance) {
         return this.#turnPage(-1, distance)
@@ -1158,7 +1353,11 @@ export class Paginator extends HTMLElement {
         this.#view.document.defaultView.focus()
     }
     destroy() {
-        this.#observer.unobserve(this)
+        if (this.#renderFrame) {
+            cancelAnimationFrame(this.#renderFrame)
+            this.#renderFrame = 0
+        }
+        this.#observer.unobserve(this.#container)
         this.#view.destroy()
         this.#view = null
         this.sections[this.#index]?.unload?.()

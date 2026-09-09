@@ -52,6 +52,14 @@ SPDX-License-Identifier: CC0-1.0
       </choices>
       <default>System</default>
     </entry>
+    <entry name="readerPageMode" type="Enum">
+      <label>Default reader page view</label>
+      <choices>
+        <choice name="SinglePage" />
+        <choice name="TwoPage" />
+      </choices>
+      <default>TwoPage</default>
+    </entry>
     <entry name="readerBackgroundPath" type="String">
       <label>Reader background image path</label>
       <default></default>
@@ -88,6 +96,10 @@ SPDX-License-Identifier: CC0-1.0
       <label>Show progress</label>
       <default>true</default>
     </entry>
+    <entry name="libraryZoomLevel" type="double">
+      <label>Library zoom level</label>
+      <default>1.0</default>
+    </entry>
   </group>
   <group name="TranslatorEngine">
     <entry name="translatorEngine" type="Enum">
@@ -110,12 +122,44 @@ SPDX-License-Identifier: CC0-1.0
     </entry>
   </group>
   <group name="Editor">
+    <entry name="editorCommand" type="String">
+      <label>External editor command</label>
+      <default>sigil</default>
+    </entry>
+    <entry name="editorStartWithTextCommand" type="String">
+      <label>External editor command for selected text</label>
+      <default>/opt/calibre/ebook-edit</default>
+    </entry>
+    <entry name="pdfEditorCommand" type="String">
+      <label>External PDF editor command</label>
+      <default></default>
+    </entry>
+    <entry name="epubCheckCommand" type="String">
+      <label>EPUB check command</label>
+      <default>epubcheck</default>
+    </entry>
+    <entry name="pdfCheckCommand" type="String">
+      <label>PDF check command</label>
+      <default></default>
+    </entry>
     <entry name="editorPath" type="String">
       <label>External editor path</label>
       <default></default>
     </entry>
   </group>
   <group name="BookDelivery">
+    <entry name="bookServerAddress" type="String">
+      <label>Book server address</label>
+      <default>127.0.0.1</default>
+    </entry>
+    <entry name="bookServerPort" type="int">
+      <label>Book server port</label>
+      <default>45961</default>
+    </entry>
+    <entry name="calibreLibraryFolder" type="String">
+      <label>Calibre Library Folder</label>
+      <default></default>
+    </entry>
     <entry name="bookResourceMode" type="String">
       <label>EPUB resource delivery mode</label>
       <default>auto</default>
@@ -123,6 +167,18 @@ SPDX-License-Identifier: CC0-1.0
     <entry name="bookReferencingMode" type="String">
       <label>EPUB reference delivery mode</label>
       <default>reader</default>
+    </entry>
+    <entry name="pdfWatermarkFilterMode" type="String">
+      <label>PDF watermark filter mode</label>
+      <default>never</default>
+    </entry>
+    <entry name="pdfWatermarkFilterEnabled" type="bool">
+      <label>Remove PDF watermark before reading</label>
+      <default>false</default>
+    </entry>
+    <entry name="pdfWatermarkFilterPattern" type="String">
+      <label>PDF watermark marker</label>
+      <default>/Private /WatermarkDemo</default>
     </entry>
   </group>
 </kcfg>

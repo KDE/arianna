@@ -29,7 +29,8 @@ public:
 
 private:
     bool isValidToken(const QString &token) const;
-    std::shared_ptr<EPubContainer> containerForIdentifier(const QString &identifier);
+    std::shared_ptr<EPubContainer> containerForIdentifier(const QString &identifier, const QString &cacheVersion = QString());
+    QString pdfFileForIdentifier(const QString &identifier) const;
     void clearServedResourcesForIdentifier(const QString &identifier);
     void clearServedResourcesForSessionIdentifier(const QString &sessionToken, const QString &identifier);
     void registerReaderSessionForIdentifier(const QString &sessionToken, const QString &identifier);
@@ -43,6 +44,7 @@ private:
     struct CachedContainer {
         std::shared_ptr<EPubContainer> container;
         QString filename;
+        QString cacheVersion;
         QDateTime lastModified;
         qint64 size = -1;
     };

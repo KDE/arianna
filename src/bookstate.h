@@ -6,16 +6,11 @@
 #include <QString>
 #include <QUuid>
 
-#include <optional>
-
-struct BookRevision {
-    QUuid revisionId;
+struct BookState {
+    QUuid stateId;
     QString bookId;
-    std::optional<QUuid> parentRevisionId;
 
     QByteArray textContentHash;
     QByteArray documentStateHash;
-
-    QString changeType;
-    std::optional<QUuid> changedObjectId;
+    QByteArray epubFileHash;
 };

@@ -45,6 +45,7 @@ public:
         TitleRole = Qt::UserRole + 1,
         HrefRole,
         IdRole,
+        TocIdRole,
     };
 
     QHash<int, QByteArray> roleNames() const override;

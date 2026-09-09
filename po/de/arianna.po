@@ -21,6 +21,12 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 26.03.70\n"
 
+#: src/qml/TableOfContentDrawer.qml:29
+#, kde-format
+msgctxt "@action:button"
+msgid "Write Table of Contents to PDF"
+msgstr "Schreibe Inhaltsverzeichnis in PDF"
+
 #: epubcontainer.cpp:35
 #, kde-format
 msgid "Failed to open %1"
@@ -66,6 +72,10 @@ msgstr "Inhaltsverzeichnis"
 #, kde-format
 msgid "Arianna"
 msgstr "Arianna"
+
+msgctxt "@title:window, %1 is the number of books"
+msgid "Library (%1) - Arianna"
+msgstr "Bibliothek (%1) - Arianna"
 
 #: main.cpp:60
 #, kde-format
@@ -113,6 +123,31 @@ msgstr "EPub-Reader-Anwendung"
 #, kde-format
 msgid "Epub file to open"
 msgstr "Zu öffnende EPub-Datei"
+
+#: main.cpp
+#, kde-format
+msgid "Start only the local BookServer and do not open the reader UI"
+msgstr "Nur den lokalen BookServer starten und die Reader-Oberfläche nicht öffnen"
+
+#: main.cpp
+#, kde-format
+msgid "Stop existing Arianna instances, remove stale BookServer discovery state, then start normally"
+msgstr "Bestehende Arianna-Instanzen beenden, veralteten BookServer-Discovery-Zustand entfernen und dann normal starten"
+
+#: main.cpp
+#, kde-format
+msgid "Write persistent diagnostic flight log history"
+msgstr "Persistente Diagnose-Flight-Log-History schreiben"
+
+#: main.cpp
+#, kde-format
+msgid "Open the given book read-only without adding it to the library"
+msgstr "Das angegebene Buch schreibgeschützt öffnen, ohne es zur Bibliothek hinzuzufügen"
+
+#: main.cpp
+#, kde-format
+msgid "Open the most recently opened library book"
+msgstr "Das zuletzt geöffnete Buch aus der Bibliothek öffnen"
 
 #: qml/BookDetailsPage.qml:16
 #, kde-format
@@ -193,6 +228,36 @@ msgctxt "@action:intoolbar"
 msgid "Search"
 msgstr "Suchen"
 
+#: qml/EpubViewerPage.qml qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@action:intoolbar"
+msgid "One-Page View"
+msgstr "Einseitige Ansicht"
+
+#: qml/EpubViewerPage.qml qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@action:intoolbar"
+msgid "Two-Page View"
+msgstr "Zweiseitige Ansicht"
+
+#: qml/EpubViewerPage.qml
+#, kde-format
+msgctxt "@action:intoolbar"
+msgid "Switch to One-Page View"
+msgstr "Zur einseitigen Ansicht wechseln"
+
+#: qml/EpubViewerPage.qml
+#, kde-format
+msgctxt "@action:intoolbar"
+msgid "Switch to Two-Page View"
+msgstr "Zur zweiseitigen Ansicht wechseln"
+
+#: qml/LibraryPage.qml:106
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "Search by title/author..."
+msgstr "Titel/Autor suchen..."
+
 #: qml/EpubViewerPage.qml:376 qml/EpubViewerPage.qml:509
 #, kde-format
 msgid "Remarks"
@@ -233,6 +298,11 @@ msgstr "Markieren"
 #, kde-format
 msgid "Copy"
 msgstr "Kopieren"
+
+#: qml/OkularPdfView.qml:564
+#, kde-format
+msgid "Copy Without Line Breaks"
+msgstr "Kopieren ohne Zeilenumbruch"
 
 #: qml/EpubViewerPage.qml:235
 #, kde-format
@@ -321,6 +391,897 @@ msgstr "Anmerkung"
 msgid "Add Note…"
 msgstr "Notiz hinzufügen …"
 
+#: qml/EpubViewerPage.qml
+#, kde-format
+msgid "The EPUB file no longer contains some anchors used by annotations or references. Importing it will keep the data, but Arianna will report the affected entries."
+msgstr "Die EPUB-Datei enthält einige von Anmerkungen oder Referenzen verwendete Anker nicht mehr. Beim Import bleiben die Daten erhalten, aber Arianna meldet die betroffenen Einträge."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Checking EPUB…"
+msgstr "EPUB wird geprüft …"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Checking PDF…"
+msgstr "PDF wird geprüft …"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "EPUB check failed."
+msgstr "EPUB-Prüfung fehlgeschlagen."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "PDF check failed."
+msgstr "PDF-Prüfung fehlgeschlagen."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "PDF version:"
+msgstr "PDF-Version:"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "EPUB version:"
+msgstr "EPUB-Version:"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Topic Tree"
+msgstr "Themabaum"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Topic Tree String"
+msgstr "Themabaumzeichenfolge"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Enter topics..."
+msgstr "Themeneingabe..."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Format: comma (,) and semicolon (;) topic separators, slash (/) level separator"
+msgstr "Format: Komma (,) und Semikolon (;) Thementrenner, Schrägstrich (/) Stufenseparator"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Save Topic Tree"
+msgstr "Themabaum speichern"
+
+#: qml/SubjectOverviewPage.qml
+#, kde-format
+msgctxt "@title:window"
+msgid "Topics"
+msgstr "Themen"
+
+msgctxt "@action:button"
+msgid "Import Books By Baloo"
+msgstr "Bücher mit Baloo importieren"
+
+msgctxt "@action:button"
+msgid "Import Books from Calibre"
+msgstr "Bücher von Calibre importieren"
+
+msgctxt "@title:group"
+msgid "Book Import"
+msgstr "Buchimport"
+
+msgctxt "@action:button"
+msgid "via File Dialog"
+msgstr "über Dateidialog"
+
+msgctxt "@action:button"
+msgid "via Baloo"
+msgstr "über Baloo"
+
+msgctxt "@action:button"
+msgid "from Calibre"
+msgstr "von Calibre"
+
+msgctxt "@title:dialog"
+msgid "Import Books By Baloo"
+msgstr "Bücher mit Baloo importieren"
+
+msgctxt "@info"
+msgid "Searching Baloo for books..."
+msgstr "Baloo sucht nach Büchern..."
+
+msgctxt "@info %1 is a number"
+msgid "Baloo found %1 possible imports. Import them into the library?"
+msgstr "Baloo hat %1 mögliche Importe gefunden. In die Bibliothek importieren?"
+
+msgctxt "@info"
+msgid "No new books were found by Baloo."
+msgstr "Baloo hat keine neuen Bücher gefunden."
+
+msgctxt "@info"
+msgid "Baloo is not available or file indexing is disabled. Books can still be added with Add Books."
+msgstr "Baloo ist nicht verfügbar oder die Dateiindizierung ist deaktiviert. Bücher können weiterhin mit „Bücher hinzufügen“ hinzugefügt werden."
+
+msgid "Set the Calibre library folder in Settings first."
+msgstr "Bitte zuerst das Calibre Bibliothek Verzeichnis in den Einstellungen festlegen."
+
+msgid "The library is still loading."
+msgstr "Die Bibliothek wird noch geladen."
+
+msgid "Calibre import failed."
+msgstr "Calibre-Import fehlgeschlagen."
+
+msgid "Calibre import finished: %1 imported, %2 duplicates skipped."
+msgstr "Calibre-Import abgeschlossen: %1 importiert, %2 Duplikate übersprungen."
+
+msgid "Calibre import finished: %1 imported, %2 duplicates skipped, %3 failed."
+msgstr "Calibre-Import abgeschlossen: %1 importiert, %2 Duplikate übersprungen, %3 fehlgeschlagen."
+
+msgid "Calibre library folder is not configured."
+msgstr "Das Calibre Bibliothek Verzeichnis ist nicht eingerichtet."
+
+msgid "Calibre library folder does not exist."
+msgstr "Das Calibre Bibliothek Verzeichnis existiert nicht."
+
+msgid "No supported EPUB or PDF books were found in the Calibre library folder."
+msgstr "Im Calibre Bibliothek Verzeichnis wurden keine unterstützten EPUB- oder PDF-Bücher gefunden."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Adding book to library…"
+msgstr "Buch wird in die Bibliothek übernommen …"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Book added to library."
+msgstr "Buch wurde in die Bibliothek übernommen."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Book could not be added to library."
+msgstr "Buch konnte nicht in die Bibliothek übernommen werden."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Add to Library"
+msgstr "In Bibliothek übernehmen"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "EPUB Maintenance"
+msgstr "EPUB-Wartung"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "PDF Maintenance"
+msgstr "PDF-Wartung"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Check and Refresh Metadata"
+msgstr "Prüfen und Metadaten auffrischen"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Check EPUB"
+msgstr "EPUB prüfen"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Check PDF"
+msgstr "PDF prüfen"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Show PDF Validation Report"
+msgstr "PDF-Validierungsbericht anzeigen"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Status:"
+msgstr "Status:"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "EPUB check:"
+msgstr "EPUB-Prüfung:"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "EPUB check output:"
+msgstr "Ausgabe der EPUB-Prüfung:"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "PDF check:"
+msgstr "PDF-Prüfung:"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "PDF check output:"
+msgstr "Ausgabe der PDF-Prüfung:"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "EPUB check is not available."
+msgstr "Die EPUB-Prüfung ist nicht verfügbar."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "PDF check is not available."
+msgstr "Die PDF-Prüfung ist nicht verfügbar."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "The PDF check reported %1 and %2."
+msgstr "Die PDF-Prüfung hat %1 und %2 gemeldet."
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgctxt "@title:window"
+msgid "PDF Validation"
+msgstr "PDF-Validierung"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "✓ Compliant"
+msgstr "✓ Konform"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "✗ Not compliant"
+msgstr "✗ Nicht konform"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "Arlington profile"
+msgstr "Arlington-Profil"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "%1 deviation"
+msgid_plural "%1 deviations"
+msgstr[0] "%1 Abweichung"
+msgstr[1] "%1 Abweichungen"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "%1 failed rule"
+msgid_plural "%1 failed rules"
+msgstr[0] "%1 fehlgeschlagene Regel"
+msgstr[1] "%1 fehlgeschlagene Regeln"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "%1 error"
+msgid_plural "%1 errors"
+msgstr[0] "%1 Fehler"
+msgstr[1] "%1 Fehler"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "Duration: %1 s"
+msgstr "Prüfzeit: %1 s"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "No failed rules were reported."
+msgstr "Es wurden keine fehlgeschlagenen Regeln gemeldet."
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "Unnamed rule"
+msgstr "Unbenannte Regel"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "Specification:"
+msgstr "Spezifikation:"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "Clause:"
+msgstr "Klausel:"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "Test number:"
+msgstr "Testnummer:"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "Object type:"
+msgstr "Objekttyp:"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "Deviations:"
+msgstr "Abweichungen:"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "✗ Object %1"
+msgstr "✗ Objekt %1"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "✗ Failed check"
+msgstr "✗ Fehlgeschlagene Prüfung"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "Technical Details"
+msgstr "Technische Details"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "Raw XML (Debug)"
+msgstr "Roh-XML (Debug)"
+
+#: qml/ReportDialog.qml
+#, kde-format
+msgid "The PDF check output is not a valid Arlington XML report."
+msgstr "Die Ausgabe der PDF-Prüfung ist kein gültiger Arlington-XML-Bericht."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Book file does not exist."
+msgstr "Die Buchdatei existiert nicht."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Book is not in the library."
+msgstr "Das Buch befindet sich nicht in der Bibliothek."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "PDF metadata could not be refreshed."
+msgstr "PDF-Metadaten konnten nicht aufgefrischt werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "PDF metadata refreshed."
+msgstr "PDF-Metadaten aufgefrischt."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Only EPUB and PDF books can be checked."
+msgstr "Nur EPUB- und PDF-Bücher können geprüft werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to open EPUB file."
+msgstr "Die EPUB-Datei kann nicht geöffnet werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to normalize EPUB file."
+msgstr "Die EPUB-Datei kann nicht normalisiert werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Registered normalized EPUB as the current book state."
+msgstr "Das normalisierte EPUB wurde als aktueller Buchzustand registriert."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Normalized EPUB, but the book state could not be refreshed."
+msgstr "Das EPUB wurde normalisiert, der Buchzustand konnte aber nicht aufgefrischt werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "EPUB was checked, but metadata could not be refreshed."
+msgstr "Das EPUB wurde geprüft, die Metadaten konnten aber nicht aufgefrischt werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "EPUB checked and metadata refreshed."
+msgstr "EPUB geprüft und Metadaten aufgefrischt."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Metadata refreshed."
+msgstr "Metadaten aufgefrischt."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Only EPUB files can be checked with EPUBCheck."
+msgstr "Nur EPUB-Dateien können mit EPUBCheck geprüft werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "No EPUB check command configured."
+msgstr "Kein EPUB-Prüfbefehl eingerichtet."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to parse EPUB check command."
+msgstr "Der EPUB-Prüfbefehl kann nicht ausgewertet werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "EPUB check could not be started."
+msgstr "Die EPUB-Prüfung konnte nicht gestartet werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "EPUB check timed out."
+msgstr "Zeitüberschreitung bei der EPUB-Prüfung."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "EPUB check crashed."
+msgstr "Die EPUB-Prüfung ist abgestürzt."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "EPUB check passed."
+msgstr "EPUB-Prüfung bestanden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "EPUB check reported problems."
+msgstr "Die EPUB-Prüfung hat Probleme gemeldet."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Only PDF files can be checked with the configured PDF check command."
+msgstr "Nur PDF-Dateien können mit dem eingerichteten PDF-Prüfbefehl geprüft werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "No PDF check command configured."
+msgstr "Kein PDF-Prüfbefehl eingerichtet."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to parse PDF check command."
+msgstr "Der PDF-Prüfbefehl kann nicht ausgewertet werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "PDF check could not be started."
+msgstr "Die PDF-Prüfung konnte nicht gestartet werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "PDF check timed out."
+msgstr "Zeitüberschreitung bei der PDF-Prüfung."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "PDF check crashed."
+msgstr "Die PDF-Prüfung ist abgestürzt."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "PDF check completed."
+msgstr "PDF-Prüfung abgeschlossen."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "PDF check reported problems."
+msgstr "Die PDF-Prüfung hat Probleme gemeldet."
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "No EPUB file is open for normalization"
+msgstr "Für die Normalisierung ist keine EPUB-Datei geöffnet"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Unable to read EPUB document %1"
+msgstr "Das EPUB-Dokument %1 kann nicht gelesen werden"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Unable to open EPUB document %1"
+msgstr "Das EPUB-Dokument %1 kann nicht geöffnet werden"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Unable to parse EPUB document %1"
+msgstr "Das EPUB-Dokument %1 kann nicht geparst werden"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Filled empty title in %1"
+msgstr "Leeren Titel in %1 gefüllt"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Unable to read EPUB package document %1"
+msgstr "Das EPUB-Paketdokument %1 kann nicht gelesen werden"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Unable to open EPUB package document %1"
+msgstr "Das EPUB-Paketdokument %1 kann nicht geöffnet werden"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Unable to parse EPUB package document %1"
+msgstr "Das EPUB-Paketdokument %1 kann nicht geparst werden"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Declared scripted property for %1"
+msgstr "Eigenschaft „scripted“ für %1 deklariert"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "No EPUB normalization changes were needed"
+msgstr "Keine EPUB-Normalisierungen erforderlich"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Unable to write normalized EPUB file"
+msgstr "Die normalisierte EPUB-Datei kann nicht geschrieben werden"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "No EPUB file is open for metadata editing"
+msgstr "Für die Metadatenbearbeitung ist keine EPUB-Datei geöffnet"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Unable to find EPUB metadata document"
+msgstr "Das EPUB-Metadatendokument kann nicht gefunden werden"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "No EPUB subject changes were needed"
+msgstr "Keine EPUB-Themenänderungen erforderlich"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "Unable to write EPUB metadata"
+msgstr "Die EPUB-Metadaten können nicht geschrieben werden"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "EPUB subjects updated"
+msgstr "EPUB-Themen aktualisiert"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Adventure"
+msgstr "Abenteuer"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Art"
+msgstr "Kunst"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Autobiography"
+msgstr "Autobiografie"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Bible"
+msgstr "Bibel"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Biography"
+msgstr "Biografie"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Business"
+msgstr "Wirtschaft"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Children"
+msgstr "Kinder"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Christianity"
+msgstr "Christentum"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Classics"
+msgstr "Klassiker"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Computer Science"
+msgstr "Informatik"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Crime"
+msgstr "Krimi"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Drama"
+msgstr "Drama"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Economics"
+msgstr "Ökonomie"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Education"
+msgstr "Bildung"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Fantasy"
+msgstr "Fantasy"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Fiction"
+msgstr "Belletristik"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Health"
+msgstr "Gesundheit"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "History"
+msgstr "Geschichte"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Horror"
+msgstr "Horror"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Islam"
+msgstr "Islam"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Judaism"
+msgstr "Judentum"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Law"
+msgstr "Recht"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Literature"
+msgstr "Literatur"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Mathematics"
+msgstr "Mathematik"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Medicine"
+msgstr "Medizin"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Memoir"
+msgstr "Memoiren"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Music"
+msgstr "Musik"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Mystery"
+msgstr "Mystery"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Nonfiction"
+msgstr "Sachbuch"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Philosophy"
+msgstr "Philosophie"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Poetry"
+msgstr "Lyrik"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Politics"
+msgstr "Politik"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Programming"
+msgstr "Programmierung"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Psychology"
+msgstr "Psychologie"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Reference"
+msgstr "Nachschlagewerk"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Religion"
+msgstr "Religion"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Romance"
+msgstr "Liebesroman"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Science"
+msgstr "Wissenschaft"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Science Fiction"
+msgstr "Science-Fiction"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Sociology"
+msgstr "Soziologie"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Technology"
+msgstr "Technik"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Theology"
+msgstr "Theologie"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Travel"
+msgstr "Reisen"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB subject"
+msgid "Young Adult"
+msgstr "Jugendbuch"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox books without a main topic"
+msgid "No Main Topic"
+msgstr "Ohne Hauptthema"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox books without an author"
+msgid "No Author"
+msgstr "Ohne Autor"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox EPUB documents"
+msgid "Epub Documents"
+msgstr "Epub Dokumente"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox PDF documents"
+msgid "Pdf Documents"
+msgstr "Pdf Dokumente"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox documents with another file type"
+msgid "Other Documents"
+msgstr "Andere Dokumente"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox books last opened within the last day"
+msgid "Last 24 Hours"
+msgstr "Letzte 24 Stunden"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox books last opened within the last week"
+msgid "Last 7 Days"
+msgstr "Letzte 7 Tage"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox books last opened within the last two weeks"
+msgid "Last 2 Weeks"
+msgstr "Letzte 2 Wochen"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox books last opened within the last three weeks"
+msgid "Last 3 Weeks"
+msgstr "Letzte 3 Wochen"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox books last opened within the last four weeks"
+msgid "Last 4 Weeks"
+msgstr "Letzte 4 Wochen"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox books last opened more than four weeks ago"
+msgid "Older than 4 Weeks"
+msgstr "Älter als 4 Wochen"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox books that have never been opened"
+msgid "Never Opened"
+msgstr "Nie geöffnet"
+
 #: qml/EpubViewerPage.qml:268
 #, kde-format
 msgctxt "Book reading progress"
@@ -357,6 +1318,11 @@ msgstr "Nächste Seite"
 msgid "Forward"
 msgstr "Vor"
 
+#: qml/EpubViewerPage.qml:1647
+#, kde-format
+msgid "Set Image not_Inverse"
+msgstr "Bild nicht invers setzen"
+
 #: qml/EpubViewerPage.qml:364
 #, kde-format
 msgid "Loc. %s of %s"
@@ -376,6 +1342,11 @@ msgstr "Seite %s"
 #, kde-format
 msgid "Close"
 msgstr "Schließen"
+
+#: qml/EpubViewerPage.qml
+#, kde-format
+msgid "save change of reference"
+msgstr "Referenzänderung speichern"
 
 #: qml/EpubViewerPage.qml:369
 #, kde-format
@@ -438,6 +1409,12 @@ msgstr "Neu"
 msgid "Library"
 msgstr "Bibliothek"
 
+#: qml/LibraryPage.qml
+#, kde-format
+msgctxt "@title:window, %1 is the page title, %2 is the number of books, %3 is the number of topics"
+msgid "%1 (%2/%3)"
+msgstr "%1 (%2/%3)"
+
 #: qml/LibraryPage.qml:24
 #, kde-format
 msgctxt "@action:button"
@@ -446,15 +1423,39 @@ msgstr "Sortieren"
 
 #: qml/LibraryPage.qml:27
 #, kde-format
+msgctxt "@action:button Toggle grouped book view"
+msgid "Group"
+msgstr "Gruppieren"
+
+#: qml/LibraryPage.qml:27
+#, kde-format
 msgctxt "@action:inmenu Sort books by title"
 msgid "Title"
 msgstr "Titel"
+
+#: qml/LibraryPage.qml
+#, kde-format
+msgctxt "@action:inmenu Sort books by main topic"
+msgid "Main Topic"
+msgstr "Hauptthema"
+
+#: qml/LibraryPage.qml
+#, kde-format
+msgctxt "@info book subtitle, %1 is the main topic and %2 is the author list"
+msgid "%1 - %2"
+msgstr "%1 - %2"
 
 #: qml/LibraryPage.qml:36
 #, kde-format
 msgctxt "@action:inmenu Sort books by author"
 msgid "Author"
 msgstr "Autor"
+
+#: qml/LibraryPage.qml
+#, kde-format
+msgctxt "@action:inmenu Sort books by file type"
+msgid "Type"
+msgstr "Typ"
 
 #: qml/LibraryPage.qml:45
 #, kde-format
@@ -473,6 +1474,30 @@ msgstr "Buchmetadaten auffrischen"
 msgctxt "@action:button"
 msgid "Book Details"
 msgstr "Buchdetails"
+
+#: qml/LibraryPage.qml
+#, kde-format
+msgctxt "@label subject hierarchy level"
+msgid "Main Topic"
+msgstr "Hauptthema"
+
+#: qml/LibraryPage.qml
+#, kde-format
+msgctxt "@label subject hierarchy level, %1 is the hierarchy depth below the main topic"
+msgid "Subtopic %1"
+msgstr "Unterthema %1"
+
+#: qml/LibraryPage.qml qml/SubjectOverviewPage.qml
+#, kde-format
+msgctxt "@action:filter %1 is the topic, %2 is the number of books"
+msgid "%1 (%2)"
+msgstr "%1 (%2)"
+
+#: qml/LibraryPage.qml
+#, kde-format
+msgctxt "@title:section author name with book count, %1 is the author name and %2 is the number of books"
+msgid "%1 (%2)"
+msgstr "%1 (%2)"
 
 #: qml/LibraryPage.qml:112
 #, kde-format
@@ -531,16 +1556,56 @@ msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "Fügen Sie einige Bücher hinzu"
 
+#: qml/LibraryPage.qml qml/SubjectOverviewPage.qml
+#, kde-format
+msgctxt "@info placeholder"
+msgid "No books found"
+msgstr "Keine Bücher gefunden"
+
+#: qml/SubjectOverviewPage.qml
+#, kde-format
+msgctxt "@info placeholder"
+msgid "No topics found"
+msgstr "Keine Themen gefunden"
+
+#: qml/SubjectOverviewPage.qml
+#, kde-format
+msgctxt "@info placeholder"
+msgid "Loading topics…"
+msgstr "Themen werden geladen…"
+
+#: qml/SubjectOverviewPage.qml
+#, kde-format
+msgctxt "@title:group"
+msgid "Topics"
+msgstr "Themen"
+
+#: qml/SubjectOverviewPage.qml
+#, kde-format
+msgctxt "@title:group %1 is a topic and %2 is the number of books"
+msgid "%1 (%2)"
+msgstr "%1 (%2)"
+
+#: qml/SubjectOverviewPage.qml
+#, kde-format
+msgctxt "@info placeholder"
+msgid "Select a topic"
+msgstr "Thema auswählen"
+
 #: qml/Main.qml:204
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
-msgstr "Übersicht"
+msgstr "Zuhause"
+
+msgctxt "Switch to the listing page showing the most recently read books, %1 is the number of books"
+msgid "Home (%1)"
+msgstr "Zuhause (%1)"
 
 #: qml/Main.qml:208
 #, kde-format
 msgid "Home"
-msgstr "Übersicht"
+msgstr "Zuhause"
 
 #: qml/Main.qml:211
 #, kde-format
@@ -555,6 +1620,13 @@ msgctxt ""
 "touch devices)"
 msgid "Open Other..."
 msgstr "Weitere öffnen …"
+
+msgctxt "@action:button"
+msgid "Open without Import..."
+msgstr "Ohne importieren öffnen..."
+
+msgid "Open without Import..."
+msgstr "Ohne importieren öffnen..."
 
 #: qml/Main.qml:225
 #, kde-format
@@ -596,15 +1668,9 @@ msgstr "Herausgeber"
 
 #: qml/Main.qml:255
 #, kde-format
-msgctxt "Switch to the listing page showing items grouped by genres"
-msgid "Keywords"
-msgstr "Schlüsselwörter"
-
-#: qml/Main.qml:257
-#, kde-format
-msgctxt "Title of the page with books grouped by genres"
-msgid "Group by Genres"
-msgstr "Nach Genre gruppieren"
+msgctxt "Switch to the overview page showing books grouped by EPUB subject"
+msgid "Topics"
+msgstr "Themen"
 
 #: qml/Main.qml:335 qml/SettingsPage.qml:16
 #, kde-format
@@ -700,30 +1766,150 @@ msgstr "Farben umkehren"
 msgid "Editor"
 msgstr "Editor"
 
-#: qml/SettingsPage.qml:305
+#: qml/SettingsPage.qml
 #, kde-format
-msgid "Editor executable"
-msgstr "Editor-Programm"
+msgid "Reader"
+msgstr "Reader"
 
-#: qml/SettingsPage.qml:307
+#: qml/SettingsPage.qml
 #, kde-format
-msgid "No editor configured"
-msgstr "Kein Editor eingerichtet"
+msgid "Server"
+msgstr "Server"
 
-#: qml/SettingsPage.qml:318
+#: qml/SettingsPage.qml
 #, kde-format
-msgid "Choose editor…"
-msgstr "Editor auswählen …"
+msgid "Book server"
+msgstr "BookServer"
 
-#: qml/SettingsPage.qml:326
+#: qml/SettingsPage.qml
 #, kde-format
-msgid "Clear editor"
-msgstr "Editor zurücksetzen"
+msgid "Address"
+msgstr "Adresse"
 
-#: qml/SettingsPage.qml:342
+#: qml/SettingsPage.qml
 #, kde-format
-msgid "Choose editor"
-msgstr "Editor auswählen"
+msgid "Port"
+msgstr "Port"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Calibre"
+msgstr "Calibre"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Calibre Library Folder"
+msgstr "Calibre Bibliothek Verzeichnis"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "No Calibre library folder"
+msgstr "Kein Calibre Bibliothek Verzeichnis"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose Calibre Library Folder…"
+msgstr "Calibre Bibliothek Verzeichnis auswählen …"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose Calibre Library Folder"
+msgstr "Calibre Bibliothek Verzeichnis auswählen"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "PDF delivery"
+msgstr "PDF-Auslieferung"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Remove watermark before reading"
+msgstr "Wasserzeichen vor dem Lesen entfernen"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Watermark marker"
+msgstr "Wasserzeichen-Marker"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Editor command"
+msgstr "Editor-Befehl"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose editor command…"
+msgstr "Editor-Befehl auswählen …"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Editor command for selected text"
+msgstr "Editor-Befehl für ausgewählten Text"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose text editor command…"
+msgstr "Editor-Befehl für Text auswählen …"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "PDF editor command"
+msgstr "PDF-Editor-Befehl"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose PDF editor command…"
+msgstr "PDF-Editor-Befehl auswählen …"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "EPUB check command"
+msgstr "EPUB-Prüfbefehl"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose EPUB check command…"
+msgstr "EPUB-Prüfbefehl auswählen …"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "PDF check command"
+msgstr "PDF-Prüfbefehl"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose PDF check command…"
+msgstr "PDF-Prüfbefehl auswählen …"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Clear editor commands"
+msgstr "Editor-Befehle löschen"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose editor command"
+msgstr "Editor-Befehl auswählen"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose text editor command"
+msgstr "Editor-Befehl für Text auswählen"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose PDF editor command"
+msgstr "PDF-Editor-Befehl auswählen"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose EPUB check command"
+msgstr "EPUB-Prüfbefehl auswählen"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Choose PDF check command"
+msgstr "PDF-Prüfbefehl auswählen"
 
 #: qml/SettingsPage.qml:177
 #, kde-format
@@ -769,6 +1955,21 @@ msgstr "Inhaltsverzeichnis"
 
 msgid "Create Reference"
 msgstr "Verweis erstellen"
+
+#: qml/EpubViewerPage.qml
+#, kde-format
+msgid "Open Reference"
+msgstr "Referenz öffnen"
+
+#: qml/EpubViewerPage.qml
+#, kde-format
+msgid "Edit Reference"
+msgstr "Referenz bearbeiten"
+
+#: qml/EpubViewerPage.qml
+#, kde-format
+msgid "Delete Reference"
+msgstr "Referenz löschen"
 
 #: qml/EpubViewerPage.qml:270 qml/EpubViewerPage.qml:486
 #, kde-format
@@ -934,3 +2135,193 @@ msgstr "Referenzen ins EPUB einbetten"
 #, kde-format
 msgid "Disable references"
 msgstr "Referenzen deaktivieren"
+
+#: pdfwatermarkfilter.cpp
+#, kde-format
+msgid "Unable to start pdftk."
+msgstr "pdftk kann nicht gestartet werden."
+
+#: pdfwatermarkfilter.cpp
+#, kde-format
+msgid "pdftk did not finish."
+msgstr "pdftk wurde nicht abgeschlossen."
+
+#: pdfwatermarkfilter.cpp
+#, kde-format
+msgid "pdftk failed."
+msgstr "pdftk ist fehlgeschlagen."
+
+#: pdfwatermarkfilter.cpp
+#, kde-format
+msgid "Unable to open the uncompressed PDF."
+msgstr "Das entpackte PDF kann nicht geöffnet werden."
+
+#: pdfwatermarkfilter.cpp
+#, kde-format
+msgid "Unable to write the processed PDF."
+msgstr "Das verarbeitete PDF kann nicht geschrieben werden."
+
+#: pdfwatermarkfilter.cpp
+#, kde-format
+msgid "Unable to flush the processed PDF."
+msgstr "Das verarbeitete PDF kann nicht abgeschlossen geschrieben werden."
+
+#: pdfwatermarkfilter.cpp
+#, kde-format
+msgid "The input PDF does not exist."
+msgstr "Das Eingabe-PDF existiert nicht."
+
+#: pdfwatermarkfilter.cpp
+#, kde-format
+msgid "The PDF watermark marker is empty."
+msgstr "Der PDF-Wasserzeichen-Marker ist leer."
+
+#: pdfwatermarkfilter.cpp
+#, kde-format
+msgid "Unable to create a temporary PDF filter directory."
+msgstr "Das temporäre PDF-Filterverzeichnis kann nicht erstellt werden."
+
+#: pdfwatermarkfilter.cpp
+#, kde-format
+msgid "pdftk did not create a filtered PDF."
+msgstr "pdftk hat kein gefiltertes PDF erstellt."
+
+#: pdfiodocument.cpp
+#, kde-format
+msgid "Unable to create a temporary PDF file"
+msgstr "Temporäre PDF-Datei kann nicht erstellt werden"
+
+#: pdfiodocument.cpp
+#, kde-format
+msgid "Unable to write the temporary PDF file"
+msgstr "Temporäre PDF-Datei kann nicht geschrieben werden"
+
+#: bookserver.cpp
+#, kde-format
+msgctxt "@item:inlistbox PDF page target"
+msgid "Page %1"
+msgstr "Seite %1"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Author name"
+msgstr "Autorenname"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "No EPUB creator changes were needed"
+msgstr "Keine EPUB-Autorenänderungen erforderlich"
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "EPUB creators updated"
+msgstr "EPUB-Autoren aktualisiert"
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Normal Coloring for This Page"
+msgstr "Normfärben für diese Seite"
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Choose Rectangle Area for Normal Coloring"
+msgstr "Rechtecksbereich zum Normalfärben auswählen"
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Choose Oval Area for Normal Coloring"
+msgstr "Ovalen Bereich zum Normalfärben auswählen"
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Choose Rectangle Area for Theme Coloring"
+msgstr "Rechtecksbereich zum Themafärben auswählen"
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Clear Preserved Areas on Page"
+msgstr "Erhaltene Bereiche auf der Seite löschen"
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Clear Inverted Areas on Page"
+msgstr "Invertierte Bereiche auf der Seite löschen"
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Add Page to Table of Contents"
+msgstr "Seite zum Inhaltsverzeichnis hinzufügen"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Set Version to PDF 2.0"
+msgstr "Version auf PDF 2.0 setzen"
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "PDF version update is not available."
+msgstr "Die Aktualisierung der PDF-Version ist nicht verfügbar."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Setting PDF version to 2.0…"
+msgstr "PDF-Version wird auf 2.0 gesetzt …"
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "The PDF already uses version 2.0."
+msgstr "Das PDF verwendet bereits Version 2.0."
+
+#: booklistmodel.cpp qml/BookDetailsPage.qml
+#, kde-format
+msgid "Unable to set the PDF version to 2.0."
+msgstr "Die PDF-Version kann nicht auf 2.0 gesetzt werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to preserve the original PDF file permissions."
+msgstr "Die ursprünglichen PDF-Dateiberechtigungen können nicht erhalten werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "The PDF version was set to 2.0, but metadata could not be refreshed."
+msgstr "Die PDF-Version wurde auf 2.0 gesetzt, aber die Metadaten konnten nicht aktualisiert werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "The PDF header was set to version 2.0. This does not validate PDF 2.0 conformance."
+msgstr "Der PDF-Header wurde auf Version 2.0 gesetzt. Dies prüft keine PDF-2.0-Konformität."
+
+#: pdfversionupdater.cpp
+#, kde-format
+msgid "The updated PDF must be written to a different file."
+msgstr "Das aktualisierte PDF muss in eine andere Datei geschrieben werden."
+
+#: pdfversionupdater.cpp
+#, kde-format
+msgid "The encrypted PDF cannot be modified without owner permissions."
+msgstr "Das verschlüsselte PDF kann ohne Eigentümerberechtigungen nicht geändert werden."
+
+#: pdfversionupdater.cpp
+#, kde-format
+msgid "The PDF contains a digital signature and cannot be modified."
+msgstr "Das PDF enthält eine digitale Signatur und kann nicht geändert werden."
+
+#: pdfversionupdater.cpp
+#, kde-format
+msgid "PoDoFo did not create a PDF with version 2.0."
+msgstr "PoDoFo hat kein PDF mit Version 2.0 erstellt."
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@title:dialog"
+msgid "Add Page to Table of Contents"
+msgstr "Seite zum Inhaltsverzeichnis hinzufügen"

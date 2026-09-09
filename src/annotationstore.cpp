@@ -30,10 +30,9 @@ static QUuid uuidFromString(QString value)
     return QUuid(value);
 }
 
-static QVariantMap annotationError(QVariantMap annotation, const QString &message, const bool conflict = false)
+static QVariantMap annotationError(QVariantMap annotation, const QString &message)
 {
     annotation.insert(QStringLiteral("error"), true);
-    annotation.insert(QStringLiteral("conflict"), conflict);
     annotation.insert(QStringLiteral("message"), message);
     return annotation;
 }
@@ -52,39 +51,32 @@ QVariantList AnnotationStore::loadAnnotations(const QString &bookId) const
     return BookDatabase::self().loadAnnotations(bookId);
 }
 
-QString AnnotationStore::currentRevisionId(const QString &bookId) const
+QString AnnotationStore::currentStateId(const QString &bookId) const
 {
     BookTruthStore store;
     const BookSnapshot snapshot = store.openBook(bookId);
-    if (!snapshot.success || !snapshot.revision) {
-        qWarning() << "Unable to get current annotation revision" << bookId << snapshot.errorMessage;
+    if (!snapshot.success || !snapshot.state) {
+        qWarning() << "Unable to get current annotation state" << bookId << snapshot.errorMessage;
         return {};
     }
 
-    return uuidToString(snapshot.revision->revisionId);
+    return uuidToString(snapshot.state->stateId);
 }
 
-QVariantMap AnnotationStore::createAnchoredAnnotation(const QString &bookId, const QVariantMap &annotation, const QString &expectedRevisionId)
+QVariantMap AnnotationStore::createAnchoredAnnotation(const QString &bookId, const QVariantMap &annotation, const QString &expectedStateId)
 {
+    Q_UNUSED(expectedStateId)
     QVariantMap copy = annotation;
-    const QString cfiRange = copy.value(QStringLiteral("value")).toString();
+    const QString cfiRange = copy.value(QStringLiteral("cfiRange")).toString().isEmpty() ? copy.value(QStringLiteral("value")).toString()
+                                                                                         : copy.value(QStringLiteral("cfiRange")).toString();
     if (bookId.isEmpty() || cfiRange.isEmpty()) {
         return annotationError(copy, QStringLiteral("Unable to create anchored annotation without book id and CFI range"));
     }
 
     BookTruthStore store;
-    QUuid expectedRevision = uuidFromString(expectedRevisionId);
-    if (expectedRevision.isNull()) {
-        const BookSnapshot snapshot = store.openBook(bookId);
-        if (!snapshot.success || !snapshot.revision) {
-            return annotationError(copy, snapshot.errorMessage);
-        }
-        expectedRevision = snapshot.revision->revisionId;
-    }
-
-    const BookCommitResult commit = store.createAnchor(bookId, cfiRange, expectedRevision);
+    const BookCommitResult commit = store.createAnchor(bookId, cfiRange);
     if (!commit.success) {
-        return annotationError(copy, commit.errorMessage, commit.conflict);
+        return annotationError(copy, commit.errorMessage);
     }
 
     if (!commit.createdAnchorId) {
@@ -102,9 +94,9 @@ QVariantMap AnnotationStore::createAnchoredAnnotation(const QString &bookId, con
     }
 
     copy.insert(QStringLiteral("annotationId"), uuidToString(annotationUuid));
+    copy.insert(QStringLiteral("cfiRange"), cfiRange);
+    copy.insert(QStringLiteral("value"), cfiRange);
     copy.insert(QStringLiteral("anchorId"), uuidToString(*commit.createdAnchorId));
-    copy.insert(QStringLiteral("createdInRevisionId"), uuidToString(commit.newRevisionId));
-    copy.insert(QStringLiteral("lastValidatedRevisionId"), uuidToString(commit.newRevisionId));
 
     BookDatabase::self().saveAnnotation(bookId, copy);
     Q_EMIT annotationsChanged(bookId);
@@ -117,9 +109,9 @@ void AnnotationStore::saveAnnotation(const QString &bookId, const QVariantMap &a
     Q_EMIT annotationsChanged(bookId);
 }
 
-void AnnotationStore::removeAnnotation(const QString &bookId, const QString &value)
+void AnnotationStore::removeAnnotation(const QString &bookId, const QString &annotationKey)
 {
-    BookDatabase::self().removeAnnotation(bookId, value);
+    BookDatabase::self().removeAnnotation(bookId, annotationKey);
     Q_EMIT annotationsChanged(bookId);
 }
 

@@ -7,6 +7,8 @@
   <id>org.kde.arianna</id>
   <provides>
     <binary>arianna</binary>
+    <mediatype>application/epub+zip</mediatype>
+    <mediatype>application/pdf</mediatype>
   </provides>
   <name>Arianna</name>
   <name xml:lang="ar">أريانا</name>

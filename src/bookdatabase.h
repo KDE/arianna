@@ -3,9 +3,10 @@
 
 #pragma once
 
-#include "bookrevision.h"
+#include "bookstate.h"
 
 #include <QObject>
+#include <QStringList>
 #include <QVariantList>
 #include <QVariantMap>
 #include <memory>
@@ -70,7 +71,7 @@ public:
     void saveAnnotation(const QString &bookId, const QVariantMap &annotation);
 
     /// Remove an annotation for a book file.
-    void removeAnnotation(const QString &bookId, const QString &value);
+    void removeAnnotation(const QString &bookId, const QString &annotationKey);
 
     /// @return saved references for a book file.
     QVariantList loadReferences(const QString &bookId);
@@ -81,16 +82,15 @@ public:
     /// Add or update an reference between two books
     void saveReference(const QVariantMap &reference);
 
-    void removeReference(const QString &referenceId, const QString &sourceBookId, const QString &targetBookId, const QString &targetAnchorId);
+    void removeReference(const QString &sourceBookId, const QString &sourceAnchorId);
 
-    /// @return the current leaf revision for a book if revision tracking has been initialized.
-    std::optional<BookRevision> currentBookRevision(const QString &bookId);
+    QVariantList loadReferencesTargeting(const QString &bookId);
 
-    /// Insert an immutable book revision record. Existing records are never updated.
-    bool saveBookRevision(const BookRevision &revision);
+    /// @return the last known current state for a book if it has been initialized.
+    std::optional<BookState> currentBookState(const QString &bookId);
 
-    /// @return all persisted revisions for a book in insertion order.
-    QList<BookRevision> bookRevisions(const QString &bookId);
+    /// Store the current single authoritative state for a book.
+    bool saveBookState(const BookState &state);
 
 Q_SIGNALS:
     /// \brief Fires when the library database file was changed by this or another process.

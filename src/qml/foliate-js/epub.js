@@ -915,8 +915,24 @@ class Loader {
     }
 }
 
-const getHTMLFragment = (doc, id) => doc.getElementById(id)
-    ?? doc.querySelector(`[name="${CSS.escape(id)}"]`)
+const decodeFragment = id => {
+    try {
+        return decodeURIComponent(id)
+    } catch {
+        return id
+    }
+}
+
+const getHTMLFragment = (doc, id) => {
+    const decoded = decodeFragment(id)
+    const candidates = decoded === id ? [id] : [decoded, id]
+    for (const candidate of candidates) {
+        const element = doc.getElementById(candidate)
+            ?? doc.getElementsByName?.(candidate)?.[0]
+        if (element) return element
+    }
+    return null
+}
 
 const getPageSpread = properties => {
     for (const p of properties) {

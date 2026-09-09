@@ -20,7 +20,7 @@ public:
     Q_INVOKABLE QVariantList loadReferences(const QString &bookId) const;
     Q_INVOKABLE QVariantMap loadReferenceBySource(const QString &sourceBookId, const QString &sourceAnchorId) const;
     Q_INVOKABLE void saveReference(const QVariantMap &reference);
-    Q_INVOKABLE void removeReference(const QString &referenceId, const QString &sourceBookId, const QString &targetBookId, const QString &targetAnchorId);
+    Q_INVOKABLE void removeReference(const QString &sourceBookId, const QString &sourceAnchorId);
 
 Q_SIGNALS:
     void referencesChanged(const QString &bookId);

@@ -3,6 +3,8 @@
 
 #include "navigation.h"
 
+#include "bookserverconfig.h"
+
 #include <QByteArray>
 #include <QUrl>
 #include <QUuid>
@@ -39,10 +41,7 @@ public:
             return;
         }
 
-        const bool localBookServer = (scheme == QStringLiteral("http") || scheme == QStringLiteral("https"))
-            && (url.host() == QStringLiteral("127.0.0.1") || url.host() == QStringLiteral("localhost")) && (url.port() == 45961 || url.port() == 45962);
-
-        if (localBookServer) {
+        if (BookServerConfig::matchesBookServer(url)) {
             info.setHttpHeader(QByteArrayLiteral("X-Arianna-Session-Token"), m_sessionToken.toUtf8());
             return;
         }

@@ -25,7 +25,8 @@ Delegates.RoundedItemDelegate {
     required property string mainText
     required property string secondaryText
     required property int currentProgress
-    property bool shrinkCoverOnHover: false
+    property string typeIconSource: ""
+    property bool showPasswordBadge: false
 
     SystemPalette {
         id: myPalette
@@ -62,8 +63,13 @@ Delegates.RoundedItemDelegate {
             id: coverArea
 
             readonly property real baseCoverMargin: Kirigami.Settings.isMobile ? 0 : Kirigami.Units.largeSpacing
-            readonly property real actionRailWidth: Kirigami.Units.gridUnit * 2 + Kirigami.Units.smallSpacing
-            readonly property real hoverCoverInset: gridEntry.shrinkCoverOnHover && gridEntry.hovered ? actionRailWidth * 0.2 : 0
+            readonly property real paintedCoverWidth: coverImage.paintedWidth > 0 ? coverImage.paintedWidth : coverImage.width
+            readonly property real paintedCoverHeight: coverImage.paintedHeight > 0 ? coverImage.paintedHeight : coverImage.height
+            readonly property real paintedCoverLeft: coverImage.x + Math.max(0, (coverImage.width - paintedCoverWidth) / 2)
+            readonly property real paintedCoverTop: coverImage.y + Math.max(0, (coverImage.height - paintedCoverHeight) / 2)
+            readonly property real paintedCoverRight: paintedCoverLeft + paintedCoverWidth
+            readonly property real coverBadgeSize: Math.max(Kirigami.Units.gridUnit * 0.75, paintedCoverWidth * 0.20)
+            readonly property real coverBadgeInset: Math.max(1, coverBadgeSize * 0.04)
 
             Layout.fillWidth: true
             Layout.preferredHeight: gridEntry.width - 2 * Kirigami.Units.largeSpacing
@@ -73,42 +79,35 @@ Delegates.RoundedItemDelegate {
 
                 height: width
 
+                readonly property bool hasCoverSource: source.toString().length > 0
+
                 fillMode: Image.PreserveAspectFit
-                source: gridEntry.imageUrl != 'file://' ? gridEntry.imageUrl : ''
+                source: gridEntry.imageUrl.toString().length > 0 ? gridEntry.imageUrl : ''
+                visible: hasCoverSource
                 asynchronous: true
+                cache: hasCoverSource
 
                 sourceSize {
-                    width: width
-                    height: height
+                    width: coverImage.hasCoverSource ? coverImage.width : 0
+                    height: coverImage.hasCoverSource ? coverImage.height : 0
                 }
 
                 anchors {
                     top: parent.top
                     left: parent.left
                     right: parent.right
-                    topMargin: coverArea.baseCoverMargin + coverArea.hoverCoverInset
+                    topMargin: coverArea.baseCoverMargin
                     leftMargin: coverArea.baseCoverMargin
-                    rightMargin: coverArea.baseCoverMargin + coverArea.hoverCoverInset
-                }
-
-                Behavior on anchors.topMargin {
-                    NumberAnimation {
-                        duration: Kirigami.Units.longDuration
-                        easing.type: Easing.OutCubic
-                    }
-                }
-
-                Behavior on anchors.rightMargin {
-                    NumberAnimation {
-                        duration: Kirigami.Units.longDuration
-                        easing.type: Easing.OutCubic
-                    }
+                    rightMargin: coverArea.baseCoverMargin
                 }
             }
 
             MultiEffect {
                 source: coverImage
-                enabled: !Kirigami.Settings.isMobile // don't use drop shadow on mobile
+                readonly property bool hasVisibleCover: !Kirigami.Settings.isMobile && coverImage.hasCoverSource && coverImage.status === Image.Ready
+
+                enabled: hasVisibleCover // don't use drop shadow on mobile
+                visible: hasVisibleCover
 
                 shadowColor: myPalette.shadow
                 autoPaddingEnabled: true
@@ -129,23 +128,42 @@ Delegates.RoundedItemDelegate {
                 }
 
                 source: gridEntry.iconName
-                visible: source !== undefined
+                visible: gridEntry.iconName.length > 0
+            }
+
+            Image {
+                id: typeIcon
+
+                readonly property bool pdfIcon: source.toString().indexOf("pdf_icon") !== -1
+                readonly property real iconAspectRatio: pdfIcon ? 2 / 3 : 1
+                readonly property real topPaddingCompensation: height * (pdfIcon ? 0.12 : 0.07)
+
+                width: height * iconAspectRatio
+                height: coverArea.coverBadgeSize
+                x: coverArea.paintedCoverLeft + coverArea.coverBadgeInset
+                y: coverArea.paintedCoverTop + coverArea.coverBadgeInset - topPaddingCompensation
+                source: gridEntry.typeIconSource
+                visible: source.toString().length > 0
+                asynchronous: true
+                fillMode: Image.PreserveAspectFit
+
+                sourceSize {
+                    width: Math.max(1, typeIcon.width * Screen.devicePixelRatio)
+                    height: Math.max(1, typeIcon.height * Screen.devicePixelRatio)
+                }
             }
 
             Charts.PieChart {
                 id: chart
 
-                width: Kirigami.Units.gridUnit
-                height: Kirigami.Units.gridUnit
+                width: coverArea.coverBadgeSize
+                height: coverArea.coverBadgeSize
+                x: coverArea.paintedCoverRight - width - coverArea.coverBadgeInset
+                y: coverArea.paintedCoverTop + coverArea.coverBadgeInset
 
                 filled: true
 
-                visible: gridEntry.currentProgress !== 0 && gridEntry.currentProgress !== 100 && gridEntry.iconName === '' && Config.showProgress
-
-                anchors {
-                    right: coverImage.right
-                    top: coverImage.top
-                }
+                visible: !gridEntry.showPasswordBadge && gridEntry.currentProgress !== 0 && gridEntry.currentProgress !== 100 && gridEntry.iconName === '' && Config.showProgress
 
                 range {
                     from: 0
@@ -163,20 +181,38 @@ Delegates.RoundedItemDelegate {
             }
 
             QQC2.Label {
-                visible: gridEntry.currentProgress === 0 && gridEntry.iconName === ''
+                visible: !gridEntry.showPasswordBadge && gridEntry.currentProgress === 0 && gridEntry.iconName === ''
+                x: coverArea.paintedCoverRight - width - coverArea.coverBadgeInset
+                y: coverArea.paintedCoverTop + coverArea.coverBadgeInset
 
                 text: i18nc("should be keep short, inside a label. Will be in uppercase", "New")
                 color: "white"
-                padding: 3
+                padding: Math.max(2, Math.round(coverArea.coverBadgeSize * 0.12))
+                font.pixelSize: Math.max(1, Math.round(coverArea.coverBadgeSize * 0.42))
 
                 background: Rectangle {
                     color: Kirigami.Theme.highlightColor
                     radius: height
                 }
+            }
 
-                anchors {
-                    right: coverImage.right
-                    top: coverImage.top
+            Rectangle {
+                id: passwordBadge
+
+                width: coverArea.coverBadgeSize
+                height: coverArea.coverBadgeSize
+                x: coverArea.paintedCoverRight - width - coverArea.coverBadgeInset
+                y: coverArea.paintedCoverTop + coverArea.coverBadgeInset
+                radius: width / 2
+                color: Kirigami.Theme.alternateBackgroundColor
+                border.color: Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.textColor, Kirigami.Theme.backgroundColor, 0.45)
+                border.width: 1
+                visible: gridEntry.showPasswordBadge
+
+                Kirigami.Icon {
+                    anchors.fill: parent
+                    anchors.margins: Math.max(2, Math.round(parent.width * 0.22))
+                    source: "object-locked-symbolic"
                 }
             }
         }

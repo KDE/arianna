@@ -13,6 +13,7 @@
 #include <QSet>
 #include <QTimer>
 #include <QUrl>
+#include <QtAlgorithms>
 
 struct ContentEntry {
     QString filename;
@@ -41,6 +42,7 @@ public:
 
     bool autoSearch = false;
     bool cacheResults = false;
+    bool balooAvailable = false;
     bool completed = false;
 
     static void appendToList(QueryListProperty *property, ContentQuery *value);
@@ -61,7 +63,8 @@ ContentList::ContentList(QObject *parent)
 {
 #ifdef HAVE_BALOO
     auto baloo = new BalooContentLister(this);
-    if (baloo->balooEnabled()) {
+    d->balooAvailable = baloo->balooEnabled();
+    if (d->balooAvailable) {
         d->actualContentList = baloo;
     } else {
         baloo->deleteLater();
@@ -89,7 +92,10 @@ ContentList::ContentList(QObject *parent)
     };
 }
 
-ContentList::~ContentList() = default;
+ContentList::~ContentList()
+{
+    qDeleteAll(d->entries);
+}
 
 QQmlListProperty<ContentQuery> ContentList::queries()
 {
@@ -104,6 +110,11 @@ bool ContentList::autoSearch() const
 bool ContentList::cacheResults() const
 {
     return d->cacheResults;
+}
+
+bool ContentList::balooAvailable() const
+{
+    return d->balooAvailable;
 }
 
 QString ContentList::getMimetype(const QString &filePath)
@@ -140,6 +151,7 @@ void ContentList::fileFound(const QString &filePath, const QVariantMap &metaData
     d->entries.append(entry);
     d->knownFiles.insert(filePath);
     endInsertRows();
+    Q_EMIT countChanged();
 
     if (d->cacheResults) {
         Private::cachedFiles.append(filePath);
@@ -172,6 +184,7 @@ void ContentList::setCacheResults(bool cacheResults)
 void ContentList::setKnownFiles(const QStringList &results)
 {
     beginResetModel();
+    qDeleteAll(d->entries);
     d->entries.clear();
     d->knownFiles.clear();
     for (const auto &result : results) {
@@ -180,12 +193,25 @@ void ContentList::setKnownFiles(const QStringList &results)
 
         entry->filename = url.fileName();
         entry->filePath = url;
-        entry->metadata = ContentListerBase::metaDataForFile(result);
 
         d->entries.append(entry);
         d->knownFiles.insert(result);
     }
     endResetModel();
+    Q_EMIT countChanged();
+}
+
+void ContentList::setIgnoredFiles(const QStringList &results)
+{
+    beginResetModel();
+    qDeleteAll(d->entries);
+    d->entries.clear();
+    d->knownFiles.clear();
+    for (const auto &result : results) {
+        d->knownFiles.insert(result);
+    }
+    endResetModel();
+    Q_EMIT countChanged();
 }
 
 QHash<int, QByteArray> ContentList::roleNames() const
@@ -220,6 +246,21 @@ int ContentList::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
     return d->entries.count();
+}
+
+int ContentList::count() const
+{
+    return rowCount();
+}
+
+void ContentList::clear()
+{
+    beginResetModel();
+    qDeleteAll(d->entries);
+    d->entries.clear();
+    d->knownFiles.clear();
+    endResetModel();
+    Q_EMIT countChanged();
 }
 
 void ContentList::classBegin()
@@ -296,6 +337,16 @@ void ContentList::addFiles(const QList<QUrl> &filePaths)
         d->manualContentLister->startSearch(d->queries);
         d->manualContentLister->addFiles(filePaths);
     }
+}
+
+QStringList ContentList::filePaths() const
+{
+    QStringList paths;
+    paths.reserve(d->entries.count());
+    for (const auto *entry : std::as_const(d->entries)) {
+        paths.append(entry->filePath.toLocalFile());
+    }
+    return paths;
 }
 
 #include "moc_contentlist.cpp"

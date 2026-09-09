@@ -5,6 +5,21 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonValue>
+
+static QString jsonValueToString(const QJsonValue &value)
+{
+    if (value.isString()) {
+        return value.toString();
+    }
+    if (value.isDouble()) {
+        return QString::number(value.toDouble(), 'g', 15);
+    }
+    if (value.isBool()) {
+        return value.toBool() ? QStringLiteral("true") : QStringLiteral("false");
+    }
+    return {};
+}
 
 TreeItem::TreeItem(const QString &title, const QString &href, const QString &id, const QJsonArray &childs, TreeItem *parent)
     : m_parentItem(parent)
@@ -14,9 +29,9 @@ TreeItem::TreeItem(const QString &title, const QString &href, const QString &id,
 {
     for (const auto &jsonEntry : childs) {
         const auto value = jsonEntry.toObject();
-        auto child = std::make_unique<TreeItem>(value[QStringLiteral("label")].toString(),
-                                                value[QStringLiteral("href")].toString(),
-                                                value[QStringLiteral("id")].toString(),
+        auto child = std::make_unique<TreeItem>(jsonValueToString(value[QStringLiteral("label")]),
+                                                jsonValueToString(value[QStringLiteral("href")]),
+                                                jsonValueToString(value[QStringLiteral("id")]),
                                                 value[QStringLiteral("subitems")].toArray(),
                                                 this);
         appendChild(std::move(child));
@@ -35,7 +50,7 @@ void TreeItem::appendChild(std::unique_ptr<TreeItem> &&item)
 
 TreeItem *TreeItem::child(int row)
 {
-    if (row < 0 || row >= m_childItems.size()) {
+    if (row < 0 || static_cast<size_t>(row) >= m_childItems.size()) {
         return nullptr;
     }
     return m_childItems.at(row).get();
@@ -72,6 +87,7 @@ QVariant TreeItem::data(int role) const
     case TableOfContentModel::HrefRole:
         return m_href;
     case TableOfContentModel::IdRole:
+    case TableOfContentModel::TocIdRole:
         return m_id;
     default:
         return {};
@@ -95,6 +111,7 @@ QHash<int, QByteArray> TableOfContentModel::roleNames() const
         {TitleRole, "title"},
         {HrefRole, "href"},
         {IdRole, "id"},
+        {TocIdRole, "tocId"},
     };
 }
 
@@ -176,9 +193,9 @@ void TableOfContentModel::importFromJson(const QByteArray &json)
     m_rootItem->clear();
     for (const auto &jsonEntry : jsonEntries) {
         const auto value = jsonEntry.toObject();
-        m_rootItem->appendChild(std::make_unique<TreeItem>(value[QStringLiteral("label")].toString(),
-                                                           value[QStringLiteral("href")].toString(),
-                                                           value[QStringLiteral("id")].toString(),
+        m_rootItem->appendChild(std::make_unique<TreeItem>(jsonValueToString(value[QStringLiteral("label")]),
+                                                           jsonValueToString(value[QStringLiteral("href")]),
+                                                           jsonValueToString(value[QStringLiteral("id")]),
                                                            value[QStringLiteral("subitems")].toArray(),
                                                            m_rootItem.get()));
     }

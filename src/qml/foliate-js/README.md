@@ -3,7 +3,7 @@
 Library for rendering e-books in the browser.
 
 Features:
-- Supports EPUB, MOBI, KF8 (AZW3), FB2, CBZ, PDF (experimental; requires PDF.js)
+- Supports EPUB, MOBI, KF8 (AZW3), FB2, CBZ
 - Add support for other formats yourself by implementing the book interface
 - Pure JavaScript
 - Small and modular
@@ -135,11 +135,9 @@ It can read both MOBI and KF8 (.azw3, and combo .mobi files) from a `File` (or `
 
 Note that KF8 files can contain fonts that are zlib-compressed. They need to be decompressed with an external library. `view.js` uses [fflate](https://github.com/101arrowz/fflate) to decompress them.
 
-### PDF and Other Fixed-Layout Formats
+### Fixed-Layout Formats
 
-There is a proof-of-concept, highly experimental adapter for [PDF.js](https://mozilla.github.io/pdf.js/), with which you can show PDFs using the same fixed-layout renderer for EPUBs.
-
-CBZs are similarly handled like fixed-layout EPUBs.
+CBZs are handled like fixed-layout EPUBs.
 
 ### The Renderers
 
@@ -371,4 +369,3 @@ MIT.
 Vendored libraries:
 - [zip.js](https://github.com/gildas-lormeau/zip.js) is licensed under the BSD-3-Clause license.
 - [fflate](https://github.com/101arrowz/fflate) is MIT licensed.
-- [PDF.js](https://mozilla.github.io/pdf.js/) is licensed under Apache.

@@ -10,13 +10,6 @@ const isZip = async file => {
     return arr[0] === 0x50 && arr[1] === 0x4b && arr[2] === 0x03 && arr[3] === 0x04
 }
 
-const isPDF = async file => {
-    const arr = new Uint8Array(await file.slice(0, 5).arrayBuffer())
-    return arr[0] === 0x25
-        && arr[1] === 0x50 && arr[2] === 0x44 && arr[3] === 0x46
-        && arr[4] === 0x2d
-}
-
 const isCBZ = ({ name, type }) =>
     type === 'application/vnd.comicbook+zip' || name.endsWith('.cbz')
 
@@ -102,10 +95,6 @@ export const makeBook = async file => {
             const { EPUB } = await import('./epub.js')
             book = await new EPUB(loader).init()
         }
-    }
-    else if (await isPDF(file)) {
-        const { makePDF } = await import('./pdf.js')
-        book = await makePDF(file)
     }
     else {
         const { isMOBI, MOBI } = await import('./mobi.js')
@@ -216,6 +205,7 @@ export class View extends HTMLElement {
     #tocProgress
     #pageProgress
     #searchResults = new Map()
+    #searchResultColor = 'red'
     #cursorAutohider = new CursorAutohider(this, () =>
         this.hasAttribute('autohide-cursor'))
     isFixedLayout = false
@@ -396,7 +386,7 @@ export class View extends HTMLElement {
                     return
                 }
                 const range = doc ? anchor(doc) : anchor
-                overlayer.add(value, range, Overlayer.outline, { color: 'red' })
+                overlayer.add(value, range, Overlayer.outline, { color: this.#searchResultColor })
             }
             return
         }
@@ -416,6 +406,15 @@ export class View extends HTMLElement {
     }
     deleteAnnotation(annotation) {
         return this.addAnnotation(annotation, true)
+    }
+    setSearchResultColor(color) {
+        const nextColor = typeof color === 'string' && color.trim() ? color.trim() : 'red'
+        if (this.#searchResultColor === nextColor) return
+
+        this.#searchResultColor = nextColor
+        for (const list of this.#searchResults.values())
+            for (const item of list)
+                this.addAnnotation(item).catch(e => console.error(e))
     }
     #getOverlayer(index) {
         return this.renderer.getContents()

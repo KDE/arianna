@@ -37,6 +37,8 @@ class ContentList : public QAbstractListModel, public QQmlParserStatus
      * \brief Whether to cache the search results for later.
      */
     Q_PROPERTY(bool cacheResults READ cacheResults WRITE setCacheResults NOTIFY cacheResultsChanged)
+    Q_PROPERTY(int count READ count NOTIFY countChanged)
+    Q_PROPERTY(bool balooAvailable READ balooAvailable CONSTANT)
 public:
     explicit ContentList(QObject *parent = nullptr);
     ~ContentList() override;
@@ -64,6 +66,7 @@ public:
      * @return whether to cache the results.
      */
     bool cacheResults() const;
+    bool balooAvailable() const;
 
     /**
      * \brief QStrings with names for the extra roles.
@@ -85,6 +88,7 @@ public:
      * @returns the number of total rows(search results) there are in this model.
      */
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    int count() const;
 
     /**
      * Inherited from QmlParserStatus, not implemented.
@@ -119,6 +123,8 @@ public:
      * search results.
      */
     Q_SLOT void setKnownFiles(const QStringList &results);
+    Q_SLOT void setIgnoredFiles(const QStringList &results);
+    Q_INVOKABLE void clear();
     /**
      * \brief Start searching with the current queries list.
      */
@@ -130,6 +136,7 @@ public:
 
     Q_SIGNAL void autoSearchChanged();
     Q_SIGNAL void cacheResultsChanged();
+    Q_SIGNAL void countChanged();
     /**
      * \brief Fires when the search is completed.
      */
@@ -138,6 +145,7 @@ public:
     Q_INVOKABLE static QString getMimetype(const QString &filePath);
 
     Q_INVOKABLE void addFiles(const QList<QUrl> &filePaths);
+    Q_INVOKABLE QStringList filePaths() const;
 
 private:
     bool isComplete() const;

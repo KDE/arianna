@@ -6,7 +6,12 @@ import { FootnoteHandler } from './foliate-js/footnotes.js'
 import { toPangoMarkup } from './markup.js'
 import { Overlayer } from './foliate-js/overlayer.js'
 
-const baseUrl = "http://127.0.0.1:45961"; // baseURL for bookserver
+let baseUrl = ""
+
+const updateBaseUrlFromBookUrl = url => {
+    const parsedUrl = new URL(url)
+    baseUrl = `${parsedUrl.protocol}//${parsedUrl.host}`
+}
 
 let backend;
 let openRequest = 0
@@ -90,8 +95,10 @@ globalThis.showSelection = detail => new Promise(resolve => {
 })
 
 globalThis.selectionAction = action => {
-    selectionAction?.(action)
+    const resolve = selectionAction
     selectionAction = null
+    resolve?.(action)
+    globalThis.reader?.view?.deselect?.()
 }
 
 const format = {}
@@ -114,6 +121,15 @@ const getSelectionRange = sel => {
     if (!sel.rangeCount) return
     const range = sel.getRangeAt(0)
     if (range.collapsed) return
+    return range
+}
+
+const selectionAutoTurnEnabled = view =>
+    view?.renderer?.hasAttribute?.('selection-auto-turn') === true
+
+const rangeForNode = node => {
+    const range = node.ownerDocument.createRange()
+    range.selectNode(node)
     return range
 }
 
@@ -229,8 +245,83 @@ const requestJson = (method, url, body = null) => new Promise((resolve, reject) 
     request.send(body === null ? null : JSON.stringify(body))
 })
 
+const dispatchBookReloadNeeded = (reason, response) => {
+    const modifiedBookIds = Array.isArray(response?.modifiedBookIds) ? response.modifiedBookIds.filter(Boolean) : []
+    if (modifiedBookIds.length === 0)
+        return
+
+    dispatch({
+        type: 'book-reload-needed',
+        payload: {
+            reason,
+            modifiedBookIds,
+            response: response ?? {},
+        },
+    })
+}
+
+const responseWithModifiedBookId = (response, bookId) => {
+    if (!bookId)
+        return response
+
+    const modifiedBookIds = Array.isArray(response?.modifiedBookIds) ? response.modifiedBookIds.filter(Boolean) : []
+    if (!modifiedBookIds.includes(bookId))
+        modifiedBookIds.push(bookId)
+
+    return {
+        ...(response ?? {}),
+        modifiedBookIds,
+    }
+}
+
+const normalizedPageMode = mode => mode === 'single' || mode === 'two' ? mode : 'two'
+
+const positiveNumberOr = (value, fallback) => {
+    const number = Number(value)
+    return Number.isFinite(number) && number > 0 ? number : fallback
+}
+
+const normalizedReaderLayout = layoutOrMode => {
+    const layout = layoutOrMode && typeof layoutOrMode === 'object' ? layoutOrMode : {}
+    const pageMode = typeof layoutOrMode === 'string'
+        ? normalizedPageMode(layoutOrMode)
+        : Number(layout.maxColumnCount) === 1 ? 'single' : 'two'
+    const maxInlineSize = positiveNumberOr(layout.maxInlineSize, 720)
+    const maxBlockSize = positiveNumberOr(layout.maxBlockSize, maxInlineSize * 2)
+    const maxColumnCountValue = positiveNumberOr(layout.maxColumnCount, pageMode === 'single' ? 1 : 2)
+    const maxColumnCount = Math.max(1, Math.round(maxColumnCountValue))
+    const gap = positiveNumberOr(layout.gap, 0.06)
+
+    return {
+        flow: typeof layout.flow === 'string' && layout.flow.length > 0 ? layout.flow : 'paginated',
+        gap,
+        maxInlineSize,
+        maxBlockSize,
+        maxColumnCount,
+        selectionAutoTurn: typeof layout.selectionAutoTurn === 'boolean'
+            ? layout.selectionAutoTurn
+            : maxColumnCount === 1,
+        animated: layout.animated !== false,
+    }
+}
+
+const applyReaderLayout = (renderer, layout) => {
+    const normalizedLayout = normalizedReaderLayout(layout)
+    renderer.setAttribute('flow', normalizedLayout.flow)
+    renderer.setAttribute('gap', normalizedLayout.gap * 100 + '%')
+    renderer.setAttribute('max-inline-size', normalizedLayout.maxInlineSize + 'px')
+    renderer.setAttribute('max-block-size', normalizedLayout.maxBlockSize + 'px')
+    renderer.setAttribute('max-column-count', normalizedLayout.maxColumnCount)
+    if (normalizedLayout.selectionAutoTurn) renderer.setAttribute('selection-auto-turn', '')
+    else renderer.removeAttribute('selection-auto-turn')
+    if (normalizedLayout.animated) renderer.setAttribute('animated', '')
+    else renderer.removeAttribute('animated')
+    return normalizedLayout
+}
+
 const crossReferenceAnchorSelector = 'a[data-role="anchor"][data-anchor-type="crossref"][id]'
 const intraBookReferenceAnchorSelector = 'a[data-role="anchor"][href][id]:not([data-anchor-type="crossref"])'
+const annotationAnchorSelector = '[data-role="anchor"][data-anchor-type="annotation"][id]'
 const epubAnchorSelector = '[data-role="anchor"]'
 const legacyBookReferenceSelector = '.bookref[data-ref]'
 const bookReferenceListSelector = `${crossReferenceAnchorSelector}, ${intraBookReferenceAnchorSelector}, ${legacyBookReferenceSelector}`
@@ -246,6 +337,62 @@ const referenceIdFromElement = el =>
     el.matches?.(crossReferenceAnchorSelector) || el.matches?.(intraBookReferenceAnchorSelector)
         ? el.id
         : el.dataset.ref
+
+const compactAnnotationId = id => {
+    id = `${id ?? ""}`.trim()
+    return id.startsWith('uuid_') ? id.slice(5) : id
+}
+
+const annotationKey = annotation =>
+    `${annotation?.annotationId || annotation?.anchorId || annotation?.cfiRange || annotation?.value || ""}`.trim()
+
+const annotationAnchorElementIds = annotation => {
+    const id = `${annotation?.anchorId || annotation?.annotationId || ""}`.trim()
+    if (!id) return []
+
+    const ids = [id]
+    if (!id.startsWith('uuid_')) ids.unshift(`uuid_${id}`)
+    return [...new Set(ids)]
+}
+
+const rangeForAnnotationAnchor = (doc, annotation) => {
+    for (const id of annotationAnchorElementIds(annotation)) {
+        const wrapper = doc.getElementById(id)
+        if (wrapper?.matches?.(annotationAnchorSelector)) {
+            const range = doc.createRange()
+            range.selectNodeContents(wrapper)
+            return range
+        }
+
+        const begin = doc.getElementById(`${id}_begin`)
+        const end = doc.getElementById(`${id}_end`)
+        if (begin && end) {
+            const range = doc.createRange()
+            range.setStartAfter(begin)
+            range.setEndBefore(end)
+            return range
+        }
+    }
+
+    return null
+}
+
+const annotationDrawKeys = annotation => {
+    const keys = [
+        annotation?.value,
+        annotation?.runtimeCfi,
+        annotation?.cfiRange,
+        annotation?.cfi,
+        annotationKey(annotation),
+        compactAnnotationId(annotation?.anchorId),
+    ]
+        .map(value => `${value ?? ""}`.trim())
+        .filter(Boolean)
+
+    return [...new Set(keys)]
+}
+
+const annotationDrawKey = annotation => annotationDrawKeys(annotation)[0] ?? ""
 
 const referenceHrefFromElement = (section, el) => {
     const id = el.id || el.getAttribute('name') || ""
@@ -319,6 +466,135 @@ const compareBooksByTitle = (left, right) =>
     bookTitle(left).localeCompare(bookTitle(right), undefined, { sensitivity: "base" })
     || (left?.id ?? "").localeCompare(right?.id ?? "", undefined, { sensitivity: "base" })
 
+const defaultSourceAnchorTitle = "S.B. Vers 1.1.1"
+
+const plainTextForHeuristics = value =>
+    compactText(`${value ?? ""}`.replace(/<[^>]+>/g, " "))
+
+const normalizedForHeuristics = value =>
+    plainTextForHeuristics(value)
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLocaleLowerCase()
+
+const bookAbbreviationForTitle = book => {
+    const title = bookTitle(book)
+    const normalizedTitle = normalizedForHeuristics(title)
+    if (/\b(srimad[-\s]*bhagavatam|srimadbhagavatam|bhagavatam)\b/.test(normalizedTitle))
+        return "S.B."
+    if (/\b(bhagavad[-\s]*gita|bhagavadgita|gita)\b/.test(normalizedTitle))
+        return "B.G."
+
+    const initials = plainTextForHeuristics(title)
+        .replace(/['’]/g, "")
+        .split(/[^A-Za-z0-9]+/)
+        .filter(word => word.length > 0 && !/^(the|a|an|der|die|das|ein|eine|und|of|and)$/i.test(word))
+        .slice(0, 4)
+        .map(word => word[0].toLocaleUpperCase())
+
+    return initials.length ? `${initials.join(".")}.` : "Ref."
+}
+
+const bookAbbreviationFromReferenceText = text => {
+    const raw = plainTextForHeuristics(text)
+    if (/\bS\.?\s*B\.?\b/i.test(raw))
+        return "S.B."
+    if (/\bB\.?\s*G\.?\b/i.test(raw))
+        return "B.G."
+
+    const normalized = normalizedForHeuristics(raw)
+    if (/\b(srimad[-\s]*bhagavatam|srimadbhagavatam|bhagavatam)\b/.test(normalized))
+        return "S.B."
+    if (/\b(bhagavad[-\s]*gita|bhagavadgita|gita)\b/.test(normalized))
+        return "B.G."
+
+    return ""
+}
+
+const textPartsForTargetLocation = location => [
+    location?.title,
+    location?.tocTitle,
+    Array.isArray(location?.tocPath) ? location.tocPath.join(" / ") : "",
+    location?.hrefLocation,
+    location?.location,
+    location?.cfiLocation,
+    location?.id,
+].map(plainTextForHeuristics).filter(Boolean)
+
+const referenceCoordinateFromText = text => {
+    const raw = plainTextForHeuristics(text)
+    const dotted = raw.match(/(?:^|[^0-9])(\d{1,3})\.(\d{1,3})(?:\.(\d{1,3}))?(?=$|[^0-9])/)
+    if (dotted)
+        return [dotted[1], dotted[2], dotted[3]].filter(Boolean).join(".")
+
+    const normalized = normalizedForHeuristics(raw)
+    const delimited = normalized.match(/(?:^|[^0-9])(\d{1,3})[-_](\d{1,3})[-_](\d{1,3})(?=$|[^0-9])/)
+    if (delimited)
+        return `${delimited[1]}.${delimited[2]}.${delimited[3]}`
+
+    const full = normalized.match(/(?:canto|skandha|book|buch)\D{0,20}(\d{1,3}).{0,80}(?:chapter|kapitel|adhyaya)\D{0,20}(\d{1,3}).{0,80}(?:verse|vers|text|sloka)\D{0,20}(\d{1,3})/)
+    if (full)
+        return `${full[1]}.${full[2]}.${full[3]}`
+
+    return ""
+}
+
+const referenceKindFromText = text => {
+    const context = normalizedForHeuristics(text)
+    if (/\b(equation|gleichung|formula|formel|eqn?|eq)\b/.test(context))
+        return "Gleichung"
+    if (/\b(verse|vers|sloka)\b/.test(context) || /\btext\s+\d{1,3}\b/.test(context))
+        return "Vers"
+    if (/\b(chapter|kapitel|canto|section|abschnitt)\b/.test(context))
+        return "Kapitel"
+
+    return ""
+}
+
+const referenceCoordinateFromTargetLocation = location => {
+    const parts = textPartsForTargetLocation(location)
+    for (const part of parts) {
+        const coordinate = referenceCoordinateFromText(part)
+        if (coordinate)
+            return coordinate
+    }
+
+    const normalizedParts = parts.map(normalizedForHeuristics)
+    const canto = normalizedParts.map(part => part.match(/(?:canto|skandha|book|buch)\D{0,20}(\d{1,3})/)?.[1]).find(Boolean)
+    const chapter = normalizedParts.map(part => part.match(/(?:chapter|kapitel|adhyaya)\D{0,20}(\d{1,3})/)?.[1]).find(Boolean)
+    const verse = normalizedParts.map(part => part.match(/(?:verse|vers|text|sloka)\D{0,20}(\d{1,3})/)?.[1]).find(Boolean)
+    if (canto && chapter && verse)
+        return `${canto}.${chapter}.${verse}`
+    if (chapter && verse)
+        return `${chapter}.${verse}`
+    if (chapter)
+        return chapter
+
+    return ""
+}
+
+const referenceKindFromTargetLocation = (location, coordinate) => {
+    const explicitKind = referenceKindFromText(textPartsForTargetLocation(location).join(" / "))
+    if (explicitKind)
+        return explicitKind
+    if (coordinate.split(".").length >= 3)
+        return "Vers"
+    if (location?.type === "navigation" || location?.type === "document")
+        return "Kapitel"
+
+    return coordinate ? "Vers" : "Kapitel"
+}
+
+const suggestedSourceAnchorTitle = (targetBook, targetLocation, sourceReferenceText = "") => {
+    if (!targetBook)
+        return ""
+
+    const abbreviation = bookAbbreviationFromReferenceText(sourceReferenceText) || bookAbbreviationForTitle(targetBook)
+    const coordinate = referenceCoordinateFromText(sourceReferenceText) || referenceCoordinateFromTargetLocation(targetLocation)
+    const kind = referenceKindFromText(sourceReferenceText) || referenceKindFromTargetLocation(targetLocation, coordinate)
+    return [abbreviation, kind, coordinate].filter(Boolean).join(" ")
+}
+
 const optionLabelForBook = book => {
     const authors = authorsForBook(book).join(", ")
     const title = bookTitle(book)
@@ -337,6 +613,8 @@ const appendTargetBookGroup = (select, label, books, selectedBookId) => {
         option.value = book.id
         option.textContent = optionLabelForBook(book)
         option.selected = book.id === selectedBookId
+        option.dataset.bookTitle = bookTitle(book)
+        option.dataset.bookAuthors = authorsForBook(book).join(", ")
         group.append(option)
     }
 
@@ -376,20 +654,49 @@ const populateTargetBookSelect = async (targetBookSelect, sourceBookId) => {
     appendTargetBookGroup(targetBookSelect, "Andere Bücher", otherBooks, sourceBookId)
 }
 
-const optionLabelForTargetLocation = location => {
-    const base = location.location || location.id || ""
-    const preview = (location.previewHtml || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
-    return preview ? `${base} - ${preview.slice(0, 80)}` : base
+const textPreviewForTargetLocation = location =>
+    (location?.previewHtml || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
+
+const fragmentLabelForTargetLocation = location => {
+    const value = location?.hrefLocation || location?.location || location?.id || ""
+    const fragmentIndex = value.indexOf("#")
+    if (fragmentIndex >= 0)
+        return `#${value.slice(fragmentIndex + 1)}`
+
+    const parts = value.split("/")
+    return parts.at(-1) || value
 }
 
-const setTargetLocationFields = (option, targetAnchorIdInput, targetLocationInput, targetPreviewHtmlInput, targetCFIInput) => {
+const optionLabelForTargetLocation = location => {
+    const base = location.hrefLocation || location.location || location.id || ""
+    const preview = textPreviewForTargetLocation(location)
+    const title = (location.title || preview || "").trim()
+    const numericDepth = Number(location.tocDepth)
+    const depth = Number.isFinite(numericDepth) ? Math.max(0, Math.min(numericDepth, 8)) : 0
+    const type = location.type || ""
+
+    if (type === "navigation") {
+        const label = title || base
+        return `${"  ".repeat(depth)}${label}`
+    }
+
+    const labelBase = fragmentLabelForTargetLocation(location)
+    const labelText = title && title !== labelBase ? `${labelBase} - ${title.slice(0, 80)}` : labelBase
+    const childDepth = location.tocTitle ? Math.max(depth, 1) : depth
+    return `${"  ".repeat(childDepth)}- ${labelText}`
+}
+
+const setTargetLocationFields = (option, targetLocationInput, targetPreviewHtmlInput, targetCFIInput, options = {}) => {
+    const updatePreviewHtml = options.updatePreviewHtml !== false
     const hasSelection = Boolean(option?.value)
     if (targetLocationInput)
         targetLocationInput.value = hasSelection ? option.value : ""
-    if (targetAnchorIdInput)
-        targetAnchorIdInput.value = hasSelection ? option.dataset.targetAnchorId ?? option.value : ""
-    if (targetPreviewHtmlInput)
+    if (targetPreviewHtmlInput && updatePreviewHtml) {
         targetPreviewHtmlInput.value = hasSelection ? option.dataset.previewHtml ?? "" : ""
+        targetPreviewHtmlInput.dataset.previewEdited = "false"
+    } else if (targetPreviewHtmlInput && !hasSelection && targetPreviewHtmlInput.dataset.previewEdited !== "true") {
+        targetPreviewHtmlInput.value = ""
+    }
     if (targetCFIInput) {
         if (hasSelection)
             targetCFIInput.value = ""
@@ -397,12 +704,12 @@ const setTargetLocationFields = (option, targetAnchorIdInput, targetLocationInpu
     }
 }
 
-const populateTargetLocationSelect = async (targetBookId, targetLocationSelect, targetAnchorIdInput, targetLocationInput, targetPreviewHtmlInput, targetCFIInput) => {
+const populateTargetLocationSelect = async (targetBookId, targetLocationSelect, targetLocationInput, targetPreviewHtmlInput, targetCFIInput) => {
     if (!targetLocationSelect)
         return
 
     targetLocationSelect.textContent = ""
-    setTargetLocationFields(null, targetAnchorIdInput, targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
+    setTargetLocationFields(null, targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
 
     const placeholder = document.createElement("option")
     placeholder.value = ""
@@ -419,25 +726,200 @@ const populateTargetLocationSelect = async (targetBookId, targetLocationSelect, 
         if (!location?.id || !location?.location)
             continue
 
+        const readerLocation = location.readerLocation || location.location
+        const hrefLocation = location.hrefLocation || location.location
         const option = document.createElement("option")
-        option.value = location.location
+        option.value = readerLocation
         option.textContent = optionLabelForTargetLocation(location)
-        option.dataset.targetAnchorId = location.id
-        option.dataset.location = location.location
+        option.dataset.location = readerLocation
+        option.dataset.hrefLocation = hrefLocation
+        option.dataset.cfiLocation = location.cfiLocation || ""
         option.dataset.previewHtml = location.previewHtml ?? ""
+        option.dataset.locationTitle = location.title ?? ""
+        option.dataset.locationType = location.type ?? ""
+        option.dataset.tocTitle = location.tocTitle ?? ""
+        option.dataset.tocPath = JSON.stringify(Array.isArray(location.tocPath) ? location.tocPath : [])
+        option.title = [Array.isArray(location.tocPath) ? location.tocPath.join(" / ") : "", hrefLocation, location.cfiLocation || "", textPreviewForTargetLocation(location)]
+            .filter(Boolean)
+            .join("\n")
         targetLocationSelect.append(option)
     }
 }
 
+const selectedTargetBookForTitle = targetBookSelect => {
+    const option = targetBookSelect?.selectedOptions?.[0]
+    if (!option?.value)
+        return null
+
+    return {
+        id: option.value,
+        title: option.dataset.bookTitle || option.textContent || option.value,
+        author: option.dataset.bookAuthors || "",
+    }
+}
+
+const selectedTargetLocationForTitle = targetLocationSelect => {
+    const option = targetLocationSelect?.selectedOptions?.[0]
+    if (!option?.value)
+        return null
+
+    let tocPath = []
+    try {
+        tocPath = JSON.parse(option.dataset.tocPath || "[]")
+    } catch {
+        tocPath = []
+    }
+
+    return {
+        id: option.value,
+        location: option.dataset.location || option.value,
+        hrefLocation: option.dataset.hrefLocation || "",
+        cfiLocation: option.dataset.cfiLocation || "",
+        previewHtml: option.dataset.previewHtml || "",
+        title: option.dataset.locationTitle || "",
+        type: option.dataset.locationType || "",
+        tocTitle: option.dataset.tocTitle || "",
+        tocPath: Array.isArray(tocPath) ? tocPath : [],
+    }
+}
+
+const updateSourceAnchorTitleSuggestion = (sourceAnchorTitleInput, targetBookSelect, targetLocationSelect, sourceReferenceText = "", force = false) => {
+    if (!sourceAnchorTitleInput)
+        return
+
+    if (!force && sourceAnchorTitleInput.dataset.autoTitle === "false" && sourceAnchorTitleInput.value.trim())
+        return
+
+    const suggestion = suggestedSourceAnchorTitle(
+        selectedTargetBookForTitle(targetBookSelect),
+        selectedTargetLocationForTitle(targetLocationSelect),
+        sourceReferenceText
+    ) || defaultSourceAnchorTitle
+    sourceAnchorTitleInput.value = suggestion
+    sourceAnchorTitleInput.dataset.autoTitle = "true"
+}
+
+const refreshReferenceOverview = () => {
+    try {
+        if (backend && typeof backend.loadReferenceOverview === "function")
+            backend.loadReferenceOverview()
+    } catch (error) {
+        console.warn("Unable to refresh reference overview", error)
+    }
+}
+
+const selectTargetLocationOption = (targetLocationSelect, targetLocationInput, targetPreviewHtmlInput, targetCFIInput, preferred = {}) => {
+    if (!targetLocationSelect)
+        return false
+
+    const preferredLocation = preferred.targetLocation ?? ""
+    const preferredLocations = [preferredLocation, preferred.targetHrefLocation ?? "", preferred.targetCfiLocation ?? ""].filter(Boolean)
+    let optionToSelect = null
+    for (const option of Array.from(targetLocationSelect.options)) {
+        if (!option.value)
+            continue
+
+        if (preferredLocations.some(location =>
+            option.value === location || option.dataset.location === location || option.dataset.hrefLocation === location || option.dataset.cfiLocation === location)) {
+            optionToSelect = option
+            break
+        }
+    }
+
+    if (!optionToSelect && preferredLocation) {
+        optionToSelect = document.createElement("option")
+        optionToSelect.value = preferredLocation
+        optionToSelect.textContent = preferredLocation
+        optionToSelect.dataset.location = preferredLocation
+        optionToSelect.dataset.hrefLocation = preferred.targetHrefLocation ?? ""
+        optionToSelect.dataset.cfiLocation = preferred.targetCfiLocation ?? (preferredLocation.startsWith("epubcfi(") ? preferredLocation : "")
+        optionToSelect.dataset.previewHtml = preferred.targetPreviewHtml ?? ""
+        optionToSelect.dataset.locationTitle = preferred.targetLocationTitle ?? ""
+        optionToSelect.dataset.locationType = preferred.targetLocationType ?? ""
+        optionToSelect.dataset.tocTitle = preferred.targetTocTitle ?? ""
+        optionToSelect.dataset.tocPath = JSON.stringify(Array.isArray(preferred.targetTocPath) ? preferred.targetTocPath : [])
+        optionToSelect.title = [preferredLocation, textPreviewForTargetLocation({ previewHtml: preferred.targetPreviewHtml ?? "" })]
+            .filter(Boolean)
+            .join("\n")
+        targetLocationSelect.append(optionToSelect)
+    }
+
+    if (!optionToSelect)
+        return false
+
+    if (Object.prototype.hasOwnProperty.call(preferred, "targetPreviewHtml")) {
+        optionToSelect.dataset.previewHtml = preferred.targetPreviewHtml ?? ""
+    }
+
+    targetLocationSelect.value = optionToSelect.value
+    setTargetLocationFields(optionToSelect, targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
+    return true
+}
+
+const confirmReferenceDeletion = () => new Promise(resolve => {
+    const dialog = document.getElementById("delete-reference-dialog")
+    if (!dialog) {
+        resolve(globalThis.confirm?.("Referenz wirklich löschen?") ?? false)
+        return
+    }
+
+    const cancelButton = document.getElementById("cancelDeleteReferenceButton")
+    const confirmButton = document.getElementById("confirmDeleteReferenceButton")
+    let settled = false
+    const finish = result => {
+        if (settled)
+            return
+
+        settled = true
+        if (cancelButton)
+            cancelButton.onclick = null
+        if (confirmButton)
+            confirmButton.onclick = null
+        dialog.oncancel = null
+        dialog.onclose = null
+        closeDialog(dialog)
+        resolve(result)
+    }
+
+    if (cancelButton)
+        cancelButton.onclick = event => {
+            event.preventDefault()
+            finish(false)
+        }
+    if (confirmButton)
+        confirmButton.onclick = event => {
+            event.preventDefault()
+            finish(true)
+        }
+    dialog.oncancel = event => {
+        event.preventDefault()
+        finish(false)
+    }
+    dialog.onclose = () => finish(false)
+
+    if (!dialog.open)
+        dialog.showModal()
+})
+
+const hasReferencePreviewHtml = previewHtml => {
+    if (previewHtml === null || previewHtml === undefined)
+        return false
+
+    return String(previewHtml).trim().length > 0
+}
+
 const createReference = (sourceBookId, cfi, text, callback, options = {}) => {
     const createReferenceDialog = document.getElementById("create-reference-dialog")
+    const createReferenceHeader = document.getElementById("createReferenceHeader")
     const createReferenceForm = document.getElementById("createReferenceForm")
     const targetBookSelect = document.getElementById("targetBookId")
     const targetLocationSelect = document.getElementById("targetLocationSelect")
-    const targetAnchorIdInput = document.getElementById("targetAnchorId")
+    const sourceAnchorTitleInput = document.getElementById("sourceAnchorTitle")
     const targetCFIInput = document.getElementById("targetCFI")
     const targetLocationInput = document.getElementById("targetLocation")
     const targetPreviewHtmlInput = document.getElementById("targetPreviewHtml")
+    const submitReferenceButton = document.getElementById("submitReferenceButton")
+    const editMode = Boolean(options.editMode)
 
     if (!createReferenceDialog || !createReferenceForm || !targetBookSelect || !targetLocationSelect) {
         console.warn("Create reference dialog is missing required elements")
@@ -446,40 +928,76 @@ const createReference = (sourceBookId, cfi, text, callback, options = {}) => {
     }
 
     createReferenceForm.reset()
-    populateTargetLocationSelect("", targetLocationSelect, targetAnchorIdInput, targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
+    if (createReferenceHeader)
+        createReferenceHeader.textContent = editMode ? "Referenz bearbeiten" : "Referenz erstellen"
+    if (submitReferenceButton)
+        submitReferenceButton.textContent = editMode ? (globalThis.uiText?.referenceDialog?.saveChangeOfReference ?? "save change of reference") : "Referenz erstellen"
+    if (sourceAnchorTitleInput) {
+        sourceAnchorTitleInput.value = options.sourceAnchorTitle ?? ""
+        sourceAnchorTitleInput.dataset.autoTitle = options.sourceAnchorTitle ? "false" : "true"
+        sourceAnchorTitleInput.oninput = () => {
+            sourceAnchorTitleInput.dataset.autoTitle = "false"
+        }
+    }
+    if (targetPreviewHtmlInput) {
+        targetPreviewHtmlInput.value = ""
+        targetPreviewHtmlInput.dataset.previewEdited = "false"
+        targetPreviewHtmlInput.oninput = () => {
+            targetPreviewHtmlInput.dataset.previewEdited = "true"
+        }
+    }
+    populateTargetLocationSelect("", targetLocationSelect, targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
     populateTargetBookSelect(targetBookSelect, sourceBookId)
-        .then(() => {
-            const refreshTargetLocations = () => {
+        .then(async () => {
+            const preferredTarget = {
+                targetLocation: options.targetLocation ?? "",
+                targetHrefLocation: options.targetHrefLocation ?? "",
+                targetCfiLocation: options.targetCfiLocation ?? "",
+                targetPreviewHtml: options.targetPreviewHtml ?? "",
+            }
+            if (options.targetBookId)
+                targetBookSelect.value = options.targetBookId
+
+            const refreshTargetLocations = (preferred = {}) => {
                 if (targetCFIInput)
                     targetCFIInput.value = ""
-                populateTargetLocationSelect(targetBookSelect.value, targetLocationSelect, targetAnchorIdInput, targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
+                return populateTargetLocationSelect(targetBookSelect.value, targetLocationSelect, targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
+                    .then(() => {
+                        selectTargetLocationOption(targetLocationSelect, targetLocationInput, targetPreviewHtmlInput, targetCFIInput, preferred)
+                        updateSourceAnchorTitleSuggestion(sourceAnchorTitleInput, targetBookSelect, targetLocationSelect, text)
+                    })
                     .catch(error => console.warn("Unable to load target locations", error))
             }
-            targetBookSelect.oninput = refreshTargetLocations
-            targetBookSelect.onchange = refreshTargetLocations
-            targetLocationSelect.onchange = () =>
-                setTargetLocationFields(targetLocationSelect.selectedOptions[0], targetAnchorIdInput, targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
+            targetBookSelect.oninput = () => refreshTargetLocations()
+            targetBookSelect.onchange = () => refreshTargetLocations()
+            targetLocationSelect.onchange = () => {
+                setTargetLocationFields(targetLocationSelect.selectedOptions[0], targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
+                updateSourceAnchorTitleSuggestion(sourceAnchorTitleInput, targetBookSelect, targetLocationSelect, text)
+            }
             if (targetCFIInput) {
                 targetCFIInput.oninput = () => {
                     if (targetCFIInput.value.trim()) {
                         targetLocationSelect.value = ""
-                        setTargetLocationFields(null, targetAnchorIdInput, targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
+                        setTargetLocationFields(null, targetLocationInput, targetPreviewHtmlInput, targetCFIInput, { updatePreviewHtml: false })
+                        updateSourceAnchorTitleSuggestion(sourceAnchorTitleInput, targetBookSelect, targetLocationSelect, text)
                     }
                 }
             }
 
+            updateSourceAnchorTitleSuggestion(sourceAnchorTitleInput, targetBookSelect, targetLocationSelect, text)
+
             if (targetBookSelect.value)
-                refreshTargetLocations()
+                await refreshTargetLocations(preferredTarget)
 
             createReferenceForm.onsubmit = event => {
                 event.preventDefault()
                 const hasSelectedTargetLocation = Boolean(targetLocationSelect.value)
                 if (hasSelectedTargetLocation)
-                    setTargetLocationFields(targetLocationSelect.selectedOptions[0], targetAnchorIdInput, targetLocationInput, targetPreviewHtmlInput, targetCFIInput)
+                    setTargetLocationFields(targetLocationSelect.selectedOptions[0], targetLocationInput, targetPreviewHtmlInput, targetCFIInput, { updatePreviewHtml: false })
 
                 const targetLocation = hasSelectedTargetLocation ? targetLocationInput?.value ?? "" : ""
-                const targetAnchorId = hasSelectedTargetLocation ? targetAnchorIdInput?.value || targetLocation : ""
-                const targetPreviewHtml = hasSelectedTargetLocation ? targetPreviewHtmlInput?.value ?? "" : ""
+                const targetPreviewHtml = targetPreviewHtmlInput?.value ?? ""
+                const targetPreviewHtmlEdited = targetPreviewHtmlInput?.dataset.previewEdited === "true"
                 const targetCFI = hasSelectedTargetLocation ? "" : (targetCFIInput?.value.trim() ?? "")
 
                 if (!targetBookSelect.value || (!hasSelectedTargetLocation && !targetCFI)) {
@@ -491,16 +1009,19 @@ const createReference = (sourceBookId, cfi, text, callback, options = {}) => {
                 requestJson("POST", `${baseUrl}/${encodeURIComponent(sourceBookId)}/ref`, {
                     cfi,
                     sourceAnchorId: options.sourceAnchorId ?? "",
+                    sourceAnchorTitle: sourceAnchorTitleInput?.value.trim() ?? "",
                     text,
                     targetBookId: targetBookSelect.value,
-                    targetAnchorId,
                     targetLocation,
                     targetPreviewHtml,
+                    targetPreviewHtmlEdited,
                     targetCFI,
                 })
-                    .then(() => {
+                    .then(response => {
+                        const reloadResponse = responseWithModifiedBookId(response, sourceBookId)
                         closeDialog(createReferenceDialog)
-                        callback(true)
+                        dispatchBookReloadNeeded(editMode ? "reference-anchor-updated" : "reference-anchor-created", reloadResponse)
+                        callback(true, reloadResponse)
                     })
                     .catch(error => {
                         if (error.status === 409 && error.responseJson?.error === "manualAnchorRequired") {
@@ -514,7 +1035,11 @@ const createReference = (sourceBookId, cfi, text, callback, options = {}) => {
                             })
                             if (error.responseJson.referenceStored)
                                 closeDialog(createReferenceDialog)
-                            callback(Boolean(error.responseJson.referenceStored))
+                            const reloadResponse = error.responseJson.referenceStored
+                                ? responseWithModifiedBookId(error.responseJson, sourceBookId)
+                                : error.responseJson
+                            dispatchBookReloadNeeded("reference-anchor-created", reloadResponse)
+                            callback(Boolean(error.responseJson.referenceStored), reloadResponse)
                             return
                         }
 
@@ -532,11 +1057,41 @@ const createReference = (sourceBookId, cfi, text, callback, options = {}) => {
         })
 }
 
-const open = async (url, initCfi, bookId) => {
+const setImageNotInverse = (bookId, imageContext) => {
+    if (!bookId || !imageContext?.cfi)
+        return Promise.reject(new Error("Missing image not_inverse context"))
+
+    return requestJson("POST", `${baseUrl}/${encodeURIComponent(bookId)}/image/not-inverse`, {
+        cfi: imageContext.cfi,
+        src: imageContext.src ?? "",
+    })
+}
+
+const open = async (url, initCfi, bookId, initialLayout) => {
     const request = ++openRequest
     closeCurrentReader()
+    updateBaseUrlFromBookUrl(url)
 
     const response = await fetch(url);
+    if (!response.ok) {
+        const responseText = await response.text()
+        let payload = {
+            httpStatus: response.status,
+            status: `http-${response.status}`,
+            message: responseText || `HTTP ${response.status}`,
+        }
+        try {
+            const responseJson = responseText ? JSON.parse(responseText) : null
+            if (responseJson && typeof responseJson === 'object') {
+                payload = { ...responseJson, httpStatus: response.status }
+            }
+        } catch (e) {
+            // Keep the textual payload for non-JSON HTTP errors.
+        }
+        dispatch({ type: 'book-error', payload })
+        return
+    }
+
     const file = await response.blob();
     file.name = response.url.split('/').pop();
     await yieldToBrowser()
@@ -591,7 +1146,7 @@ const open = async (url, initCfi, bookId) => {
         dispatch({ type: 'book-error', payload: 'unsupported-type' }) //payload type will change here.
         return
     }
-    const reader = new Reader(book, initCfi, bookId)
+    const reader = new Reader(book, initCfi, bookId, initialLayout)
     globalThis.reader = reader
     await reader.init()
     if (request !== openRequest) {
@@ -599,11 +1154,16 @@ const open = async (url, initCfi, bookId) => {
         reader.close()
         return
     }
-    dispatch({ type: 'book-ready', payload: { book, reader } })
+    const readyBook = {
+        metadata: book.metadata ?? null,
+        toc: book.toc ?? null,
+        pageList: book.pageList ?? null,
+    }
+    dispatch({ type: 'book-ready', payload: { book: readyBook } })
 }
 
-globalThis.openSync = function (url, initCfi, bookId) {
-    open(url, initCfi, bookId).catch(e => {
+globalThis.openSync = function (url, initCfi, bookId, initialLayout) {
+    open(url, initCfi, bookId, initialLayout).catch(e => {
         console.error(e)
         dispatch({ type: 'book-error', payload: e?.message ?? String(e) })
     });
@@ -837,42 +1397,152 @@ class BookReferenceHandler {
         this.bookId = bookId;
     }
 
-    async handle(book, event) {
-        const { ref, text = "", title = "" } = event.detail;
+    async #loadReference(book, detail = {}, options = {}) {
+        const { ref, text = "", title = "" } = detail;
         if (!ref)
-            return
+            return null
 
         const source = ref;
-        const dialog = document.getElementById("reference-dialog");
-        const preview = document.getElementById("referencePreview");
-        if (!dialog) return
-        const sourceInput = dialog.querySelector('[name="source"]');
-        if (sourceInput) {
-            sourceInput.value = source;
-        }
 
         const ReferenceResponse = await fetch(
             `${baseUrl}/${encodeURIComponent(this.bookId)}/ref/${encodeURIComponent(ref)}`
         );
         if (ReferenceResponse.status === 404) {
-            closeDialog(dialog)
+            if (options.createIfMissing === false)
+                return null
+
             createReference(this.bookId, "", text, success => {
                 if (success) console.log("Reference stored for existing source anchor:", ref);
                 else console.log("Reference not stored for existing source anchor:", ref);
             }, {
                 sourceAnchorId: ref,
+                sourceAnchorTitle: title,
             })
-            return
+            return null
         }
         if (!ReferenceResponse.ok) {
             throw new Error(`Unable to load reference ${ref}: HTTP ${ReferenceResponse.status}`)
         }
         const reference = await ReferenceResponse.json();
+        const sourceAnchorTitle = reference.sourceAnchorTitle ?? title
+        const targetLocation = reference.location ?? reference.targetLocation ?? reference.target?.location ?? ""
+        const targetPreviewHtml = reference.target?.previewHtml ?? reference.targetPreviewHtml ?? reference.previewHtml ?? ""
+        const targetBookId = reference.targetBookId ?? reference.target?.targetBookId ?? ""
+        const targetHrefLocation = reference.targetHrefLocation ?? reference.target?.hrefLocation ?? ""
+        const targetCfiLocation = reference.targetCfiLocation ?? reference.target?.cfiLocation ?? ""
+        const targetNavigationLocation = targetHrefLocation || targetLocation
+        const targetEntry = reference.target?.entry ?? null
+        const sourceTitle = book?.metadata?.title || book?.metadata?.identifier || ''
+
+        return {
+            ref,
+            text,
+            title,
+            source,
+            reference,
+            sourceAnchorTitle,
+            targetLocation,
+            targetPreviewHtml,
+            targetBookId,
+            targetHrefLocation,
+            targetCfiLocation,
+            targetNavigationLocation,
+            targetEntry,
+            sourceTitle,
+        }
+    }
+
+    #openReference(context, dialog = null) {
+        if (!context?.targetNavigationLocation) {
+            console.warn('No target location available for reference');
+            return false;
+        }
+
+        try {
+            if (backend && typeof backend.openReferencePage === 'function') {
+                closeDialog(dialog);
+                backend.openReferencePage(
+                    context.targetNavigationLocation,
+                    context.targetEntry,
+                    context.reference.target?.readOnly ?? false,
+                    context.sourceTitle
+                );
+                return true;
+            }
+
+            console.warn('backend.openReferencePage is not available');
+        } catch (e) {
+            console.warn('Failed to open reference page', e);
+        }
+
+        return false;
+    }
+
+    #editReference(book, context, dialog = null) {
+        closeDialog(dialog)
+        createReference(this.bookId, "", context.text, (success, response = {}) => {
+            if (!success)
+                return
+
+            const updatedSourceAnchorTitle = response.sourceAnchorTitle ?? context.sourceAnchorTitle
+            refreshReferenceOverview()
+            this.handle(book, {
+                detail: {
+                    ref: context.ref,
+                    text: context.text,
+                    title: updatedSourceAnchorTitle,
+                }
+            }).catch(error => console.warn("Unable to reload edited reference", error))
+        }, {
+            editMode: true,
+            sourceAnchorId: context.ref,
+            sourceAnchorTitle: context.sourceAnchorTitle,
+            targetBookId: context.targetBookId,
+            targetLocation: context.targetLocation,
+            targetHrefLocation: context.targetHrefLocation,
+            targetCfiLocation: context.targetCfiLocation,
+            targetPreviewHtml: context.targetPreviewHtml,
+        })
+    }
+
+    async #deleteReference(context, dialog = null) {
+        if (!await confirmReferenceDeletion())
+            return
+
+        try {
+            const response = await requestJson("DELETE", `${baseUrl}/${encodeURIComponent(this.bookId)}/ref/${encodeURIComponent(context.ref)}`)
+            closeDialog(dialog)
+            refreshReferenceOverview()
+            dispatchBookReloadNeeded("reference-anchor-deleted", response)
+        } catch (error) {
+            console.warn("Unable to delete reference", error)
+        }
+    }
+
+    async handle(book, event) {
+        const dialog = document.getElementById("reference-dialog");
+        if (!dialog) return
+
+        const context = await this.#loadReference(book, event.detail)
+        if (!context)
+            return
+
+        if (!hasReferencePreviewHtml(context.targetPreviewHtml) && context.targetNavigationLocation) {
+            this.#openReference(context)
+            return
+        }
+
+        const preview = document.getElementById("referencePreview");
+        const sourceInput = dialog.querySelector('[name="source"]');
+        if (sourceInput) {
+            sourceInput.value = context.source;
+        }
+
         if (!dialog.open) dialog.showModal();
         if (!preview) {
             console.warn('referencePreview element not found');
         } else {
-            const previewHtml = reference.target?.previewHtml ?? reference.previewHtml;
+            const previewHtml = context.targetPreviewHtml;
             preview.style.textAlign = 'justify';
 
             if (previewHtml) {
@@ -889,39 +1559,51 @@ class BookReferenceHandler {
 
         setReferenceHeader(
             document.getElementById("referenceHeader"),
-            title,
-            reference.target?.shortName ?? reference.shortName ?? "Referenz"
+            context.sourceAnchorTitle,
+            context.reference.target?.shortName ?? context.reference.shortName ?? "Referenz"
         )
 
         // Preview oder Navigation...
         const openRefBtn = document.getElementById('openReferenceButton');
         if (openRefBtn) {
-            openRefBtn.onclick = () => {
-                const targetLocation = reference.target?.location ?? reference.location;
-                if (!targetLocation) {
-                    console.warn('No target location available for reference');
-                    return;
-                }
-
-                const sourceTitle = book?.metadata?.title || book?.metadata?.identifier || '';
-
-                try {
-                    if (backend && typeof backend.openReferencePage === 'function') {
-                        closeDialog(dialog);
-                        backend.openReferencePage(
-                            targetLocation,
-                            reference.target?.entry ?? null,
-                            reference.target?.readOnly ?? false,
-                            sourceTitle
-                        );
-                    } else {
-                        console.warn('backend.openReferencePage is not available');
-                    }
-                } catch (e) {
-                    console.warn('Failed to open reference page', e);
-                }
-            };
+            openRefBtn.onclick = () => this.#openReference(context, dialog);
         }
+
+        const editRefBtn = document.getElementById('editReferenceButton')
+        if (editRefBtn) {
+            editRefBtn.onclick = () => this.#editReference(book, context, dialog)
+        }
+
+        const deleteRefBtn = document.getElementById('deleteReferenceButton')
+        if (deleteRefBtn) {
+            deleteRefBtn.onclick = () => this.#deleteReference(context, dialog)
+        }
+    }
+
+    async showContextMenu(book, detail) {
+        const context = await this.#loadReference(book, detail, { createIfMissing: false })
+        if (!context)
+            return
+
+        globalThis.showSelection({
+            type: 'reference',
+            ref: context.ref,
+            text: context.text,
+            title: context.sourceAnchorTitle,
+            canOpen: Boolean(context.targetNavigationLocation),
+        }).then(action => {
+            switch (action) {
+                case 'open-reference':
+                    this.#openReference(context)
+                    break
+                case 'edit-reference':
+                    this.#editReference(book, context)
+                    break
+                case 'delete-reference':
+                    this.#deleteReference(context)
+                    break
+            }
+        })
     }
 }
 
@@ -931,16 +1613,19 @@ class Reader {
         document.documentElement, () => this.autohideCursor)
     #footnoteHandler = new FootnoteHandler()
     #bookReferenceHandler;
+    #annotationKeyByValue = new Map()
+    #contextImage = null
     style = {
         spacing: 1.4,
         justify: true,
         hyphenate: true,
         invert: false,
     }
-    constructor(book, initCfi, bookId) {
+    constructor(book, initCfi, bookId, initialLayout) {
         this.book = book
         this.initCfi = initCfi;
         this.bookId = bookId || book.metadata.identifier;
+        this.initialLayout = normalizedReaderLayout(initialLayout);
         this.#bookReferenceHandler = new BookReferenceHandler(this.bookId);
         if (book.metadata?.description)
             book.metadata.description = toPangoMarkup(book.metadata.description)
@@ -1003,6 +1688,10 @@ class Reader {
         document.body.append(this.view)
         this.sectionFractions = this.view.getSectionFractions()
         await this.view.open(this.book)
+        const initialRenderer = this.view?.renderer
+        if (initialRenderer && !this.view.isFixedLayout) {
+            applyReaderLayout(initialRenderer, this.initialLayout)
+        }
         this.#handleEvents()
         await this.view.init({ lastLocation: this.initCfi })
     }
@@ -1086,6 +1775,125 @@ class Reader {
                 dispatch({ type: 'reference-overview', payload: { bookId: this.bookId, references: [] } })
             })
     }
+    async #annotationForDisplay(annotation) {
+        const fallbackCfi = annotation?.value || annotation?.cfiRange || annotation?.cfi || ""
+        if (fallbackCfi) {
+            return {
+                ...annotation,
+                value: fallbackCfi,
+                runtimeCfi: fallbackCfi,
+            }
+        }
+
+        return null
+    }
+    #drawAnnotation({ draw, annotation, doc, range }) {
+        const { color } = annotation
+        if (['underline', 'squiggly', 'strikethrough'].includes(color)) {
+            const { defaultView } = doc
+            const node = range.startContainer
+            const el = node.nodeType === 1 ? node : node.parentElement
+            const { writingMode } = defaultView.getComputedStyle(el)
+
+            draw(Overlayer[color], { writingMode, tooltip: annotation.note || "" })
+        }
+        else draw(Overlayer.highlight, { color, tooltip: annotation.note || "" })
+    }
+    #removeAnnotationOverlays(annotation) {
+        const keys = annotationDrawKeys(annotation)
+        if (keys.length === 0) return
+
+        for (const { overlayer } of this.view?.renderer?.getContents?.() ?? []) {
+            if (!overlayer) continue
+            for (const key of keys)
+                overlayer.remove(key)
+        }
+        for (const key of keys)
+            this.#annotationKeyByValue.delete(key)
+    }
+    #drawAnchoredAnnotation(annotation) {
+        const key = annotationDrawKey(annotation)
+        if (!key) return false
+
+        const annotationLookupKey = annotationKey(annotation) || key
+        let drawn = false
+        for (const { doc, overlayer } of this.view?.renderer?.getContents?.() ?? []) {
+            if (!doc || !overlayer) continue
+
+            const range = rangeForAnnotationAnchor(doc, annotation)
+            if (!range) continue
+
+            overlayer.remove(key)
+            const draw = (func, opts) => overlayer.add(key, range, func, opts)
+            this.#drawAnnotation({ draw, annotation, doc, range })
+            this.#annotationKeyByValue.set(key, annotationLookupKey)
+            drawn = true
+        }
+
+        return drawn
+    }
+    #updateAnnotationRuntimeLocation(annotation) {
+        const key = annotationKey(annotation)
+        if (!key || !annotation?.value) return
+
+        this.#annotationKeyByValue.set(annotation.value, key)
+        dispatch({
+            type: 'annotation-location',
+            payload: {
+                bookId: this.bookId,
+                annotationId: key,
+                anchorId: annotation.anchorId || "",
+                value: annotation.value,
+                cfiRange: annotation.cfiRange || "",
+                runtimeCfi: annotation.value,
+                text: annotation.text || "",
+            },
+        })
+    }
+    addAnnotation(annotation) {
+        this.#annotationForDisplay(annotation)
+            .then(resolved => {
+                if (this.#drawAnchoredAnnotation(resolved || annotation)) {
+                    if (resolved?.value)
+                        this.#updateAnnotationRuntimeLocation(resolved)
+                    return
+                }
+
+                if (!resolved?.value) {
+                    console.warn('Unable to resolve annotation anchor', annotation?.annotationId || annotation?.anchorId || annotation?.cfiRange || "")
+                    return
+                }
+
+                this.#updateAnnotationRuntimeLocation(resolved)
+                return this.view.addAnnotation(resolved)
+            })
+            .catch(error => console.warn('Unable to add annotation', error))
+    }
+    deleteAnnotation(annotation) {
+        this.#removeAnnotationOverlays(annotation)
+        this.#annotationForDisplay(annotation)
+            .then(resolved => {
+                if (!resolved?.value) return
+                this.#removeAnnotationOverlays(resolved)
+                this.#annotationKeyByValue.delete(resolved.value)
+                return this.view.deleteAnnotation(resolved)
+            })
+            .catch(error => console.warn('Unable to delete annotation', error))
+    }
+    setContextImageNotInverse() {
+        const imageContext = this.#contextImage
+        if (!imageContext?.cfi) {
+            console.warn("No image context available for not_inverse marker")
+            return
+        }
+
+        imageContext.element?.classList?.add('not_inverse')
+        setImageNotInverse(this.bookId, imageContext)
+            .then(response => {
+                dispatchBookReloadNeeded("image-not-inverse", response)
+            })
+            .catch(error => console.warn("Unable to set image not_inverse", error))
+    }
     setAppearance({ style, layout, autohideCursor }) {
         Object.assign(this.style, style)
         const { theme } = style
@@ -1097,6 +1905,7 @@ class Reader {
         $style.setProperty('--arianna-reader-background-image', 'none')
         $style.removeProperty('--arianna-reader-background-filter')
         const renderer = this.view?.renderer
+        this.view?.setSearchResultColor?.(style.searchResultColor)
         if (renderer) {
             if (style.readerBackgroundImage) {
                 renderer.style.setProperty('--arianna-reader-background-image', style.readerBackgroundImage)
@@ -1105,13 +1914,7 @@ class Reader {
                 renderer.style.setProperty('--arianna-reader-background-image', 'none')
                 renderer.style.removeProperty('--arianna-reader-background-filter')
             }
-            renderer.setAttribute('flow', layout.flow)
-            renderer.setAttribute('gap', layout.gap * 100 + '%')
-            renderer.setAttribute('max-inline-size', layout.maxInlineSize + 'px')
-            renderer.setAttribute('max-block-size', layout.maxBlockSize + 'px')
-            renderer.setAttribute('max-column-count', layout.maxColumnCount)
-            if (layout.animated) renderer.setAttribute('animated', '')
-            else renderer.removeAttribute('animated')
+            applyReaderLayout(renderer, layout)
             renderer.setStyles?.(getCSS(this.style))
         }
         document.body.classList.toggle('invert', this.style.invert)
@@ -1163,21 +1966,10 @@ class Reader {
         this.view.addEventListener('show-annotation', e => {
             const { value, index, range } = e.detail
             const pos = getPosition(range)
-            this.#showAnnotation({ index, range, value, pos })
+            const annotationKey = this.#annotationKeyByValue.get(value) || value
+            this.#showAnnotation({ index, range, value, annotationKey, pos })
         })
-        this.view.addEventListener('draw-annotation', e => {
-            const { draw, annotation, doc, range } = e.detail
-            const { color } = annotation
-            if (['underline', 'squiggly', 'strikethrough'].includes(color)) {
-                const { defaultView } = doc
-                const node = range.startContainer
-                const el = node.nodeType === 1 ? node : node.parentElement
-                const { writingMode } = defaultView.getComputedStyle(el)
-
-                draw(Overlayer[color], { writingMode, tooltip: annotation.note || "" })
-            }
-            else draw(Overlayer.highlight, { color, tooltip: annotation.note || "" })
-        })
+        this.view.addEventListener('draw-annotation', e => this.#drawAnnotation(e.detail))
         this.view.addEventListener('external-link', e => {
             e.preventDefault()
             dispatch({ type: 'external-link', payload: e.detail })
@@ -1211,6 +2003,43 @@ class Reader {
                 .catch(e => console.error(e))
         })
 
+        doc.addEventListener('contextmenu', event => {
+            const referenceEl = event.target.closest?.(bookReferenceClickSelector)
+            if (referenceEl) {
+                const ref = referenceIdFromElement(referenceEl)
+                if (ref) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    this.#contextImage = null
+                    this.#bookReferenceHandler.showContextMenu(this.book, {
+                        ref,
+                        text: referenceEl.textContent ?? "",
+                        title: referenceEl.getAttribute("title") ?? "",
+                        role: referenceEl.dataset.role,
+                        anchorType: referenceEl.dataset.anchorType,
+                    }).catch(err => console.warn(err))
+                    return
+                }
+            }
+
+            const img = event.target.closest?.('img')
+            if (!img) {
+                this.#contextImage = null
+                return
+            }
+
+            try {
+                this.#contextImage = {
+                    element: img,
+                    cfi: this.view.getCFI(index, rangeForNode(img), cfiFilter),
+                    src: img.getAttribute('src') || img.currentSrc || img.src || "",
+                }
+            } catch (e) {
+                this.#contextImage = null
+                console.warn("Unable to create image CFI for context menu", e)
+            }
+        })
+
         let isSelecting = false
         doc.addEventListener('pointerdown', () => isSelecting = true)
         doc.addEventListener('pointerup', () => {
@@ -1230,6 +2059,7 @@ class Reader {
             // this makes it possible to select across pages
             doc.addEventListener('selectionchange', debounce(() => {
                 if (!isSelecting) return
+                if (!selectionAutoTurnEnabled(this.view)) return
                 if (this.view.renderer.getAttribute('flow') !== 'paginated') return
                 const { lastLocation } = this.view
                 if (!lastLocation) return
@@ -1259,8 +2089,8 @@ class Reader {
         })
         this.#cursorAutohider.cloneFor(doc.documentElement)
     }
-    #showAnnotation({ index, range, value, pos }) {
-        globalThis.showSelection({ type: 'annotation', value, pos })
+    #showAnnotation({ index, range, value, annotationKey, pos }) {
+        globalThis.showSelection({ type: 'annotation', value, annotationKey: annotationKey || value, cfiRange: value, pos })
             .then(action => {
                 if (action === 'select')
                     this.#showSelection({ index, range, value, pos })

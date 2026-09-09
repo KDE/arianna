@@ -166,7 +166,13 @@ Baloo::QueryRunnable *BalooContentLister::Private::createQuery(ContentQuery *con
         break;
     }
 
-    balooQuery.setSearchString(QStringLiteral("epub"));
+    const QString searchString = contentQuery->searchString().trimmed();
+    const QStringList mimeTypes = contentQuery->mimeTypes();
+    if (!searchString.isEmpty()) {
+        balooQuery.setSearchString(searchString);
+    } else if (contentQuery->type() == ContentQuery::Epub && mimeTypes.size() == 1 && mimeTypes.contains(QStringLiteral("application/epub+zip"))) {
+        balooQuery.setSearchString(QStringLiteral("epub"));
+    }
 
     auto runnable = new Baloo::QueryRunnable{balooQuery};
     connect(runnable, &Baloo::QueryRunnable::queryResult, q, [this, contentQuery, location](QRunnable *, const QString &file) {

@@ -5,6 +5,7 @@
 
 #include <QAbstractListModel>
 #include <QDateTime>
+#include <QVariantList>
 #include <memory>
 #include <optional>
 #include <qqmlintegration.h>
@@ -17,6 +18,7 @@ struct BookEntry {
     Q_PROPERTY(QString filename MEMBER filename CONSTANT)
     Q_PROPERTY(QString filetitle MEMBER filetitle CONSTANT)
     Q_PROPERTY(QString title MEMBER title CONSTANT)
+    Q_PROPERTY(QStringList subjects MEMBER genres CONSTANT)
     Q_PROPERTY(QStringList genres MEMBER genres CONSTANT)
     Q_PROPERTY(QStringList keywords MEMBER keywords CONSTANT)
     Q_PROPERTY(QStringList characters MEMBER characters CONSTANT)
@@ -31,11 +33,15 @@ struct BookEntry {
     Q_PROPERTY(QString currentLocation MEMBER currentLocation CONSTANT)
     Q_PROPERTY(int currentProgress MEMBER currentProgress CONSTANT)
     Q_PROPERTY(double zoomLevel MEMBER zoomLevel CONSTANT)
+    Q_PROPERTY(QString pageMode MEMBER pageMode CONSTANT)
+    Q_PROPERTY(QString bookVersion MEMBER bookVersion CONSTANT)
     Q_PROPERTY(QString thumbnail MEMBER thumbnail CONSTANT)
+    Q_PROPERTY(bool passwordProtected MEMBER passwordProtected CONSTANT)
     Q_PROPERTY(QStringList description MEMBER description CONSTANT)
     Q_PROPERTY(QString comment MEMBER comment CONSTANT)
     Q_PROPERTY(QStringList tags MEMBER tags CONSTANT)
     Q_PROPERTY(QString locations MEMBER locations CONSTANT)
+    Q_PROPERTY(QString pdfNotInvertedRegions MEMBER pdfNotInvertedRegions CONSTANT)
     Q_PROPERTY(QString identifier MEMBER identifier CONSTANT)
     Q_PROPERTY(QString uniqueIdentifier MEMBER uniqueIdentifier CONSTANT)
     Q_PROPERTY(QString source MEMBER source CONSTANT)
@@ -66,11 +72,15 @@ public:
     QString currentLocation;
     int currentProgress = 0;
     double zoomLevel = 1.0;
+    QString pageMode;
+    QString bookVersion;
     QString thumbnail;
+    bool passwordProtected = false;
     QStringList description;
     QString comment;
     QStringList tags;
     QString locations;
+    QString pdfNotInvertedRegions;
     QString identifier;
     QString uniqueIdentifier;
     QString source;
@@ -126,6 +136,7 @@ public:
         CurrentLocationRole, /// For getting the current page as an epubjs location.
         CurrentProgressRole, /// For getting the current progress as an int (percentage).
         ZoomLevelRole, /// For getting the WebEngine zoom level.
+        PageModeRole, /// For getting the reader page mode.
         CategoryEntriesModelRole, /// For getting the model of this category.
         CategoryEntryCountRole, /// For getting the an int with the number of books within this category.
         ThumbnailRole, /// For getting a thumbnail url for this book.
@@ -133,11 +144,20 @@ public:
         CommentRole, /// For getting a string with user assigned comment.
         TagsRole, /// For getting a stringlist with user assigned tags.
         RatingRole, /// For getting an int with the rating of the comic. This is gotten from KFileMeta and thus goes from 1-10 with 0 being no rating.
-        GenreRole, /// For getting a stringlist with genres assigned to this book.
+        SubjectRole, /// For getting a stringlist with subjects assigned to this book.
+        GenreRole, /// Deprecated alias for getting a stringlist with subjects assigned to this book.
         KeywordRole, /// For getting a stringlist with keywords assigned to this book. Where tags are user assigned, keywords come from the book itself.
         CharacterRole, /// For getting a stringlist with names of characters in this book.
         LocationsRole, /// Epub locations cache
+        PdfNotInvertedRegionsRole, /// PDF page regions that should keep their original colors.
         EntryRole,
+        LocalizedTitleRole, /// For getting a localized display title without changing the source value.
+        TitleSortRole, /// For sorting books by title while ignoring leading articles.
+        MainSubjectSortRole, /// For sorting books by their first subject hierarchy level.
+        MainSubjectRole, /// For showing the first subject hierarchy level as a section title.
+        BookVersionRole, /// For getting the EPUB or PDF format version.
+        TypeSortRole, /// For sorting books by file type and title.
+        PasswordProtectedRole, /// For marking books that need a reading password.
     };
     Q_ENUM(Roles)
 
@@ -211,6 +231,30 @@ public:
      * @param filename the filename associated with an entry object.
      */
     Q_INVOKABLE BookEntry bookEntryFromFile(const QString &filename);
+    /**
+     * @return all category entries flattened by level, preserving their full slash-separated path.
+     */
+    Q_INVOKABLE QVariantList flatCategoryEntries(const QString &parentPath = QString()) const;
+    /**
+     * @return book entries grouped by their first subject hierarchy level.
+     */
+    Q_INVOKABLE QVariantList mainSubjectBookGroups(const QString &filterText = QString());
+    /**
+     * @return book entries grouped by their title's first letter.
+     */
+    Q_INVOKABLE QVariantList titleBookGroups(const QString &filterText = QString());
+    /**
+     * @return book entries grouped by their authors.
+     */
+    Q_INVOKABLE QVariantList authorBookGroups(const QString &filterText = QString());
+    /**
+     * @return book entries grouped by the time they were last opened.
+     */
+    Q_INVOKABLE QVariantList lastOpenedBookGroups(const QString &filterText = QString());
+    /**
+     * @return book entries grouped by file type.
+     */
+    Q_INVOKABLE QVariantList typeBookGroups(const QString &filterText = QString());
     /**
      * @return an entry index for the given filename.
      * @param filename the filename associated with an entry object.
