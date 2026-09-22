@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: arianna\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
 "POT-Creation-Date: 2026-07-31 00:42+0000\n"
-"PO-Revision-Date: 2026-05-28 17:03-0400\n"
+"PO-Revision-Date: 2026-09-22 18:02+0900\n"
 "Last-Translator: Abduqadir Abliz <sahranbay@gmail.com>\n"
 "Language-Team: Uyghur <kde-i18n-doc@kde.org>\n"
 "Language: ug\n"
@@ -61,7 +61,7 @@ msgstr "مەزمۇن مۇندەرىجىسى"
 #: main.cpp:45 qml/Main.qml:19 qml/Main.qml:303
 #, kde-format
 msgid "Arianna"
-msgstr "Arianna"
+msgstr ""
 
 #: main.cpp:47
 #, kde-format
@@ -71,12 +71,12 @@ msgstr "EPub ئوقۇغۇچ"
 #: main.cpp:49
 #, kde-format
 msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
-msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
+msgstr ""
 
 #: main.cpp:50
 #, kde-format
 msgid "Niccolò Venerandi"
-msgstr "Niccolò Venerandi"
+msgstr ""
 
 #: main.cpp:50 main.cpp:51
 #, kde-format
@@ -86,7 +86,7 @@ msgstr "ئاسرىغۇچى"
 #: main.cpp:51
 #, kde-format
 msgid "Carl Schwan"
-msgstr "Carl Schwan"
+msgstr ""
 
 #: main.cpp:52
 #, kde-format
@@ -208,7 +208,7 @@ msgstr "ئىزدە"
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
-msgstr "%1%"
+msgstr ""
 
 #: qml/EpubViewerPage.qml:288
 #, kde-format
