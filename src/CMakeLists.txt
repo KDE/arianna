@@ -123,7 +123,6 @@ target_link_libraries(arianna_static PUBLIC
     KF6::Crash
     KF6::ColorScheme
     KF6::I18nQml
-    KirigamiApp
 )
 
 target_link_libraries(arianna_static PUBLIC Qt::WebEngineQuick)
@@ -143,6 +142,6 @@ add_executable(arianna
 )
 
 target_include_directories(arianna PRIVATE ${CMAKE_BINARY_DIR})
-target_link_libraries(arianna PUBLIC arianna_static arianna_staticplugin)
+target_link_libraries(arianna PRIVATE arianna_static arianna_staticplugin KirigamiApp)
 
 install(TARGETS arianna ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})

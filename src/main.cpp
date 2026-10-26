@@ -6,7 +6,6 @@
 #include <QNetworkProxy>
 #include <QNetworkProxyFactory>
 #include <QQmlApplicationEngine>
-#include <QQmlContext>
 #include <QQuickStyle>
 #include <QQuickWindow>
 #include <QtWebEngineQuick>
@@ -17,12 +16,11 @@
 #include <KConfig>
 #include <KCrash>
 #include <KDBusService>
-#include <KLocalizedContext>
 #include <KLocalizedQmlContext>
 #include <KLocalizedString>
 #include <KWindowConfig>
 #include <KWindowSystem>
-#include <KirigamiAddons/App/KirigamiAppDefaults>
+#include <KirigamiAppDefaults>
 #include <QStringLiteral>
 
 #include "arianna-version.h"
@@ -41,12 +39,8 @@ int main(int argc, char *argv[])
 
     KLocalizedString::setApplicationDomain(QByteArrayLiteral("arianna"));
 
-    KAboutData about(QStringLiteral("arianna"),
-                     i18n("Arianna"),
-                     QStringLiteral(ARIANNA_VERSION_STRING),
-                     i18n("EPub Reader"),
-                     KAboutLicense::GPL_V3,
-                     i18n("2022 Niccolò Venerandi <niccolo@venerandi.com>"));
+    auto about = KAboutData::fromAppStreamId(QStringLiteral("org.kde.arianna"));
+    about.setVersion(ARIANNA_VERSION_STRING);
     about.addAuthor(i18n("Niccolò Venerandi"), i18n("Maintainer"), QStringLiteral("niccolo@venerandi.com"));
     about.addAuthor(i18n("Carl Schwan"), i18n("Maintainer"), QStringLiteral("carl@carlschwan.eu"));
     about.setTranslator(i18nc("NAME OF TRANSLATORS", "Your names"), i18nc("EMAIL OF TRANSLATORS", "Your emails"));
@@ -59,7 +53,7 @@ int main(int argc, char *argv[])
 
     KDBusService service(KDBusService::Unique);
     QQmlApplicationEngine engine;
-    engine.rootContext()->setContextObject(new KLocalizedQmlContext(&engine));
+    KLocalization::setupLocalizedContext(&engine);
 
     QCommandLineParser parser;
     parser.setApplicationDescription(i18n("Epub reader"));
@@ -69,7 +63,7 @@ int main(int argc, char *argv[])
     parser.process(app);
     about.processCommandLine(&parser);
 
-    engine.loadFromModule("org.kde.arianna", "Main");
+    KirigamiAppDefaults::load("org.kde.arianna", "Main", &engine);
     if (engine.rootObjects().isEmpty()) {
         return -1;
     }
