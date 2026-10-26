@@ -6,6 +6,7 @@ import QtQuick.Window
 import QtQuick.Controls as QQC2
 import QtQuick.Dialogs as Dialogs
 import QtQuick.Layouts
+import org.kde.ki18n
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.formcard as FormCard
 import org.kde.arianna
@@ -13,15 +14,15 @@ import org.kde.arianna
 FormCard.FormCardPage {
     id: root
 
-    title: i18n("Settings")
+    title: KI18n.i18n("Settings")
 
     FormCard.FormHeader {
-        title: i18n("Appearance")
+        title: KI18n.i18n("Appearance")
     }
 
     FormCard.FormCard {
         FormCard.FormSpinBoxDelegate {
-            label: i18n("Maximum width:")
+            label: KI18n.i18n("Maximum width:")
 
             from: Kirigami.Units.smallSpacing
             to: Screen.desktopAvailableWidth
@@ -35,7 +36,7 @@ FormCard.FormCardPage {
         FormCard.FormDelegateSeparator {}
 
         FormCard.FormSpinBoxDelegate {
-            label: i18n("Margin:")
+            label: KI18n.i18n("Margin:")
 
             from: 0
             to: Screen.desktopAvailableWidth
@@ -50,7 +51,7 @@ FormCard.FormCardPage {
 
         FormCard.FormCheckDelegate {
             id: showProgress
-            text: i18n("Show progress")
+            text: KI18n.i18n("Show progress")
 
             checked: Config.showProgress
             onCheckedChanged: {
@@ -61,7 +62,7 @@ FormCard.FormCardPage {
     }
 
     FormCard.FormHeader {
-        title: i18n("Font")
+        title: KI18n.i18n("Font")
     }
 
     FormCard.FormCard {
@@ -69,12 +70,12 @@ FormCard.FormCardPage {
         Layout.fillWidth: true
 
         FormCard.FormButtonDelegate {
-            text: i18n("Change default font")
+            text: KI18n.i18n("Change default font")
             onClicked: fontDialog.open()
         }
 
         FormCard.FormSwitchDelegate {
-            text: i18n("Use publisher font")
+            text: KI18n.i18n("Use publisher font")
 
             checked: Config.usePublisherFont
             onCheckedChanged: {
@@ -85,13 +86,13 @@ FormCard.FormCardPage {
     }
 
     FormCard.FormHeader {
-        title: i18n("Text flow")
+        title: KI18n.i18n("Text flow")
     }
 
     FormCard.FormCard {
         FormCard.FormCheckDelegate {
             id: justifyText
-            text: i18n("Justify text")
+            text: KI18n.i18n("Justify text")
 
             checked: Config.justify
             onCheckedChanged: {
@@ -104,7 +105,7 @@ FormCard.FormCardPage {
 
         FormCard.FormCheckDelegate {
             id: hyphenateText
-            text: i18n("Hyphenate text")
+            text: KI18n.i18n("Hyphenate text")
 
             checked: Config.hyphenate
             onCheckedChanged: {
@@ -116,7 +117,7 @@ FormCard.FormCardPage {
         FormCard.FormDelegateSeparator { above: hyphenateText }
 
         FormCard.FormSpinBoxDelegate {
-            label: i18n("Line height:")
+            label: KI18n.i18n("Line height:")
 
             from: 10
             to: 50
@@ -133,7 +134,7 @@ FormCard.FormCardPage {
         FormCard.FormDelegateSeparator { above: hyphenateText }
 
         FormCard.FormSpinBoxDelegate {
-            label: i18n("Brightness:")
+            label: KI18n.i18n("Brightness:")
 
             from: 0
             to: 100
@@ -151,12 +152,12 @@ FormCard.FormCardPage {
     }
 
     FormCard.FormHeader {
-        title: i18n("Colors")
+        title: KI18n.i18n("Colors")
     }
 
     FormCard.FormCard {
         FormCard.FormSwitchDelegate {
-            text: i18n("Invert colors")
+            text: KI18n.i18n("Invert colors")
 
             checked: Config.invert
             onCheckedChanged: {
@@ -174,7 +175,7 @@ FormCard.FormCardPage {
         Layout.topMargin: Kirigami.Units.largeSpacing
 
         FormCard.FormButtonDelegate {
-            text: i18n("About Arianna")
+            text: KI18n.i18n("About Arianna")
             onClicked: applicationWindow().pageStack.layers.push(Qt.createComponent("org.kde.kirigamiaddons.formcard", "AboutPage"))
             icon.name: "org.kde.arianna"
         }
@@ -182,7 +183,7 @@ FormCard.FormCardPage {
         FormCard.FormDelegateSeparator {}
 
         FormCard.FormButtonDelegate {
-            text: i18n("About KDE")
+            text: KI18n.i18n("About KDE")
             onClicked: applicationWindow().pageStack.layers.push(Qt.createComponent("org.kde.kirigamiaddons.formcard", "AboutKDEPage"))
             icon.name: "kde"
         }
@@ -191,7 +192,7 @@ FormCard.FormCardPage {
     data: Dialogs.FontDialog {
         id: fontDialog
 
-        title: i18n("Change default font")
+        title: KI18n.i18n("Change default font")
 
         currentFont: Config.defaultFont
 

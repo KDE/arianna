@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Controls 2 as QQC2
 import QtQuick.Layouts
 
+import org.kde.ki18n
 import org.kde.kirigami 2 as Kirigami
 import org.kde.kirigamiaddons.delegates 1 as Delegates
 import org.kde.kirigamiaddons.treeview as Tree
@@ -20,8 +21,8 @@ Kirigami.OverlayDrawer {
     width: Kirigami.Units.gridUnit * 20
     edge: Qt.application.layoutDirection == Qt.RightToLeft ? Qt.LeftEdge : Qt.RightEdge
     handleClosedIcon.name: 'format-list-ordered'
-    handleClosedToolTip: i18nc("@info:tooltip", "Open table of contents")
-    handleOpenToolTip: i18nc("@info:tooltip", "Close table of contents")
+    handleClosedToolTip: KI18n.i18nc("@info:tooltip", "Open table of contents")
+    handleOpenToolTip: KI18n.i18nc("@info:tooltip", "Close table of contents")
 
     topPadding: 0
     leftPadding: 0
@@ -42,7 +43,7 @@ Kirigami.OverlayDrawer {
             bottomPadding: Kirigami.Units.smallSpacing
 
             Kirigami.Heading {
-                text: i18nc("@info:title", "Table of Contents")
+                text: KI18n.i18nc("@info:title", "Table of Contents")
             }
         }
 

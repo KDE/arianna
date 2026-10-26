@@ -6,6 +6,7 @@ import QtQuick.Controls as QQC2
 import QtWebEngine
 import QtWebChannel
 import QtQuick.Layouts
+import org.kde.ki18n
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.delegates as Delegates
 import org.kde.arianna
@@ -77,9 +78,9 @@ Kirigami.Page {
         }
 
         emptyText: if (searchResultModel.loading) {
-            return i18n("Loading");
+            return KI18n.i18n("Loading");
         } else if (count === 0 && searchDialog.text.length > 2) {
-            return i18n("No search results");
+            return KI18n.i18n("No search results");
         } else {
             return '';
         }
@@ -123,13 +124,13 @@ Kirigami.Page {
 
     actions: [
         Kirigami.Action {
-            text: i18nc("@action:intoolbar", "Search")
+            text: KI18n.i18nc("@action:intoolbar", "Search")
             displayHint: Kirigami.DisplayHint.IconOnly
             icon.name: "system-search-symbolic"
             onTriggered: searchDialog.open();
         },
         Kirigami.Action {
-            text: i18n("Book Details")
+            text: KI18n.i18n("Book Details")
             displayHint: Kirigami.DisplayHint.IconOnly
             icon.name: "documentinfo"
             enabled: backend.metadata
@@ -152,10 +153,10 @@ Kirigami.Page {
     Kirigami.PlaceholderMessage {
         anchors.centerIn: parent
         width: parent.width - Kirigami.Units.gridUnit * 4
-        text: i18n("No book selected")
+        text: KI18n.i18n("No book selected")
         visible: root.url === ''
         helpfulAction: Kirigami.Action {
-            text: i18n("Open file")
+            text: KI18n.i18n("Open file")
             onTriggered: {
                 const fileDialog = openFileDialog.createObject(QQC2.ApplicationWindow.overlay)
                 fileDialog.accepted.connect(() => {
@@ -176,8 +177,8 @@ Kirigami.Page {
         FileDialog {
             id: root
             parentWindow: applicationWindow()
-            title: i18n("Please choose a file")
-            nameFilters: [i18nc("Name filter for EPUB files", "eBook files (*.epub *.cb* *.fb2 *.fb2zip)")]
+            title: KI18n.i18n("Please choose a file")
+            nameFilters: [KI18n.i18nc("Name filter for EPUB files", "eBook files (*.epub *.cb* *.fb2 *.fb2zip)")]
         }
     }
 
@@ -226,13 +227,13 @@ Kirigami.Page {
             }
 
             QQC2.MenuItem {
-                text: i18n("Copy")
+                text: KI18n.i18n("Copy")
                 icon.name: 'edit-copy'
                 onClicked: Clipboard.saveText(backend.selection.text)
             }
 
             QQC2.MenuItem {
-                text: i18n("Find")
+                text: KI18n.i18n("Find")
                 icon.name: 'search'
                 onClicked: view.runJavaScript(`find.find('${backend.selection.text}', true, true)`);
             }
@@ -265,7 +266,7 @@ Kirigami.Page {
         contentItem: RowLayout {
             QQC2.ToolButton {
                 id: progressButton
-                text: i18nc("Book reading progress", "%1%", Math.round(backend.progress * 100))
+                text: KI18n.i18nc("Book reading progress", "%1%", Math.round(backend.progress * 100))
                 property bool isMenuOpen: false
                 onClicked: {
                     isMenuOpen = !isMenuOpen;
@@ -285,12 +286,12 @@ Kirigami.Page {
                         Kirigami.FormLayout {
                             Layout.fillWidth: true
                             QQC2.Label {
-                                Kirigami.FormData.label: i18n("Time left in chapter:")
-                                text: backend.timeInChapter ? Format.formatDuration(backend.timeInChapter * 1000) : i18n("Loading")
+                                Kirigami.FormData.label: KI18n.i18n("Time left in chapter:")
+                                text: backend.timeInChapter ? Format.formatDuration(backend.timeInChapter * 1000) : KI18n.i18n("Loading")
                             }
                             QQC2.Label {
-                                Kirigami.FormData.label: i18n("Time left in book:")
-                                text: backend.timeInBook ? Format.formatDuration(backend.timeInBook * 1000) : i18n("Loading")
+                                Kirigami.FormData.label: KI18n.i18n("Time left in book:")
+                                text: backend.timeInBook ? Format.formatDuration(backend.timeInBook * 1000) : KI18n.i18n("Loading")
                             }
                         }
                     }
@@ -300,7 +301,7 @@ Kirigami.Page {
                 QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
             }
             QQC2.ToolButton {
-                text: i18n("Previous Page")
+                text: KI18n.i18n("Previous Page")
                 display: QQC2.AbstractButton.IconOnly
                 icon.name: "arrow-left"
                 onClicked: view.prev()
@@ -326,7 +327,7 @@ Kirigami.Page {
                 Layout.fillWidth: true
             }
             QQC2.ToolButton {
-                text: i18n("Next Page")
+                text: KI18n.i18n("Next Page")
                 icon.name: "arrow-right"
                 onClicked: view.next()
                 display: QQC2.AbstractButton.IconOnly
@@ -361,21 +362,21 @@ Kirigami.Page {
             switch (action.type) {
             case 'ready':
                 const uiText = {
-                    loc: i18n("Loc. %s of %s"),
-                    page: i18n("Page %s of %s"),
-                    pageWithoutTotal: i18n("Page %s"),
-                    close: i18n("Close"),
+                    loc: KI18n.i18n("Loc. %s of %s"),
+                    page: KI18n.i18n("Page %s of %s"),
+                    pageWithoutTotal: KI18n.i18n("Page %s"),
+                    close: KI18n.i18n("Close"),
                     references: {
-                        "footnote": i18n("Footnote"),
-                        "footnote-go": i18n("Go to Footnote"),
-                        "endnote": i18n("Endnote"),
-                        "endnote-go": i18n("Go to Endnote"),
-                        "note": i18n("Note"),
-                        "note-go": i18n("Go to Note"),
-                        "glossary": i18n("Definition"),
-                        "glossary-go": i18n("Go to Definition"),
-                        "biblioentry": i18n("Bibliography"),
-                        "biblioentry-go": i18n("Go to Bibliography"),
+                        "footnote": KI18n.i18n("Footnote"),
+                        "footnote-go": KI18n.i18n("Go to Footnote"),
+                        "endnote": KI18n.i18n("Endnote"),
+                        "endnote-go": KI18n.i18n("Go to Endnote"),
+                        "note": KI18n.i18n("Note"),
+                        "note-go": KI18n.i18n("Go to Note"),
+                        "glossary": KI18n.i18n("Definition"),
+                        "glossary-go": KI18n.i18n("Go to Definition"),
+                        "biblioentry": KI18n.i18n("Bibliography"),
+                        "biblioentry-go": KI18n.i18n("Go to Bibliography"),
                     },
                 }
 

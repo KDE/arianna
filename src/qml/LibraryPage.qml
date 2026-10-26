@@ -6,6 +6,7 @@ import QtQuick.Controls as QQC2
 import QtWebEngine
 import QtWebChannel
 import QtQuick.Layouts
+import org.kde.ki18n
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.components as Components
 import org.kde.quickcharts as Charts
@@ -16,7 +17,7 @@ Kirigami.ScrollablePage {
 
     property CategoryEntriesModel bookListModel
 
-    title: i18n("Library")
+    title: KI18n.i18n("Library")
 
     GridView {
         id: contentDirectoryView
@@ -95,7 +96,7 @@ Kirigami.ScrollablePage {
 
             QQC2.Action {
                 icon.name: 'documentinfo-symbolic'
-                text: i18nc("@action:inmenu", "Book Details")
+                text: KI18n.i18nc("@action:inmenu", "Book Details")
                 onTriggered: applicationWindow().pageStack.pushDialogLayer(Qt.resolvedUrl("./BookDetailsPage.qml"), {
                     metadata: menu.entry,
                 })
@@ -107,7 +108,7 @@ Kirigami.ScrollablePage {
             width: parent.width - (Kirigami.Units.largeSpacing * 4)
             visible: contentDirectoryView.count === 0
             icon.name: "application-epub+zip"
-            text: i18nc("@info placeholder", "Add some books")
+            text: KI18n.i18nc("@info placeholder", "Add some books")
             helpfulAction: root.actions[0]
         }
     }

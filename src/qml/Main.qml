@@ -5,6 +5,7 @@ import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
 import Qt.labs.platform
+import org.kde.ki18n
 import org.kde.arianna
 import org.kde.kitemmodels as KItemModels
 import org.kde.kirigami as Kirigami
@@ -16,7 +17,7 @@ Kirigami.ApplicationWindow {
 
     property bool isLoading: true;
 
-    title: i18n("Arianna")
+    title: KI18n.i18n("Arianna")
 
     width: Kirigami.Units.gridUnit * 65
     height: Kirigami.Units.gridUnit * 45
@@ -165,7 +166,7 @@ Kirigami.ApplicationWindow {
                         }
                     }
 
-                    emptyText: i18n("No search results")
+                    emptyText: KI18n.i18n("No search results")
                 }
             }
 
@@ -201,20 +202,20 @@ Kirigami.ApplicationWindow {
                     width: scrollView.width
                     PlaceItem {
                         id: goHomeButton
-                        text: i18nc("Switch to the listing page showing the most recently read books", "Home");
+                        text: KI18n.i18nc("Switch to the listing page showing the most recently read books", "Home");
                         icon.name: "go-home";
                         checked: true
                         QQC2.ButtonGroup.group: placeGroup
-                        onTriggered: Navigation.openLibrary(i18n("Home"), bookListModel, true)
+                        onTriggered: Navigation.openLibrary(KI18n.i18n("Home"), bookListModel, true)
                     }
                     PlaceItem {
-                        text: i18nc("Switch to the listing page showing the most recently discovered books", "Recently Added Books");
+                        text: KI18n.i18nc("Switch to the listing page showing the most recently discovered books", "Recently Added Books");
                         icon.name: "appointment-new";
                         QQC2.ButtonGroup.group: placeGroup
                         onTriggered: Navigation.openLibrary(text, bookListModel.newlyAddedCategoryModel, true)
                     }
                     PlaceItem {
-                        text: i18nc("Open a book from somewhere on disk (uses the open dialog, or a drilldown on touch devices)", "Open Other...");
+                        text: KI18n.i18nc("Open a book from somewhere on disk (uses the open dialog, or a drilldown on touch devices)", "Open Other...");
                         icon.name: "document-open";
                         action: addBookAction
                         QQC2.ButtonGroup.group: null
@@ -222,7 +223,7 @@ Kirigami.ApplicationWindow {
                     }
 
                     PlaceItem {
-                        text: i18nc("Open the settings page", "Settings");
+                        text: KI18n.i18nc("Open the settings page", "Settings");
                         icon.name: "configure"
                         onClicked: Navigation.openSettings()
                         QQC2.ButtonGroup.group: placeGroup
@@ -231,30 +232,30 @@ Kirigami.ApplicationWindow {
                     }
 
                     Kirigami.ListSectionHeader {
-                        text: i18nc("Heading for switching to listing page showing items grouped by some properties", "Group By")
+                        text: KI18n.i18nc("Heading for switching to listing page showing items grouped by some properties", "Group By")
                     }
                     PlaceItem {
-                        text: i18nc("Switch to the listing page showing items grouped by author", "Author");
+                        text: KI18n.i18nc("Switch to the listing page showing items grouped by author", "Author");
                         icon.name: "actor";
                         onTriggered: Navigation.openLibrary(text, bookListModel.authorCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                     PlaceItem {
-                        text: i18nc("Switch to the listing page showing items grouped by series", "Series");
+                        text: KI18n.i18nc("Switch to the listing page showing items grouped by series", "Series");
                         icon.name: "edit-group";
-                        onTriggered: Navigation.openLibrary(i18nc("Title of the page with books grouped by what series they are in", "Group by Series"), bookListModel.seriesCategoryModel, true)
+                        onTriggered: Navigation.openLibrary(KI18n.i18nc("Title of the page with books grouped by what series they are in", "Group by Series"), bookListModel.seriesCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                     PlaceItem {
-                        text: i18nc("Switch to the listing page showing items grouped by publisher", "Publisher");
+                        text: KI18n.i18nc("Switch to the listing page showing items grouped by publisher", "Publisher");
                         icon.name: "view-media-publisher";
                         onTriggered: Navigation.openLibrary(text, bookListModel.publisherCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                     PlaceItem {
-                        text: i18nc("Switch to the listing page showing items grouped by genres", "Keywords");
+                        text: KI18n.i18nc("Switch to the listing page showing items grouped by genres", "Keywords");
                         icon.name: "tag";
-                        onTriggered: Navigation.openLibrary(i18nc("Title of the page with books grouped by genres", "Group by Genres"), bookListModel.keywordCategoryModel, true)
+                        onTriggered: Navigation.openLibrary(KI18n.i18nc("Title of the page with books grouped by genres", "Group by Genres"), bookListModel.keywordCategoryModel, true)
                         QQC2.ButtonGroup.group: placeGroup
                     }
                 }
@@ -300,7 +301,7 @@ Kirigami.ApplicationWindow {
             });
 
             epubViewer.bookClosed.connect(() => {
-                root.title = i18n("Arianna");
+                root.title = KI18n.i18n("Arianna");
             });
         }
 
@@ -332,7 +333,7 @@ Kirigami.ApplicationWindow {
 
         function onOpenSettings() {
             pageStack.pushDialogLayer(Qt.resolvedUrl('./SettingsPage.qml'), {}, {
-                title: i18n("Settings"),
+                title: KI18n.i18n("Settings"),
                 width: Kirigami.Units.gridUnit * 24,
             });
         }
@@ -340,7 +341,7 @@ Kirigami.ApplicationWindow {
 
     Kirigami.Action {
         id: addBookAction
-        text: i18nc("@action:button", "Add Books…")
+        text: KI18n.i18nc("@action:button", "Add Books…")
         icon.name: "list-add"
         onTriggered: {
             const fileDialog = openFileDialog.createObject(QQC2.ApplicationWindow.overlay)
@@ -361,8 +362,8 @@ Kirigami.ApplicationWindow {
         FileDialog {
             id: root
             parentWindow: applicationWindow()
-            title: i18n("Please choose files")
-            nameFilters: [i18nc("Name filter for EPUB files", "eBook files (*.epub *.cb* *.fb2 *.fb2zip)")]
+            title: KI18n.i18n("Please choose files")
+            nameFilters: [KI18n.i18nc("Name filter for EPUB files", "eBook files (*.epub *.cb* *.fb2 *.fb2zip)")]
             fileMode: FileDialog.OpenFiles // Changed to support multiple files
         }
     }

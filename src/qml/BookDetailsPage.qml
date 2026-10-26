@@ -4,6 +4,7 @@
 import QtQuick
 import QtQuick.Controls as QQC2
 import QtQuick.Layouts
+import org.kde.ki18n
 import org.kde.kirigami as Kirigami
 import org.kde.kirigamiaddons.formcard as FormCard
 import org.kde.arianna as Arianna
@@ -13,7 +14,7 @@ FormCard.FormCardPage {
 
     property var metadata
 
-    title: i18nc("@info:title", "Book Details")
+    title: KI18n.i18nc("@info:title", "Book Details")
 
     FormCard.FormHeader {
         title: root.metadata.title
@@ -23,7 +24,7 @@ FormCard.FormCardPage {
         FormCard.FormTextDelegate {
             id: authorField
 
-            text: i18n("Author:")
+            text: KI18n.i18n("Author:")
             description: root.metadata.author.join(', ')
             visible: description.length > 0
         }
@@ -35,7 +36,7 @@ FormCard.FormCardPage {
         FormCard.FormTextDelegate {
             id: descriptionField
 
-            text: i18n("Description:")
+            text: KI18n.i18n("Description:")
             description: root.metadata.description
             visible: description.length > 0
         }
@@ -47,7 +48,7 @@ FormCard.FormCardPage {
         FormCard.FormTextDelegate {
             id: publisherField
 
-            text: i18n("Publisher:")
+            text: KI18n.i18n("Publisher:")
             description: root.metadata.publisher
             visible: description.length > 0
         }
@@ -59,7 +60,7 @@ FormCard.FormCardPage {
         FormCard.FormTextDelegate {
             id: languageField
 
-            text: i18n("Language:")
+            text: KI18n.i18n("Language:")
             description: Qt.locale(root.metadata.language).nativeLanguageName
             visible: description.length > 0
         }
@@ -71,7 +72,7 @@ FormCard.FormCardPage {
         FormCard.FormTextDelegate {
             id: publishingField
 
-            text: i18n("Publishing date:")
+            text: KI18n.i18n("Publishing date:")
             description: /^\d+$/.test(root.metadata.pubdate) ? root.metadata.pubdate : new Date(root.metadata.pubdate).toLocaleDateString()
             visible: description.length > 0
         }
@@ -82,7 +83,7 @@ FormCard.FormCardPage {
 
         FormCard.FormTextDelegate {
             id: copyrightField
-            text: i18n("Copyright:")
+            text: KI18n.i18n("Copyright:")
             description: root.metadata.rights
             visible: description.length > 0
         }
