@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: kdeorg\n"
 "Report-Msgid-Bugs-To: https://bugs.kde.org\n"
-"POT-Creation-Date: 2026-07-31 00:42+0000\n"
+"POT-Creation-Date: 2026-10-27 00:57+0000\n"
 "PO-Revision-Date: 2024-04-22 15:58\n"
 "Last-Translator: \n"
 "Language-Team: Chinese Simplified\n"
@@ -57,289 +57,279 @@ msgstr "元数据格式错误，无法获取内容元数据路径"
 msgid "Table of Contents"
 msgstr "目录"
 
-#: main.cpp:45 qml/Main.qml:19 qml/Main.qml:303
-#, kde-format
-msgid "Arianna"
-msgstr "Arianna"
-
-#: main.cpp:47
-#, kde-format
-msgid "EPub Reader"
-msgstr "EPub 阅读器"
-
-#: main.cpp:49
-#, kde-format
-msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
-msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
-
-#: main.cpp:50
+#: main.cpp:44
 #, kde-format
 msgid "Niccolò Venerandi"
 msgstr "Niccolò Venerandi"
 
-#: main.cpp:50 main.cpp:51
+#: main.cpp:44 main.cpp:45
 #, kde-format
 msgid "Maintainer"
 msgstr "维护人员"
 
-#: main.cpp:51
+#: main.cpp:45
 #, kde-format
 msgid "Carl Schwan"
 msgstr "Carl Schwan"
 
-#: main.cpp:52
+#: main.cpp:46
 #, kde-format
 msgctxt "NAME OF TRANSLATORS"
 msgid "Your names"
 msgstr "KDE 中国, Eric Zhao, Si Heng Tang, EasternLi, dringsim, 嗨皮重生锚"
 
-#: main.cpp:52
+#: main.cpp:46
 #, kde-format
 msgctxt "EMAIL OF TRANSLATORS"
 msgid "Your emails"
 msgstr "kde-china@kde.org, zhaojiale20060708@outlook.com, , , ,"
 
-#: main.cpp:65
+#: main.cpp:59
 #, kde-format
 msgid "Epub reader"
 msgstr "EPub 阅读器"
 
-#: main.cpp:66
+#: main.cpp:60
 #, kde-format
 msgid "Epub file to open"
 msgstr "要打开的 Epub 文件"
 
-#: qml/BookDetailsPage.qml:16
+#: qml/BookDetailsPage.qml:17
 #, kde-format
 msgctxt "@info:title"
 msgid "Book Details"
 msgstr "图书详情"
 
-#: qml/BookDetailsPage.qml:26
+#: qml/BookDetailsPage.qml:27
 #, kde-format
 msgid "Author:"
 msgstr "作者："
 
-#: qml/BookDetailsPage.qml:38
+#: qml/BookDetailsPage.qml:39
 #, kde-format
 msgid "Description:"
 msgstr "描述："
 
-#: qml/BookDetailsPage.qml:50
+#: qml/BookDetailsPage.qml:51
 #, kde-format
 msgid "Publisher:"
 msgstr "出版社："
 
-#: qml/BookDetailsPage.qml:62
+#: qml/BookDetailsPage.qml:63
 #, kde-format
 msgid "Language:"
 msgstr "语言："
 
-#: qml/BookDetailsPage.qml:74
+#: qml/BookDetailsPage.qml:75
 #, kde-format
 msgid "Publishing date:"
 msgstr "出版日期："
 
-#: qml/BookDetailsPage.qml:85
+#: qml/BookDetailsPage.qml:86
 #, kde-format
 msgid "Copyright:"
 msgstr "版权："
 
-#: qml/ColorSchemeDelegate.qml:13
+#: qml/ColorSchemeDelegate.qml:14
 #, kde-format
 msgid "Color theme"
 msgstr "颜色主题"
 
-#: qml/EpubViewerPage.qml:80 qml/EpubViewerPage.qml:289
-#: qml/EpubViewerPage.qml:293
+#: qml/EpubViewerPage.qml:81 qml/EpubViewerPage.qml:290
+#: qml/EpubViewerPage.qml:294
 #, kde-format
 msgid "Loading"
 msgstr "正在加载"
 
-#: qml/EpubViewerPage.qml:82 qml/Main.qml:168
+#: qml/EpubViewerPage.qml:83 qml/Main.qml:169
 #, kde-format
 msgid "No search results"
 msgstr "无搜索结果"
 
-#: qml/EpubViewerPage.qml:126
+#: qml/EpubViewerPage.qml:127
 #, kde-format
 msgctxt "@action:intoolbar"
 msgid "Search"
 msgstr "搜索"
 
-#: qml/EpubViewerPage.qml:132
+#: qml/EpubViewerPage.qml:133
 #, kde-format
 msgid "Book Details"
 msgstr "图书详情"
 
-#: qml/EpubViewerPage.qml:155
+#: qml/EpubViewerPage.qml:156
 #, kde-format
 msgid "No book selected"
 msgstr "未选择书籍"
 
-#: qml/EpubViewerPage.qml:158
+#: qml/EpubViewerPage.qml:159
 #, kde-format
 msgid "Open file"
 msgstr "打开文件"
 
-#: qml/EpubViewerPage.qml:179
+#: qml/EpubViewerPage.qml:180
 #, kde-format
 msgid "Please choose a file"
 msgstr "请选择一个文件"
 
-#: qml/EpubViewerPage.qml:180 qml/Main.qml:365
+#: qml/EpubViewerPage.qml:181 qml/Main.qml:366
 #, kde-format
 msgctxt "Name filter for EPUB files"
 msgid "eBook files (*.epub *.cb* *.fb2 *.fb2zip)"
 msgstr "eBook 文件 (*.epub *.cb* *.fb2 *.fb2zip)"
 
-#: qml/EpubViewerPage.qml:229
+#: qml/EpubViewerPage.qml:230
 #, kde-format
 msgid "Copy"
 msgstr "复制"
 
-#: qml/EpubViewerPage.qml:235
+#: qml/EpubViewerPage.qml:236
 #, kde-format
 msgid "Find"
 msgstr "查找"
 
-#: qml/EpubViewerPage.qml:268
+#: qml/EpubViewerPage.qml:269
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
 msgstr "%1%"
 
-#: qml/EpubViewerPage.qml:288
+#: qml/EpubViewerPage.qml:289
 #, kde-format
 msgid "Time left in chapter:"
 msgstr "章节剩余时间："
 
-#: qml/EpubViewerPage.qml:292
+#: qml/EpubViewerPage.qml:293
 #, kde-format
 msgid "Time left in book:"
 msgstr "全书剩余时间："
 
-#: qml/EpubViewerPage.qml:303
+#: qml/EpubViewerPage.qml:304
 #, kde-format
 msgid "Previous Page"
 msgstr "上一页"
 
-#: qml/EpubViewerPage.qml:329
+#: qml/EpubViewerPage.qml:330
 #, kde-format
 msgid "Next Page"
 msgstr "下一页"
 
-#: qml/EpubViewerPage.qml:364
+#: qml/EpubViewerPage.qml:365
 #, kde-format
 msgid "Loc. %s of %s"
 msgstr "第 %s 部分 共 %s 部分"
 
-#: qml/EpubViewerPage.qml:365
+#: qml/EpubViewerPage.qml:366
 #, kde-format
 msgid "Page %s of %s"
 msgstr "第 %s 页 共 %s 页"
 
-#: qml/EpubViewerPage.qml:366
+#: qml/EpubViewerPage.qml:367
 #, kde-format
 msgid "Page %s"
 msgstr "第 %s 页"
 
-#: qml/EpubViewerPage.qml:367
+#: qml/EpubViewerPage.qml:368
 #, kde-format
 msgid "Close"
 msgstr "关闭"
 
-#: qml/EpubViewerPage.qml:369
+#: qml/EpubViewerPage.qml:370
 #, kde-format
 msgid "Footnote"
 msgstr "脚注"
 
-#: qml/EpubViewerPage.qml:370
+#: qml/EpubViewerPage.qml:371
 #, kde-format
 msgid "Go to Footnote"
 msgstr "跳转到脚注"
 
-#: qml/EpubViewerPage.qml:371
+#: qml/EpubViewerPage.qml:372
 #, kde-format
 msgid "Endnote"
 msgstr "尾注"
 
-#: qml/EpubViewerPage.qml:372
+#: qml/EpubViewerPage.qml:373
 #, kde-format
 msgid "Go to Endnote"
 msgstr "跳转到尾注"
 
-#: qml/EpubViewerPage.qml:373
+#: qml/EpubViewerPage.qml:374
 #, kde-format
 msgid "Note"
 msgstr "笔记"
 
-#: qml/EpubViewerPage.qml:374
+#: qml/EpubViewerPage.qml:375
 #, kde-format
 msgid "Go to Note"
 msgstr "跳转到笔记"
 
-#: qml/EpubViewerPage.qml:375
+#: qml/EpubViewerPage.qml:376
 #, kde-format
 msgid "Definition"
 msgstr "定义"
 
-#: qml/EpubViewerPage.qml:376
+#: qml/EpubViewerPage.qml:377
 #, kde-format
 msgid "Go to Definition"
 msgstr "跳转到定义"
 
-#: qml/EpubViewerPage.qml:377
+#: qml/EpubViewerPage.qml:378
 #, kde-format
 msgid "Bibliography"
 msgstr "参考文献"
 
-#: qml/EpubViewerPage.qml:378
+#: qml/EpubViewerPage.qml:379
 #, kde-format
 msgid "Go to Bibliography"
 msgstr "跳转到参考文献"
 
-#: qml/GridBrowserDelegate.qml:146
+#: qml/GridBrowserDelegate.qml:147
 #, kde-format
 msgctxt "should be keep short, inside a label. Will be in uppercase"
 msgid "New"
 msgstr "新建"
 
-#: qml/LibraryPage.qml:19
+#: qml/LibraryPage.qml:20
 #, kde-format
 msgid "Library"
 msgstr "图书馆"
 
-#: qml/LibraryPage.qml:98
+#: qml/LibraryPage.qml:99
 #, kde-format
 msgctxt "@action:inmenu"
 msgid "Book Details"
 msgstr "图书详情"
 
-#: qml/LibraryPage.qml:110
+#: qml/LibraryPage.qml:111
 #, kde-format
 msgctxt "@info placeholder"
 msgid "Add some books"
 msgstr "添加图书"
 
-#: qml/Main.qml:204
+#: qml/Main.qml:20 qml/Main.qml:304
+#, kde-format
+msgid "Arianna"
+msgstr "Arianna"
+
+#: qml/Main.qml:205
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently read books"
 msgid "Home"
 msgstr "首页"
 
-#: qml/Main.qml:208
+#: qml/Main.qml:209
 #, kde-format
 msgid "Home"
 msgstr "首页"
 
-#: qml/Main.qml:211
+#: qml/Main.qml:212
 #, kde-format
 msgctxt "Switch to the listing page showing the most recently discovered books"
 msgid "Recently Added Books"
 msgstr "最近添加的图书"
 
-#: qml/Main.qml:217
+#: qml/Main.qml:218
 #, kde-format
 msgctxt ""
 "Open a book from somewhere on disk (uses the open dialog, or a drilldown on "
@@ -347,13 +337,13 @@ msgctxt ""
 msgid "Open Other..."
 msgstr "打开其他"
 
-#: qml/Main.qml:225
+#: qml/Main.qml:226
 #, kde-format
 msgctxt "Open the settings page"
 msgid "Settings"
 msgstr "设置"
 
-#: qml/Main.qml:234
+#: qml/Main.qml:235
 #, kde-format
 msgctxt ""
 "Heading for switching to listing page showing items grouped by some "
@@ -361,152 +351,158 @@ msgctxt ""
 msgid "Group By"
 msgstr "分组依据"
 
-#: qml/Main.qml:237
+#: qml/Main.qml:238
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by author"
 msgid "Author"
 msgstr "作者"
 
-#: qml/Main.qml:243
+#: qml/Main.qml:244
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by series"
 msgid "Series"
 msgstr "系列"
 
-#: qml/Main.qml:245
+#: qml/Main.qml:246
 #, kde-format
 msgctxt "Title of the page with books grouped by what series they are in"
 msgid "Group by Series"
 msgstr "按系列分组"
 
-#: qml/Main.qml:249
+#: qml/Main.qml:250
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by publisher"
 msgid "Publisher"
 msgstr "出版社"
 
-#: qml/Main.qml:255
+#: qml/Main.qml:256
 #, kde-format
 msgctxt "Switch to the listing page showing items grouped by genres"
 msgid "Keywords"
 msgstr "关键词"
 
-#: qml/Main.qml:257
+#: qml/Main.qml:258
 #, kde-format
 msgctxt "Title of the page with books grouped by genres"
 msgid "Group by Genres"
 msgstr "按流派分组"
 
-#: qml/Main.qml:335 qml/SettingsPage.qml:16
+#: qml/Main.qml:336 qml/SettingsPage.qml:17
 #, kde-format
 msgid "Settings"
 msgstr "设置"
 
-#: qml/Main.qml:343
+#: qml/Main.qml:344
 #, kde-format
 msgctxt "@action:button"
 msgid "Add Books…"
 msgstr "添加图书..."
 
-#: qml/Main.qml:364
+#: qml/Main.qml:365
 #, kde-format
 msgid "Please choose files"
 msgstr "请选择文件"
 
-#: qml/SettingsPage.qml:19
+#: qml/SettingsPage.qml:20
 #, kde-format
 msgid "Appearance"
 msgstr "外观"
 
-#: qml/SettingsPage.qml:24
+#: qml/SettingsPage.qml:25
 #, kde-format
 msgid "Maximum width:"
 msgstr "最大宽度："
 
-#: qml/SettingsPage.qml:38
+#: qml/SettingsPage.qml:39
 #, kde-format
 msgid "Margin:"
 msgstr "页边距："
 
-#: qml/SettingsPage.qml:53
+#: qml/SettingsPage.qml:54
 #, kde-format
 msgid "Show progress"
 msgstr "显示进度条"
 
-#: qml/SettingsPage.qml:64
+#: qml/SettingsPage.qml:65
 #, kde-format
 msgid "Font"
 msgstr "字体"
 
-#: qml/SettingsPage.qml:72 qml/SettingsPage.qml:194
+#: qml/SettingsPage.qml:73 qml/SettingsPage.qml:195
 #, kde-format
 msgid "Change default font"
 msgstr "更改默认字体"
 
-#: qml/SettingsPage.qml:77
+#: qml/SettingsPage.qml:78
 #, kde-format
 msgid "Use publisher font"
 msgstr "使用出版字体"
 
-#: qml/SettingsPage.qml:88
+#: qml/SettingsPage.qml:89
 #, kde-format
 msgid "Text flow"
 msgstr "文本流"
 
-#: qml/SettingsPage.qml:94
+#: qml/SettingsPage.qml:95
 #, kde-format
 msgid "Justify text"
 msgstr "两端对齐文本"
 
-#: qml/SettingsPage.qml:107
+#: qml/SettingsPage.qml:108
 #, kde-format
 msgid "Hyphenate text"
 msgstr "启用连字符"
 
-#: qml/SettingsPage.qml:119
+#: qml/SettingsPage.qml:120
 #, kde-format
 msgid "Line height:"
 msgstr "行高："
 
-#: qml/SettingsPage.qml:136
+#: qml/SettingsPage.qml:137
 #, kde-format
 msgid "Brightness:"
 msgstr "亮度："
 
-#: qml/SettingsPage.qml:154
+#: qml/SettingsPage.qml:155
 #, kde-format
 msgid "Colors"
 msgstr "颜色"
 
-#: qml/SettingsPage.qml:159
+#: qml/SettingsPage.qml:160
 #, kde-format
 msgid "Invert colors"
 msgstr "反色"
 
-#: qml/SettingsPage.qml:177
+#: qml/SettingsPage.qml:178
 #, kde-format
 msgid "About Arianna"
 msgstr "关于 Arianna"
 
-#: qml/SettingsPage.qml:185
+#: qml/SettingsPage.qml:186
 #, kde-format
 msgid "About KDE"
 msgstr "关于 KDE"
 
-#: qml/TableOfContentDrawer.qml:23
+#: qml/TableOfContentDrawer.qml:24
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
 msgstr "打开目录"
 
-#: qml/TableOfContentDrawer.qml:24
+#: qml/TableOfContentDrawer.qml:25
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
 msgstr "关闭目录"
 
-#: qml/TableOfContentDrawer.qml:45
+#: qml/TableOfContentDrawer.qml:46
 #, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
 msgstr "目录"
+
+#~ msgid "EPub Reader"
+#~ msgstr "EPub 阅读器"
+
+#~ msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
+#~ msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
