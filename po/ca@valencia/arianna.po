@@ -213,7 +213,7 @@ msgstr "Busca"
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
-msgstr "%1%"
+msgstr "%1 %"
 
 #: qml/EpubViewerPage.qml:288
 #, kde-format
@@ -457,7 +457,7 @@ msgstr "Utilitza la lletra de l'editorial"
 #: qml/SettingsPage.qml:88
 #, kde-format
 msgid "Text flow"
-msgstr "Flux del text"
+msgstr "Text que fluïx"
 
 #: qml/SettingsPage.qml:94
 #, kde-format
