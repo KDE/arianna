@@ -41,6 +41,7 @@ class OkularPdfPageItem : public QQuickItem, public Okular::View
     QML_ELEMENT
 
     Q_PROPERTY(OkularPdfDocument *document READ document WRITE setDocument NOTIFY documentChanged)
+    Q_PROPERTY(OkularPdfPageItem *selectionPeer READ selectionPeer WRITE setSelectionPeer NOTIFY selectionPeerChanged)
     Q_PROPERTY(int pageNumber READ pageNumber WRITE setPageNumber NOTIFY pageNumberChanged)
     Q_PROPERTY(bool pageValid READ pageValid NOTIFY pageValidChanged)
     Q_PROPERTY(bool inverted READ inverted WRITE setInverted NOTIFY invertedChanged)
@@ -57,6 +58,9 @@ public:
 
     OkularPdfDocument *document() const;
     void setDocument(OkularPdfDocument *document);
+
+    OkularPdfPageItem *selectionPeer() const;
+    void setSelectionPeer(OkularPdfPageItem *selectionPeer);
 
     int pageNumber() const;
     void setPageNumber(int pageNumber);
@@ -84,6 +88,7 @@ public:
 
 Q_SIGNALS:
     void documentChanged();
+    void selectionPeerChanged();
     void pageNumberChanged();
     void pageValidChanged();
     void invertedChanged();
@@ -93,6 +98,7 @@ Q_SIGNALS:
     void backgroundColorChanged();
     void notInvertedRegionsChanged();
     void forcedInvertedRegionsChanged();
+    void textSelectionStarted();
     void selectionMenuRequested(qreal x, qreal y);
     void pageColorMenuRequested(qreal x, qreal y);
     void linkActivated(const QString &location, const QString &sourceLocation);
@@ -119,11 +125,12 @@ private:
     const Okular::Action *internalLinkActionAt(const QPointF &position) const;
     bool activateLinkAction(const Okular::Action *action, const QPointF &sourcePosition);
     void updateTextSelectionOverlay();
-    void updateTextSelection(const QPointF &endPosition);
+    void updateTextSelection(const QPointF &endPosition, const QPointF &scenePosition);
     std::unique_ptr<Okular::RegularAreaRect> textSelectionForPoints(const QPointF &startPosition, const QPointF &endPosition) const;
     Okular::NormalizedPoint normalizedPointForPosition(const QPointF &position) const;
 
     QPointer<OkularPdfDocument> m_document;
+    QPointer<OkularPdfPageItem> m_selectionPeer;
     const Okular::Page *m_page = nullptr;
     QTimer *m_redrawTimer = nullptr;
     QImage m_buffer;
@@ -147,4 +154,5 @@ private:
     bool m_mousePressed = false;
     bool m_textSelecting = false;
     bool m_hasLastSelectionEndPosition = false;
+    bool m_peerTextSelectionActive = false;
 };

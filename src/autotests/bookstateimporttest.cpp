@@ -35,6 +35,7 @@ private Q_SLOTS:
     void testAtomicFileFailurePreservesAuthoritativeState();
     void testDuplicateImportsCreateSingleState();
     void testAnchorValidationFailuresReportOnly();
+    void testExistingIssuesDoNotBlockUnrelatedEdits();
 };
 
 static QString uniqueBookId(const QString &prefix)
@@ -411,6 +412,51 @@ void BookStateImportTest::testAnchorValidationFailuresReportOnly()
     QVERIFY(writeTestEpub(workingPath, chapterWithBody(QByteArrayLiteral("<p><span id=\"uuid_not-valid\" data-role=\"anchor\">Broken</span></p>"))));
     const BookStateImportResult malformed = importer.importEditorWorkingCopy(malformedSession);
     QVERIFY(malformed.status == BookStateImportStatus::AnchorValidationFailed);
+}
+
+void BookStateImportTest::testExistingIssuesDoNotBlockUnrelatedEdits()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString bookId = uniqueBookId(QStringLiteral("existing-issues"));
+    const QString original = dir.filePath(QStringLiteral("original.epub"));
+    const QString working = dir.filePath(QStringLiteral("working.epub"));
+    const QByteArray body = QByteArrayLiteral("<p><span id=\"kept-note\" data-role=\"anchor\">Original text.</span></p>");
+    QVERIFY(writeTestEpub(original, chapterWithBody(body)));
+    addBookEntry(bookId, original);
+    // Reproduce the stale internal references from an older edition.
+    for (const auto &anchor : {"missing-source-one", "missing-source-two"}) {
+        BookDatabase::self().saveReference({{QStringLiteral("sourceBookId"), bookId},
+                                            {QStringLiteral("sourceAnchorId"), QString::fromLatin1(anchor)},
+                                            {QStringLiteral("targetBookId"), bookId},
+                                            {QStringLiteral("targetLocation"), QStringLiteral("OEBPS/chapter.xhtml")}});
+    }
+    BookDatabase::self().saveAnnotation(bookId, {{QStringLiteral("annotationId"), QStringLiteral("saved-note")},
+                                               {QStringLiteral("anchorId"), QStringLiteral("kept-note")}});
+    auto session = createSession(bookId, working);
+    const auto references = BookDatabase::self().loadReferences(bookId);
+    const auto annotations = BookDatabase::self().loadAnnotations(bookId);
+    QVERIFY(writeTestEpub(working, chapterWithBody(QByteArray(body).replace("Original", "Edited"))));
+    BookStateImport importer;
+    const auto imported = importer.importEditorWorkingCopy(session);
+    QVERIFY2(imported.status == BookStateImportStatus::Imported, qPrintable(imported.errorMessage));
+    QCOMPARE(imported.anchorValidationIssues.size(), 2);
+    QCOMPARE(fileHash(original), fileHash(working));
+    QCOMPARE(BookDatabase::self().loadReferences(bookId), references);
+    QCOMPARE(BookDatabase::self().loadAnnotations(bookId), annotations);
+    const auto acceptedHash = fileHash(original);
+    const auto acceptedSessionHash = session.lastImportedFileHash;
+    const auto acceptedState = BookDatabase::self().currentBookState(bookId)->stateId;
+
+    // Existing issues must not hide a newly removed annotation anchor.
+    QVERIFY(writeTestEpub(working, chapterWithBody(QByteArrayLiteral("<p>Newly removed note anchor.</p>"))));
+    const auto rejected = importer.importEditorWorkingCopy(session);
+    QVERIFY(rejected.status == BookStateImportStatus::AnchorValidationFailed);
+    QCOMPARE(fileHash(original), acceptedHash);
+    QCOMPARE(session.lastImportedFileHash, acceptedSessionHash);
+    QCOMPARE(BookDatabase::self().currentBookState(bookId)->stateId, acceptedState);
+    QCOMPARE(BookDatabase::self().loadReferences(bookId), references);
+    QCOMPARE(BookDatabase::self().loadAnnotations(bookId), annotations);
 }
 
 QTEST_MAIN(BookStateImportTest)

@@ -47,6 +47,7 @@ class OkularPdfDocument : public QObject
     Q_PROPERTY(bool opened READ opened NOTIFY openedChanged)
     Q_PROPERTY(bool loading READ loading NOTIFY loadingChanged)
     Q_PROPERTY(bool needsPassword READ needsPassword NOTIFY needsPasswordChanged)
+    Q_PROPERTY(bool pdfLinkAnnotationAllowed READ pdfLinkAnnotationAllowed NOTIFY pdfLinkAnnotationAllowedChanged)
     Q_PROPERTY(int pageCount READ pageCount NOTIFY pageCountChanged)
     Q_PROPERTY(int currentPage READ currentPage WRITE setCurrentPage NOTIFY currentPageChanged)
     Q_PROPERTY(QString password READ password WRITE setPassword NOTIFY passwordChanged)
@@ -82,6 +83,7 @@ public:
     bool opened() const;
     bool loading() const;
     bool needsPassword() const;
+    bool pdfLinkAnnotationAllowed() const;
     int pageCount() const;
 
     int currentPage() const;
@@ -106,7 +108,32 @@ public:
     Q_INVOKABLE void clearTextSelection();
     Q_INVOKABLE void copySelectedText(bool removeLineBreaks) const;
     Q_INVOKABLE QString selectedTextForTranslation() const;
+    Q_INVOKABLE QString selectedTextForSpeech() const;
+    /// Read-only positions in Okular's extracted text, independent of repeated
+    /// words and of the live selection after its menu closes.
+    Q_INVOKABLE QVariantMap speechSelectionRange() const;
+    Q_INVOKABLE QVariantMap speechPageSegments(int page, int offset, int maximumSegments = 24) const;
+    /// Returns the current text selection in Okular's normalized page coordinates.
+    /// This is intentionally document geometry, not an Arianna annotation anchor.
+    Q_INVOKABLE QVariantMap textSelectionGeometry() const;
+    /// Creates a document-owned PDF /Link annotation. Both selections use the
+    /// normalized geometry returned by textSelectionGeometry().
+    Q_INVOKABLE QVariantMap createPdfLinkAnnotation(const QVariantMap &sourceSelection,
+                                                     const QVariantMap &targetSelection,
+                                                     const QString &targetFileName = QString());
+    /// Stores a document-owned Arianna anchor on the supplied normalized PDF
+    /// selection. The PDF only records the anchor id; reference data remains
+    /// in Arianna's database.
+    Q_INVOKABLE QVariantMap createPdfAnchorAnnotation(const QVariantMap &selection,
+                                                       const QString &anchorId,
+                                                       const QString &targetFileName = QString());
+    /// Returns the Arianna anchors embedded in a PDF. An /NM entry is only
+    /// accepted when the annotation explicitly has /AriannaAnchor true.
+    Q_INVOKABLE QVariantList pdfAriannaAnchors(const QString &targetFileName = QString()) const;
+    Q_INVOKABLE QVariantList searchText(const QString &text) const;
     Q_INVOKABLE QVariantMap writeTableOfContentsToPdf(const QString &tableOfContentsJson, const QString &targetFileName = QString());
+    Q_INVOKABLE QVariantMap removeTableOfContentsItemFromPdf(const QString &tocId, const QString &targetFileName = QString());
+    Q_INVOKABLE QVariantMap editTableOfContentsItemInPdf(const QString &tocId, const QString &title, const QString &targetFileName = QString());
     Q_INVOKABLE void reload();
 
     Okular::Document *document() const;
@@ -121,6 +148,7 @@ Q_SIGNALS:
     void openedChanged();
     void loadingChanged();
     void needsPasswordChanged();
+    void pdfLinkAnnotationAllowedChanged();
     void pageCountChanged();
     void currentPageChanged();
     void passwordChanged();
@@ -136,9 +164,11 @@ private:
     void clearDocumentState();
     void updateMetadata();
     void updateTableOfContents();
+    void updatePdfLinkAnnotationPermission();
     void setStatus(Status status);
     void setPageCount(int pageCount);
     void setNeedsPassword(bool needsPassword);
+    void setPdfLinkAnnotationAllowed(bool allowed);
     void setErrorString(const QString &errorString);
     void setCurrentPageValue(int page);
 
@@ -147,6 +177,7 @@ private:
     std::unique_ptr<OkularPdfDocumentObserver> m_pageviewObserver;
     Status m_status = Null;
     bool m_needsPassword = false;
+    bool m_pdfLinkAnnotationAllowed = false;
     int m_pageCount = 0;
     int m_currentPage = 0;
     QString m_password;

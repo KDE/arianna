@@ -115,33 +115,14 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
             flex-direction: column;
         }
 
-        #footnote-dialog {
-            width: 400px;
-            height: 400px;
-        }
-
-        #reference-dialog,
-        #create-reference-dialog,
-        #delete-reference-dialog {
-            width: 500px;
-        }
-
-        #reference-dialog {
-            height: 300px;
-        }
-
-        #create-reference-dialog {
-            max-height: min(90vh, 600px);
-        }
-
-        #delete-reference-dialog {
-            width: min(420px, 100%);
-        }
-
-        #footnote-dialog>div {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
+        /* Keep the resource owner alive for the native footnote window. */
+        #footnote-source {
+            position: fixed;
+            left: -10000px;
+            top: 0;
+            width: 600px;
+            height: 600px;
+            pointer-events: none;
         }
 
         .reader-dialog header {
@@ -159,8 +140,7 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
         }
 
         .reader-dialog--stacked>div,
-        .reader-dialog--stacked main,
-        #createReferenceForm {
+        .reader-dialog--stacked main {
             display: flex;
             flex-direction: column;
         }
@@ -169,29 +149,6 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
             flex: none;
         }
 
-        #reference-dialog .reference-preview-pane {
-            display: flex;
-            flex: 1 1 auto;
-            flex-direction: column;
-            min-height: 0;
-            overflow: hidden;
-        }
-
-        #reference-dialog main,
-        #create-reference-dialog main,
-        #delete-reference-dialog main {
-            overflow-y: auto;
-            overflow-x: hidden;
-            padding: 8px 16px;
-            box-sizing: border-box;
-        }
-
-        #reference-dialog main {
-            flex: 0 1 auto;
-            max-height: 40%;
-        }
-
-        #footnote-dialog form,
         .reader-dialog footer {
             display: flex;
             border-top: 1px solid var(--border);
@@ -203,7 +160,6 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
             gap: 8px;
         }
 
-        #footnote-dialog form button,
         .reader-dialog footer button {
             flex: 1;
             border: 0;
@@ -215,85 +171,22 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
             min-width: 0;
         }
 
-        #footnote-dialog form button+button,
         .reader-dialog footer button+button {
             border-inline-start: 1px solid var(--border);
         }
 
-        #footnote-dialog form button:hover,
         .reader-dialog footer button:hover {
             background: var(--hover);
         }
 
-        #footnote-dialog form button:active,
         .reader-dialog footer button:active {
             background: var(--active);
         }
 
-        #reference-dialog footer button:hover,
-        #reference-dialog footer button:active {
-            color: yellow;
-        }
-
-        #footnote-dialog foliate-view {
+        #footnote-source foliate-view {
             display: block;
             width: 100%;
             height: 100%;
-        }
-
-        #referencePreview,
-        #targetResults {
-            padding: 0 8px;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
-            overflow-x: hidden;
-        }
-
-        #reference-dialog foliate-view,
-        #referencePreview,
-        #targetResults {
-            display: block;
-            width: 100%;
-        }
-
-        #referencePreview,
-        #targetResults {
-            flex: 1 1 auto;
-            min-height: 0;
-            max-height: 100%;
-            overflow-y: auto;
-        }
-
-        #createReferenceForm {
-            gap: 8px;
-        }
-
-        #delete-reference-dialog p {
-            margin: 8px 0;
-            line-height: 1.4;
-        }
-
-        #createReferenceForm label {
-            font-weight: bold;
-        }
-
-        #createReferenceForm input[type="text"],
-        #createReferenceForm select,
-        #createReferenceForm textarea {
-            width: 100%;
-            box-sizing: border-box;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            padding: 8px;
-            background: var(--bg);
-            color: var(--fg);
-        }
-
-        #createReferenceForm textarea {
-            min-height: 90px;
-            resize: vertical;
-            font: inherit;
         }
 
         @media (max-width: 500px) {
@@ -313,77 +206,8 @@ SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accept
     <script src="qrc:/qtwebchannel/qwebchannel.js"></script>
     <script src="reader.js" type="module"></script>
     <div id="viewer"></div>
-    <dialog id="footnote-dialog" class="reader-dialog">
-        <div>
-            <header></header>
-            <main></main>
-            <form method="dialog">
-                <input name="href" type="hidden">
-                <button value="close"></button>
-                <button value="go"></button>
-            </form>
-        </div>
-    </dialog>
+    <div id="footnote-source" aria-hidden="true" inert></div>
 
-    <dialog id="reference-dialog" class="reader-dialog reader-dialog--stacked">
-        <header id="referenceHeader">Referenz</header>
-        <div class="reference-preview-pane">
-            <div id="referencePreview" class="reference-preview"></div>
-        </div>
-        <main>
-
-            <div id="targetResults"></div>
-        </main>
-
-        <footer>
-            <button id="closeButton" value="close">Schließen</button>
-            <button id="openReferenceButton" value="openRef">Referenz öffnen</button>
-            <button id="editReferenceButton" value="editRef">Referenz bearbeiten</button>
-            <button id="deleteReferenceButton" value="deleteRef">Referenz löschen</button>
-        </footer>
-    </dialog>
-    <dialog id="create-reference-dialog" class="reader-dialog reader-dialog--stacked">
-        <header id="createReferenceHeader">Referenz erstellen</header>
-        <main>
-            <form id="createReferenceForm">
-                <label for="sourceAnchorTitle">Quellanker-Titel:</label>
-                <input type="text" id="sourceAnchorTitle" name="sourceAnchorTitle" value="S.B. Vers 1.1.1">
-
-                <label for="targetBookId">Zielbuch:</label>
-                <select id="targetBookId" name="targetBookId" required>
-                    <option value="">-- Bitte wählen --</option>
-                </select>
-
-                <label for="targetLocationSelect">Zielort:</label>
-                <select id="targetLocationSelect" name="targetLocationSelect">
-                    <option value="">-- Keine Auswahl --</option>
-                </select>
-
-                <label for="targetCFI">Zielort-CFI:</label>
-                <input type="text" id="targetCFI" name="targetCFI" placeholder="epubcfi(...)">
-
-                <label for="targetPreviewHtml">Preview-Text:</label>
-                <textarea id="targetPreviewHtml" name="targetPreviewHtml" rows="4"></textarea>
-
-                <input type="hidden" id="targetLocation" name="targetLocation">
-            </form>
-        </main>
-
-        <footer>
-            <button id="closeCreateReferenceButton" value="close">Schließen</button>
-            <button id="submitReferenceButton" type="submit" form="createReferenceForm">Referenz erstellen</button>
-        </footer>
-    </dialog>
-    <dialog id="delete-reference-dialog" class="reader-dialog reader-dialog--stacked">
-        <header>Referenz löschen?</header>
-        <main>
-            <p>Diese Referenz wird aus der Datenbank entfernt. Der Quellanker wird aus dem EPUB entfernt; der sichtbare Text bleibt erhalten.</p>
-        </main>
-        <footer>
-            <button id="cancelDeleteReferenceButton" value="cancel">Abbrechen</button>
-            <button id="confirmDeleteReferenceButton" value="delete">Referenz löschen</button>
-        </footer>
-    </dialog>
 </body>
 
 </html>

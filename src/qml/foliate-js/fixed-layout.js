@@ -1,3 +1,5 @@
+import { waitForMath } from './mathjax.js'
+
 const parseViewport = str => str
     ?.split(/[,;\s]/) // NOTE: technically, only the comma is valid
     ?.filter(x => x)
@@ -88,8 +90,10 @@ export class FixedLayout extends HTMLElement {
         this.#root.append(element)
         if (!src) return { blank: true, element, iframe }
         return new Promise(resolve => {
-            iframe.addEventListener('load', () => {
+            iframe.addEventListener('load', async () => {
                 const doc = iframe.contentDocument
+                iframe.style.display = 'block'
+                await waitForMath(doc)
                 this.dispatchEvent(new CustomEvent('load', { detail: { doc, index } }))
                 const { width, height } = getViewport(doc, this.defaultViewport)
                 resolve({

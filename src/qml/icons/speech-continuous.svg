@@ -1,0 +1,11 @@
+<!-- SPDX-FileCopyrightText: none -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22 22">
+  <defs>
+    <style id="current-color-scheme" type="text/css">
+      .ColorScheme-Text { color: #232629; }
+    </style>
+  </defs>
+  <path class="ColorScheme-Text" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"
+        d="M11 11 C9 8.5 7.5 7 5.5 7 C3.5 7 2 8.5 2 11 C2 13.5 3.5 15 5.5 15 C7.5 15 9 13.5 11 11 C13 8.5 14.5 7 16.5 7 C18.5 7 20 8.5 20 11 C20 13.5 18.5 15 16.5 15 C14.5 15 13 13.5 11 11"/>
+</svg>

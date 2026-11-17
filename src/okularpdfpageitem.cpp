@@ -411,6 +411,21 @@ void OkularPdfPageItem::setDocument(OkularPdfDocument *document)
     Q_EMIT documentChanged();
 }
 
+OkularPdfPageItem *OkularPdfPageItem::selectionPeer() const
+{
+    return m_selectionPeer;
+}
+
+void OkularPdfPageItem::setSelectionPeer(OkularPdfPageItem *selectionPeer)
+{
+    if (m_selectionPeer == selectionPeer) {
+        return;
+    }
+
+    m_selectionPeer = selectionPeer;
+    Q_EMIT selectionPeerChanged();
+}
+
 int OkularPdfPageItem::pageNumber() const
 {
     return m_pageNumber;
@@ -767,9 +782,11 @@ void OkularPdfPageItem::mousePressEvent(QMouseEvent *event)
     }
 
     if (event->button() == Qt::LeftButton) {
+        Q_EMIT textSelectionStarted();
         m_selectionStartPosition = event->position();
         m_mousePressed = true;
         m_textSelecting = false;
+        m_peerTextSelectionActive = false;
         m_pressedLinkAction = linkActionAt(event->position());
         m_hasLastSelectionEndPosition = false;
         m_document->clearTextSelection();
@@ -806,7 +823,7 @@ void OkularPdfPageItem::mouseMoveEvent(QMouseEvent *event)
     }
 
     m_textSelecting = true;
-    updateTextSelection(event->position());
+    updateTextSelection(event->position(), event->scenePosition());
     event->accept();
 }
 
@@ -824,7 +841,7 @@ void OkularPdfPageItem::mouseReleaseEvent(QMouseEvent *event)
     bool requestSelectionMenu = false;
     bool linkActivated = false;
     if (m_textSelecting && canSelectText()) {
-        updateTextSelection(event->position());
+        updateTextSelection(event->position(), event->scenePosition());
         requestSelectionMenu = m_document && m_document->hasTextSelection() && !m_document->selectedText().trimmed().isEmpty();
     } else if (m_pressedLinkAction && linkActionAt(event->position()) == m_pressedLinkAction) {
         linkActivated = activateLinkAction(m_pressedLinkAction, event->position());
@@ -833,6 +850,7 @@ void OkularPdfPageItem::mouseReleaseEvent(QMouseEvent *event)
     const QPointF menuPosition = event->position();
     m_mousePressed = false;
     m_textSelecting = false;
+    m_peerTextSelectionActive = false;
     m_pressedLinkAction = nullptr;
     event->accept();
 
@@ -1041,10 +1059,37 @@ void OkularPdfPageItem::updateTextSelectionOverlay()
     }
 }
 
-void OkularPdfPageItem::updateTextSelection(const QPointF &endPosition)
+void OkularPdfPageItem::updateTextSelection(const QPointF &endPosition, const QPointF &scenePosition)
 {
     if (!m_document) {
         return;
+    }
+
+    if (m_selectionPeer && m_selectionPeer->canSelectText() && m_pageNumber != m_selectionPeer->m_pageNumber) {
+        const QPointF peerPosition = m_selectionPeer->mapFromScene(scenePosition);
+        const QRectF peerBounds(0, 0, m_selectionPeer->width(), m_selectionPeer->height());
+        if (peerBounds.contains(peerPosition)) {
+            const bool forward = m_pageNumber < m_selectionPeer->m_pageNumber;
+            const QPointF sourceEdge = forward ? QPointF(width(), height()) : QPointF(0, 0);
+            const QPointF peerEdge = forward ? QPointF(0, 0) : QPointF(m_selectionPeer->width(), m_selectionPeer->height());
+            const QPointF peerStart = forward ? peerEdge : peerPosition;
+            const QPointF peerEnd = forward ? peerPosition : peerEdge;
+            m_document->setTextSelection(m_pageNumber, textSelectionForPoints(m_selectionStartPosition, sourceEdge));
+            m_selectionPeer->m_document->setTextSelection(m_selectionPeer->m_pageNumber,
+                                                          m_selectionPeer->textSelectionForPoints(peerStart, peerEnd));
+            m_peerTextSelectionActive = true;
+            return;
+        }
+
+        if (m_peerTextSelectionActive) {
+            const QPointF ownPosition = mapFromScene(scenePosition);
+            const QRectF ownBounds(0, 0, width(), height());
+            if (!ownBounds.contains(ownPosition)) {
+                return;
+            }
+            m_selectionPeer->m_document->setTextSelection(m_selectionPeer->m_pageNumber, nullptr);
+            m_peerTextSelectionActive = false;
+        }
     }
 
     const QPoint roundedEndPosition(static_cast<int>(std::lround(endPosition.x())), static_cast<int>(std::lround(endPosition.y())));

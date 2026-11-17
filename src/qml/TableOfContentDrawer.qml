@@ -15,15 +15,34 @@ Kirigami.OverlayDrawer {
     id: root
 
     property alias model: tableOfContentModel
-    property bool tableOfContentsModified: false
     property string currentTocId: ""
     property string currentHref: ""
+    property string contextTocId: ""
+    property string contextTocTitle: ""
+    readonly property bool canEditPdfTableOfContents: {
+        const window = applicationWindow();
+        const currentPage = window && window.pageStack ? window.pageStack.layers.currentItem : null;
+        return currentPage && currentPage.pdfDocument !== undefined;
+    }
     signal goTo(cfi: string)
-    signal saveTableOfContents()
+    signal removePdfTableOfContentsItem(tocId: string)
+    signal editPdfTableOfContentsItem(tocId: string, title: string)
 
     function clearCurrentItem() {
         currentTocId = "";
         currentHref = "";
+    }
+
+    function openTocItemContextMenu(tocId, title, position) {
+        if (!canEditPdfTableOfContents || !tocId) {
+            return;
+        }
+
+        contextTocId = tocId;
+        contextTocTitle = title;
+        tocItemContextMenu.x = position.x;
+        tocItemContextMenu.y = position.y;
+        tocItemContextMenu.open();
     }
 
     function stringValue(value) {
@@ -83,16 +102,6 @@ Kirigami.OverlayDrawer {
                     text: i18nc("@info:title", "Table of Contents")
                 }
 
-                QQC2.ToolButton {
-                    icon.name: "document-save"
-                    text: i18nc("@action:button", "Write Table of Contents to PDF")
-                    enabled: root.tableOfContentsModified
-                    display: QQC2.AbstractButton.IconOnly
-                    onClicked: root.saveTableOfContents()
-                    QQC2.ToolTip.text: text
-                    QQC2.ToolTip.visible: hovered
-                    QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
-                }
             }
         }
 
@@ -144,8 +153,33 @@ Kirigami.OverlayDrawer {
                     Component.onCompleted: if (currentTocItem && root.drawerOpen) {
                         root.scheduleTreeViewPosition(model.index, tocId, href);
                     }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        acceptedButtons: Qt.RightButton
+                        onClicked: mouse => {
+                            const position = itemDelegate.mapToItem(treeView, mouse.x, mouse.y);
+                            root.openTocItemContextMenu(itemDelegate.tocId, itemDelegate.title, position);
+                        }
+                    }
                 }
             }
+        }
+    }
+
+    QQC2.Menu {
+        id: tocItemContextMenu
+
+        parent: treeView
+
+        QQC2.MenuItem {
+            text: i18nc("@action:inmenu", "Edit TOC Item")
+            onTriggered: root.editPdfTableOfContentsItem(root.contextTocId, root.contextTocTitle)
+        }
+
+        QQC2.MenuItem {
+            text: i18nc("@action:inmenu", "Remove TOC Item")
+            onTriggered: root.removePdfTableOfContentsItem(root.contextTocId)
         }
     }
 }

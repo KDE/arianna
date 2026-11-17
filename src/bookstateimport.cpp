@@ -132,7 +132,9 @@ BookStateImportResult BookStateImport::importEditorWorkingCopy(EditorSession &se
     result.currentStateId = snapshot.state->stateId;
     result.previousStateId = snapshot.state->stateId;
 
-    const BookCommitResult commit = store.commitCandidateBookFile(session.bookId, workingCopyInfo.absoluteFilePath(), allowInvalidAnchors);
+    // An unrelated edit must not require repairing stale references already
+    // missing in the authoritative edition. Newly introduced issues still block.
+    const BookCommitResult commit = store.commitCandidateBookFile(session.bookId, workingCopyInfo.absoluteFilePath(), allowInvalidAnchors, true);
     result.textContentHash = commit.textContentHash;
     result.documentStateHash = commit.documentStateHash;
     result.epubFileHash = commit.epubFileHash;

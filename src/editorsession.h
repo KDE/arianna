@@ -15,10 +15,17 @@ struct EditorSession {
     QString workingCopyPath;
 
     QByteArray lastImportedFileHash;
+    QByteArray lastImportedStateHash;
 
     QDateTime createdAt;
     QDateTime lastImportedAt;
 
     qint64 editorProcessId = -1;
     bool active = false;
+    QUuid baseStateId;
+    QByteArray baseFileHash;
+    QString lastImportStatus;
+    qint64 ownerPid = -1;
+    QString ownerToken;
+    QString editorToken;
 };

@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accepted-LGPL
 
 #include "pdfwatermarkfilter.h"
+#include "booklistmodel.h"
 #include "config.h"
 
 #include <QFile>
@@ -90,6 +91,7 @@ private Q_SLOTS:
     void doesNotFollowNestedFormResources();
     void handlesMultipleContentStreams();
     void handlesSharedPageResources();
+    void createsAndReplacesWatermarkFreePdf();
     void rejectsSignedPdf();
     void rejectsEncryptedPdfWithoutOwnerPermissions();
 };
@@ -213,6 +215,35 @@ void PdfWatermarkFilterTest::handlesSharedPageResources()
         QVERIFY(!hasXObjectResource(page, nameBytes(watermarkName)));
         QVERIFY(!pageContents(page).contains(invocation(watermarkName).trimmed()));
     }
+}
+
+void PdfWatermarkFilterTest::createsAndReplacesWatermarkFreePdf()
+{
+    QTemporaryDir directory;
+    QVERIFY(directory.isValid());
+    const QString inputFileName = directory.filePath(QStringLiteral("watermarked.pdf"));
+
+    PdfMemDocument document;
+    PdfPage &page = document.GetPages().CreatePage(PdfPageSize::A4);
+    const auto watermark = document.CreateXObjectForm(Rect(0, 0, 20, 20));
+    addAdobeWatermarkMarker(*watermark);
+    appendContent(page, invocation(addXObject(page.GetResources(), *watermark)));
+    save(document, inputFileName);
+
+    BookListModel bookListModel;
+    const QVariantMap filterResult = bookListModel.createWatermarkFreePdf(inputFileName, Config::defaultPdfWatermarkFilterPatternValue());
+    QVERIFY(filterResult.value(QStringLiteral("success")).toBool());
+    QVERIFY(filterResult.value(QStringLiteral("filtered")).toBool());
+    QCOMPARE(filterResult.value(QStringLiteral("occurrences")).toInt(), 1);
+
+    const QString replacementFileName = filterResult.value(QStringLiteral("replacementFileName")).toString();
+    const QVariantMap replacementResult = bookListModel.replaceBookFileWithWatermarkFreePdf(inputFileName, replacementFileName, false);
+    QVERIFY(replacementResult.value(QStringLiteral("success")).toBool());
+    QVERIFY(!QFileInfo::exists(replacementFileName));
+
+    QFile inputFile(inputFileName);
+    QVERIFY(inputFile.open(QIODevice::ReadOnly));
+    QVERIFY(!inputFile.readAll().contains("WatermarkDemo"));
 }
 
 void PdfWatermarkFilterTest::rejectsSignedPdf()

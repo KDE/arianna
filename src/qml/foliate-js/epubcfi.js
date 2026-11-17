@@ -1,3 +1,5 @@
+import { mathCFIFilter, mathSourceBoundary, mathVisualBoundary } from './mathjax.js'
+
 const findIndices = (arr, f) => arr
     .map((x, i, a) => f(x, i, a) ? i : null).filter(x => x != null)
 const splitAt = (arr, is) => [-1, ...is, arr.length].reduce(({ xs, a }, b) =>
@@ -198,12 +200,13 @@ const getChildNodes = (node, filter) => {
     const nodes = Array.from(node.childNodes)
         // "content other than element and character data is ignored"
         .filter(node => isTextNode(node) || isElementNode(node))
-    return filter ? nodes.map(node => {
-        const accept = filter(node)
+    return nodes.map(node => {
+        const math = mathCFIFilter(node)
+        const accept = math === NodeFilter.FILTER_ACCEPT ? filter?.(node) : math
         if (accept === NodeFilter.FILTER_REJECT) return null
         else if (accept === NodeFilter.FILTER_SKIP) return getChildNodes(node, filter)
         else return node
-    }).flat().filter(x => x) : nodes
+    }).flat().filter(x => x)
 }
 
 // child nodes are organized such that the result is always
@@ -256,15 +259,24 @@ const partsToNode = (node, parts, filter) => {
     if (!Array.isArray(node)) return { node, offset }
     // get underlying text node and offset from the chunk
     let sum = 0
-    for (const n of node) {
+    for (const [i, n] of node.entries()) {
         const { length } = n.nodeValue
+        if (sum + length === offset && node[i + 1]
+            && mathVisualBoundary(node[i + 1], 0).node !== node[i + 1])
+            return { node: node[i + 1], offset: 0 }
         if (sum + length >= offset) return { node: n, offset: offset - sum }
         sum += length
     }
 }
 
 const nodeToParts = (node, offset, filter) => {
-    const { parentNode, id } = node
+    const { id } = node
+    let parentNode = node.parentNode
+    // Index text in its logical source parent, including reader-owned anchor
+    // wrappers. Their text can join adjacent siblings in a single CFI chunk.
+    while (mathCFIFilter(parentNode) === NodeFilter.FILTER_SKIP
+        || filter?.(parentNode) === NodeFilter.FILTER_SKIP)
+        parentNode = parentNode.parentNode
     const indexed = indexChildNodes(parentNode, filter)
     const index = indexed.findIndex(x =>
         Array.isArray(x) ? x.some(x => x === node) : x === node)
@@ -289,9 +301,11 @@ const nodeToParts = (node, offset, filter) => {
 
 export const fromRange = (range, filter) => {
     const { startContainer, startOffset, endContainer, endOffset } = range
-    const start = nodeToParts(startContainer, startOffset, filter)
+    const sourceStart = mathSourceBoundary(startContainer, startOffset)
+    const sourceEnd = mathSourceBoundary(endContainer, endOffset, !range.collapsed)
+    const start = nodeToParts(sourceStart.node, sourceStart.offset, filter)
     if (range.collapsed) return toString([start])
-    const end = nodeToParts(endContainer, endOffset, filter)
+    const end = nodeToParts(sourceEnd.node, sourceEnd.offset, filter)
     return buildRange([start], [end])
 }
 
@@ -300,12 +314,18 @@ export const toRange = (doc, parts, filter) => {
     const endParts = collapse(parts, true)
 
     const root = doc.documentElement
-    const start = partsToNode(root, startParts[0], filter)
-    const end = partsToNode(root, endParts[0], filter)
+    let start = partsToNode(root, startParts[0], filter)
+    let end = partsToNode(root, endParts[0], filter)
 
     if (!isNode(start?.node) || !isNode(end?.node)
     || !isValidOffset(start) || !isValidOffset(end))
         throw new Error('CFI target no longer exists')
+
+    const point = start.node === end.node && start.offset === end.offset
+        && start.before === end.before && start.after === end.after
+    if (!start.before && !start.after) start = mathVisualBoundary(start.node, start.offset)
+    if (point) end = start
+    else if (!end.before && !end.after) end = mathVisualBoundary(end.node, end.offset, true)
 
     const range = doc.createRange()
 

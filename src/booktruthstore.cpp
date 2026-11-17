@@ -1,11 +1,17 @@
 // SPDX-License-Identifier: LGPL-2.1-only OR LGPL-3.0-only OR LicenseRef-KDE-Accepted-LGPL
 
+#include "maintenancefiles.h"
 #include "booktruthstore.h"
+#include "workstructure.h"
+#include <QLockFile>
 
 #include "bookdatabase.h"
 #include "categoryentriesmodel.h"
+#include "config.h"
 #include "epubcontainer.h"
 
+#include <KArchiveDirectory>
+#include <KLocalizedString>
 #include <QCryptographicHash>
 #include <QDir>
 #include <QDomDocument>
@@ -43,6 +49,7 @@ struct FileReplacementBackup {
 struct AnchorScanResult {
     QSet<QString> anchorIds;
     QSet<QString> elementIds;
+    QHash<QString, QSet<QString>> documentElementIds;
     QStringList errors;
 };
 
@@ -208,6 +215,8 @@ static bool copyAnchorSafetyBackup(const QString &sourcePath, const QString &anc
             return false;
         }
 
+        if (!MaintenanceFiles::registerBackup(sourceInfo.absoluteFilePath(), candidatePath))
+            qWarning() << "Unable to record safety backup" << candidatePath;
         if (backupPath) {
             *backupPath = candidatePath;
         }
@@ -343,6 +352,7 @@ static void scanAnchorElements(const QDomNode &node, AnchorScanResult &result, Q
         const QString elementId = element.attribute(QStringLiteral("id")).trimmed();
         if (!elementId.isEmpty()) {
             result.elementIds.insert(elementId);
+            result.documentElementIds[documentPath].insert(elementId);
         }
 
         const QString dataRole = element.attribute(QStringLiteral("data-role")).trimmed();
@@ -400,37 +410,54 @@ static AnchorScanResult scanPersistentAnchors(EPubContainer &container)
     return result;
 }
 
-static QString fragmentFromLocation(const QString &location)
-{
-    const int fragmentIndex = location.indexOf(QLatin1Char('#'));
-    if (fragmentIndex < 0) {
-        return {};
-    }
-
-    return QUrl::fromPercentEncoding(location.mid(fragmentIndex + 1).toUtf8()).trimmed();
-}
-
-static QStringList targetAnchorCandidateIds(const QVariantMap &reference)
-{
-    QStringList candidates;
-    auto append = [&candidates](QString value) {
-        value = value.trimmed();
-        if (!value.isEmpty() && !candidates.contains(value)) {
-            candidates.append(value);
-        }
-    };
-
-    const QString targetLocation = reference.value(QStringLiteral("targetLocation")).toString().trimmed();
-    if (!targetLocation.contains(QLatin1Char('/')) && !targetLocation.contains(QLatin1Char('#')) && !targetLocation.startsWith(QStringLiteral("epubcfi("))) {
-        append(targetLocation);
-    }
-    append(fragmentFromLocation(targetLocation));
-    return candidates;
-}
-
 static bool hasElementOrAnchor(const AnchorScanResult &scan, const QString &id)
 {
     return scan.elementIds.contains(id) || hasAnchorElement(scan, id);
+}
+
+static bool hasReferenceTarget(EPubContainer &container, const AnchorScanResult &scan, const QString &location)
+{
+    // CFIs and external URLs require separate checks in the reference report.
+    if (location.isEmpty() || location.startsWith(QStringLiteral("epubcfi("))) {
+        return true;
+    }
+    const QUrl url(location);
+    if (!url.isValid()) {
+        return false;
+    }
+    if (!url.isRelative() || !url.authority().isEmpty()) {
+        return true;
+    }
+    const QString fragment = url.fragment(QUrl::FullyDecoded);
+    if (url.path().isEmpty()) {
+        return fragment.isEmpty() || hasElementOrAnchor(scan, fragment);
+    }
+
+    QString path;
+    if (!url.hasFragment() && !location.contains(QLatin1Char('/'))) {
+        const QString id = QUrl::fromPercentEncoding(location.toUtf8());
+        if (hasElementOrAnchor(scan, id)) {
+            return true;
+        }
+        // Legacy locations can be manifest IDs; a bare filename is a file target.
+        path = container.epubItem(id).path;
+    }
+    if (path.isEmpty()) {
+        path = QUrl(QStringLiteral("epub:/")).resolved(url).adjusted(QUrl::NormalizePathSegments).path().mid(1);
+    }
+    const auto entry = container.rootDirectory()->entry(path);
+    if (!entry || !entry->isFile()) {
+        return false;
+    }
+    if (fragment.isEmpty()) {
+        return true;
+    }
+    // The anchor must belong to the referenced document, even if another chapter
+    // contains an identical ID.
+    const auto ids = scan.documentElementIds.value(path);
+    const QString normalized = normalizedAnchorElementId(fragment);
+    return ids.contains(fragment) || ids.contains(normalized)
+        || (ids.contains(normalized + QStringLiteral("_begin")) && ids.contains(normalized + QStringLiteral("_end")));
 }
 
 static AnchorValidationResult validateKnownAnchorsInBook(const QString &bookId, const QString &candidatePath)
@@ -478,24 +505,10 @@ static AnchorValidationResult validateKnownAnchorsInBook(const QString &bookId, 
     for (const QVariant &referenceValue : targetReferences) {
         const QVariantMap reference = referenceValue.toMap();
         const QString targetLocation = reference.value(QStringLiteral("targetLocation")).toString().trimmed();
-        const QStringList targetCandidates = targetAnchorCandidateIds(reference);
-        const bool hasTargetAnchor = std::any_of(targetCandidates.cbegin(), targetCandidates.cend(), [&candidateAnchors](const QString &candidate) {
-            return hasElementOrAnchor(candidateAnchors, candidate);
-        });
-        if (!targetCandidates.isEmpty() && !hasTargetAnchor) {
-            issues.append(makeAnchorIssue(QStringLiteral("reference-target"),
-                                          bookId,
-                                          targetCandidates.constFirst(),
-                                          referenceIssueKey(reference),
-                                          QStringLiteral("Reference target anchor no longer exists in EPUB: %1").arg(targetCandidates.constFirst())));
-            continue;
-        }
-
-        const QString fragment = fragmentFromLocation(targetLocation);
-        if (!fragment.isEmpty() && !hasElementOrAnchor(candidateAnchors, fragment)) {
+        if (!hasReferenceTarget(candidate, candidateAnchors, targetLocation)) {
             issues.append(makeAnchorIssue(QStringLiteral("reference-target-location"),
                                           bookId,
-                                          fragment,
+                                          targetLocation,
                                           referenceIssueKey(reference),
                                           QStringLiteral("Reference target location no longer exists in EPUB: %1").arg(targetLocation)));
         }
@@ -511,6 +524,16 @@ static AnchorValidationResult validateKnownAnchorsInBook(const QString &bookId, 
     }
 
     return {true, {}, {}};
+}
+
+static bool onlyExistingAnchorIssues(const AnchorValidationResult &previous, const AnchorValidationResult &candidate)
+{
+    return !candidate.issues.isEmpty() && std::all_of(candidate.issues.cbegin(), candidate.issues.cend(), [&previous](const auto &issue) {
+        return std::any_of(previous.issues.cbegin(), previous.issues.cend(), [&issue](const auto &old) {
+            return issue.type == old.type && issue.bookId == old.bookId && issue.anchorId == old.anchorId && issue.objectId == old.objectId
+                && issue.message == old.message;
+        });
+    });
 }
 
 static QByteArray visibleTextDigestInput(const QByteArray &data)
@@ -696,12 +719,30 @@ BookSnapshot BookTruthStore::openBook(const QString &bookId) const
     return snapshot;
 }
 
-BookCommitResult BookTruthStore::createAnchor(const QString &bookId, const QString &cfiRange)
+BookCommitResult BookTruthStore::createAnchor(const QString &bookId, const QString &cfiRange, const QString &expectedText, const QUuid &expectedStateId)
+{
+    return createAnchorInternal(bookId, cfiRange, expectedText, {}, -1, {}, QUuid::createUuidV7(), expectedStateId);
+}
+
+BookCommitResult BookTruthStore::createAnchorAtText(const QString &bookId, const QString &documentPath, int occurrence,
+                                                   const QString &expectedText, const QByteArray &expectedFileHash, const QUuid &anchorUuid)
+{
+    return createAnchorInternal(bookId, {}, expectedText, documentPath, occurrence, expectedFileHash, anchorUuid);
+}
+
+BookCommitResult BookTruthStore::createAnchorInternal(const QString &bookId,
+                                                      const QString &cfiRange,
+                                                      const QString &expectedText,
+                                                      const QString &documentPath,
+                                                      int occurrence,
+                                                      const QByteArray &expectedFileHash,
+                                                      const QUuid &anchorUuid,
+                                                      const QUuid &expectedStateId)
 {
     BookCommitResult result;
-
-    if (bookId.isEmpty() || cfiRange.isEmpty()) {
-        result.errorMessage = QStringLiteral("Unable to create annotation anchor without book id and CFI range");
+    const bool textLocation = !documentPath.isEmpty();
+    if (bookId.isEmpty() || anchorUuid.isNull() || (textLocation ? (occurrence < 0 || expectedText.simplified().isEmpty()) : cfiRange.isEmpty())) {
+        result.errorMessage = i18n("The selected remark passage is incomplete.");
         return result;
     }
 
@@ -710,6 +751,21 @@ BookCommitResult BookTruthStore::createAnchor(const QString &bookId, const QStri
         result.errorMessage = QStringLiteral("No book entry found for identifier: %1").arg(bookId);
         return result;
     }
+    QLockFile mutationLock(QFileInfo(entry->filename).absoluteFilePath() + QStringLiteral(".arianna-book.lock"));
+    if (!mutationLock.tryLock(0)) {
+        result.errorMessage = i18n("The book is being changed in another process. Please try again.");
+        return result;
+    }
+
+
+    auto editorFilesLock = MaintenanceFiles::lock();
+    if (!editorFilesLock) {
+        result.errorMessage = i18n("Editor files are currently being checked or changed. Please try again.");
+        return result;
+    }
+    result.errorMessage = MaintenanceFiles::anchorEditBlockReason(*entry);
+    if (!result.errorMessage.isEmpty())
+        return result;
 
     QMutexLocker locker(&bookMutationMutex);
 
@@ -720,14 +776,21 @@ BookCommitResult BookTruthStore::createAnchor(const QString &bookId, const QStri
     }
 
     const BookState currentState = *snapshot.state;
+    if (!expectedStateId.isNull() && currentState.stateId != expectedStateId) {
+        result.errorMessage = i18n("The book has changed. Select the passage again before saving the remark.");
+        return result;
+    }
     result.oldStateId = currentState.stateId;
     result.textContentHash = snapshot.textContentHash;
     result.documentStateHash = snapshot.documentStateHash;
     result.epubFileHash = snapshot.epubFileHash;
+    if (textLocation && (expectedFileHash.isEmpty() || snapshot.epubFileHash != expectedFileHash)) {
+        result.errorMessage = i18n("The EPUB has changed since the text search. Search again before setting the anchor.");
+        return result;
+    }
 
     const QString outputPath = QFileInfo(entry->filename).absoluteFilePath();
     const QString inputPath = outputPath;
-    const QUuid anchorUuid = QUuid::createUuidV7();
     const QString elementId = anchorElementId(anchorUuid);
 
     QByteArray anchoredEpub;
@@ -738,11 +801,13 @@ BookCommitResult BookTruthStore::createAnchor(const QString &bookId, const QStri
             return result;
         }
 
-        anchoredEpub = container.createAnnotationAnchoredEpub(cfiRange, elementId);
+        anchoredEpub = textLocation ? container.createAnnotationAnchoredEpubAtText(documentPath, occurrence, expectedText, elementId)
+                                    : container.createAnnotationAnchoredEpub(cfiRange, elementId, expectedText);
     }
 
     if (anchoredEpub.isEmpty()) {
-        result.errorMessage = QStringLiteral("Unable to create annotation anchor for selected CFI range");
+        result.errorMessage = textLocation ? i18n("The selected text passage could not be anchored in the EPUB.")
+                                           : QStringLiteral("Unable to create annotation anchor for selected CFI range");
         return result;
     }
 
@@ -760,16 +825,30 @@ BookCommitResult BookTruthStore::createAnchor(const QString &bookId, const QStri
         return result;
     }
 
+    // Verify the serialized EPUB, not only the in-memory DOM, before saving a
+    // remark that would otherwise permanently refer to a nonexistent anchor.
+    EPubContainer candidate(nullptr);
+    const bool opened = candidate.openFile(temporaryPath);
+    const auto anchors = opened ? scanPersistentAnchors(candidate) : AnchorScanResult{};
+    const auto validationError = validateAnchorChanges(bookId, inputPath, temporaryPath);
+    if (!opened || !anchors.errors.isEmpty() || !hasAnchorElement(anchors, elementId) || !validationError.isEmpty()) {
+        QFile::remove(temporaryPath);
+        result.errorMessage = validationError.isEmpty() ? i18n("The new remark anchor could not be verified. The remark was not saved.") : validationError;
+        return result;
+    }
+
     BookState newState = makeBookState(bookId, newHashes);
 
     QString safetyBackupPath;
     QString safetyBackupError;
-    if (!copyAnchorSafetyBackup(outputPath, elementId, &safetyBackupPath, &safetyBackupError)) {
-        QFile::remove(temporaryPath);
-        result.errorMessage = safetyBackupError;
-        return result;
+    if (Config::backupOnAnchoring()) {
+        if (!copyAnchorSafetyBackup(outputPath, elementId, &safetyBackupPath, &safetyBackupError)) {
+            QFile::remove(temporaryPath);
+            result.errorMessage = safetyBackupError;
+            return result;
+        }
+        qDebug() << "Created pre-anchor EPUB backup:" << safetyBackupPath;
     }
-    qDebug() << "Created pre-anchor EPUB backup:" << safetyBackupPath;
 
     FileReplacementBackup backup;
     QString replacementError;
@@ -787,6 +866,8 @@ BookCommitResult BookTruthStore::createAnchor(const QString &bookId, const QStri
     }
 
     discardFileReplacementBackup(backup);
+    if (!safetyBackupPath.isEmpty())
+        MaintenanceFiles::completeBackup(safetyBackupPath);
 
     result.success = true;
     result.newStateId = newState.stateId;
@@ -797,7 +878,12 @@ BookCommitResult BookTruthStore::createAnchor(const QString &bookId, const QStri
     return result;
 }
 
-BookCommitResult BookTruthStore::commitCandidateBookFile(const QString &bookId, const QString &candidateEpubPath, const bool allowInvalidAnchors)
+BookCommitResult BookTruthStore::commitCandidateBookFile(const QString &bookId,
+                                                         const QString &candidateEpubPath,
+                                                         const bool allowInvalidAnchors,
+                                                         const bool allowExistingAnchorIssues,
+                                                         const QByteArray &expectedFileHash,
+                                                         const bool metadataOnly)
 {
     BookCommitResult result;
 
@@ -821,6 +907,12 @@ BookCommitResult BookTruthStore::commitCandidateBookFile(const QString &bookId, 
         result.errorMessage = QStringLiteral("No book entry found for identifier: %1").arg(bookId);
         return result;
     }
+    QLockFile mutationLock(QFileInfo(entry->filename).absoluteFilePath() + QStringLiteral(".arianna-book.lock"));
+    if (!mutationLock.tryLock(0)) {
+        result.errorMessage = i18n("The book is being changed in another process. Please try again.");
+        return result;
+    }
+
 
     const BookSnapshot snapshot = openBook(bookId);
     if (!snapshot.success || !snapshot.state) {
@@ -828,6 +920,14 @@ BookCommitResult BookTruthStore::commitCandidateBookFile(const QString &bookId, 
         return result;
     }
 
+    if (!expectedFileHash.isEmpty() && snapshot.epubFileHash != expectedFileHash) {
+        result.errorMessage = i18n("The EPUB changed during review. Analyze it again before writing the structure.");
+        return result;
+    }
+    if (metadataOnly && expectedFileHash.isEmpty()) {
+        result.errorMessage = i18n("The reviewed EPUB source hash is missing.");
+        return result;
+    }
     const BookState currentState = *snapshot.state;
     result.oldStateId = currentState.stateId;
     result.textContentHash = snapshot.textContentHash;
@@ -841,6 +941,20 @@ BookCommitResult BookTruthStore::commitCandidateBookFile(const QString &bookId, 
         return result;
     }
 
+    if (metadataOnly) {
+        EPubContainer original(nullptr);
+        if (!original.openFile(snapshot.filename) || !WorkStructure::preservesSource(original, candidate, &result.errorMessage)) {
+            result.invalidCandidate = true;
+            return result;
+        }
+        if (WorkStructure::snapshot(candidate, bookId).value(QStringLiteral("existing")).toObject().value(QStringLiteral("validity"))
+            != QJsonValue(QStringLiteral("valid"))) {
+            result.invalidCandidate = true;
+            result.errorMessage = i18n("The exported structure could not be verified.");
+            return result;
+        }
+
+    }
     const BookHashes newHashes = calculateHashes(candidateInfo.absoluteFilePath());
     if (!newHashes.success) {
         result.invalidCandidate = true;
@@ -858,7 +972,12 @@ BookCommitResult BookTruthStore::commitCandidateBookFile(const QString &bookId, 
     AnchorValidationResult anchorValidation{true, {}, {}};
     if (currentState.documentStateHash != newHashes.documentStateHash) {
         anchorValidation = validateKnownAnchorsInBook(bookId, candidateInfo.absoluteFilePath());
-        if (!anchorValidation.success && !allowInvalidAnchors) {
+        bool onlyExistingIssues = false;
+        if (!anchorValidation.success && allowExistingAnchorIssues) {
+            const auto previous = validateKnownAnchorsInBook(bookId, snapshot.filename);
+            onlyExistingIssues = onlyExistingAnchorIssues(previous, anchorValidation);
+        }
+        if (!anchorValidation.success && !allowInvalidAnchors && !onlyExistingIssues) {
             result.validationFailed = true;
             result.errorMessage = anchorValidation.errorMessage;
             result.anchorValidationIssues = anchorValidation.issues;
@@ -882,6 +1001,12 @@ BookCommitResult BookTruthStore::commitCandidateBookFile(const QString &bookId, 
         return result;
     }
 
+    if (QCryptographicHash::hash(candidateData, QCryptographicHash::Sha256).toHex() != newHashes.epubFileHash
+        || (!expectedFileHash.isEmpty() && calculateFileHash(outputPath, nullptr) != expectedFileHash)) {
+        QFile::remove(temporaryPath);
+        result.errorMessage = i18n("The EPUB changed before the reviewed structure could be committed.");
+        return result;
+    }
     BookState newState = makeBookState(bookId, newHashes);
 
     FileReplacementBackup backup;
@@ -910,6 +1035,24 @@ BookCommitResult BookTruthStore::commitCandidateBookFile(const QString &bookId, 
     return result;
 }
 
+std::optional<BookState> BookTruthStore::stateForFile(const QString &bookId, const QString &fileName) const
+{
+    const auto hashes = calculateHashes(fileName);
+    if (bookId.isEmpty() || !hashes.success) {
+        return std::nullopt;
+    }
+    return makeBookState(bookId, hashes);
+}
+
+QString BookTruthStore::validateAnchorChanges(const QString &bookId, const QString &previousPath, const QString &candidatePath) const
+{
+    const auto candidate = validateKnownAnchorsInBook(bookId, candidatePath);
+    if (candidate.success || onlyExistingAnchorIssues(validateKnownAnchorsInBook(bookId, previousPath), candidate)) {
+        return {};
+    }
+    return candidate.errorMessage;
+}
+
 BookCommitResult BookTruthStore::commitActiveFileChangeIfNeeded(const QString &bookId, const bool allowInvalidAnchors)
 {
     BookCommitResult result;
@@ -926,6 +1069,12 @@ BookCommitResult BookTruthStore::commitActiveFileChangeIfNeeded(const QString &b
         result.errorMessage = QStringLiteral("No book entry found for identifier: %1").arg(bookId);
         return result;
     }
+    QLockFile mutationLock(QFileInfo(entry->filename).absoluteFilePath() + QStringLiteral(".arianna-book.lock"));
+    if (!mutationLock.tryLock(0)) {
+        result.errorMessage = i18n("The book is being changed in another process. Please try again.");
+        return result;
+    }
+
 
     const QString activePath = QFileInfo(entry->filename).absoluteFilePath();
     const QFileInfo activeInfo(activePath);

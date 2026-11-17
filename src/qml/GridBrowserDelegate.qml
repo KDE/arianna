@@ -27,13 +27,38 @@ Delegates.RoundedItemDelegate {
     required property int currentProgress
     property string typeIconSource: ""
     property bool showPasswordBadge: false
+    property string passwordFileName: ""
+    property string passwordBookId: ""
+    property var formatVariants: []
+    readonly property var formatTags: {
+        const tags = [];
+        for (let i = 0; i < formatVariants.length; ++i) {
+            const format = formatVariants[i].format;
+            if (tags.indexOf(format) < 0) tags.push(format);
+        }
+        return tags.sort();
+    }
+    readonly property bool combinedFormats: formatTags.length > 1
+    signal activated(int modifiers)
+
+    // AbstractButton.clicked has no modifiers. Preserve them for Ctrl+click,
+    // while keyboard activation continues to use the normal click signal.
+    onClicked: activated(Qt.NoModifier)
+    MouseArea {
+        id: activationArea
+        anchors.fill: parent
+        acceptedButtons: Qt.LeftButton
+        onPressed: gridEntry.forceActiveFocus(Qt.MouseFocusReason)
+        onClicked: mouse => gridEntry.activated(mouse.modifiers)
+        onWheel: wheel => wheel.accepted = false
+    }
 
     SystemPalette {
         id: myPalette
     }
 
     property color stateIndicatorColor: {
-        if (gridEntry.activeFocus || gridEntry.pressed || gridEntry.hovered) {
+        if (gridEntry.activeFocus || gridEntry.pressed || activationArea.pressed || gridEntry.hovered) {
             return Kirigami.Theme.highlightColor;
         } else {
             return "transparent";
@@ -57,6 +82,18 @@ Delegates.RoundedItemDelegate {
 
     Accessible.role: Accessible.ListItem
     Accessible.name: mainText
+    Accessible.description: showPasswordBadge ? passwordIndicator.description : ""
+    QQC2.ToolTip.visible: hovered && showPasswordBadge
+    QQC2.ToolTip.text: passwordIndicator.description
+    QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+
+    PdfPasswordIndicator {
+        id: passwordIndicator
+        enabled: gridEntry.visible && gridEntry.showPasswordBadge
+        fileName: gridEntry.passwordFileName
+        bookId: gridEntry.passwordBookId
+        window: gridEntry.Window.window
+    }
 
     contentItem: ColumnLayout {
         Item {
@@ -76,13 +113,17 @@ Delegates.RoundedItemDelegate {
 
             Image {
                 id: coverImage
+                objectName: "bookCoverImage"
 
                 height: width
 
-                readonly property bool hasCoverSource: source.toString().length > 0
+                readonly property bool hasCoverSource: {
+                    const sourceUrl = gridEntry.imageUrl.toString()
+                    return sourceUrl.length > 0 && sourceUrl !== "file://undefined" && sourceUrl !== "file://null"
+                }
 
                 fillMode: Image.PreserveAspectFit
-                source: gridEntry.imageUrl.toString().length > 0 ? gridEntry.imageUrl : ''
+                source: hasCoverSource ? gridEntry.imageUrl : ''
                 visible: hasCoverSource
                 asynchronous: true
                 cache: hasCoverSource
@@ -121,6 +162,7 @@ Delegates.RoundedItemDelegate {
 
             Kirigami.Icon {
                 id: fallBackIcon
+                objectName: "bookCoverFallbackIcon"
 
                 anchors {
                     fill: coverImage
@@ -128,7 +170,27 @@ Delegates.RoundedItemDelegate {
                 }
 
                 source: gridEntry.iconName
-                visible: gridEntry.iconName.length > 0
+                visible: !lockedPdfCover.visible && gridEntry.iconName.length > 0
+            }
+
+            Image {
+                id: lockedPdfCover
+                objectName: "lockedPdfCoverIcon"
+
+                anchors.centerIn: coverImage
+                width: coverImage.width
+                height: coverImage.height * 0.8
+                source: gridEntry.showPasswordBadge
+                    && (!coverImage.hasCoverSource || coverImage.status === Image.Error)
+                    ? Qt.resolvedUrl(passwordIndicator.unlocked ? "icons/unlocked-pdf-cover.svg" : "icons/locked-pdf-cover.svg") : ""
+                visible: source.toString().length > 0
+                fillMode: Image.PreserveAspectFit
+                asynchronous: true
+
+                sourceSize {
+                    width: Math.max(1, lockedPdfCover.width * Screen.devicePixelRatio)
+                    height: Math.max(1, lockedPdfCover.height * Screen.devicePixelRatio)
+                }
             }
 
             Image {
@@ -143,13 +205,45 @@ Delegates.RoundedItemDelegate {
                 x: coverArea.paintedCoverLeft + coverArea.coverBadgeInset
                 y: coverArea.paintedCoverTop + coverArea.coverBadgeInset - topPaddingCompensation
                 source: gridEntry.typeIconSource
-                visible: source.toString().length > 0
+                visible: !gridEntry.combinedFormats && source.toString().length > 0
                 asynchronous: true
                 fillMode: Image.PreserveAspectFit
 
                 sourceSize {
                     width: Math.max(1, typeIcon.width * Screen.devicePixelRatio)
                     height: Math.max(1, typeIcon.height * Screen.devicePixelRatio)
+                }
+            }
+
+            Row {
+                x: coverArea.paintedCoverLeft + coverArea.coverBadgeInset
+                y: coverArea.paintedCoverTop + coverArea.coverBadgeInset
+                visible: gridEntry.combinedFormats
+                spacing: Kirigami.Units.smallSpacing
+
+                Repeater {
+                    model: gridEntry.formatTags
+                    delegate: Image {
+                        id: formatIcon
+                        required property string modelData
+                        objectName: "formatTag" + modelData
+
+                        readonly property bool pdfIcon: modelData === "PDF"
+                        readonly property real iconAspectRatio: pdfIcon ? 2 / 3 : 1
+                        readonly property real topPaddingCompensation: height * (pdfIcon ? 0.12 : 0.07)
+
+                        width: height * iconAspectRatio
+                        height: coverArea.coverBadgeSize
+                        y: -topPaddingCompensation
+                        source: pdfIcon ? Qt.resolvedUrl("icons/pdf_icon.png") : Qt.resolvedUrl("icons/epub_icon.png")
+                        asynchronous: true
+                        fillMode: Image.PreserveAspectFit
+
+                        sourceSize {
+                            width: Math.max(1, formatIcon.width * Screen.devicePixelRatio)
+                            height: Math.max(1, formatIcon.height * Screen.devicePixelRatio)
+                        }
+                    }
                 }
             }
 
@@ -198,6 +292,7 @@ Delegates.RoundedItemDelegate {
 
             Rectangle {
                 id: passwordBadge
+                objectName: "passwordBadge"
 
                 width: coverArea.coverBadgeSize
                 height: coverArea.coverBadgeSize
@@ -207,12 +302,13 @@ Delegates.RoundedItemDelegate {
                 color: Kirigami.Theme.alternateBackgroundColor
                 border.color: Kirigami.ColorUtils.linearInterpolation(Kirigami.Theme.textColor, Kirigami.Theme.backgroundColor, 0.45)
                 border.width: 1
-                visible: gridEntry.showPasswordBadge
+                visible: gridEntry.showPasswordBadge && !lockedPdfCover.visible
 
                 Kirigami.Icon {
+                    objectName: "passwordBadgeIcon"
                     anchors.fill: parent
                     anchors.margins: Math.max(2, Math.round(parent.width * 0.22))
-                    source: "object-locked-symbolic"
+                    source: passwordIndicator.unlocked ? "object-unlocked-symbolic" : "object-locked-symbolic"
                 }
             }
         }

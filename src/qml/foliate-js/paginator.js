@@ -1,3 +1,5 @@
+import { waitForMath, mathVisualTarget } from './mathjax.js'
+
 const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const debounce = (f, wait, immediate) => {
@@ -49,6 +51,7 @@ const isUsableRect = rect => rect
     && (rect.width > 0 || rect.height > 0)
 
 const rectForTarget = target => {
+    target = mathVisualTarget(target)
     const rects = target?.getClientRects?.()
     if (rects) {
         const rect = Array.from(rects)
@@ -235,7 +238,7 @@ const getVisibleRange = (doc, start, end, mapRect) => {
     const acceptNode = node => {
         const name = node.localName?.toLowerCase()
         // ignore all scripts, styles, and their children
-        if (name === 'script' || name === 'style') return FILTER_REJECT
+        if (name === 'script' || name === 'style' || node.hasAttribute?.('data-arianna-math-source')) return FILTER_REJECT
         if (node.nodeType === 1) {
             const { left, right } = mapRect(node.getBoundingClientRect())
             // no need to check child nodes if it's completely out of view
@@ -355,6 +358,9 @@ class View {
     #column = true
     #size
     #layout = {}
+    #mathLayoutPromise = Promise.resolve()
+    #mathLayoutPending = false
+    #mathLayoutSerial = 0
     constructor({ container, onExpand }) {
         this.container = container
         this.onExpand = onExpand
@@ -400,17 +406,17 @@ class View {
                 const doc = this.document
                 return doc?.body && (reason === 'load' || doc.URL === src) && doc.readyState !== 'loading'
             }
-            const finish = reason => {
+            const finish = async reason => {
                 if (done || !isTargetDocumentReady(reason)) return
                 done = true
                 clearInterval(poll)
                 clearTimeout(fallback)
                 this.#iframe.removeEventListener('load', onLoad)
                 const doc = this.document
-                afterLoad?.(doc)
-
                 // it needs to be visible for Firefox to get computed style
                 this.#iframe.style.display = 'block'
+                await waitForMath(doc)
+                afterLoad?.(doc)
                 const { vertical, rtl } = getDirection(doc)
                 const background = getBackground(doc)
                 this.#iframe.style.display = 'none'
@@ -422,6 +428,7 @@ class View {
                 const layout = beforeRender?.({ vertical, rtl, background })
                 this.#iframe.style.display = 'block'
                 this.render(layout)
+                await this.#mathLayoutPromise
                 this.#observer.observe(doc.body)
 
                 // the resize observer above doesn't work in Firefox
@@ -442,10 +449,23 @@ class View {
     }
     render(layout) {
         if (!layout) return
+        const serial = ++this.#mathLayoutSerial
+        this.#mathLayoutPending = typeof this.document.defaultView?.ariannaMathLayout === 'function'
         this.#column = layout.flow !== 'scrolled'
         this.#layout = layout
         if (this.#column) this.columnize(layout)
         else this.scrolled(layout)
+        if (this.#mathLayoutPending) {
+            this.#mathLayoutPromise = Promise.resolve(this.document.defaultView.ariannaMathLayout(layout.columnWidth))
+                .catch(error => console.warn('EPUB math reflow failed', error))
+                .then(() => {
+                    if (serial !== this.#mathLayoutSerial) return
+                    this.#mathLayoutPending = false
+                    this.setImageSize()
+                    this.expand()
+                })
+        }
+        return this.#mathLayoutPending ? this.#mathLayoutPromise : Promise.resolve()
     }
     scrolled({ gap, columnWidth }) {
         const vertical = this.#vertical
@@ -501,6 +521,7 @@ class View {
         const vertical = this.#vertical
         const doc = this.document
         for (const el of doc.body.querySelectorAll('img, svg, video')) {
+            if (el.closest('mjx-container')) continue // MathJax handles equation overflow.
             // preserve max size if they are already set
             const { maxHeight, maxWidth } = doc.defaultView.getComputedStyle(el)
             setStylesImportant(el, {
@@ -518,6 +539,7 @@ class View {
         }
     }
     expand() {
+        if (this.#mathLayoutPending) return
         const { documentElement } = this.document
         if (this.#column) {
             const side = this.#vertical ? 'height' : 'width'
@@ -609,6 +631,7 @@ export class Paginator extends HTMLElement {
     #touchScrolled
     #lastVisibleRange
     #renderFrame = 0
+    #renderSerial = 0
     #getReaderBackground() {
         const style = getComputedStyle(this)
         const image = style.getPropertyValue('--arianna-reader-background-image').trim()
@@ -946,14 +969,17 @@ export class Paginator extends HTMLElement {
 
         return { height, width, margin, gap, columnWidth }
     }
-    render() {
+    async render() {
         if (!this.#view) return
+        const view = this.#view
+        const serial = ++this.#renderSerial
         const anchor = this.#justAnchored ? this.#anchor : (this.#lastVisibleRange ?? this.#anchor)
-        this.#view.render(this.#beforeRender({
+        await view.render(this.#beforeRender({
             vertical: this.#vertical,
             rtl: this.#rtl,
         }))
-        this.#scrollToAnchor(anchor)
+        if (serial !== this.#renderSerial || view !== this.#view) return
+        return this.#scrollToAnchor(anchor)
             .catch(e => {
                 console.error(e)
                 console.error('Could not keep anchor after render')
@@ -1117,6 +1143,15 @@ export class Paginator extends HTMLElement {
     }
     async scrollToAnchor(anchor, select) {
         return this.#scrollToAnchor(anchor, select ? 'selection' : 'navigation')
+    }
+    isRangeVisible(range) {
+        const rect = anchorRect(range.cloneRange?.() ?? range)
+        if (!rect) return false
+        const { left, right } = this.#getRectMapper()(rect)
+        const offset = this.scrolled ? 0 : (this.#rtl ? -this.size : this.size)
+        const margin = this.scrolled ? this.#margin : 0
+        return left >= this.start - offset + margin - 1
+            && right <= this.end - offset - margin + 1
     }
     async #scrollToAnchor(anchor, reason = 'anchor') {
         this.#anchor = anchor
@@ -1323,6 +1358,15 @@ export class Paginator extends HTMLElement {
     lastSection() {
         const index = this.sections.findLastIndex(section => section.linear !== 'no')
         return this.goTo({ index })
+    }
+    get maxInlineSizeForViewport() {
+        const style = getComputedStyle(this.#top)
+        const columns = parseInt(style.getPropertyValue('--_max-column-count-spread')) || 1
+        const gap = parseFloat(style.getPropertyValue('--_gap')) / 100
+        const { width, height } = this.#top.getBoundingClientRect()
+        // The outer gutter also needs room. Use the effective column count,
+        // which accounts for portrait and vertical writing layouts.
+        return (this.#vertical ? height : width) * (1 - gap) / columns
     }
     getContents() {
         if (this.#view) return [{

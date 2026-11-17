@@ -138,6 +138,9 @@ public:
     /// \returns whether the cache is loaded from the database.
     bool cacheLoaded() const;
 
+    /// Read current persisted metadata without changing or importing the EPUB.
+    Q_INVOKABLE BookEntry bookEntryFromDatabase(const QString &fileName) const;
+
     /// \brief Update the data of a book at runtime
     ///
     /// This is used in to update totalPages and currentPage.
@@ -150,12 +153,12 @@ public:
     /// \brief Populate the EPUB subject category model after the main book list is visible.
     Q_INVOKABLE void populateSubjectCategoryModel();
 
-    /// \brief Refresh an existing book entry from the current EPUB file contents.
-    ///
-    /// This updates metadata and cover data for books that are already in the
-    /// library. Files that are not in the library are left untouched.
+    /// Import a file, rejecting book IDs already registered under another file.
     Q_INVOKABLE BookEntry addBookFromFile(const QString &fileName, bool refreshCover = true);
+    Q_INVOKABLE QVariantMap importBookFiles(const QStringList &fileNames, bool refreshCover = true);
+    Q_INVOKABLE QVariantMap changeRejectedBookIdentifier(const QString &fileName);
     Q_INVOKABLE QVariantMap importCalibreLibrary(const QString &folderName, bool refreshCover = true);
+    /// Refresh metadata and cover data for an existing library entry.
     Q_INVOKABLE BookEntry refreshBookFromFile(const QString &fileName, bool refreshCover = true);
     Q_INVOKABLE QVariantMap checkAndRefreshBookFromFile(const QString &fileName, bool refreshCover = true);
     Q_INVOKABLE QVariantMap checkEpubFile(const QString &fileName, const QString &command) const;
@@ -169,13 +172,16 @@ public:
     /// Delete a book from the model, and optionally delete the entry from file storage.
     /// \param fileName The filename of the book to remove.
     /// \param deleteFile Whether to also delete the file from the disk.
-    Q_INVOKABLE void removeBook(const QString &fileName, bool deleteFile = false);
+    Q_INVOKABLE QVariantMap removeBook(const QString &fileName, bool deleteFile = false);
 
     /// \brief A list of the files currently known by the applications
     /// \returns a QStringList with paths to known books.
     Q_INVOKABLE QStringList knownBookFiles() const;
 
 Q_SIGNALS:
+    /// Details for a rejected import, including conflicting book ID and existing file when available.
+    void structureReviewRequested(const QString &bookId);
+    void importRejected(const QVariantMap &rejection);
     /// \brief Fires when the seriesCategoryModel has changed or finished initializing.
     void seriesCategoryModelChanged();
     /// \brief Fires when the publisherCategoryModel has changed or finished initializing.
@@ -201,6 +207,7 @@ Q_SIGNALS:
     void bookRefreshAboutToUpdate(const QString &fileName);
 
 private:
+    QVariantMap importBookFile(const QString &fileName, const QVariantHash &metadata, bool refreshCover);
     class Private;
     std::unique_ptr<Private> d;
 

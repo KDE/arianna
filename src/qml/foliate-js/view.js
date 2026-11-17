@@ -116,14 +116,20 @@ class CursorAutohider {
     #el
     #check
     #state
+    #position
+    #hidden = false
     constructor(el, check, state = {}) {
         this.#el = el
         this.#check = check
         this.#state = state
+        // A movement can reach both the reader and its chapter iframe. Each
+        // clone must restore its own cursor, even at the same screen position.
+        this.#position = { x: state.x, y: state.y }
         if (this.#state.hidden) this.hide()
         this.#el.addEventListener('mousemove', ({ screenX, screenY }) => {
             // check if it actually moved
-            if (screenX === this.#state.x && screenY === this.#state.y) return
+            if (screenX === this.#position.x && screenY === this.#position.y) return
+            this.#position.x = screenX, this.#position.y = screenY
             this.#state.x = screenX, this.#state.y = screenY
             this.show()
             if (this.#timeout) clearTimeout(this.#timeout)
@@ -134,10 +140,15 @@ class CursorAutohider {
         return new CursorAutohider(el, this.#check, this.#state)
     }
     hide() {
+        this.#hidden = true
         this.#el.style.cursor = 'none'
         this.#state.hidden = true
     }
     show() {
+        // Arianna has its own cursor hider. When Foliate's hider is disabled,
+        // it must not undo a cursor hidden by that owner.
+        if (!this.#check() && !this.#hidden) return
+        this.#hidden = false
         this.#el.style.removeProperty('cursor')
         this.#state.hidden = false
     }
@@ -206,6 +217,10 @@ export class View extends HTMLElement {
     #pageProgress
     #searchResults = new Map()
     #searchResultColor = 'red'
+    #hiddenSearchResult = null
+    #searchResultRestoreTimer = null
+    #searchNavigationGeneration = 0
+    #searchNavigation = Promise.resolve()
     #cursorAutohider = new CursorAutohider(this, () =>
         this.hasAttribute('autohide-cursor'))
     isFixedLayout = false
@@ -284,6 +299,7 @@ export class View extends HTMLElement {
         }
     }
     close() {
+        this.#resetSearchResultFlash()
         this.renderer?.destroy()
         this.renderer?.remove()
         this.#sectionProgress = null
@@ -292,7 +308,6 @@ export class View extends HTMLElement {
         this.#searchResults = new Map()
         this.lastLocation = null
         this.history.clear()
-        this.tts = null
         this.mediaOverlay = null
     }
     goToTextStart() {
@@ -356,22 +371,25 @@ export class View extends HTMLElement {
         this.#emit('load', { doc, index })
     }
     #handleLinks(doc, index) {
-        const { book } = this
-        const section = book.sections[index]
         doc.addEventListener('click', e => {
+            if (e.defaultPrevented) return
             const a = e.target.closest('a[href]')
             if (!a) return
             e.preventDefault()
-            const href_ = a.getAttribute('href')
-            const href = section?.resolveHref?.(href_) ?? href_
-            if (book?.isExternal?.(href))
-                Promise.resolve(this.#emit('external-link', { a, href }, true))
-                    .then(x => x ? globalThis.open(href, '_blank') : null)
-                    .catch(e => console.error(e))
-            else Promise.resolve(this.#emit('link', { a, href }, true))
-                .then(x => x ? this.goTo(href) : null)
-                .catch(e => console.error(e))
+            this.followLink(a, index)
         })
+    }
+    followLink(a, index) {
+        const { book } = this
+        const href_ = a.getAttribute('href')
+        const href = book.sections[index]?.resolveHref?.(href_) ?? href_
+        if (book?.isExternal?.(href))
+            return Promise.resolve(this.#emit('external-link', { a, href }, true))
+                .then(x => x ? globalThis.open(href, '_blank') : null)
+                .catch(e => console.error(e))
+        return Promise.resolve(this.#emit('link', { a, href }, true))
+            .then(x => x ? this.goTo(href) : null)
+            .catch(e => console.error(e))
     }
     async addAnnotation(annotation, remove) {
         const { value } = annotation
@@ -387,6 +405,7 @@ export class View extends HTMLElement {
                 }
                 const range = doc ? anchor(doc) : anchor
                 overlayer.add(value, range, Overlayer.outline, { color: this.#searchResultColor })
+                overlayer.setHidden(value, value === this.#hiddenSearchResult)
             }
             return
         }
@@ -416,6 +435,33 @@ export class View extends HTMLElement {
             for (const item of list)
                 this.addAnnotation(item).catch(e => console.error(e))
     }
+    #setHiddenSearchResult(value) {
+        for (const { overlayer } of this.renderer?.getContents() ?? []) {
+            overlayer?.setHidden(this.#hiddenSearchResult, false)
+            overlayer?.setHidden(value, true)
+        }
+        this.#hiddenSearchResult = value
+    }
+    #resetSearchResultFlash() {
+        ++this.#searchNavigationGeneration
+        clearTimeout(this.#searchResultRestoreTimer)
+        this.#searchResultRestoreTimer = null
+        this.#setHiddenSearchResult(null)
+    }
+    goToSearchResult(cfi, flash = false) {
+        this.#resetSearchResultFlash()
+        const generation = this.#searchNavigationGeneration
+        // Serialize section loads; only the latest wheel target may flash.
+        const navigate = async () => {
+            if (generation !== this.#searchNavigationGeneration) return
+            const resolved = await this.goTo(cfi)
+            if (!resolved || generation !== this.#searchNavigationGeneration || !flash) return
+            this.#setHiddenSearchResult(SEARCH_PREFIX + cfi)
+            this.#searchResultRestoreTimer = setTimeout(() => this.#resetSearchResultFlash(), 500)
+        }
+        this.#searchNavigation = this.#searchNavigation.then(navigate, navigate)
+        return this.#searchNavigation
+    }
     #getOverlayer(index) {
         return this.renderer.getContents()
             .find(x => x.index === index && x.overlayer)
@@ -423,6 +469,7 @@ export class View extends HTMLElement {
     #createOverlayer({ doc, index }) {
         const overlayer = new Overlayer()
         doc.addEventListener('click', e => {
+            if (e.defaultPrevented || doc.getSelection()?.type === 'Range') return
             const [value, range] = overlayer.hitTest(e)
             if (value && !value.startsWith(SEARCH_PREFIX)) {
                 this.#emit('show-annotation', { value, index, range })
@@ -600,16 +647,10 @@ export class View extends HTMLElement {
         yield 'done'
     }
     clearSearch() {
+        this.#resetSearchResultFlash()
         for (const list of this.#searchResults.values())
             for (const item of list) this.deleteAnnotation(item)
         this.#searchResults.clear()
-    }
-    async initTTS(granularity = 'word') {
-        const doc = this.renderer.getContents()[0].doc
-        if (this.tts && this.tts.doc === doc) return
-        const { TTS } = await import('./tts.js')
-        this.tts = new TTS(doc, textWalker, range =>
-            this.renderer.scrollToAnchor(range, true), granularity)
     }
     startMediaOverlay() {
         const { index } = this.renderer.getContents()[0]

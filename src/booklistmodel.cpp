@@ -4,8 +4,11 @@
 #include "booklistmodel.h"
 
 #include "bookdatabase.h"
+#include "bookreferencecheck.h"
 #include "booktruthstore.h"
 #include "config.h"
+#include "maintenancefiles.h"
+#include "pdfbookidentifier.h"
 #include "okularpdfpagepainter.h"
 #include "okularpdfsupport.h"
 #include "pdfvalidationreportparser.h"
@@ -34,9 +37,11 @@
 #include <QProcess>
 #include <QRect>
 #include <QRegularExpression>
+#include <QSaveFile>
 #include <QSet>
 #include <QStandardPaths>
 #include <QTemporaryFile>
+#include <QTemporaryDir>
 #include <QTimer>
 #include <QUrl>
 #include <QUuid>
@@ -97,6 +102,9 @@ static QStringList normalizedCommaSeparatedList(QString value)
 
 static QString stablePdfIdentifier(const QFileInfo &fileInfo)
 {
+    const auto storedId = pdfBookIdentifier(fileInfo.absoluteFilePath());
+    if (!storedId.isEmpty())
+        return normalizeBookServerIdentifier(storedId);
     const QByteArray pathHash = QCryptographicHash::hash(QDir::cleanPath(fileInfo.absoluteFilePath()).toUtf8(), QCryptographicHash::Sha256).toHex();
     return QStringLiteral("arianna-pdf-%1").arg(QString::fromLatin1(pathHash.left(32)));
 }
@@ -579,6 +587,8 @@ static BookEntry createBookEntryFromFile(const QString &fileName, const QVariant
             entry.currentLocation = it.value().toString();
         } else if (it.key() == QLatin1String("currentProgress")) {
             entry.currentProgress = it.value().toInt();
+        } else if (it.key() == QLatin1String("pageWidthDistance")) {
+            entry.pageWidthDistance = qMax(-1, it.value().toInt());
         } else if (it.key() == QLatin1String("pageMode")) {
             entry.pageMode = it.value().toString();
             if (entry.pageMode != QStringLiteral("single") && entry.pageMode != QStringLiteral("two")) {
@@ -617,12 +627,16 @@ static BookEntry createBookEntryFromFile(const QString &fileName, const QVariant
 
 static bool bookEntryDataMatches(const BookEntry &first, const BookEntry &second)
 {
+    if (first.formatGroup != second.formatGroup)
+        return false;
     return first.filename == second.filename && first.filetitle == second.filetitle && first.title == second.title && first.genres == second.genres
         && first.keywords == second.keywords && first.characters == second.characters && first.series == second.series
         && first.seriesNumbers == second.seriesNumbers && first.seriesVolumes == second.seriesVolumes && first.author == second.author
         && first.rights == second.rights && first.publisher == second.publisher && first.created == second.created
         && first.lastOpenedTime == second.lastOpenedTime && first.currentLocation == second.currentLocation && first.currentProgress == second.currentProgress
-        && first.zoomLevel == second.zoomLevel && first.pageMode == second.pageMode && first.bookVersion == second.bookVersion
+        && first.lastClosedTime == second.lastClosedTime && first.lastClosedOpenedTime == second.lastClosedOpenedTime
+        && first.zoomLevel == second.zoomLevel && first.pageMode == second.pageMode && first.pageWidthDistance == second.pageWidthDistance
+        && first.bookVersion == second.bookVersion
         && first.thumbnail == second.thumbnail && first.passwordProtected == second.passwordProtected && first.description == second.description
         && first.comment == second.comment && first.tags == second.tags && first.locations == second.locations
         && first.pdfNotInvertedRegions == second.pdfNotInvertedRegions && first.identifier == second.identifier
@@ -652,6 +666,7 @@ public:
         , subjectCategoryPopulationIndex(0) { };
 
     QList<BookEntry> entries;
+    QHash<QString, QVariantMap> rejectedImports;
 
     ContentList *contentModel;
     CategoryEntriesModel *newlyAddedCategoryModel;
@@ -919,7 +934,9 @@ public:
                 }
                 validEntries.append(cachedEntry);
             } else {
-                BookDatabase::self().removeEntry(entry);
+                // A disconnected drive or moved file is a maintenance finding,
+                // not an explicit request to delete the book and its user data.
+                validEntries.append(entry);
             }
         }
 
@@ -1062,31 +1079,12 @@ ContentList *BookListModel::contentModel() const
 
 void BookListModel::contentModelItemsInserted(QModelIndex index, int first, int last)
 {
-    d->initializeSubModels(this);
-
-    // Process items in batches for better performance
-    QList<BookEntry> newEntries;
-    newEntries.reserve(last - first + 1);
-
     for (int i = first; i < last + 1; ++i) {
-        QVariant filePath = d->contentModel->data(d->contentModel->index(i, 0, index), ContentList::FilePathRole);
-        QVariantHash metadata = d->contentModel->data(d->contentModel->index(i, 0, index), Qt::UserRole + 2).toHash();
-        const BookEntry entry = createBookEntryFromFile(filePath.toUrl().toLocalFile(), metadata);
-        if (entry.filename.isEmpty()) {
-            continue;
-        }
-
-        newEntries.append(entry);
+        const auto row = d->contentModel->index(i, 0, index);
+        const auto filePath = d->contentModel->data(row, ContentList::FilePathRole).toUrl().toLocalFile();
+        const auto metadata = d->contentModel->data(row, ContentList::MetadataRole).toHash();
+        importBookFile(filePath, metadata, true);
     }
-
-    // Batch process the entries
-    for (const BookEntry &entry : std::as_const(newEntries)) {
-        if (d->addEntry(this, entry)) {
-            BookDatabase::self().addEntry(entry);
-        }
-    }
-
-    Q_EMIT countChanged();
 }
 
 CategoryEntriesModel *BookListModel::newlyAddedCategoryModel() const
@@ -1141,7 +1139,12 @@ CategoryEntriesModel *BookListModel::folderCategoryModel() const
 
 int BookListModel::count() const
 {
-    return d->entries.count();
+    return CategoryEntriesModel::bookCount();
+}
+
+BookEntry BookListModel::bookEntryFromDatabase(const QString &fileName) const
+{
+    return BookDatabase::self().loadEntry(fileName).value_or(BookEntry{});
 }
 
 void BookListModel::setBookData(const QString &fileName, const QString &property, const QString &value)
@@ -1166,6 +1169,9 @@ void BookListModel::setBookData(const QString &fileName, const QString &property
         } else if (property == QStringLiteral("zoomLevel")) {
             entry.zoomLevel = value.toDouble();
             BookDatabase::self().updateEntry(entry.filename, property, QVariant(entry.zoomLevel));
+        } else if (property == QStringLiteral("pageWidthDistance")) {
+            entry.pageWidthDistance = qMax(-1, value.toInt());
+            BookDatabase::self().updateEntry(entry.filename, property, QVariant(entry.pageWidthDistance));
         } else if (property == QStringLiteral("pageMode")) {
             entry.pageMode = value == QStringLiteral("single") || value == QStringLiteral("two") ? value : QString();
             BookDatabase::self().updateEntry(entry.filename, property, QVariant(entry.pageMode));
@@ -1314,30 +1320,208 @@ void BookListModel::populateSubjectCategoryModel()
 
 BookEntry BookListModel::addBookFromFile(const QString &fileName, bool refreshCover)
 {
+    return importBookFile(fileName, {}, refreshCover).value(QStringLiteral("entry")).value<BookEntry>();
+}
+
+QVariantMap BookListModel::importBookFile(const QString &fileName, const QVariantHash &metadata, bool refreshCover)
+{
     const QFileInfo fileInfo(localFileNameFromUrlOrPath(fileName));
+    auto reject = [this](const QVariantMap &result) {
+        Q_EMIT importRejected(result);
+        return result;
+    };
+    const QVariantMap failure{{QStringLiteral("success"), false},
+                              {QStringLiteral("status"), QStringLiteral("failed")},
+                              {QStringLiteral("fileName"), fileInfo.absoluteFilePath()},
+                              {QStringLiteral("message"), i18n("Unable to import book file: %1", fileInfo.absoluteFilePath())}};
     if (!fileInfo.exists() || !fileInfo.isFile()) {
-        return BookEntry();
+        return reject(failure);
     }
 
     const QString absoluteFileName = fileInfo.absoluteFilePath();
     if (indexOfFile(absoluteFileName) != -1) {
-        return bookEntryFromFile(absoluteFileName);
+        return {{QStringLiteral("success"), true},
+                {QStringLiteral("status"), QStringLiteral("already-known")},
+                {QStringLiteral("fileName"), absoluteFileName},
+                {QStringLiteral("entry"), QVariant::fromValue(bookEntryFromFile(absoluteFileName))}};
     }
 
-    const BookEntry entry = createBookEntryFromFile(absoluteFileName, {}, refreshCover);
+    BookEntry entry = createBookEntryFromFile(absoluteFileName, metadata, refreshCover);
     if (entry.filename.isEmpty()) {
-        return BookEntry();
+        return reject(failure);
     }
 
+    auto result = BookDatabase::self().importEntry(entry);
+    if (!result.value(QStringLiteral("success")).toBool()) {
+        removeCachedCover(entry.thumbnail);
+        if (result.value(QStringLiteral("status")) == QStringLiteral("duplicate-book-id")) {
+            auto plan = result;
+            entry.thumbnail.clear();
+            plan.insert(QStringLiteral("entry"), QVariant::fromValue(entry));
+            plan.insert(QStringLiteral("fileHash"), MaintenanceFiles::digest(absoluteFileName));
+            d->rejectedImports.insert(absoluteFileName, plan);
+        }
+        return reject(result);
+    }
+    if (result.value(QStringLiteral("status")) == QStringLiteral("already-known")) {
+        const auto stored = BookDatabase::self().loadEntry(absoluteFileName);
+        if (!stored)
+            return reject(failure);
+        removeCachedCover(entry.thumbnail, stored->thumbnail);
+        entry = *stored;
+    }
     d->initializeSubModels(this);
-    if (!d->addEntry(this, entry)) {
-        return bookEntryFromFile(absoluteFileName);
+    if (d->addEntry(this, entry))
+        Q_EMIT countChanged();
+    result.insert(QStringLiteral("entry"), QVariant::fromValue(entry));
+    d->rejectedImports.remove(absoluteFileName);
+    if (Config::sanskritStructureOnImport() && !entry.uniqueIdentifier.isEmpty()
+        && fileInfo.suffix().compare(QStringLiteral("epub"), Qt::CaseInsensitive) == 0) {
+        Q_EMIT structureReviewRequested(entry.uniqueIdentifier);
     }
+    return result;
+}
 
-    d->skipNextDatabaseSync = true;
-    BookDatabase::self().addEntry(entry);
-    Q_EMIT countChanged();
-    return entry;
+static bool copyFileAtomically(const QString &source, const QString &destination)
+{
+    QFile input(source);
+    QSaveFile output(destination);
+    if (!input.open(QIODevice::ReadOnly) || !output.open(QIODevice::WriteOnly))
+        return false;
+    while (!input.atEnd()) {
+        const auto block = input.read(1024 * 1024);
+        if (input.error() != QFileDevice::NoError || output.write(block) != block.size())
+            return false;
+    }
+    return output.commit();
+}
+
+QVariantMap BookListModel::changeRejectedBookIdentifier(const QString &fileName)
+{
+    const auto path = QFileInfo(localFileNameFromUrlOrPath(fileName)).absoluteFilePath();
+    const auto plan = d->rejectedImports.value(path);
+    const auto oldIds = plan.value(QStringLiteral("conflictingBookIds")).toStringList();
+    const auto originalHash = plan.value(QStringLiteral("fileHash")).toByteArray();
+    auto failure = [&](const QString &message) {
+        return QVariantMap{
+            {QStringLiteral("success"), false},
+            {QStringLiteral("message"), message},
+            {QStringLiteral("canChangeIdentifier"),
+             !originalHash.isEmpty() && MaintenanceFiles::digest(path) == originalHash && BookDatabase::self().canChangeBookIdentifiers(oldIds, path)}};
+    };
+    if (originalHash.isEmpty() || MaintenanceFiles::digest(path) != originalHash)
+        return failure(i18n("The rejected file has changed. Import it again before changing its identifier."));
+    bool loaded = false;
+    const auto books = BookDatabase::self().loadEntries(&loaded);
+    if (!loaded)
+        return failure(i18n("Unable to read the library database."));
+    for (const auto &book : books) {
+        if (book.filename == path || QFileInfo(book.filename).canonicalFilePath() == QFileInfo(path).canonicalFilePath())
+            return failure(i18n("This file is already registered in the library and cannot be changed through an import conflict."));
+    }
+    if (!BookDatabase::self().canChangeBookIdentifiers(oldIds, path))
+        return failure(
+            i18n("The book identifier cannot be changed because stored remarks or cross-references are anchored in this file or their positions could not be "
+                 "verified."));
+
+    QTemporaryDir staging;
+    const auto candidate = staging.filePath(QStringLiteral("book.") + QFileInfo(path).suffix());
+    if (!staging.isValid() || !QFile::copy(path, candidate))
+        return failure(i18n("Unable to prepare a copy for changing the book identifier."));
+    const auto newId = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    auto entry = plan.value(QStringLiteral("entry")).value<BookEntry>();
+    const auto mime = QMimeDatabase().mimeTypeForFile(path).name();
+    if (mime == QStringLiteral("application/epub+zip")) {
+        {
+            EPubContainer epub(nullptr);
+            if (!epub.openFile(candidate))
+                return failure(i18n("Unable to change the EPUB book identifier."));
+            const auto changed = epub.replaceBookIdentifiers(oldIds, newId);
+            if (!changed.success)
+                return failure(changed.errorMessage);
+        }
+        EPubContainer verification(nullptr);
+        if (!verification.openFile(candidate))
+            return failure(i18n("Unable to verify the new book identifier."));
+        applyEpubIdentifiers(entry, verification);
+    } else if (mime == QStringLiteral("application/pdf")) {
+        const auto error = writePdfBookIdentifier(path, candidate, newId);
+        if (!error.isEmpty())
+            return failure(error);
+        entry.identifier = entry.uniqueIdentifier = pdfBookIdentifier(candidate);
+    } else {
+        return failure(i18n("This book format does not support changing its identifier."));
+    }
+    auto newIds = entry.identifier.split(QLatin1Char(','), Qt::SkipEmptyParts);
+    newIds.append(entry.uniqueIdentifier);
+    bool foundNewId = false;
+    for (const auto &id : newIds) {
+        const auto normalized = normalizeBookServerIdentifier(id);
+        if (oldIds.contains(normalized))
+            return failure(i18n("Unable to verify the new book identifier."));
+        foundNewId |= normalized == newId;
+    }
+    if (!foundNewId || MaintenanceFiles::digest(path) != originalHash)
+        return failure(i18n("Unable to verify the new book identifier."));
+    const auto backup = path + QStringLiteral(".arianna-id-change-") + newId + QStringLiteral(".bak");
+    if (!QFile::copy(path, backup) || MaintenanceFiles::digest(backup) != originalHash)
+        return failure(i18n("Unable to create a backup before changing the book identifier."));
+    if (!copyFileAtomically(candidate, path)) {
+        QFile::remove(backup);
+        return failure(i18n("Unable to save the new book identifier."));
+    }
+    const auto result = BookDatabase::self().importEntry(entry, oldIds);
+    if (!result.value(QStringLiteral("success")).toBool()) {
+        if (MaintenanceFiles::digest(path) != MaintenanceFiles::digest(candidate) || !copyFileAtomically(backup, path))
+            return failure(i18n("Import failed. The original file is backed up at: %1", backup));
+        QFile::remove(backup);
+        return failure(result.value(QStringLiteral("message")).toString());
+    }
+    QFile::remove(backup);
+    d->rejectedImports.remove(path);
+    d->initializeSubModels(this);
+    if (d->addEntry(this, entry))
+        Q_EMIT countChanged();
+    refreshBookFromFile(path, true);
+    return {{QStringLiteral("success"), true},
+            {QStringLiteral("fileName"), path},
+            {QStringLiteral("bookId"), newId},
+            {QStringLiteral("message"), i18n("Book identifier changed to %1. The file was imported.", newId)}};
+}
+
+QVariantMap BookListModel::importBookFiles(const QStringList &fileNames, bool refreshCover)
+{
+    int imported = 0, duplicates = 0, duplicateBookIds = 0, failed = 0;
+    QStringList importedFiles, failedFiles;
+    QVariantList rejections;
+    for (const auto &path : fileNames) {
+        const auto result = importBookFile(path, {}, refreshCover);
+        const auto status = result.value(QStringLiteral("status")).toString();
+        if (status == QStringLiteral("imported")) {
+            ++imported;
+            importedFiles.append(result.value(QStringLiteral("fileName")).toString());
+        } else if (status == QStringLiteral("already-known")) {
+            ++duplicates;
+        } else if (status == QStringLiteral("duplicate-book-id")) {
+            ++duplicates;
+            ++duplicateBookIds;
+            rejections.append(result);
+        } else {
+            ++failed;
+            failedFiles.append(result.value(QStringLiteral("fileName")).toString());
+            rejections.append(result);
+        }
+    }
+    return {{QStringLiteral("success"), true},
+            {QStringLiteral("scanned"), fileNames.size()},
+            {QStringLiteral("imported"), imported},
+            {QStringLiteral("duplicates"), duplicates},
+            {QStringLiteral("duplicateBookIds"), duplicateBookIds},
+            {QStringLiteral("failed"), failed},
+            {QStringLiteral("importedFiles"), importedFiles},
+            {QStringLiteral("failedFiles"), failedFiles},
+            {QStringLiteral("rejections"), rejections},
+            {QStringLiteral("message"), i18n("Import finished: %1 imported, %2 duplicates skipped, %3 failed.", imported, duplicates, failed)}};
 }
 
 QVariantMap BookListModel::importCalibreLibrary(const QString &folderName, bool refreshCover)
@@ -1366,18 +1550,7 @@ QVariantMap BookListModel::importCalibreLibrary(const QString &folderName, bool 
         return result;
     }
 
-    QSet<QString> knownBookFiles;
-    knownBookFiles.reserve(d->entries.size());
-    for (const BookEntry &entry : std::as_const(d->entries)) {
-        knownBookFiles.insert(QFileInfo(localFileNameFromUrlOrPath(entry.filename)).absoluteFilePath());
-    }
-
-    QStringList failedFiles;
-    int scanned = 0;
-    int imported = 0;
-    int duplicates = 0;
-    int failed = 0;
-
+    QStringList files;
     QDirIterator it(folderInfo.absoluteFilePath(), QDir::Files | QDir::Readable | QDir::NoDotAndDotDot, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         it.next();
@@ -1387,33 +1560,15 @@ QVariantMap BookListModel::importCalibreLibrary(const QString &folderName, bool 
             continue;
         }
 
-        ++scanned;
-        const QString absoluteFileName = bookFileInfo.absoluteFilePath();
-        if (knownBookFiles.contains(absoluteFileName)) {
-            ++duplicates;
-            continue;
-        }
-
-        const BookEntry entry = addBookFromFile(absoluteFileName, refreshCover);
-        if (entry.filename.isEmpty()) {
-            ++failed;
-            if (failedFiles.size() < 20) {
-                failedFiles.append(absoluteFileName);
-            }
-            continue;
-        }
-
-        ++imported;
-        knownBookFiles.insert(QFileInfo(entry.filename).absoluteFilePath());
+        files.append(bookFileInfo.absoluteFilePath());
     }
-
-    result.insert(QStringLiteral("success"), true);
+    files.sort();
+    result = importBookFiles(files, refreshCover);
     result.insert(QStringLiteral("folder"), folderInfo.absoluteFilePath());
-    result.insert(QStringLiteral("scanned"), scanned);
-    result.insert(QStringLiteral("imported"), imported);
-    result.insert(QStringLiteral("duplicates"), duplicates);
-    result.insert(QStringLiteral("failed"), failed);
-    result.insert(QStringLiteral("failedFiles"), failedFiles);
+    const auto scanned = result.value(QStringLiteral("scanned")).toInt();
+    const auto imported = result.value(QStringLiteral("imported")).toInt();
+    const auto duplicates = result.value(QStringLiteral("duplicates")).toInt();
+    const auto failed = result.value(QStringLiteral("failed")).toInt();
 
     if (scanned == 0) {
         result.insert(QStringLiteral("message"), i18n("No supported EPUB or PDF books were found in the Calibre library folder."));
@@ -1586,6 +1741,8 @@ QVariantMap BookListModel::checkAndRefreshBookFromFile(const QString &fileName, 
         messages.append(i18n("Metadata refreshed."));
     }
 
+    if (Config::sanskritStructureOnImport() && !oldEntry.uniqueIdentifier.isEmpty())
+        Q_EMIT structureReviewRequested(oldEntry.uniqueIdentifier);
     result.insert(QStringLiteral("success"), true);
     result.insert(QStringLiteral("entry"), QVariant::fromValue(refreshedEntry));
     result.insert(QStringLiteral("message"), messages.join(QStringLiteral("\n")));
@@ -1993,12 +2150,17 @@ QString BookListModel::bookVersionFromFile(const QString &fileName) const
     return {};
 }
 
-void BookListModel::removeBook(const QString &fileName, bool deleteFile)
+QVariantMap BookListModel::removeBook(const QString &fileName, bool deleteFile)
 {
     for (qsizetype i = 0; i < d->entries.size(); ++i) {
         const BookEntry entry = d->entries.at(i);
         if (entry.filename != fileName) {
             continue;
+        }
+
+        const auto result = BookReferenceCheck::removeBook(entry);
+        if (!result.value(QStringLiteral("success")).toBool()) {
+            return result;
         }
 
         if (deleteFile && !QFile::remove(entry.filename)) {
@@ -2008,9 +2170,9 @@ void BookListModel::removeBook(const QString &fileName, bool deleteFile)
         d->entries.removeAt(i);
         Q_EMIT entryRemoved(entry);
         Q_EMIT countChanged();
-        BookDatabase::self().removeEntry(entry);
-        break;
+        return result;
     }
+    return {{QStringLiteral("success"), false}, {QStringLiteral("message"), i18n("The book is no longer in the library.")}};
 }
 
 QStringList BookListModel::knownBookFiles() const

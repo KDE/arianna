@@ -275,7 +275,7 @@ Not a particularly descriptive name, but essentially, `text-walker.js` is a smal
 
 E.g. you can join all the text nodes together, use `Intl.Segmenter` to segment the string into words, and get the results in DOM Ranges, so you can mark up those words in the original document.
 
-In foliate-js, this is used for searching and TTS.
+In this Arianna copy of foliate-js, this is used for searching.
 
 ### Searching
 
@@ -283,9 +283,10 @@ It provides a search module, which can in fact be used as a standalone module fo
 
 ### Text-to-Speech (TTS)
 
-The TTS module doesn't directly handle speech output. Rather, its methods return SSML documents (as strings), which you can then feed to your speech synthesizer.
-
-The SSML attributes `ssml:ph` and `ssml:alphabet` are supported. There's no support for PLS and CSS Speech.
+This Arianna copy omits the upstream TTS module and `View.initTTS()`. Arianna
+extracts source text and CFIs in `../reader.js`, using the DOM block traversal
+in `../speech-blocks.js`, and sends them to its native Speech Dispatcher
+controller. Speech output and SSML generation live in `src/speechcontroller.cpp`.
 
 ### Offline Dictionaries
 

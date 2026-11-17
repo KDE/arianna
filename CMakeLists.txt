@@ -16,6 +16,13 @@ set(QT_MIN_VERSION "6.8.0")
 
 find_package(ECM ${KF_MIN_VERSION} REQUIRED NO_MODULE)
 find_package(PkgConfig REQUIRED)
+pkg_check_modules(SPEECHD REQUIRED IMPORTED_TARGET speech-dispatcher>=0.9)
+pkg_check_modules(IAST REQUIRED IMPORTED_TARGET iast)
+# iast.pc does not provide Cflags, so resolve its public headers explicitly.
+find_path(IAST_INCLUDE_DIR NAMES iast/transliteration.h HINTS ${IAST_INCLUDEDIR})
+if (NOT IAST_INCLUDE_DIR)
+    message(FATAL_ERROR "libiast was found, but its public header iast/transliteration.h is missing.")
+endif()
 pkg_check_modules(PODOFO REQUIRED libpodofo>=1.1.1)
 find_library(PODOFO_LIBRARY
     NAMES podofo
@@ -58,14 +65,14 @@ ecm_setup_version(${PROJECT_VERSION}
     VERSION_HEADER ${CMAKE_CURRENT_BINARY_DIR}/arianna-version.h
 )
 
-find_package(Qt6 ${QT_MIN_VERSION} NO_MODULE COMPONENTS Widgets Core Quick Gui QuickControls2 WebSockets WebChannel Test Svg Sql Xml HttpServer PrintSupport)
+find_package(Qt6 ${QT_MIN_VERSION} NO_MODULE COMPONENTS Widgets Core Quick Gui QuickControls2 WebSockets WebChannel Test Svg Sql Xml HttpServer PrintSupport DBus)
 set_package_properties(Qt6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"
 )
 qt_policy(SET QTP0001 NEW)
 qt_policy(SET QTP0004 NEW)
-find_package(KF6 ${KF_MIN_VERSION} COMPONENTS Kirigami I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Archive QuickCharts Crash ColorScheme KIO XmlGui)
+find_package(KF6 ${KF_MIN_VERSION} COMPONENTS Kirigami I18n Config CoreAddons DBusAddons WindowSystem FileMetaData Archive QuickCharts Crash ColorScheme KIO XmlGui Wallet)
 set_package_properties(KF6 PROPERTIES
     TYPE REQUIRED
     PURPOSE "Basic application components"

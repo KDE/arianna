@@ -274,6 +274,10 @@ const getMetadata = opf => {
             ?? legacyMeta?.['calibre:title_sort'],
         subtitle: dc.title?.find(x => prop(x, 'title-type') === 'subtitle')?.value,
         language: dc.language?.map(x => x.value),
+        // Explicit publication metadata only; never infer an edition from a date/title.
+        edition: one(properties['https://schema.org/bookEdition'])
+            ?? one(properties['http://schema.org/bookEdition'])
+            ?? legacyMeta?.['calibre:edition'] ?? legacyMeta?.edition,
         description: one(dc.description),
         publisher: makeContributor(dc.publisher?.[0]),
         published: dc.date?.find(x => x.attrs.event === 'publication')?.value
@@ -847,9 +851,28 @@ class Loader {
                 }
             }
             // replace hrefs (excluding anchors)
+            // The reader bootstrap follows the same script policy as the book.
+            // Inert config markers remain data and are never evaluated.
+            if (!this.allowScript) {
+                for (const script of doc.querySelectorAll('script')) {
+                    script.removeAttribute('src')
+                    script.setAttribute('type', 'application/x-arianna-disabled-script')
+                    script.removeAttribute('data-arianna-mathjax')
+                }
+                for (const el of doc.querySelectorAll('*')) {
+                    for (const attr of Array.from(el.attributes)) {
+                        if (/^on/i.test(attr.localName) || (/^(?:href|src)$/i.test(attr.localName) && /^\s*javascript:/i.test(attr.value)))
+                            el.removeAttributeNode(attr)
+                    }
+                }
+            }
             // TODO: srcset?
-            const replace = async (el, attr) => el.setAttribute(attr,
-                await this.loadHref(el.getAttribute(attr), href, parents))
+            const replace = async (el, attr) => {
+                const source = el.getAttribute(attr)
+                if (el.localName === 'img' && attr === 'src')
+                    el.setAttribute('data-arianna-original-src', source)
+                el.setAttribute(attr, await this.loadHref(source, href, parents))
+            }
             await mapConcurrent(doc.querySelectorAll('link[href]'), 8, el => replace(el, 'href'))
             await mapConcurrent(doc.querySelectorAll('[src]'), 8, el => replace(el, 'src'))
             await mapConcurrent(doc.querySelectorAll('[poster]'), 8, el => replace(el, 'poster'))
@@ -956,10 +979,11 @@ export class EPUB {
     parser = new DOMParser()
     #loader
     #encryption
-    constructor({ loadText, loadBlob, getSize, sha1 }) {
+    constructor({ loadText, loadBlob, getSize, sha1, allowScript = true }) {
         this.loadText = loadText
         this.loadBlob = loadBlob
         this.getSize = getSize
+        this.allowScript = allowScript
         this.#encryption = new Encryption(deobfuscators(sha1))
     }
     async #loadXML(uri) {
@@ -998,6 +1022,7 @@ ${doc.querySelector('parsererror').innerText}`)
                 .then(this.#encryption.getDecoder(uri)),
             resources: this.resources,
         })
+        this.#loader.allowScript = this.allowScript
         this.transformTarget = this.#loader.eventTarget
         this.sections = this.resources.spine.map((spineItem, index) => {
             const { idref, linear, properties = [] } = spineItem

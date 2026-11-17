@@ -28,7 +28,7 @@ public:
 
 Q_SIGNALS:
     void webEngineSessionTokenChanged();
-    void openBook(const QString &fileName, const QString &locations, const QString &currentLocation, const BookEntry &entry, bool readOnly);
+    void openBook(const QString &fileName, const QString &locations, const QString &currentLocation, const BookEntry &entry, bool readOnly, bool noLibraryImport = false);
 
     void openLibrary(const QString &title, CategoryEntriesModel *model, bool replace);
 

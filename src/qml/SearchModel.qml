@@ -7,11 +7,32 @@ ListModel {
     id: root
 
     property bool loading: false
+    property int currentResult: -1
 
     signal searchTriggered(text: string)
+    signal resultSelected(cfi: string, flash: bool)
+
+    onCountChanged: if (count === 0) currentResult = -1
+
+    function selectResult(index, flash = false) {
+        if (loading || count === 0) {
+            return;
+        }
+        currentResult = (index + count) % count;
+        resultSelected(get(currentResult).cfi, flash);
+    }
+
+    function previousResult(flash = false) {
+        selectResult(currentResult < 0 ? count - 1 : currentResult - 1, flash);
+    }
+
+    function nextResult(flash = false) {
+        selectResult(currentResult + 1, flash);
+    }
 
     function search(text) {
-        loading = false;
+        clear();
+        loading = true;
         searchTriggered(text);
     }
 

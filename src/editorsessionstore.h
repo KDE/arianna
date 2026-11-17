@@ -25,12 +25,17 @@ public:
     Q_INVOKABLE QVariantMap createOrReuseEditorSession(const QString &bookId, const QString &authoritativeFilePath);
     Q_INVOKABLE QVariantMap activeSessionForBook(const QString &bookId) const;
     Q_INVOKABLE QVariantMap sessionInfo(const QString &sessionId) const;
+    Q_INVOKABLE QVariantMap resumeEditorSession(const QString &sessionId);
     Q_INVOKABLE void noteEditorProcessStarted(const QString &sessionId, qint64 editorProcessId);
     Q_INVOKABLE void scheduleImport(const QString &sessionId);
     Q_INVOKABLE QVariantMap importNow(const QString &sessionId, bool allowInvalidAnchors = false);
     Q_INVOKABLE QVariantMap finishSession(const QString &sessionId);
+    Q_INVOKABLE void retainWorkingCopy(const QString &sessionId);
+    Q_INVOKABLE void releaseWorkingCopy(const QString &sessionId);
+    Q_INVOKABLE QVariantMap recoverWorkingCopy(const QString &bookId, const QString &path);
 
 Q_SIGNALS:
+    void editorStartBlocked(const QString &message, const QStringList &workingCopies);
     void editorSessionImportFinished(const QString &sessionId,
                                      const QString &status,
                                      const QString &message,
@@ -47,7 +52,12 @@ private:
     QString normalizedSessionId(const QString &sessionId) const;
     void startStabilityCheck(const QString &sessionId);
     void completeStabilityCheck(const QString &sessionId, qint64 previousSize, const QDateTime &previousModified);
+    void restoreSessions();
+    bool persist(const EditorSession &session) const;
+    QVariantMap blocked(const QString &message, const QStringList &paths = {});
+    void discardImportedCopy(const QString &sessionId);
 
+    QHash<QString, int> m_reviewHolds;
     QHash<QString, EditorSession> m_sessions;
     QHash<QString, QString> m_activeSessionByBookId;
     QHash<QString, QTimer *> m_debounceTimers;

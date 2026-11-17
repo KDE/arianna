@@ -69,4 +69,9 @@ void Clipboard::saveText(QString message)
     m_clipboard->setMimeData(mineData);
 }
 
+void Clipboard::savePlainText(const QString &message)
+{
+    m_clipboard->setText(message);
+}
+
 #include "moc_clipboard.cpp"

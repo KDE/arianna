@@ -16,6 +16,8 @@ class CategoryEntriesModel;
 struct BookEntry {
     Q_GADGET
     Q_PROPERTY(QString filename MEMBER filename CONSTANT)
+    Q_PROPERTY(QString formatGroup MEMBER formatGroup CONSTANT)
+    Q_PROPERTY(QVariantList formatVariants MEMBER formatVariants CONSTANT)
     Q_PROPERTY(QString filetitle MEMBER filetitle CONSTANT)
     Q_PROPERTY(QString title MEMBER title CONSTANT)
     Q_PROPERTY(QStringList subjects MEMBER genres CONSTANT)
@@ -30,10 +32,13 @@ struct BookEntry {
     Q_PROPERTY(QString publisher MEMBER publisher CONSTANT)
     Q_PROPERTY(QDateTime created MEMBER created CONSTANT)
     Q_PROPERTY(QDateTime lastOpenedTime MEMBER lastOpenedTime CONSTANT)
+    Q_PROPERTY(QDateTime lastClosedTime MEMBER lastClosedTime CONSTANT)
+    Q_PROPERTY(QDateTime lastClosedOpenedTime MEMBER lastClosedOpenedTime CONSTANT)
     Q_PROPERTY(QString currentLocation MEMBER currentLocation CONSTANT)
     Q_PROPERTY(int currentProgress MEMBER currentProgress CONSTANT)
     Q_PROPERTY(double zoomLevel MEMBER zoomLevel CONSTANT)
     Q_PROPERTY(QString pageMode MEMBER pageMode CONSTANT)
+    Q_PROPERTY(int pageWidthDistance MEMBER pageWidthDistance CONSTANT)
     Q_PROPERTY(QString bookVersion MEMBER bookVersion CONSTANT)
     Q_PROPERTY(QString thumbnail MEMBER thumbnail CONSTANT)
     Q_PROPERTY(bool passwordProtected MEMBER passwordProtected CONSTANT)
@@ -56,6 +61,8 @@ public:
     QString saveCover(const QImage &image, const QString &path = {}) const;
 
     QString filename;
+    QString formatGroup;
+    QVariantList formatVariants;
     QString filetitle;
     QString title;
     QStringList genres;
@@ -69,10 +76,15 @@ public:
     QString publisher;
     QDateTime created;
     QDateTime lastOpenedTime;
+    QDateTime lastClosedTime;
+    // Opening time of the reader session that produced lastClosedTime.
+    QDateTime lastClosedOpenedTime;
     QString currentLocation;
     int currentProgress = 0;
     double zoomLevel = 1.0;
     QString pageMode;
+    // EPUB column width / PDF spread gap in logical pixels; -1 uses the reader default.
+    int pageWidthDistance = -1;
     QString bookVersion;
     QString thumbnail;
     bool passwordProtected = false;
@@ -137,6 +149,7 @@ public:
         CurrentProgressRole, /// For getting the current progress as an int (percentage).
         ZoomLevelRole, /// For getting the WebEngine zoom level.
         PageModeRole, /// For getting the reader page mode.
+        PageWidthDistanceRole, /// EPUB column width or PDF spread gap.
         CategoryEntriesModelRole, /// For getting the model of this category.
         CategoryEntryCountRole, /// For getting the an int with the number of books within this category.
         ThumbnailRole, /// For getting a thumbnail url for this book.

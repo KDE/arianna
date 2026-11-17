@@ -11,6 +11,12 @@ import org.kde.arianna
 Kirigami.Page {
     id: root
 
+    BookFormatDialog {
+        id: bookFormatDialog
+        parent: QQC2.Overlay.overlay
+        onBookChosen: entry => Navigation.openBook(entry.filename, entry.locations, entry.currentLocation, entry, false)
+    }
+
     property CategoryEntriesModel bookListModel
     property var addBookAction
     property string searchText: applicationWindow().librarySearchText
@@ -274,7 +280,8 @@ Kirigami.Page {
                         width: root.bookTileWidth(subjectBooksView.width)
                         height: subjectBooksView.cellHeight
 
-                        imageUrl: categoryEntriesModel === "" ? ("file://" + thumbnail) : ""
+                        imageUrl: categoryEntriesModel === "" && thumbnail && thumbnail !== "undefined" && thumbnail !== "null"
+                            ? ("file://" + thumbnail) : ""
                         iconName: if (categoryEntriesModel !== "") {
                             return thumbnail;
                         } else if (thumbnail === "") {
@@ -287,11 +294,16 @@ Kirigami.Page {
                         secondaryText: author ? bookDelegate.author.join(", ") : ""
                         typeIconSource: root.typeIconSourceForFile(bookDelegate.filename, bookDelegate.categoryEntriesModel)
                         showPasswordBadge: bookDelegate.passwordProtected
+                        passwordFileName: bookDelegate.filename
+                        passwordBookId: bookDelegate.entry.uniqueIdentifier || bookDelegate.entry.identifier || ""
+                        formatVariants: bookDelegate.entry.formatVariants || []
 
-                        onClicked: if (categoryEntriesModel) {
-                            Navigation.openLibrary(localizedTitle, categoryEntriesModel, false);
-                        } else {
-                            Navigation.openBook(filename, locations, currentLocation, entry, false);
+                        onActivated: modifiers => {
+                            if (categoryEntriesModel) {
+                                Navigation.openLibrary(localizedTitle, categoryEntriesModel, false);
+                            } else {
+                                bookFormatDialog.openBook(entry, modifiers);
+                            }
                         }
 
                         QQC2.ToolButton {

@@ -21,12 +21,6 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 26.03.70\n"
 
-#: src/qml/TableOfContentDrawer.qml:29
-#, kde-format
-msgctxt "@action:button"
-msgid "Write Table of Contents to PDF"
-msgstr "Schreibe Inhaltsverzeichnis in PDF"
-
 #: epubcontainer.cpp:35
 #, kde-format
 msgid "Failed to open %1"
@@ -119,10 +113,10 @@ msgstr "kde-i18n-de@kde.org"
 msgid "Epub reader"
 msgstr "EPub-Reader-Anwendung"
 
-#: main.cpp:80
+#: main.cpp
 #, kde-format
-msgid "Epub file to open"
-msgstr "Zu öffnende EPub-Datei"
+msgid "Epub file to open, or PDF files to check for watermarks"
+msgstr "Zu öffnende EPub-Datei oder auf Wasserzeichen zu prüfende PDF-Dateien"
 
 #: main.cpp
 #, kde-format
@@ -148,6 +142,11 @@ msgstr "Das angegebene Buch schreibgeschützt öffnen, ohne es zur Bibliothek hi
 #, kde-format
 msgid "Open the most recently opened library book"
 msgstr "Das zuletzt geöffnete Buch aus der Bibliothek öffnen"
+
+#: main.cpp
+#, kde-format
+msgid "Check the given PDF files for watermark markers, remove found markers, write the result to standard output, and exit"
+msgstr "Die angegebenen PDF-Dateien auf Wasserzeichen-Markierungen prüfen, gefundene Markierungen entfernen, das Ergebnis in die Standardausgabe schreiben und anschließend beenden"
 
 #: qml/BookDetailsPage.qml:16
 #, kde-format
@@ -217,6 +216,12 @@ msgstr "Farbschema"
 msgid "Loading"
 msgstr "Wird geladen"
 
+#: qml/EpubViewerPage.qml qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@title:dialog, %1 is the number of matches"
+msgid "Search Results(%1)"
+msgstr "Suchergebnisse(%1)"
+
 #: qml/EpubViewerPage.qml:82 qml/Main.qml:168
 #, kde-format
 msgid "No search results"
@@ -262,6 +267,21 @@ msgstr "Titel/Autor suchen..."
 #, kde-format
 msgid "Remarks"
 msgstr "Anmerkungen"
+
+#: qml/EpubViewerPage.qml qml/PdfViewerPage.qml
+#, kde-format
+msgid "No remarks in this book"
+msgstr "Keine Anmerkungen in diesem Buch"
+
+#: qml/EpubViewerPage.qml qml/PdfViewerPage.qml
+#, kde-format
+msgid "Highlighted text"
+msgstr "Markierter Text"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Page %1"
+msgstr "Seite %1"
 
 #: qml/EpubViewerPage.qml:132
 #, kde-format
@@ -348,7 +368,7 @@ msgstr "System"
 #: qml/EpubViewerPage.qml:449
 #, kde-format
 msgid "Search with Google"
-msgstr "Mit Google Suchen"
+msgstr "mit Google suchen"
 
 #: qml/EpubViewerPage.qml:468
 #, kde-format
@@ -468,6 +488,44 @@ msgstr "Bücher von Calibre importieren"
 msgctxt "@title:group"
 msgid "Book Import"
 msgstr "Buchimport"
+
+#: qml/ImportPageView.qml
+msgctxt "@title:tab"
+msgid "File Dialog"
+msgstr "Dateidialog"
+
+#: qml/ImportPageView.qml
+msgctxt "@title:tab"
+msgid "Baloo"
+msgstr "Baloo"
+
+#: qml/ImportPageView.qml
+msgctxt "@title:tab"
+msgid "Calibre"
+msgstr "Calibre"
+
+#: qml/ImportPageView.qml
+msgid "Choose eBook files to add to your library."
+msgstr "Wählen Sie E-Book-Dateien aus, um sie zur Bibliothek hinzuzufügen."
+
+#: qml/ImportPageView.qml
+msgid "Search the indexed folders for books that are not yet in the library."
+msgstr "Die indizierten Ordner nach Büchern durchsuchen, die noch nicht in der Bibliothek sind."
+
+#: qml/ImportPageView.qml
+msgctxt "@action:button"
+msgid "Search for Books"
+msgstr "Nach Büchern suchen"
+
+#: qml/ImportPageView.qml
+msgctxt "@action:button"
+msgid "Import Books"
+msgstr "Bücher importieren"
+
+#: qml/ImportPageView.qml
+msgctxt "@info"
+msgid "Baloo is not available or file indexing is disabled. Use the File Dialog tab to add books."
+msgstr "Baloo ist nicht verfügbar oder die Dateiindizierung ist deaktiviert. Verwenden Sie den Tab „Dateidialog“, um Bücher hinzuzufügen."
 
 msgctxt "@action:button"
 msgid "via File Dialog"
@@ -1345,6 +1403,7 @@ msgstr "Schließen"
 
 #: qml/EpubViewerPage.qml
 #, kde-format
+#: qml/PdfViewerPage.qml
 msgid "save change of reference"
 msgstr "Referenzänderung speichern"
 
@@ -1357,6 +1416,11 @@ msgstr "Fußnote"
 #, kde-format
 msgid "Go to Footnote"
 msgstr "Zur Fußnote gehen"
+
+#: qml/FootnoteWindow.qml
+#, kde-format
+msgid "The footnote could not be loaded."
+msgstr "Die Fußnote konnte nicht geladen werden."
 
 #: qml/EpubViewerPage.qml:371
 #, kde-format
@@ -1505,6 +1569,17 @@ msgctxt "@action:button"
 msgid "Edit Book"
 msgstr "Buch bearbeiten"
 
+#, kde-format
+msgctxt "@action:intoolbar"
+msgid "Edit Current Page"
+msgstr "aktuelle Seite editieren"
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Edit Current Page"
+msgstr "Aktuelle Seite editieren"
+
 #: qml/LibraryPage.qml:124
 #, kde-format
 msgctxt "@action:button"
@@ -1542,8 +1617,18 @@ msgstr "Buch entfernen"
 
 #, kde-format
 msgctxt "@info"
-msgid "Do you really want to remove the book from the library? All saved data such as progress and annotations will be lost."
-msgstr "Buch wirklich aus der Bibliothek löschen? Alle gespeicherten Daten wie Fortschritt und Anmerkungen gehen dabei verloren."
+msgid "Do you really want to remove the book from the library? Its saved progress, annotations and all cross-references to and from this book will be deleted. Unused cross-reference anchors in other books will also be removed."
+msgstr "Buch wirklich aus der Bibliothek löschen? Der gespeicherte Lesefortschritt, die Anmerkungen und alle Querverweise von und zu diesem Buch werden gelöscht. Nicht mehr verwendete Querverweisanker in anderen Büchern werden ebenfalls entfernt."
+
+#: bookreferencecheck.cpp booklistmodel.cpp
+#, kde-format
+msgid "The book is no longer in the library."
+msgstr "Das Buch befindet sich nicht mehr in der Bibliothek."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "Unable to remove the book and its related data."
+msgstr "Das Buch und die zugehörigen Daten können nicht entfernt werden."
 
 #, kde-format
 msgctxt "@option:check %1 is the book file location"
@@ -1833,23 +1918,13 @@ msgstr "Wasserzeichen-Marker"
 
 #: qml/SettingsPage.qml
 #, kde-format
-msgid "Editor command"
-msgstr "Editor-Befehl"
+msgid "EPUB-Editor command"
+msgstr "EPUB-Editor-Befehl"
 
 #: qml/SettingsPage.qml
 #, kde-format
-msgid "Choose editor command…"
-msgstr "Editor-Befehl auswählen …"
-
-#: qml/SettingsPage.qml
-#, kde-format
-msgid "Editor command for selected text"
-msgstr "Editor-Befehl für ausgewählten Text"
-
-#: qml/SettingsPage.qml
-#, kde-format
-msgid "Choose text editor command…"
-msgstr "Editor-Befehl für Text auswählen …"
+msgid "Choose EPUB-Editor command…"
+msgstr "EPUB-Editor-Befehl auswählen …"
 
 #: qml/SettingsPage.qml
 #, kde-format
@@ -1888,13 +1963,8 @@ msgstr "Editor-Befehle löschen"
 
 #: qml/SettingsPage.qml
 #, kde-format
-msgid "Choose editor command"
-msgstr "Editor-Befehl auswählen"
-
-#: qml/SettingsPage.qml
-#, kde-format
-msgid "Choose text editor command"
-msgstr "Editor-Befehl für Text auswählen"
+msgid "Choose EPUB-Editor command"
+msgstr "EPUB-Editor-Befehl auswählen"
 
 #: qml/SettingsPage.qml
 #, kde-format
@@ -1958,11 +2028,13 @@ msgstr "Verweis erstellen"
 
 #: qml/EpubViewerPage.qml
 #, kde-format
+#: qml/PdfViewerPage.qml
 msgid "Open Reference"
 msgstr "Referenz öffnen"
 
 #: qml/EpubViewerPage.qml
 #, kde-format
+#: qml/PdfViewerPage.qml
 msgid "Edit Reference"
 msgstr "Referenz bearbeiten"
 
@@ -1975,6 +2047,16 @@ msgstr "Referenz löschen"
 #, kde-format
 msgid "References"
 msgstr "Referenzen"
+
+#: qml/EpubViewerPage.qml qml/PdfViewerPage.qml
+#, kde-format
+msgid "No references in this book"
+msgstr "Keine Referenzen in diesem Buch"
+
+#: qml/EpubViewerPage.qml qml/PdfViewerPage.qml
+#, kde-format
+msgid "Reference"
+msgstr "Referenz"
 
 #: qml/EpubViewerPage.qml
 #, kde-format
@@ -2325,3 +2407,4137 @@ msgstr "PoDoFo hat kein PDF mit Version 2.0 erstellt."
 msgctxt "@title:dialog"
 msgid "Add Page to Table of Contents"
 msgstr "Seite zum Inhaltsverzeichnis hinzufügen"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "End of table of contents"
+msgstr "Ende des Inhaltsverzeichnisses"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Insert relative to:"
+msgstr "Einfügen relativ zu:"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Position:"
+msgstr "Position:"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "Before selected item"
+msgstr "Vor dem ausgewählten Eintrag"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "After selected item"
+msgstr "Nach dem ausgewählten Eintrag"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@item:inlistbox"
+msgid "As subitem of selected item"
+msgstr "Als Untereintrag des ausgewählten Eintrags"
+
+#: okularpdfdocument.cpp
+#, kde-format
+msgid "The selected table of contents item is no longer available."
+msgstr "Der ausgewählte Inhaltsverzeichniseintrag ist nicht mehr verfügbar."
+
+#: okularpdfdocument.cpp
+#, kde-format
+msgid "The selected table of contents position is invalid."
+msgstr "Die ausgewählte Position im Inhaltsverzeichnis ist ungültig."
+
+#: qml/TableOfContentDrawer.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Edit TOC Item"
+msgstr "Inhaltspunkt bearbeiten"
+
+#: qml/TableOfContentDrawer.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Remove TOC Item"
+msgstr "Inhaltspunkt löschen"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@title:dialog"
+msgid "Edit Table of Contents Item"
+msgstr "Inhaltspunkt bearbeiten"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@label"
+msgid "Title:"
+msgstr "Titel:"
+
+#: okularpdfdocument.cpp
+#, kde-format
+msgid "The table of contents title must not be empty."
+msgstr "Der Titel des Inhaltsverzeichnispunkts darf nicht leer sein."
+
+#: okularpdfdocument.cpp
+#, kde-format
+msgid "The table of contents item was removed from the PDF."
+msgstr "Der Inhaltsverzeichnispunkt wurde aus dem PDF entfernt."
+
+#: okularpdfdocument.cpp
+#, kde-format
+msgid "The table of contents item was updated in the PDF."
+msgstr "Der Inhaltsverzeichnispunkt wurde im PDF aktualisiert."
+
+#: qml/BookDetailsPage.qml
+#, kde-format
+msgid "Encryption:"
+msgstr "Verschlüsselung:"
+
+#: pdfsecurityinfo.cpp
+#, kde-format
+msgid "The PDF is not encrypted."
+msgstr "Die PDF ist nicht verschlüsselt."
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Add Note"
+msgstr "Notiz hinzufügen"
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Create PDF Link"
+msgstr "PDF Link erstellen"
+
+#: qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Create External Book Reference"
+msgstr "externe Buchreferenz erstellen"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Create External Book Reference"
+msgstr "Externe Buchreferenz erstellen"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Source Anchor Title:"
+msgstr "Quellanker-Titel:"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Target Book:"
+msgstr "Zielbuch:"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Target Location:"
+msgstr "Zielort:"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Explicit Target Location:"
+msgstr "Expliziter Zielort:"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Preview Text:"
+msgstr "Vorschautext:"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "-- Please choose --"
+msgstr "-- Bitte wählen --"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "-- No selection --"
+msgstr "-- Keine Auswahl --"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "This Book"
+msgstr "Dieses Buch"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Already Externally Referenced Books"
+msgstr "Bereits extern referenzierte Bücher"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Books by the Same Author"
+msgstr "Bücher vom selben Autor"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Other Books"
+msgstr "Andere Bücher"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Loading…"
+msgstr "Wird geladen …"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "The book server is unavailable."
+msgstr "Der Buchserver ist nicht verfügbar."
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Unable to load cross-reference data."
+msgstr "Die Daten für die Buchreferenz können nicht geladen werden."
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Unable to write the PDF anchor."
+msgstr "Der PDF-Anker kann nicht geschrieben werden."
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Unable to save the reference."
+msgstr "Die Referenz kann nicht gespeichert werden."
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "Current target location"
+msgstr "Aktueller Zielort"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgid "No preview available"
+msgstr "Keine Vorschau verfügbar"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@info"
+msgid "Select the PDF link target"
+msgstr "Ziel des PDF Links wählen"
+
+#: qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Cancel"
+msgstr "Abbrechen"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Book file does not exist: %1"
+msgstr "Buchdatei existiert nicht: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Anchor validation is only available for EPUB and PDF files: %1"
+msgstr "Die Ankerprüfung ist nur für EPUB- und PDF-Dateien verfügbar: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Unable to open EPUB: %1"
+msgstr "EPUB kann nicht geöffnet werden: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Cannot parse %1 (line %2, column %3): %4"
+msgstr "%1 kann nicht gelesen werden (Zeile %2, Spalte %3): %4"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "This CFI position could not be verified: %1"
+msgstr "Diese CFI-Position konnte nicht überprüft werden: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Invalid target location: %1"
+msgstr "Ungültige Zielposition: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "External link; network availability was not checked: %1"
+msgstr "Externer Link; Erreichbarkeit im Netzwerk wurde nicht geprüft: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Target anchor occurs in multiple places: %1"
+msgstr "Zielanker kommt an mehreren Stellen vor: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Target anchor is missing or ambiguous: %1"
+msgstr "Zielanker fehlt oder ist nicht eindeutig: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Target document does not exist: %1"
+msgstr "Zieldokument existiert nicht: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "The target exists, but its fragment cannot be checked: %1"
+msgstr "Das Ziel existiert, aber sein Fragment kann nicht geprüft werden: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Target anchor %1 does not exist in %2."
+msgstr "Zielanker %1 existiert nicht in %2."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Target anchor %1 occurs more than once in %2."
+msgstr "Zielanker %1 kommt in %2 mehrfach vor."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Unable to read the reference database. The check could not be completed."
+msgstr "Die Referenzdatenbank kann nicht gelesen werden. Die Prüfung konnte nicht abgeschlossen werden."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Source and target were found and are unambiguous."
+msgstr "Quelle und Ziel wurden gefunden und sind eindeutig."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "This book is not in the library. Incoming and outgoing database references could not be checked."
+msgstr "Dieses Buch ist nicht in der Bibliothek. Eingehende und ausgehende Datenbankreferenzen konnten nicht geprüft werden."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Source book is missing or ambiguous in the library: %1"
+msgstr "Quellbuch fehlt in der Bibliothek oder ist nicht eindeutig: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Target book is missing or ambiguous in the library: %1"
+msgstr "Zielbuch fehlt in der Bibliothek oder ist nicht eindeutig: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "The reference has no source anchor ID."
+msgstr "Die Referenz hat keine Quellanker-ID."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Source reference anchor is missing or ambiguous: %1"
+msgstr "Quellanker der Referenz fehlt oder ist nicht eindeutig: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Source anchor %1 could not be verified because a source document is unreadable."
+msgstr "Quellanker %1 konnte nicht geprüft werden, weil ein Quelldokument nicht lesbar ist."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Source anchor ID occurs more than once: %1"
+msgstr "Quellanker-ID kommt mehrfach vor: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "The reference has no target location."
+msgstr "Die Referenz hat keine Zielposition."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "The EPUB anchor type does not match the stored reference."
+msgstr "Der EPUB-Ankertyp stimmt nicht mit der gespeicherten Referenz überein."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "The EPUB reference anchor has no matching entry in the reference database."
+msgstr "Für den EPUB-Referenzanker fehlt ein passender Eintrag in der Referenzdatenbank."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "%1 results: %2 OK, %3 errors, %4 not fully verified."
+msgstr "%1 Ergebnisse: %2 OK, %3 Fehler, %4 nicht vollständig geprüft."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Incoming reference"
+msgstr "Eingehende Referenz"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Outgoing reference"
+msgstr "Ausgehende Referenz"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Cross-reference inspection"
+msgstr "Querverweisprüfung"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "OK"
+msgstr "OK"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Error"
+msgstr "Fehler"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Not fully verified"
+msgstr "Nicht vollständig geprüft"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Source book: %1"
+msgstr "Quellbuch: %1"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Source book: %1 (ID: %2)"
+msgstr "Quellbuch: %1 (Id: %2)"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Source file: %1"
+msgstr "Quelldatei: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Document: %1"
+msgstr "Dokument: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Line: %1"
+msgstr "Zeile: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Source anchor: %1"
+msgstr "Quellanker: %1"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Source anchor: %1 in %2"
+msgstr "Quellanker: %1 in %2"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Target book: %1"
+msgstr "Zielbuch: %1"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Target book: %1 (ID: %2)"
+msgstr "Zielbuch: %1 (Id: %2)"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Target file: %1"
+msgstr "Zieldatei: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Stored target: %1"
+msgstr "Gespeichertes Ziel: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Resolved target: %1"
+msgstr "Aufgelöstes Ziel: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Checking references…"
+msgstr "Referenzen werden geprüft …"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Checks cross-references between EPUB and PDF books in the Arianna library. Links within the same book are excluded. Books requiring a password and unsupported targets are reported as not fully verified."
+msgstr "Prüft Querverweise zwischen EPUB- und PDF-Büchern in der Arianna-Bibliothek. Buchinterne Links sind ausgeschlossen. Bücher, die ein Passwort erfordern, und nicht unterstützte Ziele werden als nicht vollständig geprüft ausgewiesen."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Outgoing: %1 · Incoming: %2"
+msgstr "Ausgehend: %1 · Eingehend: %2"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Search books, anchors, targets and messages…"
+msgstr "Bücher, Anker, Ziele und Meldungen durchsuchen …"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Only problems and unverified references"
+msgstr "Nur Probleme und ungeprüfte Referenzen"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Copy Report"
+msgstr "Bericht kopieren"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "No references found."
+msgstr "Keine Referenzen gefunden."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "No results match the filter."
+msgstr "Keine Ergebnisse entsprechen dem Filter."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgid "Reference check:"
+msgstr "Referenzprüfung:"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Check Cross-References"
+msgstr "Querverweise prüfen"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Show Reference Report"
+msgstr "Referenzprüfbericht anzeigen"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml qml/BookDetailsPage.qml
+#, kde-format
+msgctxt "@title:window"
+msgid "Cross-Reference Check"
+msgstr "Querverweisprüfung"
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "Some EPUB documents are unreadable; the book-wide anchor lookup is incomplete."
+msgstr "Einige EPUB-Dokumente sind nicht lesbar; die buchweite Ankersuche ist unvollständig."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "Cross-reference anchors could not be fully checked in %1: %2"
+msgstr "Querverweisanker konnten in %1 nicht vollständig geprüft werden: %2"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The PDF requires a password; its cross-references could not be fully checked: %1"
+msgstr "Das PDF erfordert ein Passwort; seine Querverweise konnten nicht vollständig geprüft werden: %1"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to inspect PDF references in %1: %2"
+msgstr "PDF-Querverweise in %1 können nicht geprüft werden: %2"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Invalid PDF target location: %1"
+msgstr "Ungültige PDF-Zielposition: %1"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The PDF target contains conflicting page and pageNumber values."
+msgstr "Die PDF-Zielposition enthält widersprüchliche Seitenangaben (page und pageNumber)."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Target page %1 does not exist. The PDF has %2 pages."
+msgstr "Zielseite %1 existiert nicht. Das PDF hat %2 Seiten."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The PDF target position is invalid. Both coordinates must be between 0 and 1."
+msgstr "Die PDF-Zielposition ist ungültig. Beide Koordinaten müssen zwischen 0 und 1 liegen."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Page %1, position (%2, %3)"
+msgstr "Seite %1, Position (%2, %3)"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The PDF reference anchor has no anchor ID."
+msgstr "Der PDF-Querverweisanker hat keine Anker-ID."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The PDF reference anchor has no matching entry in the reference database."
+msgstr "Für den PDF-Querverweisanker fehlt ein passender Eintrag in der Referenzdatenbank."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Source page: %1"
+msgstr "Quellseite: %1"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Source annotation: %1"
+msgstr "Quellannotation: %1"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Target page: %1"
+msgstr "Zielseite: %1"
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "Unknown PDF target alignment: %1"
+msgstr "Unbekannte Ausrichtung der PDF-Zielposition: %1"
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "PDF source anchor %1 occurs more than once (pages: %2)."
+msgstr "PDF-Quellanker %1 kommt mehrfach vor (Seiten: %2)."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Reference text"
+msgstr "Referenztext"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Configure an EPUB editor in Settings to open this book."
+msgstr "Konfigurieren Sie in den Einstellungen einen EPUB-Editor, um dieses Buch zu öffnen."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to create an editor session."
+msgstr "Eine Editorsitzung kann nicht erstellt werden."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The book is already open in the editor."
+msgstr "Das Buch ist bereits im Editor geöffnet."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to start the EPUB editor. Check the editor command or close the other editor session."
+msgstr "Der EPUB-Editor kann nicht gestartet werden. Prüfen Sie den Editorbefehl oder schließen Sie die andere Editorsitzung."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Book opened in the editor. Insert the anchor at the intended passage and save the book."
+msgstr "Buch im Editor geöffnet. Fügen Sie den Anker an der gewünschten Textstelle ein und speichern Sie das Buch."
+
+#: qml/ReferenceReportDialog.qml qml/ReferenceTargetDialog.qml
+#, kde-format
+msgid "Edit Source File"
+msgstr "Quelldatei bearbeiten"
+
+#: qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Source file opened in the editor at anchor %1."
+msgstr "Quelldatei im Editor beim Anker %1 geöffnet."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Editor changes imported. Checking references again…"
+msgstr "Editoränderungen übernommen. Referenzen werden erneut geprüft …"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Editor changes could not be imported: %1\nWorking copy: %2"
+msgstr "Editoränderungen konnten nicht übernommen werden: %1\nArbeitskopie: %2"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Missing source anchor"
+msgstr "Fehlender Quellanker"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Missing target anchor"
+msgstr "Fehlender Zielanker"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Template: replace the placeholder with the original reference text and insert it at the intended passage."
+msgstr "Vorlage: Ersetzen Sie den Platzhalter durch den ursprünglichen Referenztext und fügen Sie ihn an der gewünschten Textstelle ein."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Insert this anchor at the intended target passage in the specified EPUB document."
+msgstr "Fügen Sie diesen Anker an der gewünschten Zielstelle im angegebenen EPUB-Dokument ein."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Open EPUB in Editor"
+msgstr "EPUB im Editor öffnen"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Copy Anchor HTML"
+msgstr "Anker-HTML kopieren"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Anchor HTML copied."
+msgstr "Anker-HTML kopiert."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Only orphaned anchors from the current report can be removed."
+msgstr "Es können nur verwaiste Anker aus dem aktuellen Prüfbericht entfernt werden."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The book has changed. Run the reference check again before removing the anchor."
+msgstr "Das Buch wurde geändert. Führen Sie die Querverweisprüfung erneut aus, bevor Sie den Anker entfernen."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The anchor is no longer orphaned or has changed. Run the reference check again."
+msgstr "Der Anker ist nicht mehr verwaist oder wurde geändert. Führen Sie die Querverweisprüfung erneut aus."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to prepare a working copy for anchor removal."
+msgstr "Eine Arbeitskopie zum Entfernen des Ankers kann nicht erstellt werden."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to remove the EPUB anchor. The original book was not changed."
+msgstr "Der EPUB-Anker kann nicht entfernt werden. Das Originalbuch wurde nicht geändert."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "This anchor is still used by another reference and cannot be removed."
+msgstr "Dieser Anker wird noch von einem anderen Verweis verwendet und kann nicht entfernt werden."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to create a backup. The anchor was not removed."
+msgstr "Eine Sicherungskopie kann nicht erstellt werden. Der Anker wurde nicht entfernt."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to save the PDF after removing the anchor."
+msgstr "Die PDF-Datei kann nach dem Entfernen des Ankers nicht gespeichert werden."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Anchor removal failed: %1\nBackup: %2"
+msgstr "Entfernen des Ankers fehlgeschlagen: %1\nSicherungskopie: %2"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Orphaned anchor removed. Backup: %1"
+msgstr "Verwaister Anker entfernt. Sicherungskopie: %1"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The anchor has changed. Run the reference check again."
+msgstr "Der Anker wurde geändert. Führen Sie die Querverweisprüfung erneut aus."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to remove the PDF anchor: %1"
+msgstr "Der PDF-Anker kann nicht entfernt werden: %1"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Remove Orphaned Anchor"
+msgstr "Verwaisten Anker löschen"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Remove this orphaned anchor from the checked book? The text will be preserved and a backup will be created."
+msgstr "Diesen verwaisten Anker aus dem geprüften Buch entfernen? Der Text bleibt erhalten und eine Sicherungskopie wird erstellt."
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Without ID"
+msgstr "Ohne ID"
+
+#: bookreferencecheck.cpp pdfreferenceindex.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Close the editor session for this book before removing an anchor."
+msgstr "Schließen Sie die Editorsitzung für dieses Buch, bevor Sie einen Anker entfernen."
+
+#: bookreferencecheck.cpp qml/EpubImportRepairDialog.qml qml/ReferenceReportDialog.qml qml/EpubViewerPage.qml
+#, kde-format
+msgid "The EPUB working copy cannot be assigned to a unique book in the library."
+msgstr "Die EPUB-Arbeitskopie kann keinem eindeutigen Buch in der Bibliothek zugeordnet werden."
+
+#: bookreferencecheck.cpp qml/EpubImportRepairDialog.qml qml/ReferenceReportDialog.qml qml/EpubViewerPage.qml
+#, kde-format
+msgid "Unable to save the book after removing the anchor."
+msgstr "Das Buch kann nach dem Entfernen des Ankers nicht gespeichert werden."
+
+#: bookreferencecheck.cpp qml/EpubImportRepairDialog.qml qml/ReferenceReportDialog.qml qml/EpubViewerPage.qml
+#, kde-format
+msgid "Retry EPUB Import"
+msgstr "EPUB erneut importieren"
+
+#: bookreferencecheck.cpp qml/EpubImportRepairDialog.qml qml/ReferenceReportDialog.qml qml/EpubViewerPage.qml
+#, kde-format
+msgid "Correct Cross-References on EPUB Import"
+msgstr "Querverweise beim EPUB-Import korrigieren"
+
+#: bookreferencecheck.cpp qml/EpubImportRepairDialog.qml qml/ReferenceReportDialog.qml qml/EpubViewerPage.qml
+#, kde-format
+msgid "Check and correct the EPUB being imported. After correcting the anchors, retry the import."
+msgstr "Prüfen und korrigieren Sie die zu importierende EPUB-Datei. Versuchen Sie nach der Ankerkorrektur den Import erneut."
+
+#: bookreferencecheck.cpp qml/EpubImportRepairDialog.qml qml/ReferenceReportDialog.qml qml/EpubViewerPage.qml
+#, kde-format
+msgid "EPUB import completed."
+msgstr "EPUB-Import abgeschlossen."
+
+#: bookreferencecheck.cpp qml/EpubImportRepairDialog.qml qml/ReferenceReportDialog.qml qml/EpubViewerPage.qml
+#, kde-format
+msgid "The EPUB could not be imported. Correct the reported anchors and try again."
+msgstr "Die EPUB-Datei konnte nicht importiert werden. Korrigieren Sie die gemeldeten Anker und versuchen Sie es erneut."
+
+#: bookreferencecheck.cpp qml/EpubImportRepairDialog.qml qml/ReferenceReportDialog.qml qml/EpubViewerPage.qml
+#, kde-format
+msgid "Check and Correct Cross-References"
+msgstr "Querverweise prüfen und korrigieren"
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Only stored cross-references from the current report can be edited."
+msgstr "Es können nur gespeicherte Querverweise aus dem aktuellen Prüfbericht bearbeitet werden."
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The cross-reference has changed or was deleted. Run the reference check again."
+msgstr "Der Querverweis wurde geändert oder gelöscht. Führen Sie die Querverweisprüfung erneut aus."
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Enter a target location."
+msgstr "Geben Sie eine Zielposition ein."
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Select a target in another book for this cross-reference."
+msgstr "Wählen Sie für diesen Querverweis ein Ziel in einem anderen Buch."
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The target book changed during validation. Check the target again."
+msgstr "Das Zielbuch wurde während der Prüfung geändert. Prüfen Sie das Ziel erneut."
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Target found: %1"
+msgstr "Ziel gefunden: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to save the cross-reference. The target was not changed."
+msgstr "Der Querverweis kann nicht gespeichert werden. Das Ziel wurde nicht geändert."
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Cross-reference target updated. Checking references again…"
+msgstr "Querverweisziel aktualisiert. Referenzen werden erneut geprüft …"
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Edit Cross-Reference"
+msgstr "Querverweis bearbeiten"
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Target book"
+msgstr "Zielbuch"
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Select a target book…"
+msgstr "Zielbuch auswählen …"
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Target location (targetLocation)"
+msgstr "Zielposition (targetLocation)"
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "EPUB: chapter.xhtml#anchor · PDF: stored page location (JSON)"
+msgstr "EPUB: kapitel.xhtml#anker · PDF: gespeicherte Seitenposition (JSON)"
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The target must exist and be unambiguous. Saving updates the stored cross-reference immediately."
+msgstr "Das Ziel muss existieren und eindeutig sein. Beim Speichern wird der gespeicherte Querverweis sofort aktualisiert."
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Check Target"
+msgstr "Ziel prüfen"
+
+#: bookreferencecheck.cpp qml/ReferenceTargetDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Check Target and Save"
+msgstr "Ziel prüfen und speichern"
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Only unambiguous EPUB source anchors from the current report can be edited."
+msgstr "Es können nur eindeutige EPUB-Quellanker aus dem aktuellen Prüfbericht bearbeitet werden."
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The source book has changed. Run the reference check again before editing its title."
+msgstr "Das Quellbuch wurde geändert. Führen Sie die Querverweisprüfung vor der Titelbearbeitung erneut aus."
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to prepare an EPUB working copy for the title change."
+msgstr "Für die Titeländerung kann keine EPUB-Arbeitskopie erstellt werden."
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to update the EPUB anchor title. The original book was not changed."
+msgstr "Der EPUB-Ankertitel kann nicht aktualisiert werden. Das Originalbuch wurde nicht geändert."
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The source book or cross-reference has changed. Run the reference check again."
+msgstr "Das Quellbuch oder der Querverweis wurde geändert. Führen Sie die Querverweisprüfung erneut aus."
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to create a current backup. The anchor title was not changed."
+msgstr "Es kann keine aktuelle Sicherung erstellt werden. Der Ankertitel wurde nicht geändert."
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to save the EPUB anchor title. Backup: %1"
+msgstr "Der EPUB-Ankertitel kann nicht gespeichert werden. Sicherung: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to save the cross-reference title. The EPUB title was not changed."
+msgstr "Der Querverweistitel kann nicht gespeichert werden. Der EPUB-Ankertitel wurde nicht geändert."
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to save the cross-reference title or restore the EPUB. Backup: %1"
+msgstr "Der Querverweistitel kann nicht gespeichert und die EPUB-Datei nicht wiederhergestellt werden. Sicherung: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Anchor title updated."
+msgstr "Ankertitel aktualisiert."
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Anchor title updated. Backup: %1"
+msgstr "Ankertitel aktualisiert. Sicherung: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Edit EPUB Anchor Title"
+msgstr "EPUB-Ankertitel bearbeiten"
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Close the editor session for this book before changing an anchor title."
+msgstr "Schließen Sie die Editor-Sitzung für dieses Buch, bevor Sie einen Ankertitel ändern."
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "EPUB anchor title (title)"
+msgstr "EPUB-Ankertitel (title)"
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "For example: S.B. 3.2.2"
+msgstr "Zum Beispiel: S.B. 3.2.2"
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Saves the title in the displayed EPUB file and the stored cross-reference. An empty title removes the title attribute. A backup is created before changing the EPUB."
+msgstr "Speichert den Titel in der angezeigten EPUB-Datei und im gespeicherten Querverweis. Ein leerer Titel entfernt das title-Attribut. Vor der EPUB-Änderung wird eine Sicherung erstellt."
+
+#: bookreferencecheck.cpp qml/ReferenceTitleDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Save Anchor Title"
+msgstr "Ankertitel speichern"
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The book is missing from the library; no file will be changed."
+msgstr "Das Buch fehlt in der Bibliothek; es wird keine Datei geändert."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The book assignment is ambiguous. Run the reference check again."
+msgstr "Die Buchzuordnung ist nicht eindeutig. Führen Sie die Querverweisprüfung erneut aus."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The book file is missing; no anchor can be removed from it."
+msgstr "Die Buchdatei fehlt; daraus kann kein Anker entfernt werden."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The book cannot be fully read. No cross-reference was deleted: %1"
+msgstr "Das Buch kann nicht vollständig gelesen werden. Es wurde kein Querverweis gelöscht: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "This target has no separate anchor. The document or page will be kept."
+msgstr "Dieses Ziel hat keinen separaten Anker. Das Dokument bzw. die Seite bleibt erhalten."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The anchor is already missing; no file change is needed."
+msgstr "Der Anker fehlt bereits; die Datei muss nicht geändert werden."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The anchor is ambiguous and cannot be safely deleted: %1"
+msgstr "Der Anker ist nicht eindeutig und kann nicht sicher gelöscht werden: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The source cross-reference marker is missing; no file change is needed."
+msgstr "Die Quellmarkierung des Querverweises fehlt; die Datei muss nicht geändert werden."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "This element is not a cross-reference marker and will be kept."
+msgstr "Dieses Element ist keine Querverweismarkierung und bleibt erhalten."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The target position cannot be resolved; its file will be kept."
+msgstr "Die Zielposition kann nicht aufgelöst werden; die Zieldatei bleibt unverändert."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The target belongs to the book's content or structure; it will be kept."
+msgstr "Das Ziel gehört zum Buchinhalt oder zur Buchstruktur und bleibt erhalten."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to read annotations. No cross-reference was deleted."
+msgstr "Die Annotationen können nicht gelesen werden. Es wurde kein Querverweis gelöscht."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The anchor is used by another reference, annotation or book link and will be kept."
+msgstr "Der Anker wird von einem anderen Verweis, einer Annotation oder einem Link im Buch verwendet und bleibt erhalten."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The cross-reference marker will be removed; the anchor ID stays available for other uses."
+msgstr "Die Querverweismarkierung wird entfernt; die Anker-ID bleibt für andere Verwendungen erhalten."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The anchor will be removed. Its text and book content will be preserved."
+msgstr "Der Anker wird entfernt. Sein Text und der Buchinhalt bleiben erhalten."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The book changed while preparing deletion. Run the reference check again."
+msgstr "Das Buch wurde während der Löschvorbereitung geändert. Führen Sie die Querverweisprüfung erneut aus."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Source and target refer to the same file. Only cross-references between different books can be deleted here."
+msgstr "Quelle und Ziel verweisen auf dieselbe Datei. Hier können nur Querverweise zwischen verschiedenen Büchern gelöscht werden."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Prepare and confirm the cross-reference deletion first."
+msgstr "Bereiten Sie die Querverweislöschung zuerst vor und bestätigen Sie sie."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The books or their references have changed. Review and confirm the deletion again."
+msgstr "Die Bücher oder ihre Verweise wurden geändert. Prüfen und bestätigen Sie die Löschung erneut."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to prepare working copies for cross-reference deletion."
+msgstr "Für die Querverweislöschung können keine Arbeitskopien vorbereitet werden."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to remove the EPUB reference marker. No book was changed."
+msgstr "Die EPUB-Querverweismarkierung kann nicht entfernt werden. Es wurde kein Buch geändert."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to prepare the new EPUB state. No book was changed."
+msgstr "Der neue EPUB-Zustand kann nicht vorbereitet werden. Es wurde kein Buch geändert."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The modified book could not be verified. No cross-reference was deleted."
+msgstr "Das geänderte Buch konnte nicht geprüft werden. Es wurde kein Querverweis gelöscht."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Deleting this anchor would damage another cross-reference. No book was changed."
+msgstr "Das Löschen dieses Ankers würde einen anderen Querverweis beschädigen. Es wurde kein Buch geändert."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to create current backups. No cross-reference was deleted."
+msgstr "Es können keine aktuellen Sicherungen erstellt werden. Es wurde kein Querverweis gelöscht."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to save a book while deleting the cross-reference."
+msgstr "Beim Löschen des Querverweises konnte ein Buch nicht gespeichert werden."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The cross-reference could not be removed from the database."
+msgstr "Der Querverweis konnte nicht aus der Datenbank gelöscht werden."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "All file changes were rolled back."
+msgstr "Alle Dateiänderungen wurden zurückgenommen."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Some files could not be restored. Backups: %1"
+msgstr "Einige Dateien konnten nicht wiederhergestellt werden. Sicherungen: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Cross-reference deleted."
+msgstr "Querverweis gelöscht."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Cross-reference deleted. Backups: %1"
+msgstr "Querverweis gelöscht. Sicherungen: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Delete Cross-Reference"
+msgstr "Querverweis löschen"
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Close the affected editor sessions before deleting this cross-reference."
+msgstr "Schließen Sie die betroffenen Editor-Sitzungen, bevor Sie diesen Querverweis löschen."
+
+#: bookreferencecheck.cpp qml/ReferenceRemovalDialog.qml qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Delete this cross-reference and apply the following changes to its source and target? The database entry will be deleted. Backups will be created before changing any files."
+msgstr "Diesen Querverweis löschen und die folgenden Änderungen an Quelle und Ziel durchführen? Der Datenbankeintrag wird gelöscht. Vor Dateiänderungen werden Sicherungen erstellt."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "SQLite integrity check passed."
+msgstr "SQLite-Integritätsprüfung bestanden."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Broken database relation: %1"
+msgstr "Fehlerhafte Datenbankbeziehung: %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The book has no unique identifier."
+msgstr "Das Buch hat keine eindeutige Kennung."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The book file is currently unavailable."
+msgstr "Die Buchdatei ist derzeit nicht verfügbar."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Several files share book identifier %1. Check whether they are copies or different editions."
+msgstr "Mehrere Dateien verwenden die Buchkennung %1. Bitte prüfen, ob es Kopien oder unterschiedliche Ausgaben sind."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Record %1: book assignment is missing or ambiguous (%2)."
+msgstr "Datensatz %1: Die Buchzuordnung fehlt oder ist mehrdeutig (%2)."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Remark %1"
+msgstr "Bemerkung %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Cross-reference %1"
+msgstr "Querverweis %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "A cross-reference has no source anchor or target location."
+msgstr "Einem Querverweis fehlt der Quellanker oder die Zielposition."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Saved book state"
+msgstr "Gespeicherter Buchzustand"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The file could not be read completely or changed during the check."
+msgstr "Die Datei konnte nicht vollständig gelesen werden oder wurde während der Prüfung verändert."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "These book files have identical contents."
+msgstr "Diese Buchdateien haben einen identischen Inhalt."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Only identical book files from the current database check can be deleted."
+msgstr "Es können nur identische Buchdateien aus der aktuellen Datenbankprüfung gelöscht werden."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Only files sharing a book ID from the current database check can be deleted."
+msgstr "Es können nur Dateien mit derselben Buch-ID aus der aktuellen Datenbankprüfung gelöscht werden."
+
+#: bookdatabase.cpp
+#, kde-format
+msgid "Unable to import %1 into the library database."
+msgstr "%1 kann nicht in die Bibliotheksdatenbank importiert werden."
+
+#: bookdatabase.cpp
+#, kde-format
+msgid "Import rejected: %1\nBook ID %2 is already used by:\n%3"
+msgstr "Import abgelehnt: %1\nDie Buch-ID %2 wird bereits verwendet von:\n%3"
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to import book file: %1"
+msgstr "Die Buchdatei kann nicht importiert werden: %1"
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Import finished: %1 imported, %2 duplicates skipped, %3 failed."
+msgstr "Import abgeschlossen: %1 importiert, %2 Duplikate übersprungen, %3 fehlgeschlagen."
+
+#: qml/Main.qml
+#, kde-format
+msgid "Files Not Imported"
+msgstr "Nicht importierte Dateien"
+
+#: qml/Main.qml
+#, kde-format
+msgid "%1 files were not imported. The remaining files were processed."
+msgstr "%1 Dateien wurden nicht importiert. Die übrigen Dateien wurden verarbeitet."
+
+#: qml/Main.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Change Book Identifier"
+msgstr "Buch identifikator ändern"
+
+#: qml/Main.qml
+#, kde-format
+msgid "Assigns a new book ID to this file and retries the import."
+msgstr "Vergibt eine neue Buch-ID für diese Datei und versucht den Import erneut."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "The rejected file has changed. Import it again before changing its identifier."
+msgstr "Die abgelehnte Datei wurde verändert. Bitte erneut importieren, bevor ihre Buch-ID geändert wird."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to read the library database."
+msgstr "Die Bibliotheksdatenbank kann nicht gelesen werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "This file is already registered in the library and cannot be changed through an import conflict."
+msgstr "Diese Datei ist bereits in der Bibliothek registriert und kann nicht über einen Importkonflikt geändert werden."
+
+#: bookdatabase.cpp booklistmodel.cpp
+#, kde-format
+msgid "The book identifier cannot be changed because stored remarks or cross-references are anchored in this file or their positions could not be verified."
+msgstr "Die Buch-ID kann nicht geändert werden, weil gespeicherte Bemerkungen oder Querverweise in dieser Datei verankert sind oder ihre Positionen nicht überprüft werden konnten."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to prepare a copy for changing the book identifier."
+msgstr "Es kann keine Kopie zum Ändern der Buch-ID vorbereitet werden."
+
+#: booklistmodel.cpp epubcontainer.cpp
+#, kde-format
+msgid "Unable to change the EPUB book identifier."
+msgstr "Die Buch-ID des EPUBs kann nicht geändert werden."
+
+#: epubcontainer.cpp
+#, kde-format
+msgid "The identifier of this signed or encrypted EPUB cannot be changed safely."
+msgstr "Die Buch-ID dieses signierten oder verschlüsselten EPUBs kann nicht sicher geändert werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to verify the new book identifier."
+msgstr "Die neue Buch-ID kann nicht überprüft werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "This book format does not support changing its identifier."
+msgstr "Bei diesem Buchformat kann die Buch-ID nicht geändert werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to create a backup before changing the book identifier."
+msgstr "Vor dem Ändern der Buch-ID kann keine Sicherungskopie erstellt werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Unable to save the new book identifier."
+msgstr "Die neue Buch-ID kann nicht gespeichert werden."
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Import failed. The original file is backed up at: %1"
+msgstr "Import fehlgeschlagen. Die Originaldatei ist hier gesichert: %1"
+
+#: booklistmodel.cpp
+#, kde-format
+msgid "Book identifier changed to %1. The file was imported."
+msgstr "Die Buch-ID wurde in %1 geändert. Die Datei wurde importiert."
+
+#: pdfbookidentifier.cpp
+#, kde-format
+msgid "Unable to change the PDF book identifier: %1"
+msgstr "Die Buch-ID der PDF-Datei kann nicht geändert werden: %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The files or book IDs have changed, or no other file with this book ID remains. Run the database check again."
+msgstr "Die Dateien oder Buch-IDs haben sich geändert oder es ist keine andere Datei mit dieser Buch-ID mehr vorhanden. Bitte die Datenbank erneut prüfen."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The files have changed or no identical copy remains. Run the database check again."
+msgstr "Die Dateien haben sich geändert oder es ist keine identische Kopie mehr vorhanden. Bitte die Datenbank erneut prüfen."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Unable to delete the book file: %1"
+msgstr "Die Buchdatei kann nicht gelöscht werden: %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The book file could not be restored. It is still available at: %1"
+msgstr "Die Buchdatei konnte nicht wiederhergestellt werden. Sie ist weiterhin hier verfügbar: %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Book file deleted: %1"
+msgstr "Buchdatei gelöscht: %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The library entry was removed, but the file could not be deleted: %1"
+msgstr "Der Bibliothekseintrag wurde entfernt, aber die Datei konnte nicht gelöscht werden: %1"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Delete Book File?"
+msgstr "Buchdatei löschen?"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Permanently delete this file and remove its library entry? Another identical copy will be retained."
+msgstr "Diese Datei endgültig löschen und ihren Bibliothekseintrag entfernen? Eine andere identische Kopie bleibt erhalten."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Permanently delete this file and remove its library entry? Another file with book ID %1 will be retained. Files with the same book ID may have different contents."
+msgstr "Diese Datei endgültig löschen und ihren Bibliothekseintrag entfernen? Eine andere Datei mit der Buch-ID %1 bleibt erhalten. Dateien mit derselben Buch-ID können unterschiedliche Inhalte haben."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Delete File"
+msgstr "Datei löschen"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "No usable %1 check program is configured. Configure it in Settings."
+msgstr "Es ist kein nutzbares %1-Prüfprogramm eingerichtet. Bitte in den Einstellungen konfigurieren."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The check program could not be started: %1"
+msgstr "Das Prüfprogramm konnte nicht gestartet werden: %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The book check was interrupted or timed out."
+msgstr "Die Buchprüfung wurde unterbrochen oder hat die Zeitgrenze überschritten."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Book structure check passed."
+msgstr "Prüfung der Buchstruktur bestanden."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The book structure check reported problems."
+msgstr "Die Prüfung der Buchstruktur hat Probleme festgestellt."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Structure checking is available for EPUB and PDF books."
+msgstr "Die Strukturprüfung ist für EPUB- und PDF-Bücher verfügbar."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The EPUB package could not be opened."
+msgstr "Das EPUB-Paket konnte nicht geöffnet werden."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The EPUB has no reading order."
+msgstr "Das EPUB hat keine Lesereihenfolge."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The reading order refers to a missing manifest item: %1"
+msgstr "Die Lesereihenfolge verweist auf einen fehlenden Manifest-Eintrag: %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "A manifest resource is missing: %1"
+msgstr "Eine im Manifest angegebene Ressource fehlt: %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Invalid XML in %1: %2"
+msgstr "Ungültiges XML in %1: %2"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Duplicate element ID in %1: %2"
+msgstr "Doppelte Element-ID in %1: %2"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The PDF has no readable pages."
+msgstr "Das PDF enthält keine lesbaren Seiten."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "The book changed during the check. Check it again."
+msgstr "Das Buch wurde während der Prüfung verändert. Bitte erneut prüfen."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Unable to read the library database: %1"
+msgstr "Die Bibliotheksdatenbank kann nicht gelesen werden: %1"
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Unknown maintenance check."
+msgstr "Unbekannte Wartungsprüfung."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "PDF target anchor is missing or ambiguous: %1"
+msgstr "Der PDF-Zielanker fehlt oder ist mehrdeutig: %1"
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "The PDF target anchor is on a different page: %1"
+msgstr "Der PDF-Zielanker befindet sich auf einer anderen Seite: %1"
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "Neither book of this cross-reference is in the library."
+msgstr "Keines der beiden Bücher dieses Querverweises befindet sich in der Bibliothek."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "The remark's book is missing or ambiguous in the library."
+msgstr "Das Buch der Bemerkung fehlt in der Bibliothek oder ist nicht eindeutig zugeordnet."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "The remark could not be verified because the book is unavailable or unreadable."
+msgstr "Die Bemerkung konnte nicht geprüft werden, weil das Buch nicht verfügbar oder nicht lesbar ist."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "The PDF remark has an invalid or missing page."
+msgstr "Die PDF-Bemerkung verweist auf eine ungültige oder fehlende Seite."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "The PDF remark has invalid or missing highlight rectangles."
+msgstr "Die PDF-Bemerkung hat ungültige oder fehlende Markierungsrechtecke."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "The remark format does not match the book."
+msgstr "Das Format der Bemerkung passt nicht zum Buch."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "The remark anchor is missing or ambiguous: %1"
+msgstr "Der Anker der Bemerkung fehlt oder ist mehrdeutig: %1"
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "This older remark uses a CFI range; its position requires checking in the reader."
+msgstr "Diese ältere Bemerkung verwendet einen CFI-Bereich. Ihre Position muss im Betrachter geprüft werden."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "The remark has no saved position."
+msgstr "Die Bemerkung hat keine gespeicherte Position."
+
+#: bookreferencecheck.cpp
+#, kde-format
+msgid "Remark position found."
+msgstr "Position der Bemerkung gefunden."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Database Consistency"
+msgstr "Konsistenz der Datenbank"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Internal Book Structure"
+msgstr "Interne Buchstruktur"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Remarks"
+msgstr "Bemerkungen"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Cross-references"
+msgstr "Querverweise"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgctxt "@title:group"
+msgid "Maintenance"
+msgstr "Wartung"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Library Maintenance: %1"
+msgstr "Bibliothekswartung: %1"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Book ID: %1"
+msgstr "Buch-ID: %1"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "The check examines the entire library without making changes. Matching EPUB and PDF formats can then be combined into one library entry."
+msgstr "Die Prüfung untersucht die gesamte Bibliothek, ohne Änderungen vorzunehmen. Passende EPUB- und PDF-Formate können anschließend zu einem Bibliothekseintrag zusammengefasst werden."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "%1 of %2 — %3"
+msgstr "%1 von %2 — %3"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Check cancelled. Results are incomplete."
+msgstr "Prüfung abgebrochen. Die Ergebnisse sind unvollständig."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "%1 books in %2 files, %3 remarks, %4 cross-references in the library."
+msgstr "%1 Bücher in %2 Dateien, %3 Bemerkungen, %4 Querverweise in der Bibliothek."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "%1 OK, %2 errors, %3 notices or incomplete checks."
+msgstr "%1 OK, %2 Fehler, %3 Hinweise oder unvollständige Prüfungen."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "All Results"
+msgstr "Alle Ergebnisse"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Errors"
+msgstr "Fehler"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Notices / Incomplete"
+msgstr "Hinweise / Unvollständig"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Cancel Check"
+msgstr "Prüfung abbrechen"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Check Again"
+msgstr "Erneut prüfen"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Notice / Not fully verified"
+msgstr "Hinweis / Nicht vollständig geprüft"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Click to copy this finding."
+msgstr "Klicken, um diesen Befund zu kopieren."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "No findings for this filter."
+msgstr "Keine Befunde für diesen Filter."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Save Report…"
+msgstr "Bericht speichern …"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Save Maintenance Report"
+msgstr "Wartungsbericht speichern"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "JSON reports (*.json)"
+msgstr "JSON-Berichte (*.json)"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Report saved."
+msgstr "Bericht gespeichert."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Unable to save the report."
+msgstr "Der Bericht kann nicht gespeichert werden."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "EPUB and PDF have the same title and authors. Combine their covers into one library entry."
+msgstr "EPUB und PDF haben denselben Titel und dieselben Autoren. Die Cover können zu einem Bibliothekseintrag zusammengefasst werden."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Formats combined. The library now shows one cover for this book."
+msgstr "Formate zusammengefasst. Die Bibliothek zeigt jetzt ein Cover für dieses Buch."
+
+#: librarymaintenance.cpp
+#, kde-format
+msgid "Unable to combine these formats. Run the database check again; the book data may have changed."
+msgstr "Diese Formate können nicht zusammengefasst werden. Bitte die Datenbank erneut prüfen; die Buchdaten haben sich möglicherweise geändert."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Combine Formats"
+msgstr "Formate zusammenfassen"
+
+#: qml/BookFormatDialog.qml
+#, kde-format
+msgctxt "@title:window"
+msgid "Choose Book Format"
+msgstr "Buchformat auswählen"
+
+#: categoryentriesmodel.cpp
+#, kde-format
+msgctxt "@item:inlistbox book formats"
+msgid "EPUB and PDF"
+msgstr "EPUB und PDF"
+
+
+msgid "Editor files are currently being checked or changed. Please try again."
+msgstr "Die Editor-Dateien werden gerade geprüft oder geändert. Bitte erneut versuchen."
+
+
+msgid "This working copy cannot be assigned to the selected book."
+msgstr "Diese Arbeitskopie kann dem ausgewählten Buch nicht zugeordnet werden."
+
+
+msgid "This working copy is still in use. Close the editor before recovering it."
+msgstr "Diese Arbeitskopie wird noch verwendet. Schließen Sie vor der Wiederaufnahme den Editor."
+
+
+msgid "The working copy is not a readable EPUB."
+msgstr "Die Arbeitskopie ist keine lesbare EPUB-Datei."
+
+
+msgid "The working copy's identifier does not match this book."
+msgstr "Die Kennung der Arbeitskopie stimmt nicht mit diesem Buch überein."
+
+
+msgid "The working copy's book identifier is ambiguous."
+msgstr "Die Buchkennung der Arbeitskopie ist nicht eindeutig."
+
+
+msgid "Unable to save the editor session."
+msgstr "Die Editorsitzung lässt sich nicht speichern."
+
+
+msgid "An editor working copy already exists for this book. Close any running editor and review the copies under Home → Maintenance → Cache and Safety Backups before starting a new session."
+msgstr "Für dieses Buch ist bereits eine Editor-Arbeitskopie vorhanden. Schließen Sie einen gegebenenfalls laufenden Editor und prüfen Sie die Kopien unter Zuhause → Wartung → Cache und Sicherheitskopien, bevor Sie eine neue Sitzung starten."
+
+
+msgid "Other working copies exist for this book. Review them in Maintenance first."
+msgstr "Für dieses Buch sind weitere Arbeitskopien vorhanden. Prüfen Sie diese zuerst unter Wartung."
+
+
+msgid "Recover this working copy in Maintenance before importing it."
+msgstr "Nehmen Sie diese Arbeitskopie vor dem Import unter Wartung wieder auf."
+
+
+msgid "In use, unreadable, or changed during the check. This file is protected."
+msgstr "In Verwendung, nicht lesbar oder während der Prüfung geändert. Diese Datei ist geschützt."
+
+
+msgid "The copy cannot be assigned to exactly one library book. Review it before deleting."
+msgstr "Die Kopie kann keinem eindeutigen Bibliotheksbuch zugeordnet werden. Vor dem Löschen prüfen."
+
+
+msgid "The original is missing or differs from its registered state. Keep this recovery copy."
+msgstr "Das Original fehlt oder weicht vom gespeicherten Stand ab. Diese Wiederherstellungskopie wird behalten."
+
+
+msgid "The most recent safety backup of this book is retained."
+msgstr "Die neueste Sicherheitskopie dieses Buches wird behalten."
+
+
+msgid "This backup is a known book version superseded by a verified current version."
+msgstr "Diese Sicherheitskopie entspricht einem bekannten Buchstand, der durch den geprüften aktuellen Stand abgelöst wurde."
+
+
+msgid "The backup's successful replacement cannot be verified. Review it before deleting."
+msgstr "Die erfolgreiche Ablösung dieser Sicherheitskopie ist nicht nachweisbar. Vor dem Löschen prüfen."
+
+
+msgid "This working copy matches the current book or a previously imported version."
+msgstr "Diese Arbeitskopie entspricht dem aktuellen Buch oder einem früher importierten Stand."
+
+
+msgid "This working copy contains changes without an import record. Its age alone does not make it disposable."
+msgstr "Diese Arbeitskopie enthält Änderungen ohne Importnachweis. Ihr Alter allein rechtfertigt keine Löschung."
+
+
+msgid "Removed %1 files (%2 MiB). Retained or skipped: %3."
+msgstr "%1 Dateien gelöscht (%2 MiB). Behalten oder übersprungen: %3."
+
+
+msgid "Editor Start Blocked"
+msgstr "Editorstart gesperrt"
+
+
+msgid "Delete Selected Copies?"
+msgstr "Ausgewählte Kopien löschen?"
+
+
+msgid "The selection includes copies whose successful import has not been verified or the most recent safety backup. Their changes may be lost permanently. Delete the listed files?"
+msgstr "Die Auswahl enthält Kopien ohne nachgewiesenen erfolgreichen Import oder die neueste Sicherheitskopie. Ihre Änderungen können endgültig verloren gehen. Die aufgeführten Dateien löschen?"
+
+
+msgid "%1 MiB · Modified: %2"
+msgstr "%1 MiB · Geändert: %2"
+
+
+msgid "Known imported copies are preselected. Copies with unverified changes and the latest safety backup are retained. Files in use are protected."
+msgstr "Nachweislich importierte Kopien sind vorausgewählt. Kopien mit ungeprüften Änderungen und die neueste Sicherheitskopie werden behalten. Verwendete Dateien sind geschützt."
+
+
+msgid "Safe to delete"
+msgstr "Gefahrlos löschbar"
+
+
+msgid "Select after review"
+msgstr "Nach Prüfung auswählen"
+
+
+msgid "Review / Import Copy…"
+msgstr "Kopie prüfen / importieren …"
+
+
+msgid "Delete Selected (%1)"
+msgstr "Auswahl löschen (%1)"
+
+
+msgctxt "@action:button"
+msgid "Cache and Safety Backups"
+msgstr "Cache und Sicherheitskopien"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Transcribe Devanagari"
+msgstr "Devanagari transkribieren"
+
+#: qml/SettingsPage.qml
+#, kde-format
+msgid "Show Devanagari text as an IAST transcription alongside the translation."
+msgstr "Devanagari-Text zusätzlich zur Übersetzung als IAST-Umschrift anzeigen."
+
+#: translator.cpp
+#, kde-format
+msgid "Devanagari transcription failed."
+msgstr "Die Devanagari-Transkription ist fehlgeschlagen."
+
+#: translator.cpp
+#, kde-format
+msgid "Error: DeepL API key is missing"
+msgstr "Fehler: Der DeepL-API-Schlüssel fehlt"
+
+#: translator.cpp
+#, kde-format
+msgid "No translation was returned."
+msgstr "Es wurde keine Übersetzung zurückgegeben."
+
+#: qml/EpubViewerPage.qml qml/PdfViewerPage.qml
+#, kde-format
+msgctxt "@title:window"
+msgid "Transcription and Translation"
+msgstr "Transkription und Übersetzung"
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgid "No EPUB is open."
+msgstr "Es ist kein EPUB geöffnet."
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgid "Unable to search EPUB chapter: %1"
+msgstr "EPUB-Kapitel kann nicht durchsucht werden: %1"
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgid "Unable to open this EPUB."
+msgstr "Dieses EPUB kann nicht geöffnet werden."
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgid "This PDF has no searchable text."
+msgstr "Dieses PDF enthält keinen durchsuchbaren Text."
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgid "Unable to search this PDF: %1"
+msgstr "Dieses PDF kann nicht durchsucht werden: %1"
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgid "Full-text search is available for EPUB and PDF books."
+msgstr "Die Volltextsuche ist für EPUB- und PDF-Bücher verfügbar."
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgid "Unable to load the library for full-text search."
+msgstr "Die Bibliothek kann für die Volltextsuche nicht geladen werden."
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgid "This book is no longer in the library."
+msgstr "Dieses Buch ist nicht mehr in der Bibliothek."
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgctxt "@title:group"
+msgid "Full-text Search"
+msgstr "Volltextsuche"
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgctxt "@info:placeholder"
+msgid "Search all books…"
+msgstr "Alle Bücher durchsuchen …"
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Search"
+msgstr "Suchen"
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgctxt "@info:progress"
+msgid "%1 / %2 books"
+msgstr "%1 / %2 Bücher"
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgctxt "@info"
+msgid "Cancelling search…"
+msgstr "Suche wird abgebrochen …"
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgctxt "@info"
+msgid "Search cancelled. Results collected so far are shown."
+msgstr "Suche abgebrochen. Die bisher gefundenen Treffer werden angezeigt."
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgctxt "@info"
+msgid "Searching…"
+msgstr "Suche läuft …"
+
+#: epubcontainer.cpp librarysearchmodel.cpp qml/LibrarySearchPane.qml qml/Main.qml
+#, kde-format
+msgctxt "@info"
+msgid "Search complete."
+msgstr "Suche abgeschlossen."
+
+#: qml/LibrarySearchPane.qml
+#, kde-format
+msgctxt "@info"
+msgid "%1 match"
+msgid_plural "%1 matches"
+msgstr[0] "%1 Treffer"
+msgstr[1] "%1 Treffer"
+
+#: qml/LibrarySearchPane.qml
+#, kde-format
+msgctxt "@info"
+msgid "%1 book could not be fully searched."
+msgid_plural "%1 books could not be fully searched."
+msgstr[0] "%1 Buch konnte nicht vollständig durchsucht werden."
+msgstr[1] "%1 Bücher konnten nicht vollständig durchsucht werden."
+
+#: qml/LibrarySearchPage.qml
+#, kde-format
+msgctxt "@title:window, %1 is the number of books with matches"
+msgid "Library Full-text Search(%1)"
+msgstr "Volltextsuche Bibliothek(%1)"
+
+#: qml/Main.qml
+#, kde-format
+msgctxt "@title:window"
+msgid "%1 - Arianna"
+msgstr "%1 - Arianna"
+
+#: qml/LibrarySearchPage.qml
+#, kde-format
+msgctxt "@info"
+msgid "Search text: %1"
+msgstr "Suchtext: %1"
+
+#: pdfsearchprocess.cpp pdfsearchhelper.cpp
+#, kde-format
+msgid "The PDF search produced too much output. Try a more specific search text."
+msgstr "Die PDF-Suche hat zu viele Ergebnisse erzeugt. Bitte den Suchtext genauer eingrenzen."
+
+#: pdfsearchprocess.cpp pdfsearchhelper.cpp
+#, kde-format
+msgid "The time limit for searching this PDF was exceeded."
+msgstr "Das Zeitlimit für die Suche in diesem PDF wurde überschritten."
+
+#: pdfsearchprocess.cpp pdfsearchhelper.cpp
+#, kde-format
+msgid "Unable to start PDF search: %1"
+msgstr "Die PDF-Suche konnte nicht gestartet werden: %1"
+
+#: pdfsearchprocess.cpp pdfsearchhelper.cpp
+#, kde-format
+msgid "Text extraction stopped unexpectedly for this PDF. The remaining books will still be searched."
+msgstr "Die Textextraktion für dieses PDF wurde unerwartet beendet. Die übrigen Bücher werden weiter durchsucht."
+
+#: pdfsearchprocess.cpp pdfsearchhelper.cpp
+#, kde-format
+msgid "PDF search returned an invalid result."
+msgstr "Die PDF-Suche hat ein ungültiges Ergebnis geliefert."
+
+#: pdfsearchprocess.cpp pdfsearchhelper.cpp
+#, kde-format
+msgid "Only the first %1 matches in this PDF are shown. Try a more specific search text."
+msgstr "Es werden nur die ersten %1 Treffer in diesem PDF angezeigt. Bitte den Suchtext genauer eingrenzen."
+
+#: pdfsearchprocess.cpp pdfsearchhelper.cpp
+#, kde-format
+msgid "Unable to search this PDF."
+msgstr "Dieses PDF kann nicht durchsucht werden."
+
+#: qml/LibrarySearchPage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Show matches"
+msgstr "Treffer aufklappen"
+
+#: qml/LibrarySearchPage.qml
+#, kde-format
+msgctxt "@action:button"
+msgid "Hide matches"
+msgstr "Treffer einklappen"
+
+#: maintenancefiles.cpp
+#, kde-format
+msgid "This working copy is being checked or its import report is open. Close the report and wait for the check to finish, then check the cache again."
+msgstr "Diese Arbeitskopie wird gerade geprüft oder ihr Importbericht ist noch geöffnet. Schließen Sie den Bericht und warten Sie das Ende der Prüfung ab. Prüfen Sie danach den Cache erneut."
+
+#: maintenancefiles.cpp
+#, kde-format
+msgid "This working copy is still open in an editor session. Close the editor, then check the cache again."
+msgstr "Diese Arbeitskopie ist noch in einer Editor-Sitzung geöffnet. Schließen Sie den Editor und prüfen Sie danach den Cache erneut."
+
+#: maintenancefiles.cpp
+#, kde-format
+msgid "Anchor changes for %1 are blocked because an editor working copy exists. Finish and import the editor changes, or close the editor and discard the working copy under Home → Maintenance → Cache and Safety Backups, then try again."
+msgstr "Ankeränderungen für %1 sind gesperrt, weil eine Editor-Arbeitskopie vorhanden ist. Beenden und importieren Sie die Bearbeitung oder schließen Sie den Editor und verwerfen Sie die Arbeitskopie unter Zuhause → Wartung → Cache und Sicherheitskopien. Versuchen Sie es anschließend erneut."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Discard Editor Working Copy?"
+msgstr "Editor-Arbeitskopie verwerfen?"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Permanently delete this editor working copy? Unimported changes will be lost. The library book and its saved anchors will not be changed. Afterwards, you can start a new editor session from the current library version."
+msgstr "Diese Editor-Arbeitskopie endgültig löschen? Nicht importierte Änderungen gehen verloren. Das Bibliotheksbuch und seine gespeicherten Anker werden nicht verändert. Anschließend können Sie eine neue Editor-Sitzung mit der aktuellen Bibliotheksversion starten."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Discard Working Copy…"
+msgstr "Arbeitskopie verwerfen…"
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Known imported copies are preselected. To abandon a failed import, use Discard Working Copy after closing the editor and import report. Unimported changes will be lost; the library book will be retained. Files in use are protected."
+msgstr "Bereits importierte Kopien sind vorausgewählt. Zum Aufgeben eines fehlgeschlagenen Imports schließen Sie Editor und Importbericht und wählen „Arbeitskopie verwerfen…“. Nicht importierte Änderungen gehen verloren; das Bibliotheksbuch bleibt erhalten. Verwendete Dateien sind geschützt."
+
+#: qml/EpubViewerPage.qml
+#, kde-format
+msgid "Anchor Change Blocked"
+msgstr "Ankeränderung gesperrt"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The new remark anchor could not be verified. The remark was not saved."
+msgstr "Der neue Bemerkungsanker konnte nicht überprüft werden. Die Bemerkung wurde nicht gespeichert."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Only missing remark anchors from the current import report can be restored."
+msgstr "Nur fehlende Bemerkungsanker aus dem aktuellen Importbericht können wiederhergestellt werden."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Restore the remark anchor in an editor working copy, then import it."
+msgstr "Stellen Sie den Bemerkungsanker in einer Editor-Arbeitskopie wieder her und importieren Sie diese anschließend."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Close the EPUB editor before restoring a remark anchor."
+msgstr "Schließen Sie den EPUB-Editor, bevor Sie einen Bemerkungsanker wiederherstellen."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The working copy or remark has changed. Run the import check again."
+msgstr "Die Arbeitskopie oder Bemerkung wurde geändert. Führen Sie die Importprüfung erneut aus."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "The saved position no longer matches the remark text. No anchor was restored. Check the passage in the EPUB editor."
+msgstr "Die gespeicherte Position stimmt nicht mehr mit dem Text der Bemerkung überein. Es wurde kein Anker wiederhergestellt. Prüfen Sie die Textstelle im EPUB-Editor."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to prepare the restored remark anchor."
+msgstr "Der wiederhergestellte Bemerkungsanker konnte nicht vorbereitet werden."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to create a current backup. The remark anchor was not restored."
+msgstr "Eine aktuelle Sicherungskopie konnte nicht erstellt werden. Der Bemerkungsanker wurde nicht wiederhergestellt."
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Unable to save the restored remark anchor. Backup: %1"
+msgstr "Der wiederhergestellte Bemerkungsanker konnte nicht gespeichert werden. Sicherungskopie: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Remark anchor restored in the working copy. Check the report, then retry the import. Backup: %1"
+msgstr "Der Bemerkungsanker wurde in der Arbeitskopie wiederhergestellt. Prüfen Sie den Bericht und versuchen Sie den Import erneut. Sicherungskopie: %1"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Restore Remark Anchor"
+msgstr "Bemerkungsanker wiederherstellen"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Restore Remark Anchor…"
+msgstr "Bemerkungsanker wiederherstellen…"
+
+#: bookreferencecheck.cpp qml/ReferenceReportDialog.qml
+#, kde-format
+msgid "Restore the missing anchor at the remark's saved position in this working copy? The text must still match. A backup will be created; the remark will be preserved."
+msgstr "Den fehlenden Anker an der gespeicherten Position der Bemerkung in dieser Arbeitskopie wiederherstellen? Der Text muss noch übereinstimmen. Eine Sicherungskopie wird erstellt; die Bemerkung bleibt erhalten."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Edit Text Passage"
+msgstr "Textstelle editieren"
+
+#: qml/MaintaincePage.qml qml/LibraryPage.qml qml/Main.qml
+#, kde-format
+msgid "Unable to open the library page for the EPUB editor."
+msgstr "Die Bibliotheksseite für den EPUB-Editor konnte nicht geöffnet werden."
+
+#: qml/MaintaincePage.qml qml/LibraryPage.qml qml/Main.qml
+#, kde-format
+msgid "The EPUB editor closed with error code %1."
+msgstr "Der EPUB-Editor wurde mit Fehlercode %1 beendet."
+
+#: qml/MaintaincePage.qml qml/LibraryPage.qml qml/Main.qml
+#, kde-format
+msgid "Opening the EPUB editor at the selected text."
+msgstr "Der EPUB-Editor wird an der ausgewählten Textstelle geöffnet."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The selected remark passage is incomplete."
+msgstr "Die ausgewählte Textstelle der Bemerkung ist unvollständig."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The EPUB has changed since the text search. Search again before setting the anchor."
+msgstr "Das EPUB wurde seit der Textsuche geändert. Vor dem Setzen des Ankers erneut suchen."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The selected text passage could not be anchored in the EPUB."
+msgstr "An der ausgewählten Textstelle konnte kein Anker im EPUB gesetzt werden."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "Run the remark check again before setting an anchor."
+msgstr "Vor dem Setzen eines Ankers die Bemerkungen erneut prüfen."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The remark's book has changed. Run the check again."
+msgstr "Das Buch der Bemerkung hat sich geändert. Die Prüfung erneut ausführen."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The remark has changed. Run the check again."
+msgstr "Die Bemerkung hat sich geändert. Die Prüfung erneut ausführen."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The EPUB could not be read for the text search."
+msgstr "Das EPUB konnte für die Textsuche nicht gelesen werden."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The EPUB changed during the text search. Search again."
+msgstr "Das EPUB hat sich während der Textsuche geändert. Erneut suchen."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The saved remark text was not found in the EPUB."
+msgstr "Der gespeicherte Bemerkungstext wurde im EPUB nicht gefunden."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The text matches have changed. Search again before setting the anchor."
+msgstr "Die Textfunde haben sich geändert. Vor dem Setzen des Ankers erneut suchen."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The EPUB anchor could not be created, and the remark could not be restored automatically: %1"
+msgstr "Der EPUB-Anker konnte nicht erstellt werden, und die Bemerkung konnte nicht automatisch wiederhergestellt werden: %1"
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "Remark anchor set in %1."
+msgstr "Bemerkungsanker in %1 gesetzt."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "Choose Text Passage for Anchor"
+msgstr "Textstelle für Anker auswählen"
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "The remark text occurs several times. Choose the correct passage using its EPUB source file and surrounding text (%1 matches shown)."
+msgstr "Der Bemerkungstext kommt mehrfach vor. Die richtige Stelle anhand der EPUB-Quelldatei und des umgebenden Texts auswählen (%1 Treffer angezeigt)."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "Set Anchor at Text Passage"
+msgstr "Anker an Textstelle setzen"
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "Remark text not found in EPUB."
+msgstr "Bemerkungstext im EPUB nicht gefunden."
+
+#: booktruthstore.cpp librarymaintenance.cpp qml/MaintaincePage.qml
+#, kde-format
+msgid "Remark text found in EPUB: %1 matches."
+msgstr "Bemerkungstext im EPUB gefunden: %1 Treffer."
+
+#: qml/MaintaincePage.qml
+#, kde-format
+msgid "Occurrence %1 in %2"
+msgstr "Fund %1 in %2"
+
+msgid "The connection to Speech Dispatcher was lost."
+msgstr "Die Verbindung zu Speech Dispatcher wurde unterbrochen."
+
+msgid "Speech Dispatcher could not pause the speech."
+msgstr "Speech Dispatcher konnte die Sprachausgabe nicht pausieren."
+
+msgid "Speech Dispatcher could not resume the speech."
+msgstr "Speech Dispatcher konnte die Sprachausgabe nicht fortsetzen."
+
+#: speechcontroller.cpp
+msgid "Speech Dispatcher could not stop the speech."
+msgstr "Speech Dispatcher konnte die Sprachausgabe nicht beenden."
+
+msgid "Could not connect to Speech Dispatcher: %1"
+msgstr "Die Verbindung zu Speech Dispatcher konnte nicht hergestellt werden: %1"
+
+msgid "Could not initialize the Speech Dispatcher connection."
+msgstr "Die Verbindung zu Speech Dispatcher konnte nicht initialisiert werden."
+
+msgctxt "speech voice, language, output module"
+msgid "%1 (%2, %3)"
+msgstr "%1 (%2, %3)"
+
+msgid "Speech Dispatcher does not offer any voices. Check its output modules."
+msgstr "Speech Dispatcher bietet keine Stimmen an. Bitte die Ausgabemodule prüfen."
+
+msgid "No speech voice is available for the language '%1'. Choose a voice in Settings."
+msgstr "Für die Sprache „%1“ ist keine Stimme verfügbar. Bitte in den Einstellungen eine Stimme auswählen."
+
+msgid "The selected speech voice is no longer available. Choose a voice in Settings."
+msgstr "Die ausgewählte Stimme ist nicht mehr verfügbar. Bitte in den Einstellungen eine Stimme auswählen."
+
+msgid "Speech Dispatcher could not select the requested voice."
+msgstr "Speech Dispatcher konnte die gewünschte Stimme nicht auswählen."
+
+msgid "Speech Dispatcher could not start the speech."
+msgstr "Speech Dispatcher konnte die Sprachausgabe nicht starten."
+
+msgctxt "@action:intoolbar"
+msgid "Read Selection Aloud"
+msgstr "Auswahl vorlesen"
+
+msgctxt "@action:intoolbar"
+msgid "Resume Reading"
+msgstr "Vorlesen fortsetzen"
+
+msgctxt "@action:intoolbar"
+msgid "Stop Reading"
+msgstr "Vorlesen stoppen"
+
+msgctxt "@action:intoolbar"
+msgid "Pause Reading"
+msgstr "Vorlesen pausieren"
+
+#: qml/EpubViewerPage.qml qml/PdfViewerPage.qml
+msgctxt "@action:intoolbar"
+msgid "Read Selection Once"
+msgstr "Auswahl einmal vorlesen"
+
+#: qml/EpubViewerPage.qml qml/PdfViewerPage.qml
+msgctxt "@action:intoolbar"
+msgid "Repeat Selection"
+msgstr "Auswahl wiederholt vorlesen"
+
+#: qml/EpubViewerPage.qml
+msgctxt "@action:intoolbar"
+msgid "Continuous Reading"
+msgstr "Fortlaufend vorlesen"
+
+#: qml/SpeechControlWindow.qml
+msgctxt "@title:window"
+msgid "Read Aloud"
+msgstr "Vorlesen"
+
+#: qml/SpeechControlWindow.qml
+msgctxt "@label Speech rate correction in percent"
+msgid "%1%"
+msgstr "%1%"
+
+#, kde-format
+msgctxt "@info:tooltip"
+msgid "Speech rate correction: %1"
+msgstr "Korrektur der Sprechgeschwindigkeit: %1"
+
+#, kde-format
+msgctxt "@action:intoolbar"
+msgid "Decrease speech rate (current: %1%)"
+msgstr "Sprechgeschwindigkeit verringern (aktuell: %1%)"
+
+#, kde-format
+msgctxt "@action:intoolbar"
+msgid "Increase speech rate (current: %1%)"
+msgstr "Sprechgeschwindigkeit erhöhen (aktuell: %1%)"
+
+msgid "Read Aloud"
+msgstr "Vorlesen"
+
+#: qml/EpubViewerPage.qml qml/OkularPdfView.qml
+#, kde-format
+msgctxt "@action:inmenu"
+msgid "Read Aloud"
+msgstr "Vorlesen"
+
+msgctxt "@label:listbox"
+msgid "Speech voice"
+msgstr "Vorlesestimme"
+
+#, kde-format
+msgctxt "@label:spinbox"
+msgid "Sentence pause length in ms"
+msgstr "Länge der Satzpause in ms"
+
+msgid "Sentence pause length in ms"
+msgstr "Länge der Satzpause in ms"
+
+#: qml/SettingsPage.qml
+msgid "Background image"
+msgstr "Hintergrundbild"
+
+#: qml/SettingsPage.qml
+msgid "Choose background image…"
+msgstr "Hintergrundbild auswählen…"
+
+#: qml/SettingsPage.qml
+msgid "Choose background image"
+msgstr "Hintergrundbild auswählen"
+
+#: qml/SettingsPage.qml
+msgid "Clear background image"
+msgstr "Hintergrundbild löschen"
+
+#: qml/SettingsPage.qml
+msgid "No background image"
+msgstr "Kein Hintergrundbild"
+
+#: qml/SettingsPage.qml
+msgid "Image files (*.png *.jpg *.jpeg *.webp *.gif *.svg)"
+msgstr "Bilddateien (*.png *.jpg *.jpeg *.webp *.gif *.svg)"
+
+#, kde-format
+msgid "Pause at normal reading speed. Faster reading shortens it; slower reading lengthens it. Set to 0 to disable the additional pause."
+msgstr "Pause bei normaler Vorlesegeschwindigkeit. Schnelleres Vorlesen verkürzt sie, langsameres verlängert sie. Mit 0 wird die zusätzliche Pause ausgeschaltet."
+
+msgctxt "@item:inlistbox speech voice"
+msgid "Automatic (text language)"
+msgstr "Automatisch (Sprache des Textes)"
+
+msgctxt "@item:inlistbox speech voice"
+msgid "Selected voice unavailable"
+msgstr "Ausgewählte Stimme nicht verfügbar"
+
+msgid "A selected voice is used for all text. Automatic uses the text language, or the system language when it is unknown."
+msgstr "Eine ausgewählte Stimme wird für alle Texte verwendet. „Automatisch“ verwendet die Sprache des Textes oder, falls diese unbekannt ist, die Systemsprache."
+
+msgctxt "@action:button"
+msgid "Refresh Voices"
+msgstr "Stimmen aktualisieren"
+
+msgid "Speech voice (empty selects a voice matching the text language)"
+msgstr "Vorlesestimme (leer wählt eine zur Sprache des Textes passende Stimme)"
+
+#: qml/SettingsPage.qml
+msgctxt "@option:check"
+msgid "Spell out Sanskrit numbers when reading aloud"
+msgstr "Sanskrit-Zahlen beim Vorlesen ausschreiben"
+
+#: config.kcfg
+msgid "Spell out Sanskrit numbers when reading aloud"
+msgstr "Sanskrit-Zahlen beim Vorlesen ausschreiben"
+
+#: qml/SettingsPage.qml
+msgid "Read whole numbers from 0 to 100 as Sanskrit words in Sanskrit passages. Applies when using a Sanskrit voice."
+msgstr "Ganze Zahlen von 0 bis 100 in Sanskrit-Passagen als Sanskrit-Zahlwörter vorlesen. Gilt bei Verwendung einer Sanskrit-Stimme."
+
+msgctxt "@info:tooltip"
+msgid "Ctrl+click: Read from the selection to the end of the book"
+msgstr "Strg+Klick: Ab der Auswahl bis zum Ende des Buches vorlesen"
+
+#: qml/MaintaincePage.qml
+msgid "Check Stored Cross-references"
+msgstr "Gespeicherte Querverweise prüfen"
+
+#: qml/MaintaincePage.qml
+msgid "Check Entire Library"
+msgstr "Gesamte Bibliothek prüfen"
+
+#: qml/MaintaincePage.qml
+msgid "Checks only stored cross-references and their source and target anchors in the linked books."
+msgstr "Prüft nur gespeicherte Querverweise und ihre Quell- und Zielanker in den beteiligten Büchern."
+
+#: qml/MaintaincePage.qml
+msgid "Checks the entire library, including cross-reference anchors without a database entry."
+msgstr "Prüft die gesamte Bibliothek, einschließlich Querverweisankern ohne Datenbankeintrag."
+
+#: qml/SettingsPage.qml
+msgctxt "@title:tab"
+msgid "Maintenance"
+msgstr "Wartung"
+
+#: qml/SettingsPage.qml
+msgctxt "@title:group"
+msgid "Create safety backups"
+msgstr "Sicherheitskopien erstellen"
+
+#: qml/SettingsPage.qml
+msgctxt "@option:check"
+msgid "When inverting images"
+msgstr "bei Bildinversionen"
+
+#: qml/SettingsPage.qml
+msgctxt "@option:check"
+msgid "When anchoring"
+msgstr "bei Verankerung"
+
+#: config.kcfg
+msgid "Create safety backups when anchoring"
+msgstr "Sicherheitskopien bei Verankerung erstellen"
+
+#: config.kcfg
+msgid "Create safety backups when inverting images"
+msgstr "Sicherheitskopien bei Bildinversionen erstellen"
+
+#: qml/SettingsPage.qml
+msgctxt "@label:spinbox"
+msgid "Paragraph pause length in ms"
+msgstr "Länge der Absatzpause in ms"
+
+#: qml/MathJaxWindow.qml
+msgctxt "@label:listbox"
+msgid "Speech language"
+msgstr "Sprache der Sprachbeschreibung"
+
+#: qml/MathJaxWindow.qml
+msgctxt "@option:check"
+msgid "Concise speech"
+msgstr "Kurze Sprachbeschreibung"
+
+#: qml/MathJaxWindow.qml
+msgctxt "@label"
+msgid "Speech description"
+msgstr "Sprachbeschreibung"
+
+#: qml/MathJaxWindow.qml
+msgctxt "@action:button"
+msgid "Read Formula Aloud"
+msgstr "Formel vorlesen"
+
+#: qml/MathJaxWindow.qml
+msgctxt "@action:button"
+msgid "Copy Speech Text"
+msgstr "Sprachbeschreibung kopieren"
+
+#: qml/MathJaxWindow.qml
+msgctxt "@title:window"
+msgid "Formula"
+msgstr "Formel"
+
+#: qml/SettingsPage.qml
+msgctxt "@option:check"
+msgid "mathjax Support"
+msgstr "Mathjax Unterstützung"
+
+#: qml/MathJaxWindow.qml
+msgctxt "@action:button"
+msgid "MathJax Menu"
+msgstr "MathJax-Menü"
+
+#: qml/MathJaxWindow.qml
+msgctxt "@action:button"
+msgid "Copy LaTeX"
+msgstr "LaTeX kopieren"
+
+#: qml/MathJaxWindow.qml
+msgctxt "@action:button"
+msgid "Copy MathML"
+msgstr "MathML kopieren"
+
+#: qml/MathJaxWindow.qml
+msgctxt "@info"
+msgid "MathJax settings apply only to this formula preview."
+msgstr "MathJax-Einstellungen gelten nur für diese Formelvorschau."
+
+#: qml/MathJaxWindow.qml
+msgctxt "@info"
+msgid "The formula preview could not be loaded."
+msgstr "Die Formelvorschau konnte nicht geladen werden."
+
+#: config.kcfg
+msgid "Paragraph pause length in ms"
+msgstr "Länge der Absatzpause in ms"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@title:group"
+msgid "Mathematics display"
+msgstr "Mathematik-Darstellung"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@label:slider"
+msgid "Display formula size"
+msgstr "Größe der abgesetzten Formeln"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@label:slider"
+msgid "Inline formula size"
+msgstr "Größe der Inline-Formeln"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@label"
+msgid "%1 %"
+msgstr "%1 %"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@label"
+msgid "Formula alignment"
+msgstr "Ausrichtung der Formeln"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@option:check formula alignment"
+msgid "Left"
+msgstr "Links"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@option:check formula alignment"
+msgid "Centered"
+msgstr "Zentriert"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@option:check formula alignment"
+msgid "Right"
+msgstr "Rechts"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@label:listbox"
+msgid "Wide equations"
+msgstr "Überbreite Gleichungen"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@item:inlistbox"
+msgid "Automatic line breaks"
+msgstr "Automatischer Zeilenumbruch"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@item:inlistbox"
+msgid "Shrink to fit"
+msgstr "An Breite anpassen"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@item:inlistbox"
+msgid "Horizontal scrolling"
+msgstr "Horizontal scrollen"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@item:inlistbox"
+msgid "Allow overflow"
+msgstr "Überlauf zulassen"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@option:check"
+msgid "Line breaks in inline formulas too"
+msgstr "Zeilenumbruch auch für Inline-Formeln"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@label"
+msgid "SVG font cache"
+msgstr "SVG-Fontcache"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@option:radio font cache"
+msgid "Local"
+msgstr "Lokal"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@option:radio font cache"
+msgid "Global"
+msgstr "Global"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@option:radio font cache"
+msgid "None"
+msgstr "Keiner"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@action:button"
+msgid "Display formula preview"
+msgstr "Vorschau: abgesetzte Formel"
+
+#: qml/MathJaxSettings.qml
+msgctxt "@action:button"
+msgid "Inline formula preview"
+msgstr "Vorschau: Inline-Formel"
+
+#: config.kcfg
+msgid "Display formula size in percent"
+msgstr "Größe der abgesetzten Formeln in Prozent"
+
+#: config.kcfg
+msgid "Inline formula size in percent"
+msgstr "Größe der Inline-Formeln in Prozent"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Show Math As"
+msgstr "Formel anzeigen als"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Copy to Clipboard"
+msgstr "In die Zwischenablage kopieren"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Math Settings"
+msgstr "Formeleinstellungen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "MathML Code"
+msgstr "MathML-Code"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Original MathML"
+msgstr "Ursprüngliches MathML"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "TeX Commands"
+msgstr "TeX-Befehle"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Original Form"
+msgstr "Ursprüngliche Form"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Speech Text"
+msgstr "Sprachbeschreibung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Braille Code"
+msgstr "Braille-Code"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "SVG Image"
+msgstr "SVG-Bild"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Annotation"
+msgstr "Quelltext-Anmerkung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Error Message"
+msgstr "Fehlermeldung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Math Renderer"
+msgstr "Formel-Renderer"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Wide Expressions"
+msgstr "Überbreite Formeln"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Overflow"
+msgstr "Überlauf zulassen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Scroll"
+msgstr "Horizontal scrollen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Linebreak"
+msgstr "Zeilenumbruch"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Scale"
+msgstr "An Breite anpassen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Truncate"
+msgstr "Abschneiden"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Elide"
+msgstr "Verkürzen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Allow In-line Breaks"
+msgstr "Zeilenumbruch in Inline-Formeln zulassen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "MathML/SVG has"
+msgstr "MathML/SVG enthält"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Semantic attributes"
+msgstr "Semantische Attribute"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "LaTeX attributes"
+msgstr "LaTeX-Attribute"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "TeX hints"
+msgstr "TeX-Hinweise"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Original as annotation"
+msgstr "Original als Quelltext-Anmerkung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Language"
+msgstr "Sprache"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Zoom Trigger"
+msgstr "Vergrößerung auslösen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Zoom Once Now"
+msgstr "Jetzt einmal vergrößern"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Click"
+msgstr "Klick"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Double-Click"
+msgstr "Doppelklick"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "No Zoom"
+msgstr "Keine Vergrößerung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Trigger Requires:"
+msgstr "Erforderliche Zusatztaste:"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Zoom Factor"
+msgstr "Vergrößerungsfaktor"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Scale All Math..."
+msgstr "Alle Formeln skalieren …"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Reset to defaults"
+msgstr "Auf Standardwerte zurücksetzen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Accessibility:"
+msgstr "Barrierefreiheit:"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Speech"
+msgstr "Sprache"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Braille"
+msgstr "Braille"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Generate"
+msgstr "Erzeugen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Show Subtitles"
+msgstr "Untertitel anzeigen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Auto Voicing"
+msgstr "Automatisch vorlesen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Rules:"
+msgstr "Sprachregeln:"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Verbose"
+msgstr "Ausführlich"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Brief"
+msgstr "Kurz"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Superbrief"
+msgstr "Sehr kurz"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Auto"
+msgstr "Automatisch"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "No Preferences"
+msgstr "Keine Präferenzen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Current Preferences"
+msgstr "Aktuelle Präferenzen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Select Preferences"
+msgstr "Präferenzen auswählen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Replace Speech"
+msgstr "Sprachbeschreibung ersetzen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Combine with Speech"
+msgstr "Mit Sprachbeschreibung kombinieren"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Code Format:"
+msgstr "Codeformat:"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Explorer"
+msgstr "Formelexplorer"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Highlight"
+msgstr "Hervorhebung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Background"
+msgstr "Hintergrund"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Foreground"
+msgstr "Vordergrund"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Blue"
+msgstr "Blau"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Red"
+msgstr "Rot"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Green"
+msgstr "Grün"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Yellow"
+msgstr "Gelb"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "White"
+msgstr "Weiß"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Black"
+msgstr "Schwarz"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "None"
+msgstr "Keine"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Hover"
+msgstr "Bei Mausberührung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Flame"
+msgstr "Flamme"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Tree Coloring"
+msgstr "Struktur farbig darstellen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Magnification"
+msgstr "Vergrößerung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Keyboard"
+msgstr "Tastatur"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Mouse"
+msgstr "Maus"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Semantic Info"
+msgstr "Semantische Informationen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Type"
+msgstr "Typ"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Role"
+msgstr "Rolle"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Prefix"
+msgstr "Präfix"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Describe math as"
+msgstr "Formel beschreiben als"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "MathJax expression"
+msgstr "MathJax-Ausdruck"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "math"
+msgstr "Mathematik"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "clickable math"
+msgstr "Anklickbare Formel"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "explorable math"
+msgstr "Erkundbare Formel"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "none"
+msgstr "Keine Beschreibung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Help message on focus"
+msgstr "Hilfetext beim Fokussieren"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Options"
+msgstr "Optionen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Semantic Enrichment"
+msgstr "Semantische Anreicherung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Collapsible Math"
+msgstr "Einklappbare Formeln"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Auto Collapse"
+msgstr "Automatisch einklappen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Include in Tab Order"
+msgstr "In Tabulator-Reihenfolge aufnehmen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Tabbing Focuses on"
+msgstr "Tabulator fokussiert"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Whole Expression"
+msgstr "Gesamten Ausdruck"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Last Explored Node"
+msgstr "Zuletzt erkundeten Knoten"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Include Hidden MathML"
+msgstr "Verborgenes MathML einfügen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "About MathJax"
+msgstr "Über MathJax"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "MathJax Help"
+msgstr "MathJax-Hilfe"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@title:window"
+msgid "MathJax MathML Expression"
+msgstr "MathJax-MathML-Ausdruck"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@title:window"
+msgid "MathJax Original Source"
+msgstr "MathJax-Originalquelle"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@title:window"
+msgid "MathJax Annotation Text"
+msgstr "MathJax-Quelltext-Anmerkung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@title:window"
+msgid "MathJax SVG Image"
+msgstr "MathJax-SVG-Bild"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@title:window"
+msgid "MathJax Speech Text"
+msgstr "MathJax-Sprachbeschreibung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@title:window"
+msgid "MathJax Braille Text"
+msgstr "MathJax-Braille-Text"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@title:window"
+msgid "MathJax Error Message"
+msgstr "MathJax-Fehlermeldung"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@title:window"
+msgid "MathJax Zoomed Expression"
+msgstr "Vergrößerte MathJax-Formel"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@title:window"
+msgid "ClearSpeak Preferences"
+msgstr "ClearSpeak-Präferenzen"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@title:window"
+msgid "Scale All Math"
+msgstr "Alle Formeln skalieren"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@label"
+msgid "Background opacity"
+msgstr "Deckkraft des Hintergrunds"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@label"
+msgid "Foreground opacity"
+msgstr "Deckkraft des Vordergrunds"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@label"
+msgid "Preferences for %1"
+msgstr "Präferenzen für %1"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Control"
+msgstr "Strg"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Shift"
+msgstr "Umschalt"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Command"
+msgstr "Befehl"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@action:inmenu MathJax"
+msgid "Option"
+msgstr "Option"
+
+#: qml/MathJaxMenu.qml
+msgctxt "@info"
+msgid "Loading MathJax menu…"
+msgstr "MathJax-Menü wird geladen …"
+
+#: qml/EpubViewerPage.qml
+msgctxt "@action:inmenu"
+msgid "Open Formula Dialog"
+msgstr "Formeldialog öffnen"
+
+#: qml/EpubViewerPage.qml
+msgctxt "@title:menu"
+msgid "MathJax (Formula Preview)"
+msgstr "MathJax (Formelvorschau)"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgctxt "@title:tab"
+msgid "AI Assistance"
+msgstr "KI-Assistenz"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex App Server"
+msgstr "Codex App Server"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex executable path"
+msgstr "Codex-Pfad"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Test Codex connection"
+msgstr "Codex-Verbindung testen"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Connected to Codex %1"
+msgstr "Erfolgreich mit Codex %1 verbunden"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Connecting to Codex…"
+msgstr "Verbindung zu Codex wird aufgebaut …"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex is disconnected"
+msgstr "Codex ist nicht verbunden"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Only the submitted text is sent to Codex. Read-only mode; requests for additional permissions are declined."
+msgstr "Nur der abgesendete Text wird an Codex übermittelt. Schreibgeschützter Modus; Anfragen nach zusätzlichen Berechtigungen werden abgelehnt."
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex response"
+msgstr "Codex-Antwort"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Enter a question or task"
+msgstr "Frage oder Aufgabe eingeben"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Connect"
+msgstr "Verbinden"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Send"
+msgstr "Absenden"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex process error: %1"
+msgstr "Codex-Prozessfehler: %1"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex exited unexpectedly (code %1, %2)."
+msgstr "Codex wurde unerwartet beendet (Code %1, %2)."
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "crashed"
+msgstr "abgestürzt"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "exited"
+msgstr "beendet"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex request timed out: %1"
+msgstr "Zeitüberschreitung bei Codex-Anfrage: %1"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex executable not found: %1"
+msgstr "Codex-Programm nicht gefunden: %1"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Could not create the Codex working directory."
+msgstr "Das Codex-Arbeitsverzeichnis konnte nicht erstellt werden."
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex message is too large."
+msgstr "Die Codex-Nachricht ist zu groß."
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Could not write to the Codex process."
+msgstr "Es konnte nicht an den Codex-Prozess geschrieben werden."
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Invalid JSON from Codex: %1"
+msgstr "Ungültiges JSON von Codex: %1"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex %1 failed (%2): %3"
+msgstr "Codex %1 fehlgeschlagen (%2): %3"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Invalid Codex response: %1"
+msgstr "Ungültige Codex-Antwort: %1"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Invalid Codex initialization response."
+msgstr "Ungültige Codex-Initialisierungsantwort."
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex did not confirm the read-only sandbox and on-request approval policy."
+msgstr "Codex hat die schreibgeschützte Sandbox und die Freigaberichtlinie on-request nicht bestätigt."
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Invalid Codex turn response."
+msgstr "Ungültige Codex-Turn-Antwort."
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex turn failed."
+msgstr "Codex-Turn fehlgeschlagen."
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Invalid Codex turn status: %1"
+msgstr "Ungültiger Codex-Turn-Status: %1"
+
+#: src/codexclient.cpp src/qml/CodexSessionPane.qml src/qml/CodexTestDialog.qml src/qml/SettingsPage.qml
+msgid "Codex request declined by the read-only prototype: %1"
+msgstr "Codex-Anfrage vom schreibgeschützten Prototyp abgelehnt: %1"
+
+#: src/codexclient.cpp
+msgid "Codex cancellation timed out."
+msgstr "Zeitüberschreitung beim Abbrechen des Codex-Turns."
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Context"
+msgstr "Kontext"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Authors"
+msgstr "Autoren"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Translators"
+msgstr "Übersetzer"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Editors"
+msgstr "Herausgeber"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Book languages"
+msgstr "Buchsprachen"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Edition"
+msgstr "Ausgabe"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Chapter"
+msgstr "Kapitel"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Chapter link"
+msgstr "Kapitellink"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Chapter heading"
+msgstr "Kapitelüberschrift"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Verse"
+msgstr "Vers"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Selection CFI"
+msgstr "CFI der Selektion"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Reader CFI"
+msgstr "Reader-CFI"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Section index"
+msgstr "Abschnittsindex"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Selection language"
+msgstr "Sprache der Selektion"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Language segments"
+msgstr "Sprachsegmente"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Surrounding sentence"
+msgstr "Umgebender Satz"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Surrounding paragraph"
+msgstr "Umgebender Absatz"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Larger section"
+msgstr "Größerer Abschnitt"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Question:"
+msgstr "Frage:"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Update context"
+msgstr "Kontext aktualisieren"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Choose context for the next question. Previously sent context remains part of the conversation."
+msgstr "Wählen Sie den Kontext für die nächste Frage. Bereits gesendeter Kontext bleibt Teil des Gesprächs."
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Context for next question"
+msgstr "Kontext für die nächste Frage"
+
+#: src/qml/ReaderContextPane.qml src/qml/EpubViewerPage.qml
+msgid "Sent question %1 — %2"
+msgstr "Gesendete Frage %1 — %2"
+
+#: src/qml/CodexSessionPane.qml
+msgid "The displayed context and your question are sent to Codex. Read-only mode; requests for additional permissions are declined."
+msgstr "Der angezeigte Kontext und Ihre Frage werden an Codex gesendet. Schreibgeschützter Modus; Anfragen nach zusätzlichen Berechtigungen werden abgelehnt."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "A confirmed child needs its confirmed parent mapping."
+msgstr "Eine bestätigte Untergliederung benötigt ihre bestätigte übergeordnete Zuordnung."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "A confirmed mapping has invalid evidence or depth."
+msgstr "Eine bestätigte Zuordnung hat ungültige Belege oder eine ungültige Gliederungstiefe."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "A confirmed structure is already present. Automatic analysis will not replace it."
+msgstr "Eine bestätigte Struktur ist bereits vorhanden. Eine automatische Analyse ersetzt sie nicht."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Accepted coordinate separators:"
+msgstr "Bestätigte Koordinatentrennzeichen:"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Add level"
+msgstr "Ebene hinzufügen"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Analyzing EPUB structure…"
+msgstr "EPUB-Struktur wird analysiert …"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Cancel Analysis"
+msgstr "Analyse abbrechen"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Candidate added an unrelated resource."
+msgstr "Die Arbeitskopie hat eine nicht zugehörige Ressource hinzugefügt."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Candidate changed a source resource: "
+msgstr "Die Arbeitskopie hat eine Quellressource verändert: "
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Candidate changed unrelated package metadata or spine."
+msgstr "Die Arbeitskopie hat andere Paketmetadaten oder die Lesereihenfolge verändert."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Candidate metadata record is invalid."
+msgstr "Der Metadatensatz der Arbeitskopie ist ungültig."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Check each mapping against the EPUB evidence. TOC labels and source text remain unchanged. Writing is an explicit editorial action."
+msgstr "Prüfen Sie jede Zuordnung anhand der EPUB-Belege. Inhaltsverzeichnis und Quelltext bleiben unverändert. Das Schreiben ist ein ausdrücklicher editorischer Vorgang."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Choose at least one structure level."
+msgstr "Wählen Sie mindestens eine Gliederungsebene."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Configure EPUBCheck before writing the structure."
+msgstr "Konfigurieren Sie EPUBCheck, bevor Sie die Struktur schreiben."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Confirm and Write to EPUB"
+msgstr "Bestätigen und ins EPUB schreiben"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Confirm at least one mapping before writing the EPUB."
+msgstr "Bestätigen Sie mindestens eine Zuordnung, bevor Sie ins EPUB schreiben."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Confirmed"
+msgstr "Bestätigt"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Confirmed structure saved in the EPUB."
+msgstr "Die bestätigte Struktur wurde im EPUB gespeichert."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Coordinate levels conflict."
+msgstr "Die Koordinatenebenen widersprechen sich."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Coordinate, e.g. 1.4"
+msgstr "Koordinate, z. B. 1.4"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Coordinate, e.g. १-४"
+msgstr "Koordinate, z. B. १-४"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Coordinates require positive whole numbers."
+msgstr "Koordinaten müssen positive ganze Zahlen enthalten."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Could not copy every EPUB resource into the candidate."
+msgstr "Nicht alle EPUB-Ressourcen konnten in die Arbeitskopie kopiert werden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Discard Unwritten Changes and Close"
+msgstr "Ungespeicherte Änderungen verwerfen und schließen"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "EPUB evidence → structure term and coordinate → confirmation"
+msgstr "EPUB-Beleg → Gliederungsbegriff und Koordinate → Bestätigung"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "EPUB source dependencies have changed. Review the preserved structure."
+msgstr "Die EPUB-Quellen haben sich geändert. Prüfen Sie die erhaltene Struktur."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "EPUBCheck could not be started. The EPUB was not changed."
+msgstr "EPUBCheck konnte nicht gestartet werden. Das EPUB wurde nicht verändert."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "EPUBCheck rejected the candidate. The EPUB was not changed."
+msgstr "EPUBCheck hat die Arbeitskopie abgelehnt. Das EPUB wurde nicht verändert."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Existing structure cannot be safely replaced."
+msgstr "Die vorhandene Struktur kann nicht sicher ersetzt werden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Go"
+msgstr "Gehe zu"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Go to Work Coordinate"
+msgstr "Zu Werkkoordinate springen"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Incomplete structured model response."
+msgstr "Die strukturierte KI-Antwort ist unvollständig."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Invalid coordinate format."
+msgstr "Ungültiges Koordinatenformat."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Invalid structure record path."
+msgstr "Ungültiger Pfad des Strukturdatensatzes."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Invalid uncertainty or source hints."
+msgstr "Ungültige Angaben zu Unsicherheiten oder Quellenhinweisen."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Levels:"
+msgstr "Ebenen:"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Malformed or oversized structure record."
+msgstr "Der Strukturdatensatz ist fehlerhaft oder zu groß."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Model coordinates require positive whole numbers."
+msgstr "KI-Koordinaten müssen positive ganze Zahlen enthalten."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Model invented numbering absent from the EPUB evidence."
+msgstr "Die KI hat eine Nummerierung vorgeschlagen, die in den EPUB-Belegen nicht vorhanden ist."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Model mapping depth conflicts with the proposed hierarchy."
+msgstr "Die Tiefe einer KI-Zuordnung widerspricht der vorgeschlagenen Hierarchie."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Model mapping has no valid EPUB evidence."
+msgstr "Eine KI-Zuordnung hat keinen gültigen EPUB-Beleg."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Model numbering conflicts with EPUB source."
+msgstr "Die KI-Nummerierung widerspricht der EPUB-Quelle."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Model parent conflicts with EPUB hierarchy."
+msgstr "Eine übergeordnete KI-Zuordnung widerspricht der EPUB-Hierarchie."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Model parent numbering conflicts with EPUB hierarchy."
+msgstr "Die Nummerierung einer übergeordneten KI-Zuordnung widerspricht der EPUB-Hierarchie."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Move level up"
+msgstr "Ebene nach oben verschieben"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "NAV and NCX disagree about a target. Confirm its mapping explicitly."
+msgstr "NAV und NCX widersprechen sich bei einem Ziel. Bestätigen Sie dessen Zuordnung ausdrücklich."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "No package metadata element."
+msgstr "Kein Paketmetadatenelement vorhanden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "No supported structure evidence was found in this EPUB."
+msgstr "In diesem EPUB wurden keine unterstützten Gliederungsbelege gefunden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Remove level"
+msgstr "Ebene entfernen"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Replace review with an AI proposal"
+msgstr "Prüfentwurf durch einen KI-Vorschlag ersetzen"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Requesting optional structure analysis…"
+msgstr "Optionale Strukturanalyse wird angefordert …"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Review Sanskrit Work Structure"
+msgstr "Sanskrit-Werkgliederung prüfen"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Review Sanskrit work structure after EPUB import or normalization"
+msgstr "Sanskrit-Werkgliederung nach EPUB-Import oder Normalisierung prüfen"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Review the local proposal or request an optional model analysis."
+msgstr "Prüfen Sie den lokalen Vorschlag oder fordern Sie eine optionale KI-Analyse an."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Review the model proposal. All mappings and source hints are unconfirmed."
+msgstr "Prüfen Sie den KI-Vorschlag. Alle Zuordnungen und Quellenhinweise sind unbestätigt."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Sanskrit Work Structure"
+msgstr "Sanskrit-Werkgliederung"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Several competing structure records exist."
+msgstr "Mehrere konkurrierende Strukturdatensätze sind vorhanden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Show the exact context sent to the model"
+msgstr "Den genauen Kontext für die KI anzeigen"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Show the preserved structure record"
+msgstr "Den erhaltenen Strukturdatensatz anzeigen"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Stored structure term is not in the verified vocabulary."
+msgstr "Ein gespeicherter Gliederungsbegriff gehört nicht zum geprüften Vokabular."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Stored verse marker or numbering conflicts with source."
+msgstr "Ein gespeicherter Versmarker oder eine Nummerierung widerspricht der Quelle."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Structure analysis was interrupted or failed."
+msgstr "Die Strukturanalyse wurde abgebrochen oder ist fehlgeschlagen."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Structure belongs to another book."
+msgstr "Die Struktur gehört zu einem anderen Buch."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Structure is not confirmed."
+msgstr "Die Struktur ist nicht bestätigt."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Structure metadata ID already exists."
+msgstr "Die Kennung der Strukturmetadaten ist bereits vorhanden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Structure parent relationships conflict."
+msgstr "Die übergeordneten Strukturzuordnungen widersprechen sich."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Structure record is too large."
+msgstr "Der Strukturdatensatz ist zu groß."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Structure resource path already exists."
+msgstr "Der Pfad der Strukturressource ist bereits vorhanden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Structure target differs from EPUB evidence."
+msgstr "Ein Strukturziel stimmt nicht mit den EPUB-Belegen überein."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Structure target has no current source evidence."
+msgstr "Ein Strukturziel hat keinen aktuellen Quellbeleg."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Term and numbering found in EPUB source."
+msgstr "Begriff und Nummerierung wurden in der EPUB-Quelle gefunden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The EPUB changed before the reviewed structure could be committed."
+msgstr "Das EPUB wurde verändert, bevor die geprüfte Struktur übernommen werden konnte."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The EPUB changed during review. Analyze it again before writing the structure."
+msgstr "Das EPUB wurde während der Prüfung verändert. Analysieren Sie es erneut, bevor Sie die Struktur schreiben."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The book is being changed in another process. Please try again."
+msgstr "Das Buch wird gerade in einem anderen Prozess geändert. Bitte versuchen Sie es erneut."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The confirmed structure changed during review."
+msgstr "Die bestätigte Struktur wurde während der Prüfung verändert."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The coordinate has no unique confirmed target."
+msgstr "Die Koordinate hat kein eindeutiges bestätigtes Ziel."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The evidence limit was reached. Review only the supplied subset."
+msgstr "Die Beleggrenze wurde erreicht. Prüfen Sie nur den bereitgestellten Ausschnitt."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The existing structure is preserved but requires review: %1"
+msgstr "Die vorhandene Struktur bleibt erhalten, muss jedoch geprüft werden: %1"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The exported structure could not be verified."
+msgstr "Die exportierte Struktur konnte nicht geprüft werden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The model did not return a valid structure proposal."
+msgstr "Die KI hat keinen gültigen Strukturvorschlag geliefert."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The review snapshot is stale or missing."
+msgstr "Der Quellstand der Prüfung ist veraltet oder fehlt."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The reviewed EPUB source hash is missing."
+msgstr "Der Hash der geprüften EPUB-Quelle fehlt."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "The reviewed source changed or confirmation is missing."
+msgstr "Die geprüfte Quelle wurde verändert oder die Bestätigung fehlt."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "This book is open read-only."
+msgstr "Dieses Buch ist schreibgeschützt geöffnet."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Two mappings share a coordinate or source target."
+msgstr "Zwei Zuordnungen verwenden dieselbe Koordinate oder dasselbe Quellziel."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unable to create the EPUB validation working copy."
+msgstr "Die EPUB-Arbeitskopie für die Prüfung konnte nicht erstellt werden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unable to read EPUB source."
+msgstr "Die EPUB-Quelle konnte nicht gelesen werden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unable to write the EPUB validation working copy."
+msgstr "Die EPUB-Arbeitskopie für die Prüfung konnte nicht geschrieben werden."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unassigned"
+msgstr "Nicht zugeordnet"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unknown coordinate separator."
+msgstr "Unbekanntes Koordinatentrennzeichen."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unknown or duplicate structure level."
+msgstr "Unbekannte oder doppelte Gliederungsebene."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unknown or duplicate structure term."
+msgstr "Unbekannter oder doppelter Gliederungsbegriff."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unreadable source document: "
+msgstr "Nicht lesbares Quelldokument: "
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unsupported coordinate separator."
+msgstr "Nicht unterstütztes Koordinatentrennzeichen."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unsupported structure schema version."
+msgstr "Nicht unterstützte Version des Strukturschemas."
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Unverified source hint: %1"
+msgstr "Ungeprüfter Quellenhinweis: %1"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Validating and writing the confirmed structure…"
+msgstr "Die bestätigte Struktur wird geprüft und geschrieben …"
+
+#: src/qml/WorkStructureDialog.qml src/workstructure.cpp src/workstructurecommit.cpp src/workstructurereview.cpp
+msgid "Verify edition-specific numbering and semantic hierarchy."
+msgstr "Prüfen Sie die editionsspezifische Nummerierung und die semantische Hierarchie."
+
+#: src/workstructure.cpp
+msgid "This TOC group has no link. Its first linked child is used as the navigation start."
+msgstr "Diese Inhaltsverzeichnisgruppe hat keinen Link. Als Navigationsanfang wird ihr erstes verlinktes Unterelement verwendet."
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "Save Answer as Remark…"
+msgstr "Antwort als Bemerkung speichern…"
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "Edit AI Remark"
+msgstr "KI-Bemerkung bearbeiten"
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "AI Remark"
+msgstr "KI-Bemerkung"
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "Text (Markdown)"
+msgstr "Text (Markdown)"
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "Save Remark"
+msgstr "Bemerkung speichern"
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "The book has changed. Select the passage again before saving the remark."
+msgstr "Das Buch wurde geändert. Wählen Sie die Textstelle vor dem Speichern der Bemerkung erneut aus."
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "The EPUB anchor was created, but the remark could not be saved. Your draft is still available."
+msgstr "Der EPUB-Anker wurde erstellt, aber die Bemerkung konnte nicht gespeichert werden. Ihr Entwurf ist weiterhin verfügbar."
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "Enter a remark of at most 256 Ki characters."
+msgstr "Geben Sie eine Bemerkung mit höchstens 256 Ki Zeichen ein."
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "The original book selection is unavailable. Select the passage again."
+msgstr "Die ursprüngliche Buchauswahl ist nicht verfügbar. Wählen Sie die Textstelle erneut aus."
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "The remark's EPUB is unavailable."
+msgstr "Das EPUB der Bemerkung ist nicht verfügbar."
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "The remark's EPUB anchor is missing."
+msgstr "Der EPUB-Anker der Bemerkung fehlt."
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "The remark could not be saved. Your draft is still available."
+msgstr "Die Bemerkung konnte nicht gespeichert werden. Ihr Entwurf ist weiterhin verfügbar."
+
+#: src/qml/RichNoteDialog.qml src/qml/EpubViewerPage.qml src/annotationstore.cpp
+msgid "The remark could not be saved."
+msgstr "Die Bemerkung konnte nicht gespeichert werden."
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "The BookServer request timed out."
+msgstr "Zeitüberschreitung bei der BookServer-Anfrage."
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "BookServer returned invalid data."
+msgstr "BookServer hat ungültige Daten geliefert."
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "BookServer request failed (HTTP %1)."
+msgstr "BookServer-Anfrage fehlgeschlagen (HTTP %1)."
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "No connection to BookServer."
+msgstr "Keine Verbindung zum BookServer."
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "This book"
+msgstr "Dieses Buch"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Previously referenced books"
+msgstr "Bereits referenzierte Bücher"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Books by the same author"
+msgstr "Bücher vom selben Autor"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Other books"
+msgstr "Andere Bücher"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Source anchor title:"
+msgstr "Quellanker-Titel:"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Loading books…"
+msgstr "Buchliste wird geladen…"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Reload Books"
+msgstr "Bücher erneut laden"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Search books by title or author…"
+msgstr "Bücher nach Titel oder Autor suchen…"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Target location"
+msgstr "Zielort"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Loading target locations…"
+msgstr "Zielorte werden geladen…"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Reload Target Locations"
+msgstr "Ziele erneut laden"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Search targets by title, text or anchor…"
+msgstr "Ziele nach Titel, Text oder Anker suchen…"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Explicit target location:"
+msgstr "Expliziter Zielort:"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Preview text (HTML):"
+msgstr "Vorschautext (HTML):"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Save Changes"
+msgstr "Änderungen speichern"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Delete Reference?"
+msgstr "Referenz löschen?"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "This reference will be removed from the database and its source anchor from the EPUB. The visible text will be kept."
+msgstr "Diese Referenz wird aus der Datenbank und ihr Quellanker aus dem EPUB entfernt. Der sichtbare Text bleibt erhalten."
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "No matches"
+msgstr "Keine Treffer"
+
+#: src/qml/CrossReferenceEditor.qml src/qml/CrossReferenceDialog.qml src/qml/ReferenceSearchList.qml src/qml/BookServerRequest.qml
+msgid "Showing 40 of %1 matches. Refine your search."
+msgstr "40 von %1 Treffern werden angezeigt. Bitte die Suche eingrenzen."
+
+#: src/qml/ReferenceSearchList.qml
+msgid "%1 match"
+msgid_plural "%1 matches"
+msgstr[0] "%1 Treffer"
+msgstr[1] "%1 Treffer"
+
+#: src/qml/CrossReferenceEditor.qml
+msgid "The BookServer session has expired. Restart Arianna."
+msgstr "Die BookServer-Sitzung ist abgelaufen. Starten Sie Arianna neu."
+
+#: src/qml/CrossReferenceEditor.qml
+msgid "The target book or its file is no longer available."
+msgstr "Das Zielbuch oder seine Datei ist nicht mehr verfügbar."
+
+#: src/qml/CrossReferenceEditor.qml
+msgid "Books by %1"
+msgstr "Bücher von %1"
+
+#: src/qml/CrossReferenceEditor.qml
+msgid "Main topic: %1"
+msgstr "Hauptthema: %1"
+
+#: src/qml/TargetAnchorRepair.qml
+msgid "Open Target Book in Editor"
+msgstr "Zielbuch im Editor öffnen"
+
+#: src/qml/TargetAnchorRepair.qml src/qml/ReferenceReportDialog.qml
+msgid "Opening the target document in Sigil…"
+msgstr "Zieldokument wird in Sigil geöffnet …"
+
+#: src/qml/TargetAnchorRepair.qml
+msgid "Verse number or target passage (optional)"
+msgstr "Versnummer oder Zielstelle (optional)"
+
+#: src/qml/TargetAnchorRepair.qml src/qml/ReferenceReportDialog.qml
+msgid "Target document opened. Review the AI instruction in Sigil's Find and Replace panel, then prepare a proposal."
+msgstr "Zieldokument geöffnet. Prüfe den KI-Auftrag in Sigils Suchen/Ersetzen-Bereich und lasse dann einen Vorschlag vorbereiten."
+
+#: src/main.cpp
+msgid "Open the given EPUB for editing without adding it to the library"
+msgstr "Die angegebene EPUB ohne Bibliotheksimport zum Bearbeiten öffnen"
+
+#: src/qml/EpubViewerPage.qml
+msgid "Outside Library"
+msgstr "Außerhalb der Bibliothek"
+
+#: src/qml/BookDetailsPage.qml
+msgid "The topic tree could not be saved. Your input has been kept."
+msgstr "Der Themenbaum konnte nicht gespeichert werden. Die Eingabe bleibt erhalten."
+
+#: src/noterenderer.cpp src/annotationstore.cpp src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "Save Discussion as Remark"
+msgstr "Diskussion als Bemerkung speichern"
+
+#: src/noterenderer.cpp src/annotationstore.cpp src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "AI Discussion Remark"
+msgstr "KI-Diskussionsbemerkung"
+
+#: src/noterenderer.cpp src/annotationstore.cpp src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "User questions (inferences):"
+msgstr "Benutzerfragen (Inferenzen):"
+
+#: src/noterenderer.cpp src/annotationstore.cpp src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "User"
+msgstr "Benutzer"
+
+#: src/noterenderer.cpp src/annotationstore.cpp src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "AI"
+msgstr "KI"
+
+#: src/noterenderer.cpp src/annotationstore.cpp src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "Response failed"
+msgstr "Antwort fehlgeschlagen"
+
+#: src/noterenderer.cpp src/annotationstore.cpp src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "Response interrupted"
+msgstr "Antwort unterbrochen"
+
+#: src/noterenderer.cpp src/annotationstore.cpp src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "No response was saved."
+msgstr "Es wurde keine Antwort gespeichert."
+
+#: src/noterenderer.cpp src/annotationstore.cpp src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "The discussion belongs to another book. Your discussion has been kept."
+msgstr "Die Diskussion gehört zu einem anderen Buch. Der Verlauf bleibt erhalten."
+
+#: src/noterenderer.cpp src/annotationstore.cpp src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "The discussion is incomplete or exceeds the size limit. Your discussion has been kept."
+msgstr "Die Diskussion ist unvollständig oder überschreitet die Größenbegrenzung. Der Verlauf bleibt erhalten."
+
+#: src/qml/EpubViewerPage.qml src/qml/RichNoteDialog.qml
+msgid "Edit"
+msgstr "Bearbeiten"
+
+#: src/qml/RichNoteDialog.qml
+msgid "Preview"
+msgstr "Vorschau"
+
+#: src/qml/PdfPasswordIndicator.qml src/pdfpasswordstore.cpp
+msgid "PDF: saved KWallet password is valid"
+msgstr "PDF: Das gespeicherte KWallet-Passwort ist gültig"
+
+#: src/qml/PdfPasswordIndicator.qml src/pdfpasswordstore.cpp
+msgid "PDF: checking saved KWallet password…"
+msgstr "PDF: Gespeichertes KWallet-Passwort wird geprüft …"
+
+#: src/qml/PdfPasswordIndicator.qml src/pdfpasswordstore.cpp
+msgid "PDF: no validated KWallet password available"
+msgstr "PDF: Kein geprüftes KWallet-Passwort verfügbar"
+
+#: src/qml/PdfPasswordIndicator.qml src/pdfpasswordstore.cpp
+msgid "The PDF file is unavailable."
+msgstr "Die PDF-Datei ist nicht verfügbar."
+
+#: src/qml/EpubViewerPage.qml
+msgid "Remark"
+msgstr "Bemerkung"
+
+#: src/qml/EpubViewerPage.qml
+msgid "Cross-reference"
+msgstr "Querverweis"
+
+#: src/qml/EpubViewerPage.qml
+msgid "Open Remark"
+msgstr "Bemerkung anzeigen"
+
+#: src/qml/EpubViewerPage.qml
+msgid "Open Link"
+msgstr "Verknüpfung öffnen"
+
+#: src/qml/EpubViewerPage.qml
+msgid "Copy Link"
+msgstr "Verknüpfung kopieren"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@label"
+msgid "Highlight color"
+msgstr "Hervorhebungsfarbe"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Yellow"
+msgstr "Gelb"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Orange"
+msgstr "Orange"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Red"
+msgstr "Rot"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Pink"
+msgstr "Rosa"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Purple"
+msgstr "Violett"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Blue"
+msgstr "Blau"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Turquoise"
+msgstr "Türkis"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Green"
+msgstr "Grün"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Light yellow"
+msgstr "Hellgelb"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Light orange"
+msgstr "Hellorange"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Light red"
+msgstr "Hellrot"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Light pink"
+msgstr "Hellrosa"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Light purple"
+msgstr "Hellviolett"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Light blue"
+msgstr "Hellblau"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Light turquoise"
+msgstr "Helltürkis"
+
+#: src/qml/AnnotationColorPalette.qml
+msgctxt "@item:inlistbox Highlight color"
+msgid "Light green"
+msgstr "Hellgrün"

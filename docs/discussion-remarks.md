@@ -1,0 +1,9 @@
+# Saved AI discussion remarks
+
+The explicitly saved conversation is user-owned annotation data (category D), associated with a captured book identity and text range. It must survive restarts and must never be treated as a regenerable AI cache. The current session's submitted turns are the source of the saved transcript; no new AI request is made to save or open it.
+
+Reuse AnnotationStore and the annotations table. Store a schema-versioned conversation in the existing noteMetadata JSON column: origin, kind, ordered turns with question/answer/status, thread/turn IDs and selection/context snapshot IDs. noteSource/note provide a readable fallback; noteHtml is derived through the existing constrained Markdown renderer and allowlisted chat markup. No database migration or new persistent store is required. All text is bounded and validated before the anchored save path runs.
+
+The source selection is captured when the corresponding question is submitted. Saving uses that book/range and the established expected-state/anchor validation, never a later global selection. An existing saved conversation updates its annotation and reuses its anchor. Source edits invalidate the normal expected-state checks; saved user data itself is not discarded or automatically regenerated. Conversation content remains in the user database; the existing explicit EPUB annotation-anchor workflow may add an anchor on first save. Viewing or cancelling never writes to the EPUB or starts AI work.
+
+The saved transcript is displayed as an attributed chat. Ordinary editable answer remarks retain their existing editor. Discussion remarks have a reader marker and their user questions appear in the remarks overview. Reader marks use a transient SVG overlay, without changing book DOM/source; its icon shares annotation hit testing and redraw lifecycle.

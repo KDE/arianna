@@ -20,8 +20,19 @@ public:
     Q_INVOKABLE QVariantList loadAnnotations(const QString &bookId) const;
     Q_INVOKABLE QString currentStateId(const QString &bookId) const;
     Q_INVOKABLE QVariantMap createAnchoredAnnotation(const QString &bookId, const QVariantMap &annotation, const QString &expectedStateId);
+    /// Stores a user-owned annotation without modifying its document. PDF notes
+    /// use this path; EPUB range annotations retain their anchored workflow.
+    Q_INVOKABLE QVariantMap createUserAnnotation(const QString &bookId, const QVariantMap &annotation);
+    Q_INVOKABLE QVariantMap renderNote(const QString &markdown) const;
+    Q_INVOKABLE QVariantMap renderDiscussion(const QVariantList &turns) const;
+    Q_INVOKABLE QStringList discussionQuestions(const QVariantMap &annotation) const;
+    Q_INVOKABLE QVariantMap saveAiDiscussionAnnotation(const QString &bookId, const QVariantMap &annotation, const QVariantList &turns);
+    Q_INVOKABLE QVariantMap saveAiAnnotation(const QString &bookId, const QVariantMap &annotation, const QString &markdown);
     Q_INVOKABLE void saveAnnotation(const QString &bookId, const QVariantMap &annotation);
     Q_INVOKABLE void removeAnnotation(const QString &bookId, const QString &annotationKey);
+
+private:
+    QVariantMap saveRenderedAiAnnotation(const QString &bookId, const QVariantMap &annotation, const QVariantMap &rendered);
 
 Q_SIGNALS:
     void annotationsChanged(const QString &bookId);

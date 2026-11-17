@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: LGPL-2.1-only or LGPL-3.0-only or LicenseRef-KDE-Accepted-LGPL
 
 #include "categoryentriesmodel.h"
+#include "bookformats.h"
 #include "arianna_debug.h"
 #include "epubcontainer.h"
 
@@ -264,6 +265,7 @@ static QVariantMap groupedBookMap(const BookEntry &entry)
     book.insert(QStringLiteral("currentLocation"), entry.currentLocation);
     book.insert(QStringLiteral("currentProgress"), entry.currentProgress);
     book.insert(QStringLiteral("pageMode"), entry.pageMode);
+    book.insert(QStringLiteral("pageWidthDistance"), entry.pageWidthDistance);
     book.insert(QStringLiteral("subjects"), entry.genres);
     book.insert(QStringLiteral("categoryEntriesCount"), 0);
     book.insert(QStringLiteral("categoryEntriesModel"), QString());
@@ -391,7 +393,8 @@ static QString fileTypeGroupTitle(const QString &filename)
 
 static QString typeSortKey(const BookEntry &entry)
 {
-    return fileTypeSortPrefix(entry.filename) + QLatin1Char('\t') + titleSortKey(entry.title);
+    return (BookFormats::types(entry).size() > 1 ? QStringLiteral("0-epub-pdf") : fileTypeSortPrefix(entry.filename))
+        + QLatin1Char('\t') + titleSortKey(entry.title);
 }
 
 static QString authorGroupTitle(const QStringList &authors)
@@ -486,6 +489,7 @@ QHash<int, QByteArray> CategoryEntriesModel::roleNames() const
         {CurrentLocationRole, "currentLocation"},
         {ZoomLevelRole, "zoomLevel"},
         {PageModeRole, "pageMode"},
+        {PageWidthDistanceRole, "pageWidthDistance"},
         {CategoryEntriesModelRole, "categoryEntriesModel"},
         {CategoryEntryCountRole, "categoryEntriesCount"},
         {ThumbnailRole, "thumbnail"},
@@ -508,7 +512,7 @@ QHash<int, QByteArray> CategoryEntriesModel::roleNames() const
 
 QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || index.row() <= -1) {
+    if (!index.isValid() || index.row() <= -1 || index.row() >= rowCount() || (role < Qt::UserRole && role != Qt::DisplayRole)) {
         return {};
     }
 
@@ -597,6 +601,8 @@ QVariant CategoryEntriesModel::data(const QModelIndex &index, int role) const
             return entry.zoomLevel;
         case PageModeRole:
             return entry.pageMode;
+        case PageWidthDistanceRole:
+            return entry.pageWidthDistance;
         case BookVersionRole:
             return entry.bookVersion;
         case PasswordProtectedRole:
@@ -662,6 +668,17 @@ int CategoryEntriesModel::count() const
 void CategoryEntriesModel::append(const BookEntry &entry, Roles compareRole)
 {
     d->invalidateBookGroupCaches();
+    const auto group = BookFormats::displayKey(entry);
+    if (!group.isEmpty()) {
+        for (int i = 0; i < d->entries.size(); ++i) {
+            if (BookFormats::displayKey(d->entries.at(i)) == group) {
+                d->entries[i] = BookFormats::combined({d->entries.at(i), entry});
+                const auto changed = index(i + d->categoryModels.size());
+                Q_EMIT dataChanged(changed, changed);
+                return;
+            }
+        }
+    }
 
     int insertionIndex = 0;
     if (compareRole == UnknownRole) {
@@ -715,10 +732,11 @@ void CategoryEntriesModel::append(const BookEntry &entry, Roles compareRole)
             }
         }
     }
-    beginInsertRows({}, insertionIndex, insertionIndex);
+    const int modelIndex = insertionIndex + d->categoryModels.size();
+    beginInsertRows({}, modelIndex, modelIndex);
     d->entries.insert(insertionIndex, entry);
-    Q_EMIT countChanged();
     endInsertRows();
+    Q_EMIT countChanged();
 }
 
 void CategoryEntriesModel::clear()
@@ -744,7 +762,7 @@ CategoryEntriesModel *CategoryEntriesModel::leafModelForEntry(const BookEntry &e
 {
     CategoryEntriesModel *model = nullptr;
     if (d->categoryModels.count() == 0) {
-        if (d->entries.contains(entry)) {
+        if (indexOfFile(entry.filename) >= 0) {
             model = this;
         }
     } else {
@@ -822,18 +840,15 @@ std::optional<BookEntry> CategoryEntriesModel::getBookEntry(int index)
 
 int CategoryEntriesModel::indexOfFile(const QString &filename)
 {
-    int index = -1;
-    if (QFile::exists(filename)) {
-        int i = 0;
-        for (const BookEntry &entry : std::as_const(d->entries)) {
-            if (entry.filename == filename) {
-                index = i;
-                break;
-            }
-            ++i;
-        }
+    for (int i = 0; i < d->entries.size(); ++i) {
+        const auto &entry = d->entries.at(i);
+        if (entry.filename == filename)
+            return i;
+        for (const auto &variant : entry.formatVariants)
+            if (variant.toMap().value(QStringLiteral("filename")).toString() == filename)
+                return i;
     }
-    return index;
+    return -1;
 }
 
 bool CategoryEntriesModel::indexIsBook(int index)
@@ -856,6 +871,11 @@ std::optional<BookEntry> CategoryEntriesModel::bookFromFile(const QString &filen
         return std::nullopt;
     }
     auto book = entry.value();
+    for (const auto &member : BookFormats::members(book))
+        if (member.filename == filename) {
+            book = member;
+            break;
+        }
     if (book.filename.isEmpty()) {
         if (QFileInfo::exists(filename)) {
             QFileInfo info(filename);
@@ -1325,14 +1345,15 @@ QVariantList CategoryEntriesModel::typeBookGroups(const QString &filterText)
             continue;
         }
 
-        const QString groupSortKey = fileTypeSortPrefix(entry.filename);
+        const bool multipleFormats = BookFormats::types(entry).size() > 1;
+        const QString groupSortKey = multipleFormats ? QStringLiteral("0-epub-pdf") : fileTypeSortPrefix(entry.filename);
 
         auto groupIt = groupIndexes.constFind(groupSortKey);
         if (groupIt == groupIndexes.constEnd()) {
             groupIndexes.insert(groupSortKey, groups.size());
             groups.append({
                 groupSortKey,
-                fileTypeGroupTitle(entry.filename),
+                multipleFormats ? i18nc("@item:inlistbox book formats", "EPUB and PDF") : fileTypeGroupTitle(entry.filename),
                 {},
             });
             groupIt = groupIndexes.constFind(groupSortKey);
@@ -1381,9 +1402,18 @@ void CategoryEntriesModel::entryDataChanged(const BookEntry &entry)
 {
     d->invalidateBookGroupCaches();
 
-    int itemOffset = d->entries.indexOf(entry);
+    int itemOffset = indexOfFile(entry.filename);
     if (itemOffset >= 0) {
-        d->entries[itemOffset] = entry;
+        if (BookFormats::displayKey(d->entries.at(itemOffset)) != BookFormats::displayKey(entry)) {
+            entryRemove(entry);
+            append(entry);
+            return;
+        }
+        auto members = BookFormats::members(d->entries.at(itemOffset));
+        for (auto &member : members)
+            if (member.filename == entry.filename)
+                member = entry;
+        d->entries[itemOffset] = BookFormats::combined(members);
         int entryIndex = itemOffset + d->categoryModels.count();
         QModelIndex changed = index(entryIndex);
         Q_EMIT dataChanged(changed, changed);
@@ -1394,11 +1424,19 @@ void CategoryEntriesModel::entryRemove(const BookEntry &entry)
 {
     d->invalidateBookGroupCaches();
 
-    int listIndex = d->entries.indexOf(entry);
+    int listIndex = indexOfFile(entry.filename);
     if (listIndex > -1) {
         int entryIndex = listIndex + d->categoryModels.count();
+        auto members = BookFormats::members(d->entries.at(listIndex));
+        members.removeIf([&](const BookEntry &member) { return member.filename == entry.filename; });
+        if (!members.isEmpty()) {
+            d->entries[listIndex] = BookFormats::combined(members);
+            const auto changed = index(entryIndex);
+            Q_EMIT dataChanged(changed, changed);
+            return;
+        }
         beginRemoveRows(QModelIndex(), entryIndex, entryIndex);
-        d->entries.removeAll(entry);
+        d->entries.removeAt(listIndex);
         endRemoveRows();
         Q_EMIT countChanged();
     }

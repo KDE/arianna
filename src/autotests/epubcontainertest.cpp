@@ -15,6 +15,7 @@
 #include <QHash>
 #include <QIODevice>
 #include <QImage>
+#include <QMap>
 #include <QObject>
 #include <QScopedPointer>
 #include <QTemporaryDir>
@@ -26,24 +27,37 @@ class EPubContainerTest : public QObject
 
 private Q_SLOTS:
     void testUniqueIdentifierMetadata();
+    void testDublinCoreMetadataNamespaces_data();
+    void testDublinCoreMetadataNamespaces();
     void testUnprefixedDescriptionMetadata();
     void testCoverImageFromMetadataCover();
     void testCoverImageFromManifestProperty();
     void testCoverImageFromPercentEncodedManifestHref();
     void testCoverImageFromGuideCoverPage();
+    void testCreateAnchorWritesActiveEpubAndBackup_data();
     void testCreateAnchorWritesActiveEpubAndBackup();
     void testCreateAnchorWrapsInlineSiblingRange();
     void testCreateAnchorRejectsBlockRange();
     void testCreateAnnotationAnchoredEpubAnnotatesWholeInlineElement();
     void testCreateAnnotationAnchoredEpubWrapsTextRange();
     void testCreateAnnotationAnchoredEpubCreatesBoundaryPair();
+    void testRestoreRemarkAcrossLinkedHeading();
     void testCreateBookrefAnchorCreatesIntraHref();
     void testCreateBookrefAnchorCreatesCrossrefTitle();
+    void testCreateBookrefAnchorWrapsPartialInlineRange_data();
+    void testCreateBookrefAnchorWrapsPartialInlineRange();
+    void testCreateBookrefAnchorRejectsUnsafeInlineRange_data();
+    void testCreateBookrefAnchorRejectsUnsafeInlineRange();
+    void testUpdateReferenceAnchorTitleWritesCrossrefTitle_data();
     void testUpdateReferenceAnchorTitleWritesCrossrefTitle();
+    void testDeleteReferenceAnchorUnwrapsCrossrefAndWritesBackup_data();
     void testDeleteReferenceAnchorUnwrapsCrossrefAndWritesBackup();
     void testDeleteTargetRangeAnchorUnwrapsGeneratedAnchor();
     void testDeleteTargetRangeAnchorKeepsNonGeneratedTarget();
+    void testSetImageNotInverseWritesClass_data();
     void testSetImageNotInverseWritesClass();
+    void testSetSvgImageNotInverse_data();
+    void testSetSvgImageNotInverse();
     void testNormalizeForAriannaFixesEmptyTitleAndScriptedProperty();
     void testUpdateCreatorsWritesDcCreatorMetadata();
     void testUpdateSubjectsWritesDcSubjectMetadata();
@@ -52,6 +66,7 @@ private Q_SLOTS:
     void testFileHashMatchesEpubBytes();
     void testContentHashIsStableAcrossZipEntryOrder();
     void testCreateTargetAnchorIsReferenceable();
+    void testServerReadyEpubCanIncludeReferencesDocument_data();
     void testServerReadyEpubCanIncludeReferencesDocument();
     void testReferenceableTargetsIncludeDocumentsAndElementIds();
 };
@@ -156,6 +171,72 @@ void EPubContainerTest::testUniqueIdentifierMetadata()
     QCOMPARE(epub.metadata(QStringLiteral("identifiers")), expectedIdentifiers);
     QCOMPARE(epub.metadata(QStringLiteral("identifier")), expectedIdentifiers);
     QCOMPARE(epub.metadata(QStringLiteral("unique-identifier")).value(0), QStringLiteral("040d189b-0546-410e-a09d-c0c98be894aa"));
+}
+
+void EPubContainerTest::testDublinCoreMetadataNamespaces_data()
+{
+    QTest::addColumn<QString>("prefix");
+    QTest::addColumn<QString>("namespaceUri");
+    QTest::addColumn<bool>("accepted");
+    const QString dc = QStringLiteral("http://purl.org/dc/elements/1.1/");
+    QTest::newRow("dc-prefix") << QStringLiteral("dc") << dc << true;
+    QTest::newRow("alternative-prefix") << QStringLiteral("dublin") << dc << true;
+    QTest::newRow("default-namespace") << QString() << dc << true;
+    QTest::newRow("dc-prefix-wrong-namespace") << QStringLiteral("dc") << QStringLiteral("urn:other-metadata") << false;
+    QTest::newRow("opf-namespace") << QString() << QStringLiteral("http://www.idpf.org/2007/opf") << false;
+    QTest::newRow("no-namespace") << QString() << QString() << false;
+}
+
+void EPubContainerTest::testDublinCoreMetadataNamespaces()
+{
+    QFETCH(QString, prefix);
+    QFETCH(QString, namespaceUri);
+    QFETCH(bool, accepted);
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString epubPath = dir.filePath(QStringLiteral("namespaces.epub"));
+    const QString qualifiedPrefix = prefix.isEmpty() ? QString() : prefix + QLatin1Char(':');
+    const QString declaration = prefix.isEmpty() ? QStringLiteral("xmlns") : QStringLiteral("xmlns:") + prefix;
+    const QByteArray package = QString::fromLatin1(R"(
+<package xmlns="http://www.idpf.org/2007/opf" xmlns:opf="http://www.idpf.org/2007/opf" unique-identifier="primary" version="3.0">
+  <opf:metadata %1="%2">
+    <%3identifier id="secondary">urn:isbn:9783161484100</%3identifier>
+    <%3identifier id="primary">namespace-book</%3identifier>
+    <%3title>Namespace Test</%3title>
+    <%3language>de</%3language>
+    <%3publisher>Test Publisher</%3publisher>
+    <%3source>Test Source</%3source>
+    <%3creator>Test Author</%3creator>
+    <%3subject>Test Subject</%3subject>
+  </opf:metadata>
+</package>)").arg(declaration, namespaceUri, qualifiedPrefix).toUtf8();
+    KZip zip(epubPath);
+    QVERIFY(zip.open(QIODevice::WriteOnly));
+    QVERIFY(zip.writeFile(QStringLiteral("mimetype"), QByteArrayLiteral("application/epub+zip")));
+    writeContainer(zip);
+    QVERIFY(zip.writeFile(QStringLiteral("OEBPS/package.opf"), package));
+    QVERIFY(zip.close());
+    QFile original(epubPath);
+    QVERIFY(original.open(QIODevice::ReadOnly));
+    const auto originalBytes = original.readAll();
+    original.close();
+
+    EPubContainer epub(nullptr);
+    QVERIFY(epub.openFile(epubPath));
+    const QMap<QString, QStringList> expected{
+        {QStringLiteral("unique-identifier"), {QStringLiteral("namespace-book")}},
+        {QStringLiteral("identifiers"), {QStringLiteral("urn:isbn:9783161484100"), QStringLiteral("namespace-book")}},
+        {QStringLiteral("title"), {QStringLiteral("Namespace Test")}},
+        {QStringLiteral("language"), {QStringLiteral("de")}},
+        {QStringLiteral("publisher"), {QStringLiteral("Test Publisher")}},
+        {QStringLiteral("source"), {QStringLiteral("Test Source")}},
+        {QStringLiteral("creator"), {QStringLiteral("Test Author")}},
+        {QStringLiteral("subject"), {QStringLiteral("Test Subject")}},
+    };
+    for (auto it = expected.cbegin(); it != expected.cend(); ++it)
+        QCOMPARE(epub.metadata(it.key()), accepted ? it.value() : QStringList());
+    QVERIFY(original.open(QIODevice::ReadOnly));
+    QCOMPARE(original.readAll(), originalBytes);
 }
 
 void EPubContainerTest::testUnprefixedDescriptionMetadata()
@@ -302,8 +383,16 @@ void EPubContainerTest::testCoverImageFromGuideCoverPage()
     QVERIFY(!epub.coverImage().isNull());
 }
 
+void EPubContainerTest::testCreateAnchorWritesActiveEpubAndBackup_data()
+{
+    QTest::addColumn<bool>("createBackup");
+    QTest::newRow("with safety backup") << true;
+    QTest::newRow("without safety backup") << false;
+}
+
 void EPubContainerTest::testCreateAnchorWritesActiveEpubAndBackup()
 {
+    QFETCH(bool, createBackup);
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -321,13 +410,14 @@ void EPubContainerTest::testCreateAnchorWritesActiveEpubAndBackup()
     EPubContainer epub(nullptr);
     QVERIFY(epub.openFile(epubPath));
 
-    const QString anchorId = epub.createAnchor(QStringLiteral("epubcfi(/6/2!/2/2,/1:6,/1:12)"));
+    const QString anchorId = epub.createAnchor(QStringLiteral("epubcfi(/6/2!/2/2,/1:6,/1:12)"), QStringLiteral("crossref"), createBackup);
     QVERIFY(!anchorId.isEmpty());
     QVERIFY(anchorId.startsWith(QStringLiteral("uuid_")));
 
     QVERIFY(!QFileInfo::exists(dir.filePath(QStringLiteral("bookid.anchored.epub"))));
     const QString backupPath = dir.filePath(QStringLiteral("source.before_anchoring_%1.epub").arg(anchorId));
-    QVERIFY(QFileInfo::exists(backupPath));
+    QCOMPARE(QFileInfo::exists(backupPath), createBackup);
+    QCOMPARE(QFileInfo::exists(backupPath + QStringLiteral(".arianna.json")), createBackup);
 
     KZip anchoredZip(epubPath);
     QVERIFY(anchoredZip.open(QIODevice::ReadOnly));
@@ -341,9 +431,11 @@ void EPubContainerTest::testCreateAnchorWritesActiveEpubAndBackup()
     QVERIFY(document.contains(QStringLiteral("id=\"") + anchorId + QStringLiteral("\"")));
     QVERIFY(document.contains(QStringLiteral("data-role=\"anchor\"")));
     QVERIFY(document.contains(QStringLiteral("data-anchor-type=\"crossref\"")));
-    QVERIFY(document.contains(QStringLiteral(">anchor</a>")));
+    QVERIFY(document.contains(QStringLiteral(">anchor</span>")));
     QCOMPARE(document.count(QStringLiteral("http://www.w3.org/1999/xhtml")), 1);
 
+    if (!createBackup)
+        return;
     KZip backupZip(backupPath);
     QVERIFY(backupZip.open(QIODevice::ReadOnly));
     const KArchiveFile *backupChapter = backupZip.directory()->file(QStringLiteral("OEBPS/chapter.xhtml"));
@@ -391,7 +483,7 @@ void EPubContainerTest::testCreateAnchorWrapsInlineSiblingRange()
     QVERIFY(document.contains(QStringLiteral("id=\"") + anchorId + QStringLiteral("\"")));
     QVERIFY(document.contains(QStringLiteral("data-role=\"anchor\"")));
     QVERIFY(document.contains(QStringLiteral("data-anchor-type=\"crossref\"")));
-    QVERIFY(document.contains(QStringLiteral("<a")));
+    QVERIFY(document.contains(QStringLiteral("<span")));
     QCOMPARE(document.count(QStringLiteral("http://www.w3.org/1999/xhtml")), 1);
     QVERIFY(document.contains(QStringLiteral("xmlns:epub=\"http://www.idpf.org/2007/ops\"")));
     QVERIFY(document.contains(QStringLiteral("epub:type=\"bodymatter\"")));
@@ -399,7 +491,7 @@ void EPubContainerTest::testCreateAnchorWrapsInlineSiblingRange()
     const qsizetype anchorIndex = document.indexOf(QStringLiteral("id=\"") + anchorId + QStringLiteral("\""));
     const qsizetype spanTextIndex = document.indexOf(QStringLiteral("Srimad-Bhagavatam,"));
     const qsizetype followingTextIndex = document.indexOf(QStringLiteral("Third Canto"));
-    const qsizetype anchorEndIndex = document.indexOf(QStringLiteral("</a>"), followingTextIndex);
+    const qsizetype anchorEndIndex = document.indexOf(QStringLiteral("</span>"), followingTextIndex);
     QVERIFY(anchorIndex >= 0);
     QVERIFY(anchorIndex < spanTextIndex);
     QVERIFY(spanTextIndex < followingTextIndex);
@@ -567,6 +659,46 @@ void EPubContainerTest::testCreateAnnotationAnchoredEpubCreatesBoundaryPair()
     QCOMPARE(document.count(QStringLiteral("http://www.w3.org/1999/xhtml")), 1);
 }
 
+void EPubContainerTest::testRestoreRemarkAcrossLinkedHeading()
+{
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const auto path = dir.filePath(QStringLiteral("heading.epub"));
+    KZip zip(path);
+    QVERIFY(zip.open(QIODevice::WriteOnly));
+    QVERIFY(zip.writeFile(QStringLiteral("mimetype"), QByteArrayLiteral("application/epub+zip")));
+    writeContainer(zip);
+    QVERIFY(zip.writeFile(QStringLiteral("OEBPS/package.opf"), QByteArray(R"(<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" unique-identifier="bookid" version="3.0"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="bookid">bookid</dc:identifier><dc:title>Linked heading</dc:title></metadata><manifest><item id="chapter" href="chapter.xhtml" media-type="application/xhtml+xml"/></manifest><spine><itemref idref="chapter"/></spine></package>)")));
+    QVERIFY(zip.writeFile(QStringLiteral("OEBPS/chapter.xhtml"), QByteArray(R"(<?xml version="1.0" encoding="utf-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>Title</title></head><body><h2><a href="Contents.html#rChap33" id="Chap33">O<small>N THE</small> N<small>UMBER OF</small> P<small>RIME</small> N<small>UMBERS LESS THAN A</small> G<small>IVEN</small> Q<small>UANTITY</small></a><a href="Chapter33.html#rChap33_ufn01" id="Chap33_ufn01">*</a></h2></body></html>)")));
+    QVERIFY(zip.close());
+    EPubContainer epub(nullptr);
+    QVERIFY(epub.openFile(path));
+    const auto cfi = QStringLiteral("epubcfi(/6/2!/4/2,/2[Chap33]/1:0,/4[Chap33_ufn01]/1:1)");
+    const auto id = QStringLiteral("uuid_01a0f37a-34f2-76f7-94d8-4d12226703af");
+    const auto expected = QStringLiteral("ON THE NUMBER OF PRIME NUMBERS LESS THAN A GIVEN QUANTITY*");
+    QVERIFY(epub.createAnnotationAnchoredEpub(cfi, id, QStringLiteral("Wrong selection")).isEmpty());
+    const auto result = epub.createAnnotationAnchoredEpub(cfi, id, expected);
+    QVERIFY(!result.isEmpty());
+    QBuffer buffer;
+    buffer.setData(result);
+    QVERIFY(buffer.open(QIODevice::ReadOnly));
+    KZip output(&buffer);
+    QVERIFY(output.open(QIODevice::ReadOnly));
+    const auto *chapter = output.directory()->file(QStringLiteral("OEBPS/chapter.xhtml"));
+    QVERIFY(chapter);
+    QScopedPointer<QIODevice> reader(chapter->createDevice());
+    const auto html = QString::fromUtf8(reader->readAll());
+    QVERIFY(html.contains(QStringLiteral("id=\"") + id + QStringLiteral("_begin\"")));
+    QVERIFY(html.contains(QStringLiteral("id=\"") + id + QStringLiteral("_end\"")));
+    QVERIFY(html.contains(QStringLiteral("href=\"Contents.html#rChap33\"")));
+    QVERIFY(html.contains(QStringLiteral("href=\"Chapter33.html#rChap33_ufn01\"")));
+    QDomDocument document;
+    QVERIFY(document.setContent(html));
+    QCOMPARE(document.elementsByTagName(QStringLiteral("a")).size(), 2);
+}
+
 void EPubContainerTest::testCreateBookrefAnchorCreatesIntraHref()
 {
     QTemporaryDir dir;
@@ -653,12 +785,168 @@ void EPubContainerTest::testCreateBookrefAnchorCreatesCrossrefTitle()
     QVERIFY(document.contains(QStringLiteral("data-anchor-type=\"crossref\"")));
     QVERIFY(document.contains(QStringLiteral("title=\"S.B. Vers 1.1.1\"")));
     QVERIFY(!document.contains(QStringLiteral("href=\"other-book.xhtml#target\"")));
-    QVERIFY(document.contains(QStringLiteral(">target</a>")));
+    QVERIFY(document.contains(QStringLiteral(">target</span>")));
     QCOMPARE(document.count(QStringLiteral("http://www.w3.org/1999/xhtml")), 1);
+}
+
+void EPubContainerTest::testCreateBookrefAnchorWrapsPartialInlineRange_data()
+{
+    QTest::addColumn<QString>("content");
+    QTest::addColumn<QString>("range");
+    QTest::addColumn<QString>("expectedContent");
+
+    QTest::newRow("reported-bs-5.33")
+        << QStringLiteral("Before <span class=\"italic\">advaitam acyutam anādim ananta-rūpam [Bs </span>5.33] after") << QStringLiteral("/2/1:38,/3:4")
+        << QStringLiteral("Before <span class=\"italic\">advaitam acyutam anādim ananta-rūpam [</span><span><span class=\"italic\">Bs </span>5.33</span>] after");
+    QTest::newRow("partial-end") << QStringLiteral("Before Bs <em class=\"italic\">5.33 after</em> end") << QStringLiteral("/1:7,/2/1:4")
+                                 << QStringLiteral("Before <span>Bs <em class=\"italic\">5.33</em></span><em class=\"italic\"> after</em> end");
+    QTest::newRow("nested-partial-ends")
+        << QStringLiteral("Before <em><strong>left Bs</strong></em> <span><i>5.33 right</i></span> after") << QStringLiteral("/2/2/1:5,/4/2/1:4")
+        << QStringLiteral("Before <em><strong>left </strong></em><span><em><strong>Bs</strong></em> <span><i>5.33</i></span></span><span><i> right</i></span> after");
+    QTest::newRow("shared-inline-parent") << QStringLiteral("Before <span class=\"outer\"><i>Bs</i> 5.33 after</span> end") << QStringLiteral("/2/2/1:0,/2/3:5")
+                                          << QStringLiteral("Before <span class=\"outer\"><span><i>Bs</i> 5.33</span> after</span> end");
+    QTest::newRow("keep-ids-on-leading-fragments")
+        << QStringLiteral(
+               "Before <span id=\"left\" xml:id=\"xml-left\" lang=\"sa\" class=\"italic\">left Bs</span> "
+               "<span id=\"right\" xml:id=\"xml-right\" lang=\"en\" class=\"bold\">5.33 right</span> after")
+        << QStringLiteral("/2/1:5,/4/1:4")
+        << QStringLiteral(
+               "Before <span id=\"left\" xml:id=\"xml-left\" lang=\"sa\" class=\"italic\">left </span>"
+               "<span><span lang=\"sa\" class=\"italic\">Bs</span> <span id=\"right\" xml:id=\"xml-right\" lang=\"en\" class=\"bold\">5.33</span></span>"
+               "<span lang=\"en\" class=\"bold\"> right</span> after");
+}
+
+void EPubContainerTest::testCreateBookrefAnchorWrapsPartialInlineRange()
+{
+    QFETCH(QString, content);
+    QFETCH(QString, range);
+    QFETCH(QString, expectedContent);
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString epubPath = dir.filePath(QStringLiteral("partial-inline.epub"));
+    const QByteArray originalChapter = hashTestChapter(content.toUtf8());
+    QVERIFY(writeHashTestEpub(epubPath, false, content.toUtf8()));
+
+    EPubContainer epub(nullptr);
+    QVERIFY(epub.openFile(epubPath));
+    const QString anchorId =
+        epub.createBookrefAnchor(QStringLiteral("epubcfi(/6/2!/2/2,%1)").arg(range), QStringLiteral("text_5.33.xhtml"), true, QStringLiteral("B.S. Vers 5.33"));
+    QVERIFY(!anchorId.isEmpty());
+
+    KZip anchoredZip(epubPath);
+    QVERIFY(anchoredZip.open(QIODevice::ReadOnly));
+    const KArchiveFile *chapter = anchoredZip.directory()->file(QStringLiteral("OEBPS/chapter.xhtml"));
+    QVERIFY(chapter);
+    QDomDocument document;
+    const auto parseOptions =
+        QDomDocument::ParseOptions(QDomDocument::ParseOption::UseNamespaceProcessing) | QDomDocument::ParseOption::PreserveSpacingOnlyNodes;
+    QVERIFY(document.setContent(chapter->data(), parseOptions));
+    const QDomNodeList elements = document.elementsByTagName(QStringLiteral("span"));
+    QDomElement anchor;
+    for (int i = 0; i < elements.size(); ++i) {
+        const auto element = elements.at(i).toElement();
+        if (element.attribute(QStringLiteral("id")) == anchorId) {
+            QVERIFY(anchor.isNull());
+            anchor = element;
+        }
+    }
+    QVERIFY(!anchor.isNull());
+    QCOMPARE(document.elementsByTagName(QStringLiteral("a")).size(), 0);
+    QCOMPARE(anchor.attribute(QStringLiteral("id")), anchorId);
+    QCOMPARE(anchor.attribute(QStringLiteral("data-role")), QStringLiteral("anchor"));
+    QCOMPARE(anchor.attribute(QStringLiteral("data-anchor-type")), QStringLiteral("crossref"));
+    QCOMPARE(anchor.attribute(QStringLiteral("title")), QStringLiteral("B.S. Vers 5.33"));
+    QCOMPARE(anchor.text(), QStringLiteral("Bs 5.33"));
+    QVERIFY(!anchor.hasAttribute(QStringLiteral("href")));
+    anchor.removeAttribute(QStringLiteral("id"));
+    anchor.removeAttribute(QStringLiteral("data-role"));
+    anchor.removeAttribute(QStringLiteral("data-anchor-type"));
+    anchor.removeAttribute(QStringLiteral("title"));
+
+    QDomDocument expected;
+    QVERIFY(expected.setContent(hashTestChapter(expectedContent.toUtf8()), parseOptions));
+    const QDomElement paragraph = document.elementsByTagName(QStringLiteral("p")).at(0).toElement();
+    const QDomElement expectedParagraph = expected.elementsByTagName(QStringLiteral("p")).at(0).toElement();
+    const auto attributes = [](const QDomNode &node) {
+        QMap<QString, QPair<QString, QString>> result;
+        for (int i = 0; i < node.attributes().size(); ++i) {
+            const QDomNode attribute = node.attributes().item(i);
+            result.insert(attribute.nodeName(), qMakePair(attribute.namespaceURI(), attribute.nodeValue()));
+        }
+        return result;
+    };
+    const auto compareNodes = [&attributes](const auto &self, const QDomNode &actualNode, const QDomNode &expectedNode) -> void {
+        QCOMPARE(actualNode.nodeType(), expectedNode.nodeType());
+        QCOMPARE(actualNode.nodeName(), expectedNode.nodeName());
+        QCOMPARE(actualNode.namespaceURI(), expectedNode.namespaceURI());
+        QCOMPARE(actualNode.nodeValue(), expectedNode.nodeValue());
+        QCOMPARE(actualNode.attributes().size(), expectedNode.attributes().size());
+        QCOMPARE(attributes(actualNode), attributes(expectedNode));
+        QCOMPARE(actualNode.childNodes().size(), expectedNode.childNodes().size());
+        for (int i = 0; i < expectedNode.childNodes().size(); ++i) {
+            self(self, actualNode.childNodes().at(i), expectedNode.childNodes().at(i));
+        }
+    };
+    compareNodes(compareNodes, paragraph, expectedParagraph);
+
+    KZip backupZip(dir.filePath(QStringLiteral("partial-inline.before_anchoring_%1.epub").arg(anchorId)));
+    QVERIFY(backupZip.open(QIODevice::ReadOnly));
+    const KArchiveFile *backupChapter = backupZip.directory()->file(QStringLiteral("OEBPS/chapter.xhtml"));
+    QVERIFY(backupChapter);
+    QCOMPARE(backupChapter->data(), originalChapter);
+}
+
+void EPubContainerTest::testCreateBookrefAnchorRejectsUnsafeInlineRange_data()
+{
+    QTest::addColumn<QString>("content");
+    QTest::addColumn<QString>("range");
+
+    QTest::newRow("starts-in-existing-link") << QStringLiteral("Before <a href=\"other.xhtml\">left Bs </a>5.33 after") << QStringLiteral("/2/1:5,/3:4");
+    QTest::newRow("contains-existing-link") << QStringLiteral("Before Bs <a href=\"other.xhtml\">5.</a>33 after") << QStringLiteral("/1:7,/3:2");
+    QTest::newRow("inside-existing-link") << QStringLiteral("Before <a href=\"other.xhtml\"><i>Bs</i> 5.33 after</a> end") << QStringLiteral("/2/2/1:0,/2/3:5");
+    QTest::newRow("reversed-inline-range") << QStringLiteral("Before <i>Bs</i> 5.33 after") << QStringLiteral("/3:5,/2/1:0");
+    QTest::newRow("stale-cfi-after-formatting-edit")
+        << QStringLiteral("Before <span class=\"italic\">advaitam acyutam anādim ananta-rūpam</span> [Bs 5.33] after") << QStringLiteral("/2/1:38,/3:4");
+}
+
+void EPubContainerTest::testCreateBookrefAnchorRejectsUnsafeInlineRange()
+{
+    QFETCH(QString, content);
+    QFETCH(QString, range);
+
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString epubPath = dir.filePath(QStringLiteral("unsafe-inline.epub"));
+    QVERIFY(writeHashTestEpub(epubPath, false, content.toUtf8()));
+    QFile originalFile(epubPath);
+    QVERIFY(originalFile.open(QIODevice::ReadOnly));
+    const QByteArray originalBytes = originalFile.readAll();
+    originalFile.close();
+
+    EPubContainer epub(nullptr);
+    QVERIFY(epub.openFile(epubPath));
+    QVERIFY(epub.createBookrefAnchor(QStringLiteral("epubcfi(/6/2!/2/2,%1)").arg(range), QStringLiteral("text_5.33.xhtml"), true).isEmpty());
+
+    QVERIFY(originalFile.open(QIODevice::ReadOnly));
+    QCOMPARE(originalFile.readAll(), originalBytes);
+}
+
+void EPubContainerTest::testUpdateReferenceAnchorTitleWritesCrossrefTitle_data()
+{
+    QTest::addColumn<QByteArray>("sourceTag");
+    QTest::addColumn<bool>("crossReference");
+    QTest::newRow("existing-a-to-internal") << QByteArrayLiteral("a") << false;
+    QTest::newRow("span-to-internal") << QByteArrayLiteral("span") << false;
+    QTest::newRow("prefixed-span-to-internal") << QByteArrayLiteral("xhtml:span") << false;
+    QTest::newRow("existing-a-title") << QByteArrayLiteral("a") << true;
+    QTest::newRow("span-title") << QByteArrayLiteral("span") << true;
 }
 
 void EPubContainerTest::testUpdateReferenceAnchorTitleWritesCrossrefTitle()
 {
+    QFETCH(QByteArray, sourceTag);
+    QFETCH(bool, crossReference);
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -669,8 +957,8 @@ void EPubContainerTest::testUpdateReferenceAnchorTitleWritesCrossrefTitle()
     writeContainer(zip);
     zip.writeFile(QStringLiteral("OEBPS/package.opf"), QByteArray(R"(<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="bookid" version="3.0"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="bookid">bookid</dc:identifier><dc:title>Update Reference Title Test</dc:title></metadata><manifest><item id="chapter" href="chapter.xhtml" media-type="application/xhtml+xml"/></manifest><spine><itemref idref="chapter"/></spine></package>)"));
-    zip.writeFile(QStringLiteral("OEBPS/chapter.xhtml"), QByteArray(R"(<?xml version="1.0" encoding="utf-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"><body><p>See <a id="source-ref" data-role="anchor" data-anchor-type="crossref" title="Old title">reference text</a> now</p></body></html>)"));
+    zip.writeFile(QStringLiteral("OEBPS/chapter.xhtml"), QStringLiteral(R"(<?xml version="1.0" encoding="utf-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml"><body><p>See <%1 id="source-ref" data-role="anchor" data-anchor-type="crossref" title="Old title">reference text</%1> now</p></body></html>)").arg(QString::fromLatin1(sourceTag)).toUtf8());
     zip.close();
 
     EPubContainer epub(nullptr);
@@ -679,7 +967,7 @@ void EPubContainerTest::testUpdateReferenceAnchorTitleWritesCrossrefTitle()
     bool changed = false;
     QVERIFY(epub.updateReferenceAnchor(QStringLiteral("source-ref"),
                                        QStringLiteral("OEBPS/chapter.xhtml#new-target"),
-                                       false,
+                                       crossReference,
                                        QStringLiteral("New title"),
                                        &changed));
     QVERIFY(changed);
@@ -696,11 +984,16 @@ void EPubContainerTest::testUpdateReferenceAnchorTitleWritesCrossrefTitle()
     QVERIFY(activeDevice);
     const QString activeDocument = QString::fromUtf8(activeDevice->readAll());
     QVERIFY(activeDocument.contains(QStringLiteral("id=\"source-ref\"")));
-    QVERIFY(activeDocument.contains(QStringLiteral("href=\"chapter.xhtml#new-target\"")));
+    QCOMPARE(activeDocument.contains(QStringLiteral("href=\"chapter.xhtml#new-target\"")), !crossReference);
     QVERIFY(activeDocument.contains(QStringLiteral("title=\"New title\"")));
-    QVERIFY(!activeDocument.contains(QStringLiteral("data-anchor-type=\"crossref\"")));
+    QCOMPARE(activeDocument.contains(QStringLiteral("data-anchor-type=\"crossref\"")), crossReference);
     QVERIFY(!activeDocument.contains(QStringLiteral("title=\"Old title\"")));
-    QVERIFY(activeDocument.contains(QStringLiteral(">reference text</a>")));
+    QDomDocument activeDom;
+    QVERIFY(activeDom.setContent(activeDocument, QDomDocument::ParseOption::UseNamespaceProcessing));
+    const auto anchor = activeDom.elementsByTagName(QStringLiteral("p")).at(0).firstChildElement();
+    QCOMPARE(anchor.namespaceURI(), QStringLiteral("http://www.w3.org/1999/xhtml"));
+    QCOMPARE(anchor.localName(), crossReference ? QString::fromLatin1(sourceTag) : QStringLiteral("a"));
+    QCOMPARE(anchor.text(), QStringLiteral("reference text"));
 
     KZip backupZip(backupPath);
     QVERIFY(backupZip.open(QIODevice::ReadOnly));
@@ -712,8 +1005,16 @@ void EPubContainerTest::testUpdateReferenceAnchorTitleWritesCrossrefTitle()
     QVERIFY(backupDocument.contains(QStringLiteral("title=\"Old title\"")));
 }
 
+void EPubContainerTest::testDeleteReferenceAnchorUnwrapsCrossrefAndWritesBackup_data()
+{
+    QTest::addColumn<QByteArray>("sourceTag");
+    QTest::newRow("existing-a") << QByteArrayLiteral("a");
+    QTest::newRow("span") << QByteArrayLiteral("span");
+}
+
 void EPubContainerTest::testDeleteReferenceAnchorUnwrapsCrossrefAndWritesBackup()
 {
+    QFETCH(QByteArray, sourceTag);
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -724,8 +1025,8 @@ void EPubContainerTest::testDeleteReferenceAnchorUnwrapsCrossrefAndWritesBackup(
     writeContainer(zip);
     zip.writeFile(QStringLiteral("OEBPS/package.opf"), QByteArray(R"(<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="bookid" version="3.0"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="bookid">bookid</dc:identifier><dc:title>Delete Reference Test</dc:title></metadata><manifest><item id="chapter" href="chapter.xhtml" media-type="application/xhtml+xml"/></manifest><spine><itemref idref="chapter"/></spine></package>)"));
-    zip.writeFile(QStringLiteral("OEBPS/chapter.xhtml"), QByteArray(R"(<?xml version="1.0" encoding="utf-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"><body><p>See <a id="source-ref" data-role="anchor" data-anchor-type="crossref" title="Bg. 9.26">Bg. 9.26</a> now</p></body></html>)"));
+    zip.writeFile(QStringLiteral("OEBPS/chapter.xhtml"), QStringLiteral(R"(<?xml version="1.0" encoding="utf-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml"><body><p>See <%1 id="source-ref" data-role="anchor" data-anchor-type="crossref" title="Bg. 9.26">Bg. 9.26</%1> now</p></body></html>)").arg(QString::fromLatin1(sourceTag)).toUtf8());
     zip.close();
 
     EPubContainer epub(nullptr);
@@ -828,8 +1129,16 @@ void EPubContainerTest::testDeleteTargetRangeAnchorKeepsNonGeneratedTarget()
     QVERIFY(activeDocument.contains(QStringLiteral("id=\"manual-target\"")));
 }
 
+void EPubContainerTest::testSetImageNotInverseWritesClass_data()
+{
+    QTest::addColumn<bool>("createBackup");
+    QTest::newRow("default-no-backup") << false;
+    QTest::newRow("backup-enabled") << true;
+}
+
 void EPubContainerTest::testSetImageNotInverseWritesClass()
 {
+    QFETCH(bool, createBackup);
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -849,11 +1158,14 @@ void EPubContainerTest::testSetImageNotInverseWritesClass()
     QVERIFY(epub.openFile(epubPath));
 
     bool changed = false;
-    QVERIFY(epub.setImageNotInverse(QStringLiteral("epubcfi(/6/2!/2,/2:1,/2:2)"), QStringLiteral("images/photo.png"), &changed));
+    const QString cfi = QStringLiteral("epubcfi(/6/2!/2,/2:1,/2:2)");
+    QVERIFY(createBackup ? epub.setImageNotInverse(cfi, QStringLiteral("images/photo.png"), &changed, true)
+                         : epub.setImageNotInverse(cfi, QStringLiteral("images/photo.png"), &changed));
     QVERIFY(changed);
 
     const QString backupPath = dir.filePath(QStringLiteral("image-source.before.image-not-inverse_photo.epub"));
-    QVERIFY(QFileInfo::exists(backupPath));
+    QCOMPARE(QFileInfo::exists(backupPath), createBackup);
+    QCOMPARE(QFileInfo::exists(backupPath + QStringLiteral(".arianna.json")), createBackup);
 
     KZip activeZip(epubPath);
     QVERIFY(activeZip.open(QIODevice::ReadOnly));
@@ -866,14 +1178,116 @@ void EPubContainerTest::testSetImageNotInverseWritesClass()
     QVERIFY(activeDocument.contains(QStringLiteral("id=\"photo\"")));
     QVERIFY(activeDocument.contains(QStringLiteral("class=\"not_inverse\"")));
 
-    KZip backupZip(backupPath);
-    QVERIFY(backupZip.open(QIODevice::ReadOnly));
-    const KArchiveFile *backupChapter = backupZip.directory()->file(QStringLiteral("OEBPS/chapter.xhtml"));
-    QVERIFY(backupChapter);
-    QScopedPointer<QIODevice> backupDevice(backupChapter->createDevice());
-    QVERIFY(backupDevice);
-    const QString backupDocument = QString::fromUtf8(backupDevice->readAll());
-    QVERIFY(!backupDocument.contains(QStringLiteral("not_inverse")));
+    if (createBackup) {
+        KZip backupZip(backupPath);
+        QVERIFY(backupZip.open(QIODevice::ReadOnly));
+        const KArchiveFile *backupChapter = backupZip.directory()->file(QStringLiteral("OEBPS/chapter.xhtml"));
+        QVERIFY(backupChapter);
+        QScopedPointer<QIODevice> backupDevice(backupChapter->createDevice());
+        QVERIFY(backupDevice);
+        const QString backupDocument = QString::fromUtf8(backupDevice->readAll());
+        QVERIFY(!backupDocument.contains(QStringLiteral("not_inverse")));
+    } else {
+        QCOMPARE(QDir(dir.path()).entryList(QDir::Files), QStringList{QStringLiteral("image-source.epub")});
+    }
+}
+
+void EPubContainerTest::testSetSvgImageNotInverse_data()
+{
+    QTest::addColumn<QString>("prefix");
+    QTest::addColumn<QString>("hrefAttribute");
+    QTest::addColumn<QString>("cfi");
+    QTest::addColumn<QString>("svgClass");
+    QTest::addColumn<QString>("imageClass");
+    QTest::addColumn<bool>("createBackup");
+    const QString svgRange = QStringLiteral("epubcfi(/6/2!/2,/2:1,/2:2)");
+    QTest::newRow("xlink-svg-selection") << QString() << QStringLiteral("xlink:href") << svgRange << QStringLiteral("cover") << QStringLiteral("picture") << true;
+    QTest::newRow("svg2-image-selection") << QString() << QStringLiteral("href") << QStringLiteral("epubcfi(/6/2!/2/2,/2:0,/2:1)")
+                                         << QStringLiteral("cover") << QStringLiteral("picture") << true;
+    QTest::newRow("prefixed-svg-src-fallback") << QStringLiteral("s:") << QStringLiteral("xlink:href") << QStringLiteral("epubcfi(/6/2!/2)")
+                                             << QStringLiteral("cover") << QStringLiteral("picture") << true;
+    QTest::newRow("image-already-marked") << QString() << QStringLiteral("xlink:href") << svgRange << QStringLiteral("cover")
+                                         << QStringLiteral("picture not_inverse") << true;
+    QTest::newRow("svg-already-marked") << QString() << QStringLiteral("xlink:href") << svgRange << QStringLiteral("cover not_inverse")
+                                       << QStringLiteral("picture") << true;
+    QTest::newRow("both-already-marked") << QString() << QStringLiteral("xlink:href") << svgRange << QStringLiteral("cover not_inverse")
+                                        << QStringLiteral("picture not_inverse") << true;
+    QTest::newRow("svg-no-backup") << QString() << QStringLiteral("xlink:href") << svgRange << QStringLiteral("cover") << QStringLiteral("picture") << false;
+}
+
+void EPubContainerTest::testSetSvgImageNotInverse()
+{
+    QFETCH(QString, prefix);
+    QFETCH(QString, hrefAttribute);
+    QFETCH(QString, cfi);
+    QFETCH(QString, svgClass);
+    QFETCH(QString, imageClass);
+    QFETCH(bool, createBackup);
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString svgNamespace = QStringLiteral("http://www.w3.org/2000/svg");
+    const QString xlinkNamespace = QStringLiteral("http://www.w3.org/1999/xlink");
+    const QString namespaceAttribute = prefix.isEmpty() ? QStringLiteral("xmlns") : QStringLiteral("xmlns:s");
+    const QByteArray body = QStringLiteral("Before <%1svg %2=\"%3\" xmlns:xlink=\"%4\" id=\"cover\" class=\"%5\" "
+                                          "width=\"100%\" height=\"100%\" viewBox=\"0 0 1053 1499\" preserveAspectRatio=\"none\">"
+                                          "<%1image id=\"photo\" class=\"%6\" width=\"1053\" height=\"1499\" %7=\"cover.jpeg\"/>"
+                                          "</%1svg> after <img id=\"other\" src=\"other.jpeg\"/>")
+                                .arg(prefix, namespaceAttribute, svgNamespace, xlinkNamespace, svgClass, imageClass, hrefAttribute).toUtf8();
+    const QString epubPath = dir.filePath(QStringLiteral("svg-cover.epub"));
+    QVERIFY(writeHashTestEpub(epubPath, false, body));
+    QFile originalFile(epubPath);
+    QVERIFY(originalFile.open(QIODevice::ReadOnly));
+    const QByteArray originalBytes = originalFile.readAll();
+    originalFile.close();
+
+    EPubContainer epub(nullptr);
+    QVERIFY(epub.openFile(epubPath));
+    bool changed = false;
+    QVERIFY(epub.setImageNotInverse(cfi, QStringLiteral("cover.jpeg"), &changed, createBackup));
+    const bool expectedChange = !svgClass.contains(QStringLiteral("not_inverse")) || !imageClass.contains(QStringLiteral("not_inverse"));
+    QCOMPARE(changed, expectedChange);
+
+    KZip activeZip(epubPath);
+    QVERIFY(activeZip.open(QIODevice::ReadOnly));
+    const KArchiveFile *chapter = activeZip.directory()->file(QStringLiteral("OEBPS/chapter.xhtml"));
+    QVERIFY(chapter);
+    QDomDocument document;
+    QVERIFY(document.setContent(chapter->data(), QDomDocument::ParseOption::UseNamespaceProcessing));
+    const QDomNodeList svgs = document.elementsByTagNameNS(svgNamespace, QStringLiteral("svg"));
+    const QDomNodeList images = document.elementsByTagNameNS(svgNamespace, QStringLiteral("image"));
+    QCOMPARE(svgs.size(), 1);
+    QCOMPARE(images.size(), 1);
+    const QDomElement svg = svgs.at(0).toElement();
+    const QDomElement image = images.at(0).toElement();
+    QCOMPARE(svg.attribute(QStringLiteral("class")), QStringLiteral("cover not_inverse"));
+    QCOMPARE(image.attribute(QStringLiteral("class")), QStringLiteral("picture not_inverse"));
+    QCOMPARE(svg.attribute(QStringLiteral("id")), QStringLiteral("cover"));
+    QCOMPARE(svg.attribute(QStringLiteral("width")), QStringLiteral("100%"));
+    QCOMPARE(svg.attribute(QStringLiteral("height")), QStringLiteral("100%"));
+    QCOMPARE(svg.attribute(QStringLiteral("viewBox")), QStringLiteral("0 0 1053 1499"));
+    QCOMPARE(svg.attribute(QStringLiteral("preserveAspectRatio")), QStringLiteral("none"));
+    QCOMPARE(image.attribute(QStringLiteral("id")), QStringLiteral("photo"));
+    QCOMPARE(image.attribute(QStringLiteral("width")), QStringLiteral("1053"));
+    QCOMPARE(image.attribute(QStringLiteral("height")), QStringLiteral("1499"));
+    QCOMPARE(hrefAttribute == QStringLiteral("href") ? image.attribute(hrefAttribute) : image.attributeNS(xlinkNamespace, QStringLiteral("href")),
+             QStringLiteral("cover.jpeg"));
+    QVERIFY(!document.elementsByTagName(QStringLiteral("img")).at(0).toElement().hasAttribute(QStringLiteral("class")));
+
+    const QStringList backups = QDir(dir.path()).entryList({QStringLiteral("*.before.image-not-inverse_*.epub")}, QDir::Files);
+    QCOMPARE(backups.size(), expectedChange && createBackup ? 1 : 0);
+    if (expectedChange && createBackup) {
+        QFile backup(dir.filePath(backups.constFirst()));
+        QVERIFY(backup.open(QIODevice::ReadOnly));
+        QCOMPARE(backup.readAll(), originalBytes);
+    }
+
+    // Reapplying the action is a no-op, including when only one tag was marked before.
+    EPubContainer reopened(nullptr);
+    QVERIFY(reopened.openFile(epubPath));
+    changed = true;
+    QVERIFY(reopened.setImageNotInverse(cfi, QStringLiteral("cover.jpeg"), &changed, !createBackup));
+    QVERIFY(!changed);
+    QCOMPARE(QDir(dir.path()).entryList({QStringLiteral("*.before.image-not-inverse_*.epub")}, QDir::Files), backups);
 }
 
 void EPubContainerTest::testNormalizeForAriannaFixesEmptyTitleAndScriptedProperty()
@@ -1316,8 +1730,17 @@ void EPubContainerTest::testCreateTargetAnchorIsReferenceable()
     QVERIFY(!document.contains(QStringLiteral("data-anchor-type=\"crossref\"")));
 }
 
+void EPubContainerTest::testServerReadyEpubCanIncludeReferencesDocument_data()
+{
+    QTest::addColumn<QByteArray>("sourceTag");
+    QTest::newRow("existing-a") << QByteArrayLiteral("a");
+    QTest::newRow("span") << QByteArrayLiteral("span");
+    QTest::newRow("prefixed-span") << QByteArrayLiteral("xhtml:span");
+}
+
 void EPubContainerTest::testServerReadyEpubCanIncludeReferencesDocument()
 {
+    QFETCH(QByteArray, sourceTag);
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -1328,8 +1751,8 @@ void EPubContainerTest::testServerReadyEpubCanIncludeReferencesDocument()
     writeContainer(zip);
     zip.writeFile(QStringLiteral("OEBPS/package.opf"), QByteArray(R"(<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://www.idpf.org/2007/opf" unique-identifier="bookid" version="3.0"><metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="bookid">bookid</dc:identifier><dc:title>Reference Include Test</dc:title></metadata><manifest><item id="chapter" href="chapter.xhtml" media-type="application/xhtml+xml"/></manifest><spine><itemref idref="chapter"/></spine></package>)"));
-    zip.writeFile(QStringLiteral("OEBPS/chapter.xhtml"), QByteArray(R"(<?xml version="1.0" encoding="utf-8"?>
-<html xmlns="http://www.w3.org/1999/xhtml"><body><p><a id="source1" title="S.B. 4.4.1" data-role="anchor" data-anchor-type="crossref">S.B. 4.4.1</a></p></body></html>)"));
+    zip.writeFile(QStringLiteral("OEBPS/chapter.xhtml"), QStringLiteral(R"(<?xml version="1.0" encoding="utf-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xhtml="http://www.w3.org/1999/xhtml"><body><p><%1 id="source1" title="S.B. 4.4.1" data-role="anchor" data-anchor-type="crossref">S.B. 4.4.1</%1></p></body></html>)").arg(QString::fromLatin1(sourceTag)).toUtf8());
     zip.close();
 
     EPubContainer epub(nullptr);
@@ -1369,6 +1792,12 @@ void EPubContainerTest::testServerReadyEpubCanIncludeReferencesDocument()
     QVERIFY(chapterDevice);
     const QString chapterDocument = QString::fromUtf8(chapterDevice->readAll());
     QVERIFY(chapterDocument.contains(QStringLiteral("href=\"references.xhtml#source1\"")));
+    QDomDocument linkedDocument;
+    QVERIFY(linkedDocument.setContent(chapterDocument, QDomDocument::ParseOption::UseNamespaceProcessing));
+    const auto exportedLinks = linkedDocument.elementsByTagNameNS(QStringLiteral("http://www.w3.org/1999/xhtml"), QStringLiteral("a"));
+    QCOMPARE(exportedLinks.size(), 1);
+    QCOMPARE(exportedLinks.at(0).toElement().text(), QStringLiteral("S.B. 4.4.1"));
+    QVERIFY(!epub.readData(QStringLiteral("OEBPS/chapter.xhtml")).contains("href="));
 
     const KArchiveFile *referencesFile = servedZip.directory()->file(QStringLiteral("OEBPS/references.xhtml"));
     QVERIFY(referencesFile);

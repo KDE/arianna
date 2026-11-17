@@ -64,6 +64,38 @@ SPDX-License-Identifier: CC0-1.0
       <label>Reader background image path</label>
       <default></default>
     </entry>
+    <entry name="mathJaxSupport" type="Bool">
+      <label>mathjax Support</label>
+      <default>true</default>
+    </entry>
+    <entry name="mathJaxScale" type="Int">
+      <label>Display formula size in percent</label>
+      <default>100</default>
+      <min>50</min>
+      <max>200</max>
+    </entry>
+    <entry name="mathJaxInlineScale" type="Int">
+      <label>Inline formula size in percent</label>
+      <default>100</default>
+      <min>50</min>
+      <max>200</max>
+    </entry>
+    <entry name="mathJaxAlignment" type="String">
+      <label>Formula alignment</label>
+      <default>center</default>
+    </entry>
+    <entry name="mathJaxOverflow" type="String">
+      <label>Wide equation handling</label>
+      <default>linebreak</default>
+    </entry>
+    <entry name="mathJaxBreakInline" type="Bool">
+      <label>Allow line breaks in inline formulas</label>
+      <default>true</default>
+    </entry>
+    <entry name="mathJaxFontCache" type="String">
+      <label>SVG font cache</label>
+      <default>local</default>
+    </entry>
     <entry name="justify" type="bool">
       <label>Justify text</label>
       <default>true</default>
@@ -101,6 +133,48 @@ SPDX-License-Identifier: CC0-1.0
       <default>1.0</default>
     </entry>
   </group>
+  <group name="Speech">
+    <entry name="speechExpandSanskritNumbers" type="Bool">
+      <label>Spell out Sanskrit numbers when reading aloud</label>
+      <default>false</default>
+    </entry>
+    <entry name="speechVoice" type="String">
+      <label>Speech voice (empty selects a voice matching the text language)</label>
+      <default></default>
+    </entry>
+    <entry name="speechSentencePauseMs" type="Int">
+      <label>Sentence pause length in ms</label>
+      <default>200</default>
+      <min>0</min>
+      <max>500</max>
+    </entry>
+    <entry name="speechParagraphPauseMs" type="Int">
+      <label>Paragraph pause length in ms</label>
+      <default>400</default>
+      <min>0</min>
+      <max>1000</max>
+    </entry>
+  </group>
+  <group name="Maintenance">
+    <entry name="backupOnAnchoring" type="Bool">
+      <label>Create safety backups when anchoring</label>
+      <default>true</default>
+    </entry>
+    <entry name="backupOnImageInversion" type="Bool">
+      <label>Create safety backups when inverting images</label>
+      <default>false</default>
+    </entry>
+  </group>
+  <group name="AiAssistance">
+    <entry name="sanskritStructureOnImport" type="Bool">
+      <label>Review Sanskrit work structure after EPUB import or normalization</label>
+      <default>false</default>
+    </entry>
+    <entry name="codexPath" type="String">
+      <label>Codex executable path</label>
+      <default>codex</default>
+    </entry>
+  </group>
   <group name="TranslatorEngine">
     <entry name="translatorEngine" type="Enum">
       <label>Translation engine</label>
@@ -120,15 +194,15 @@ SPDX-License-Identifier: CC0-1.0
       <label>Translation target language</label>
       <default>DE</default>
     </entry>
+    <entry name="transcribeDevanagari" type="bool">
+      <label>Transcribe Devanagari</label>
+      <default>false</default>
+    </entry>
   </group>
   <group name="Editor">
     <entry name="editorCommand" type="String">
       <label>External editor command</label>
       <default>sigil</default>
-    </entry>
-    <entry name="editorStartWithTextCommand" type="String">
-      <label>External editor command for selected text</label>
-      <default>/opt/calibre/ebook-edit</default>
     </entry>
     <entry name="pdfEditorCommand" type="String">
       <label>External PDF editor command</label>
@@ -140,10 +214,6 @@ SPDX-License-Identifier: CC0-1.0
     </entry>
     <entry name="pdfCheckCommand" type="String">
       <label>PDF check command</label>
-      <default></default>
-    </entry>
-    <entry name="editorPath" type="String">
-      <label>External editor path</label>
       <default></default>
     </entry>
   </group>

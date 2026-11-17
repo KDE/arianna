@@ -36,27 +36,43 @@ export class Overlayer {
         this.#svg.removeChild(this.#map.get(key).element)
         this.#map.delete(key)
     }
+    setHidden(key, hidden) {
+        const obj = this.#map.get(key)
+        if (!obj) return
+        obj.hidden = hidden
+        obj.element.style.visibility = hidden ? 'hidden' : ''
+    }
     redraw() {
         for (const obj of this.#map.values()) {
             const { range, draw, options, element } = obj
             this.#svg.removeChild(element)
             const rects = range.getClientRects()
             const el = draw(rects, options)
+            if (obj.hidden) el.style.visibility = 'hidden'
             this.#svg.append(el)
             obj.element = el
             obj.rects = rects
         }
     }
     hitTest({ x, y }) {
+        return this.hitTestAll({ x, y })[0] ?? []
+    }
+    hitTestAll({ x, y }) {
         const arr = Array.from(this.#map.entries())
+        const hits = []
         // loop in reverse to hit more recently added items first
         for (let i = arr.length - 1; i >= 0; i--) {
             const [key, obj] = arr[i]
-            for (const { left, top, right, bottom } of obj.rects)
-                if (top <= y && left <= x && bottom > y && right > x)
-                    return [key, obj.range]
+            // Transient speech markers must not mask the annotations underneath.
+            if (obj.hidden || obj.options?.interactive === false) continue
+            const extra = obj.options?.extraHitRects?.(obj.element) ?? []
+            for (const { left, top, right, bottom } of [...obj.rects, ...extra])
+                if (top <= y && left <= x && bottom > y && right > x) {
+                    hits.push([key, obj.range])
+                    break
+                }
         }
-        return []
+        return hits
     }
     static underline(rects, options = {}) {
         const { color = 'red', width: strokeWidth = 2, writingMode } = options
@@ -181,4 +197,3 @@ export class Overlayer {
         return image
     }
 }
-

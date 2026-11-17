@@ -6,6 +6,12 @@ SPDX-PackageSupplier = "Carl Schwan <carl@carlschwan.eu>"
 SPDX-PackageDownloadLocation = "https://invent.kde.org/graphics/arianna"
 
 [[annotations]]
+path = ["src/thirdparty/mathjax/**", "src/thirdparty/mathjax.qrc"]
+precedence = "aggregate"
+SPDX-FileCopyrightText = "MathJax Consortium and Speech Rule Engine contributors"
+SPDX-License-Identifier = "Apache-2.0"
+
+[[annotations]]
 path = ["org.kde.arianna.svg", "logo.png"]
 precedence = "aggregate"
 SPDX-FileCopyrightText = "Áron Kovács"

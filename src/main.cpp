@@ -4,6 +4,10 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QDateTime>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusInterface>
+#include <QDBusReply>
 #include <QDir>
 #include <QEventLoop>
 #include <QFile>
@@ -11,6 +15,9 @@
 #include <QFontDatabase>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonArray>
+#include <QLockFile>
+#include <QElapsedTimer>
 #include <QNetworkAccessManager>
 #include <QNetworkProxy>
 #include <QNetworkProxyFactory>
@@ -22,6 +29,7 @@
 #include <QQuickStyle>
 #include <QQuickWindow>
 #include <QStandardPaths>
+#include <QTextStream>
 #include <QThread>
 #include <QUrl>
 #include <QVector>
@@ -58,9 +66,13 @@
 #include "arianna-version.h"
 #include "ariannatrace.h"
 #include "bookdatabase.h"
+#include "booklistmodel.h"
 #include "bookserver.h"
 #include "bookserverconfig.h"
+#include "config.h"
 #include "navigation.h"
+#include "readerhistory.h"
+#include "readercontrol.h"
 #include <KConfig>
 #include <KConfigGroup>
 #include <QUuid>
@@ -174,7 +186,7 @@ static bool unregisterBookServerSessionToken(const QString &sessionToken)
     return ok;
 }
 
-static QString registerReadOnlyBook(const QString &sessionToken, const QString &fileName)
+static QString registerReadOnlyBook(const QString &sessionToken, const QString &fileName, const QString &identifier = {})
 {
     if (sessionToken.isEmpty() || fileName.isEmpty()) {
         return {};
@@ -187,6 +199,7 @@ static QString registerReadOnlyBook(const QString &sessionToken, const QString &
 
     QJsonObject payload;
     payload.insert(QStringLiteral("fileName"), fileName);
+    if (!identifier.isEmpty()) payload.insert(QStringLiteral("identifier"), identifier);
 
     auto *reply = manager.post(request, QJsonDocument(payload).toJson(QJsonDocument::Compact));
     bool ok = false;
@@ -196,12 +209,12 @@ static QString registerReadOnlyBook(const QString &sessionToken, const QString &
     }
 
     const QJsonDocument document = QJsonDocument::fromJson(body);
-    const QString identifier = document.object().value(QStringLiteral("identifier")).toString();
-    if (identifier.isEmpty()) {
+    const QString registeredIdentifier = document.object().value(QStringLiteral("identifier")).toString();
+    if (registeredIdentifier.isEmpty()) {
         qWarning() << "BookServer did not return a read-only book identifier";
     }
 
-    return identifier;
+    return registeredIdentifier;
 }
 
 static bool startDetachedBookServer()
@@ -214,7 +227,14 @@ static bool startDetachedBookServer()
 
     AriannaTrace::event(QStringLiteral("bookserver.spawn.requested"),
                         {{QStringLiteral("executable"), QCoreApplication::applicationFilePath()}, {QStringLiteral("arguments"), arguments}});
-    const bool started = QProcess::startDetached(QCoreApplication::applicationFilePath(), arguments, QString(), &pid);
+    QProcess process;
+    process.setProgram(QCoreApplication::applicationFilePath());
+    process.setArguments(arguments);
+    // A command-only caller must be able to exit and close its output pipes.
+    // Persistent diagnostics remain available through --flight-log.
+    process.setStandardOutputFile(QProcess::nullDevice());
+    process.setStandardErrorFile(QProcess::nullDevice());
+    const bool started = process.startDetached(&pid);
     AriannaTrace::event(QStringLiteral("bookserver.spawn.finished"), {{QStringLiteral("started"), started}, {QStringLiteral("pid"), pid}});
     if (!started) {
         qWarning() << "Unable to start detached Arianna BookServer";
@@ -225,6 +245,11 @@ static bool startDetachedBookServer()
 
 static QString ensureBookServerSessionToken(const QString &serverToken)
 {
+    QLockFile launchLock(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QStringLiteral("/arianna-bookserver-start.lock"));
+    if (!launchLock.tryLock(10000)) {
+        qWarning() << "Another Arianna process is starting/restarting the BookServer";
+        return {};
+    }
     bool triedStartingServer = false;
 
     for (int attempt = 0; attempt < 30; ++attempt) {
@@ -242,6 +267,128 @@ static QString ensureBookServerSessionToken(const QString &serverToken)
     }
 
     return {};
+}
+
+static void waitForControlPoll()
+{
+    QEventLoop loop;
+    QTimer::singleShot(50, &loop, &QEventLoop::quit);
+    loop.exec();
+}
+
+static QJsonObject bookServerControl(const QString &serverToken, bool stop, bool *notListening = nullptr)
+{
+    QNetworkAccessManager manager;
+    QNetworkRequest request(QUrl(BookServerConfig::baseUrl() + QStringLiteral("/server-control")));
+    request.setRawHeader(QByteArrayLiteral("X-Arianna-Server-Token"), serverToken.toUtf8());
+    auto *reply = stop ? manager.deleteResource(request) : manager.get(request);
+    bool ok = false;
+    const auto body = waitForNetworkReply(reply, &ok, 1000, false);
+    if (notListening) *notListening = reply->error() == QNetworkReply::ConnectionRefusedError;
+    return ok ? QJsonDocument::fromJson(body).object() : QJsonObject();
+}
+
+static bool refreshRunningReaderProcesses();
+
+static bool restartBookServer(const QString &serverToken)
+{
+    // Use the same lock as ordinary reader startup: one owner stops and starts.
+    QLockFile launchLock(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QStringLiteral("/arianna-bookserver-start.lock"));
+    if (!launchLock.tryLock(10000)) {
+        qWarning() << "Timed out waiting for BookServer startup/restart lock";
+        return false;
+    }
+    bool notListening = false;
+    const auto current = bookServerControl(serverToken, false, &notListening);
+    if (current.isEmpty() && !notListening) {
+        qWarning() << "The running BookServer does not support authenticated restart or uses a different credential; close the older BookServer first";
+        return false;
+    }
+    if (!current.isEmpty()) {
+        if (bookServerControl(serverToken, true).value(QStringLiteral("state")).toString() != QStringLiteral("Stopping")) {
+            qWarning() << "BookServer rejected the shutdown request";
+            return false;
+        }
+        QElapsedTimer stopTimer;
+        stopTimer.start();
+        while (!notListening && stopTimer.elapsed() < 5000) {
+            waitForControlPoll();
+            bookServerControl(serverToken, false, &notListening);
+        }
+        if (!notListening) {
+            qWarning() << "Timed out waiting for the old BookServer to stop";
+            return false;
+        }
+    }
+    if (!startDetachedBookServer()) return false;
+    QElapsedTimer startTimer;
+    startTimer.start();
+    while (startTimer.elapsed() < 10000) {
+        const auto running = bookServerControl(serverToken, false);
+        if (!running.isEmpty()) {
+            qInfo() << "New BookServer ready, PID:" << running.value(QStringLiteral("pid")).toInteger();
+            return refreshRunningReaderProcesses();
+        }
+        waitForControlPoll();
+    }
+    qWarning() << "Timed out waiting for the new BookServer";
+    return false;
+}
+
+static bool refreshRunningReaderProcesses()
+{
+    auto bus = QDBusConnection::sessionBus();
+    if (!bus.isConnected() || !bus.interface()) {
+        qWarning() << "Unable to access the session D-Bus for reader refresh";
+        return false;
+    }
+    const QDBusReply<QStringList> names = bus.interface()->registeredServiceNames();
+    if (!names.isValid()) return false;
+    const QString requestId = QUuid::createUuid().toString(QUuid::WithoutBraces);
+    bool success = true;
+    int processes = 0;
+    for (const auto &name : names.value()) {
+        if (name != QStringLiteral("org.kde.arianna") && !name.startsWith(QStringLiteral("org.kde.arianna-"))) continue;
+        QDBusInterface reader(name, QStringLiteral("/Reader"), QStringLiteral("org.kde.arianna.Reader1"), bus);
+        reader.setTimeout(20000);
+        const QDBusReply<int> reply = reader.call(QStringLiteral("RefreshReaders"), requestId);
+        if (!reply.isValid() || reply.value() < 0) {
+            qWarning() << "Reader refresh failed (older readers may need restarting):" << name << reply.error().message();
+            success = false;
+        } else {
+            qInfo() << "Refreshed" << reply.value() << "reader(s) in" << name;
+        }
+        ++processes;
+    }
+    if (!processes) qInfo() << "No running Arianna reader sessions found";
+    return success;
+}
+
+static int refreshReaderProcess(QObject *root, const QString &serverToken, const QString &sessionToken)
+{
+    // Preserve the token bound into QML and WebEngine instead of invalidating URLs.
+    QNetworkAccessManager manager;
+    QNetworkRequest request(bookServerSessionUrl());
+    request.setRawHeader(QByteArrayLiteral("X-Arianna-Server-Token"), serverToken.toUtf8());
+    request.setHeader(QNetworkRequest::ContentTypeHeader, QByteArrayLiteral("application/json"));
+    auto *reply = manager.post(request, QJsonDocument(QJsonObject{{QStringLiteral("sessionToken"), sessionToken}}).toJson(QJsonDocument::Compact));
+    bool ok = false;
+    const auto body = waitForNetworkReply(reply, &ok);
+    if (!ok || QJsonDocument::fromJson(body).object().value(QStringLiteral("sessionToken")).toString() != sessionToken) return -1;
+    QVariant filesJson;
+    if (!QMetaObject::invokeMethod(root, "readerSessionFiles", Q_RETURN_ARG(QVariant, filesJson))) return -1;
+    const auto files = QJsonDocument::fromJson(filesJson.toString().toUtf8()).array();
+    for (const auto &value : files) {
+        const auto file = value.toObject();
+        const auto identifier = file.value(QStringLiteral("identifier")).toString();
+        if (identifier.isEmpty() || registerReadOnlyBook(sessionToken, file.value(QStringLiteral("fileName")).toString(), identifier) != identifier) {
+            qWarning() << "Unable to restore transient reader registration:" << file.value(QStringLiteral("fileName")).toString();
+            return -1;
+        }
+    }
+    QVariant count;
+    if (!QMetaObject::invokeMethod(root, "refreshReaderSessions", Q_RETURN_ARG(QVariant, count))) return -1;
+    return count.toInt();
 }
 
 static bool hasOptionArgument(int argc, char *argv[], const QStringList &optionNames)
@@ -436,6 +583,53 @@ static QString localFilePathFromArgument(const QString &argument, const QString 
     return fileInfo.absoluteFilePath();
 }
 
+static int checkAndRemovePdfWatermarks(const QStringList &fileArguments)
+{
+    QTextStream output(stdout);
+    if (fileArguments.isEmpty()) {
+        output << i18n("No PDF files were specified.") << Qt::endl;
+        return 1;
+    }
+
+    QString pattern = Config::pdfWatermarkFilterPattern().trimmed();
+    if (pattern.isEmpty()) {
+        pattern = Config::defaultPdfWatermarkFilterPatternValue();
+    }
+
+    BookListModel bookListModel;
+    int exitCode = 0;
+    for (const QString &argument : fileArguments) {
+        const QString fileName = localFilePathFromArgument(argument);
+        output << fileName << Qt::endl;
+
+        const QVariantMap checkResult = bookListModel.createWatermarkFreePdf(fileName, pattern);
+        output << QStringLiteral("  %1").arg(checkResult.value(QStringLiteral("message")).toString()) << Qt::endl;
+        if (!checkResult.value(QStringLiteral("success")).toBool()) {
+            exitCode = 1;
+            continue;
+        }
+
+        if (!checkResult.value(QStringLiteral("filtered")).toBool()) {
+            continue;
+        }
+
+        const QString replacementFileName = checkResult.value(QStringLiteral("replacementFileName")).toString();
+        const QVariantMap replacementResult = bookListModel.replaceBookFileWithWatermarkFreePdf(fileName, replacementFileName, false);
+        bookListModel.discardWatermarkFreePdf(replacementFileName);
+
+        const bool replacementSucceeded = replacementResult.value(QStringLiteral("success")).toBool();
+        const QString replacementMessage =
+            replacementSucceeded ? i18n("PDF replaced with watermark-free version.") : replacementResult.value(QStringLiteral("message")).toString();
+        output << QStringLiteral("  %1").arg(replacementMessage) << Qt::endl;
+        if (!replacementSucceeded) {
+            exitCode = 1;
+        }
+    }
+
+    output.flush();
+    return exitCode;
+}
+
 static bool argumentsRequestReadOnly(const QStringList &arguments)
 {
     for (int i = 1; i < arguments.size(); ++i) {
@@ -448,6 +642,15 @@ static bool argumentsRequestReadOnly(const QStringList &arguments)
         }
     }
 
+    return false;
+}
+
+static bool argumentsRequestNoLibraryImport(const QStringList &arguments)
+{
+    for (int i = 1; i < arguments.size(); ++i) {
+        if (arguments.at(i) == QStringLiteral("--")) return false;
+        if (arguments.at(i) == QStringLiteral("--no-library-import")) return true;
+    }
     return false;
 }
 
@@ -476,6 +679,10 @@ static QString fileArgumentFromActivationArguments(const QStringList &arguments)
             continue;
         }
         if (!endOfOptions && argument == QStringLiteral("--open-read-only")) {
+            continue;
+        }
+        if (!endOfOptions && argument == QStringLiteral("--open-last-closed-book")) {
+            ++i; // Its count is an option value, not a file name.
             continue;
         }
         if (!endOfOptions && argument.startsWith(QStringLiteral("--"))) {
@@ -530,8 +737,43 @@ static bool openLastOpenedBook(Navigation *navigation)
     return true;
 }
 
+static void openLastClosedBooks(Navigation *navigation, const QList<BookEntry> &entries)
+{
+    if (!navigation) return;
+    if (entries.isEmpty()) {
+        qWarning() << "No previously closed Arianna library books found";
+    }
+    // Keep the snapshot: opening a reader must not change this selection/order.
+    for (const auto &entry : entries) {
+        qInfo() << "Reopening last closed book:" << entry.filename;
+        Q_EMIT navigation->openBook(entry.filename, entry.locations, entry.currentLocation, entry, false);
+    }
+}
+
+static std::optional<int> lastClosedBookCountFromActivation(const QStringList &arguments)
+{
+    for (int i = 1; i < arguments.size(); ++i) {
+        const QString &argument = arguments.at(i);
+        if (argument == QStringLiteral("--")) break;
+        QString value;
+        if (argument == QStringLiteral("--open-last-closed-book")) {
+            value = arguments.value(i + 1);
+        } else if (argument.startsWith(QStringLiteral("--open-last-closed-book="))) {
+            value = argument.mid(QStringLiteral("--open-last-closed-book=").size());
+        } else {
+            continue;
+        }
+        bool ok = false;
+        const int count = value.toInt(&ok);
+        if (ok && count > 0) return count;
+        qWarning() << "--open-last-closed-book requires a positive integer";
+        break;
+    }
+    return std::nullopt;
+}
+
 static void
-openBookArgument(Navigation *navigation, const QString &argument, const QString &workingDirectory = {}, bool readOnly = false, const QString &sessionToken = {})
+openBookArgument(Navigation *navigation, const QString &argument, const QString &workingDirectory = {}, bool readOnly = false, const QString &sessionToken = {}, bool noLibraryImport = false)
 {
     const QString fileName = localFilePathFromArgument(argument, workingDirectory);
     if (fileName.isEmpty()) {
@@ -544,7 +786,14 @@ openBookArgument(Navigation *navigation, const QString &argument, const QString 
         return;
     }
 
-    if (readOnly) {
+    if (noLibraryImport && fileInfo.suffix().compare(QLatin1String("epub"), Qt::CaseInsensitive) != 0) {
+        qWarning() << "--no-library-import requires an EPUB file:" << fileName;
+        return;
+    }
+
+    // Both modes use session-only, immutable BookServer delivery. The external
+    // editor owns explicit saves in no-library mode; no BookTruthStore import.
+    if (readOnly || noLibraryImport) {
         const QString identifier = registerReadOnlyBook(sessionToken, fileName);
         if (identifier.isEmpty()) {
             qWarning() << "Unable to register read-only book with the Arianna BookServer:" << fileName;
@@ -557,7 +806,7 @@ openBookArgument(Navigation *navigation, const QString &argument, const QString 
         readOnlyEntry.title = fileInfo.completeBaseName();
         readOnlyEntry.uniqueIdentifier = identifier;
 
-        Q_EMIT navigation->openBook(fileName, {}, {}, readOnlyEntry, true);
+        Q_EMIT navigation->openBook(fileName, {}, {}, readOnlyEntry, readOnly, noLibraryImport);
         return;
     }
 
@@ -572,8 +821,21 @@ openBookArgument(Navigation *navigation, const QString &argument, const QString 
 int main(int argc, char *argv[])
 {
     const bool requestedBookServerOnly = hasBookServerOnlyArgument(argc, argv);
+    const bool requestedWatermarkCheck = hasOptionArgument(argc, argv, {QStringLiteral("--check-and-remove-watermark-pdf-only")});
+    const bool requestedReaderRefresh = hasOptionArgument(argc, argv,
+        {QStringLiteral("--reopen-already-opened-books")});
+    const bool requestedServerRestart = hasOptionArgument(argc, argv, {QStringLiteral("--restart-new-bookserver")});
+    QStringList rawArguments;
+    bool requestedHistoryOpen = false;
+    for (int i = 0; i < argc; ++i) {
+        const auto argument = QString::fromLocal8Bit(argv[i]);
+        rawArguments.append(argument);
+        if (argument == QStringLiteral("--open-last-opened-book") || argument.startsWith(QStringLiteral("--open-last-closed-book"))) requestedHistoryOpen = true;
+    }
+    const bool controlOnly = (requestedReaderRefresh || requestedServerRestart) && !requestedHistoryOpen
+        && fileArgumentFromActivationArguments(rawArguments).isEmpty() && !requestedBookServerOnly;
     const bool flightLogRequested = hasFlightLogArgument(argc, argv);
-    const bool exitsBeforeOpeningUi = hasEarlyExitArgument(argc, argv);
+    const bool exitsBeforeOpeningUi = hasEarlyExitArgument(argc, argv) || requestedWatermarkCheck || controlOnly;
     if (!requestedBookServerOnly && !exitsBeforeOpeningUi) {
         QtWebEngineQuick::initialize();
     }
@@ -630,22 +892,37 @@ int main(int argc, char *argv[])
     about.setBugAddress("https://bugs.kde.org/describecomponents.cgi?product=arianna");
 
     KAboutData::setApplicationData(about);
-    KCrash::initialize();
 
     QCommandLineParser parser;
     parser.setApplicationDescription(i18n("Epub reader"));
-    parser.addPositionalArgument(QStringLiteral("file"), i18n("Epub file to open"));
+    parser.addPositionalArgument(QStringLiteral("file..."), i18n("Epub file to open, or PDF files to check for watermarks"));
     QCommandLineOption bookServerOnlyOption(QStringLiteral("bookserver"), i18n("Start only the local BookServer and do not open the reader UI"));
     QCommandLineOption startNewOption(QStringLiteral("start-new"),
                                       i18n("Stop existing Arianna instances, remove stale BookServer discovery state, then start normally"));
     QCommandLineOption flightLogOption(QStringLiteral("flight-log"), i18n("Write persistent diagnostic flight log history"));
     QCommandLineOption readOnlyOption(QStringLiteral("open-read-only"), i18n("Open the given book read-only without adding it to the library"));
     QCommandLineOption openLastOpenedBookOption(QStringLiteral("open-last-opened-book"), i18n("Open the most recently opened library book"));
+    QCommandLineOption openLastClosedBookOption(QStringLiteral("open-last-closed-book"),
+        i18n("Open the n most recently closed library books in their original opening order"), QStringLiteral("n"));
+    QCommandLineOption refreshReadersOption(QStringLiteral("reopen-already-opened-books"),
+        i18n("Refresh all running reader sessions at their current positions without opening another window"));
+    QCommandLineOption restartBookServerOption(QStringLiteral("restart-new-bookserver"),
+        i18n("Restart the BookServer and refresh all running reader sessions"));
+    QCommandLineOption checkAndRemoveWatermarkPdfOnlyOption(
+        QStringLiteral("check-and-remove-watermark-pdf-only"),
+        i18n("Check the given PDF files for watermark markers, remove found markers, write the result to standard output, and exit"));
     parser.addOption(bookServerOnlyOption);
     parser.addOption(startNewOption);
     parser.addOption(flightLogOption);
+    QCommandLineOption noLibraryImportOption(QStringLiteral("no-library-import"),
+        i18n("Open the given EPUB for editing without adding it to the library"));
+    parser.addOption(noLibraryImportOption);
     parser.addOption(readOnlyOption);
     parser.addOption(openLastOpenedBookOption);
+    parser.addOption(openLastClosedBookOption);
+    parser.addOption(refreshReadersOption);
+    parser.addOption(restartBookServerOption);
+    parser.addOption(checkAndRemoveWatermarkPdfOnlyOption);
 
     about.setupCommandLine(&parser);
     parser.process(*app);
@@ -654,12 +931,42 @@ int main(int argc, char *argv[])
     const bool bookServerOnly = parser.isSet(bookServerOnlyOption);
     const bool startNew = parser.isSet(startNewOption);
     const bool readOnly = parser.isSet(readOnlyOption);
+    const bool noLibraryImport = parser.isSet(noLibraryImportOption);
     const bool openLastOpenedBookRequested = parser.isSet(openLastOpenedBookOption);
+    const bool openLastClosedBookRequested = parser.isSet(openLastClosedBookOption);
+    bool lastClosedCountValid = false;
+    const int lastClosedCount = parser.value(openLastClosedBookOption).toInt(&lastClosedCountValid);
+    if (openLastClosedBookRequested && (!lastClosedCountValid || lastClosedCount <= 0)) {
+        QTextStream(stderr) << "--open-last-closed-book requires a positive integer\n";
+        return 1;
+    }
     const QStringList args = parser.positionalArguments();
+    if (parser.isSet(checkAndRemoveWatermarkPdfOnlyOption)) {
+        return checkAndRemovePdfWatermarks(args);
+    }
+
+    if (parser.isSet(restartBookServerOption) || parser.isSet(refreshReadersOption)) {
+        if (bookServerOnly || startNew) {
+            QTextStream(stderr) << "Reader refresh/restart cannot be combined with --bookserver or --start-new\n";
+            return 1;
+        }
+        const auto controlServerToken = persistentServerToken();
+        if (parser.isSet(restartBookServerOption)) {
+            if (!restartBookServer(controlServerToken)) return 1;
+        } else {
+            QLockFile launchLock(QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + QStringLiteral("/arianna-bookserver-start.lock"));
+            if (!launchLock.tryLock(10000) || !refreshRunningReaderProcesses()) return 1;
+        }
+        if (controlOnly) return 0;
+    }
+
+    KCrash::initialize();
+
     const QString startupFileName = args.isEmpty() ? QString() : localFilePathFromArgument(args.at(0));
     const bool startupFileOpenRequested = !startupFileName.isEmpty() && QFileInfo::exists(startupFileName);
     const std::optional<BookEntry> startupLastOpenedEntry = openLastOpenedBookRequested ? lastOpenedBookEntry() : std::optional<BookEntry>();
-    const bool startupDirectReaderMode = startupFileOpenRequested || startupLastOpenedEntry.has_value();
+    const QList<BookEntry> startupLastClosedEntries = openLastClosedBookRequested ? ReaderHistory::lastClosedBooks(lastClosedCount) : QList<BookEntry>();
+    const bool startupDirectReaderMode = startupFileOpenRequested || startupLastOpenedEntry.has_value() || !startupLastClosedEntries.isEmpty();
     if (startNew) {
         const int rocketCount = stopExistingAriannaInstances();
         cleanupBookServerDiscoveryFile();
@@ -712,6 +1019,13 @@ int main(int argc, char *argv[])
     if (navigation) {
         navigation->setWebEngineSessionToken(sessionToken);
     }
+    ReaderControl readerControl([&engine, serverToken, sessionToken] {
+        if (engine.rootObjects().isEmpty()) return -1;
+        return refreshReaderProcess(engine.rootObjects().first(), serverToken, sessionToken);
+    });
+    if (!QDBusConnection::sessionBus().registerObject(QStringLiteral("/Reader"), &readerControl, QDBusConnection::ExportAllSlots)) {
+        qWarning() << "Unable to register reader refresh control on D-Bus";
+    }
     qDebug() << "Arianna BookServer session registered:" << sessionToken;
 
     QObject::connect(&service,
@@ -727,7 +1041,9 @@ int main(int argc, char *argv[])
 
                                  const QString fileArgument = fileArgumentFromActivationArguments(arguments);
                                  if (!fileArgument.isEmpty()) {
-                                     openBookArgument(navigation, fileArgument, workingDirectory, argumentsRequestReadOnly(arguments), sessionToken);
+                                     openBookArgument(navigation, fileArgument, workingDirectory, argumentsRequestReadOnly(arguments), sessionToken, argumentsRequestNoLibraryImport(arguments));
+                                 } else if (const auto count = lastClosedBookCountFromActivation(arguments)) {
+                                     openLastClosedBooks(navigation, ReaderHistory::lastClosedBooks(*count));
                                  } else if (argumentsRequestOpenLastOpenedBook(arguments)) {
                                      openLastOpenedBook(navigation);
                                  }
@@ -737,7 +1053,9 @@ int main(int argc, char *argv[])
                      });
 
     if (!args.isEmpty()) {
-        openBookArgument(navigation, args[0], {}, readOnly, sessionToken);
+        openBookArgument(navigation, args[0], {}, readOnly, sessionToken, noLibraryImport);
+    } else if (openLastClosedBookRequested) {
+        openLastClosedBooks(navigation, startupLastClosedEntries);
     } else if (openLastOpenedBookRequested) {
         openLastOpenedBook(navigation);
     }

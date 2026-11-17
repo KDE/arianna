@@ -28,8 +28,12 @@ public:
     ResourceMap makeResourceMap(const QSet<QString> &servedFiles, const QString &identifier, const QString &sessionToken = QString());
 
 private:
+    friend class BookServerCacheTest;
+    static constexpr qsizetype MaxCachedContainers = 8;
     bool isValidToken(const QString &token) const;
     std::shared_ptr<EPubContainer> containerForIdentifier(const QString &identifier, const QString &cacheVersion = QString());
+    QJsonObject workStructureSnapshot(const QString &identifier);
+    QJsonObject storedWorkStructureState(const QString &identifier);
     QString pdfFileForIdentifier(const QString &identifier) const;
     void clearServedResourcesForIdentifier(const QString &identifier);
     void clearServedResourcesForSessionIdentifier(const QString &sessionToken, const QString &identifier);
@@ -47,6 +51,7 @@ private:
         QString cacheVersion;
         QDateTime lastModified;
         qint64 size = -1;
+        quint64 lastUse = 0;
     };
     QHttpServer server;
     QString m_serverToken;
@@ -55,6 +60,7 @@ private:
     QMap<QString, QSet<QString>> m_servedFilesByIdentifier;
     QMap<QString, QMap<QString, QString>> m_resourceMapByIdentifier;
     QMap<QString, CachedContainer> m_containerCache;
+    quint64 m_containerCacheClock = 0;
     QHash<QString, QString> m_readOnlyFilesByIdentifier;
     QHash<QString, int> m_readerSessionRefCount;
     QHash<QString, QSet<QString>> m_identifiersByReaderSession;

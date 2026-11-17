@@ -30,6 +30,7 @@ public:
     Q_INVOKABLE QString saveImage(QString localPath = {}) const;
 
     Q_INVOKABLE void saveText(QString message);
+    Q_INVOKABLE void savePlainText(const QString &message);
 
 private:
     QClipboard *const m_clipboard;

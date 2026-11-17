@@ -17,12 +17,22 @@ FormCard.FormCardPage {
     readonly property int readerSettingsTab: 0
     readonly property int serverSettingsTab: 1
     readonly property int editorSettingsTab: 2
+    readonly property int maintenanceSettingsTab: 3
+    readonly property int aiAssistanceSettingsTab: 4
     readonly property bool readerSettingsVisible: settingsTabs.currentIndex === readerSettingsTab
     readonly property bool serverSettingsVisible: settingsTabs.currentIndex === serverSettingsTab
     readonly property bool editorSettingsVisible: settingsTabs.currentIndex === editorSettingsTab
+    readonly property bool maintenanceSettingsVisible: settingsTabs.currentIndex === maintenanceSettingsTab
+    readonly property bool aiAssistanceSettingsVisible: settingsTabs.currentIndex === aiAssistanceSettingsTab
+
+    SpeechController {
+        id: speechSettings
+        Component.onCompleted: refreshVoices()
+    }
 
     QQC2.TabBar {
         id: settingsTabs
+        objectName: "settingsTabs"
 
         Layout.fillWidth: true
 
@@ -37,6 +47,57 @@ FormCard.FormCardPage {
         QQC2.TabButton {
             text: i18n("Editor")
         }
+
+        QQC2.TabButton {
+            objectName: "maintenanceSettingsTabButton"
+            text: i18nc("@title:tab", "Maintenance")
+        }
+
+        QQC2.TabButton {
+            objectName: "aiAssistanceSettingsTabButton"
+            text: i18nc("@title:tab", "AI Assistance")
+        }
+    }
+
+    FormCard.FormHeader {
+        visible: root.aiAssistanceSettingsVisible
+        title: i18n("Codex App Server")
+    }
+
+    FormCard.FormCard {
+        visible: root.aiAssistanceSettingsVisible
+
+        FormCard.FormCheckDelegate {
+            text: i18n("Review Sanskrit work structure after EPUB import or normalization")
+            checked: Config.sanskritStructureOnImport
+            onToggled: { Config.sanskritStructureOnImport = checked; Config.save(); }
+        }
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormTextFieldDelegate {
+            objectName: "codexPathSetting"
+            label: i18n("Codex executable path")
+            text: Config.codexPath
+            placeholderText: "codex"
+            onEditingFinished: {
+                Config.codexPath = text.trim();
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormButtonDelegate {
+            objectName: "codexTestConnectionButton"
+            text: i18n("Test Codex connection")
+            icon.name: "tools-wizard"
+            onClicked: codexTestDialog.open()
+        }
+    }
+
+    CodexTestDialog {
+        id: codexTestDialog
+        parent: QQC2.Overlay.overlay
     }
 
     FormCard.FormHeader {
@@ -87,6 +148,24 @@ FormCard.FormCardPage {
 
         FormCard.FormDelegateSeparator {}
 
+        FormCard.FormCheckDelegate {
+            objectName: "mathJaxSupportSwitch"
+            text: i18nc("@option:check", "mathjax Support")
+            checked: Config.mathJaxSupport
+            onToggled: {
+                Config.mathJaxSupport = checked;
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        MathJaxSettings {
+            onReadAloudRequested: segment => speechSettings.speakSegments([segment])
+        }
+
+        FormCard.FormDelegateSeparator {}
+
         FormCard.FormComboBoxDelegate {
             text: i18nc("@label:listbox", "Default page view")
             textRole: "display"
@@ -100,6 +179,96 @@ FormCard.FormCardPage {
                 Config.readerPageMode = model[index].value;
                 Config.save();
             }
+        }
+    }
+
+    FormCard.FormHeader {
+        visible: root.readerSettingsVisible
+        title: i18n("Read Aloud")
+    }
+
+    FormCard.FormCard {
+        visible: root.readerSettingsVisible
+
+        FormCard.FormComboBoxDelegate {
+            id: speechVoiceChoice
+            text: i18nc("@label:listbox", "Speech voice")
+            textRole: "name"
+            valueRole: "id"
+            model: {
+                const voices = [{ id: "", name: i18nc("@item:inlistbox speech voice", "Automatic (text language)") }].concat(speechSettings.voices);
+                if (Config.speechVoice && !voices.some(voice => voice.id === Config.speechVoice)) {
+                    voices.push({ id: Config.speechVoice, name: i18nc("@item:inlistbox speech voice", "Selected voice unavailable") });
+                }
+                return voices;
+            }
+            currentIndex: Math.max(0, model.findIndex(voice => voice.id === Config.speechVoice))
+            onActivated: index => {
+                Config.speechVoice = model[index].id;
+                Config.save();
+            }
+        }
+
+        FormCard.FormTextDelegate {
+            text: i18n("A selected voice is used for all text. Automatic uses the text language, or the system language when it is unknown.")
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormSwitchDelegate {
+            objectName: "speechSanskritNumbersSwitch"
+            text: i18nc("@option:check", "Spell out Sanskrit numbers when reading aloud")
+            description: i18n("Read whole numbers from 0 to 100 as Sanskrit words in Sanskrit passages. Applies when using a Sanskrit voice.")
+            checked: Config.speechExpandSanskritNumbers
+            onToggled: {
+                Config.speechExpandSanskritNumbers = checked;
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormSpinBoxDelegate {
+            objectName: "speechSentencePauseSetting"
+            label: i18nc("@label:spinbox", "Sentence pause length in ms")
+            from: 0
+            to: 500
+            stepSize: 1
+            value: Config.speechSentencePauseMs
+            onValueChanged: {
+                Config.speechSentencePauseMs = value;
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormSpinBoxDelegate {
+            objectName: "speechParagraphPauseSetting"
+            label: i18nc("@label:spinbox", "Paragraph pause length in ms")
+            from: 0
+            to: 500
+            stepSize: 1
+            value: Config.speechParagraphPauseMs
+            onValueChanged: {
+                Config.speechParagraphPauseMs = value;
+                Config.save();
+            }
+        }
+
+        FormCard.FormTextDelegate {
+            text: i18n("Pause at normal reading speed. Faster reading shortens it; slower reading lengthens it. Set to 0 to disable the additional pause.")
+        }
+
+        FormCard.FormTextDelegate {
+            visible: speechSettings.errorString.length > 0
+            text: speechSettings.errorString
+        }
+
+        FormCard.FormButtonDelegate {
+            text: i18nc("@action:button", "Refresh Voices")
+            icon.name: "view-refresh"
+            onClicked: speechSettings.refreshVoices()
         }
     }
 
@@ -237,7 +406,7 @@ FormCard.FormCardPage {
         FormCard.FormDelegateSeparator {}
 
         FormCard.FormTextFieldDelegate {
-            label: i18n("Reader background image")
+            label: i18n("Background image")
             text: Config.readerBackgroundPath
             placeholderText: i18n("No background image")
             onEditingFinished: {
@@ -315,6 +484,19 @@ FormCard.FormCardPage {
             onEditingFinished: {
                 Config.targetLanguage = text.trim() || "DE";
                 text = Config.targetLanguage;
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormSwitchDelegate {
+            objectName: "transcribeDevanagariSwitch"
+            text: i18n("Transcribe Devanagari")
+            description: i18n("Show Devanagari text as an IAST transcription alongside the translation.")
+            checked: Config.transcribeDevanagari
+            onToggled: {
+                Config.transcribeDevanagari = checked;
                 Config.save();
             }
         }
@@ -510,12 +692,11 @@ FormCard.FormCardPage {
     FormCard.FormCard {
         visible: root.editorSettingsVisible
         FormCard.FormTextFieldDelegate {
-            label: i18n("Editor command")
+            label: i18n("EPUB-Editor command")
             text: Config.editorCommand
             placeholderText: i18n("sigil")
             onEditingFinished: {
                 Config.editorCommand = text.trim();
-                Config.editorPath = "";
                 Config.save();
             }
         }
@@ -523,7 +704,7 @@ FormCard.FormCardPage {
         FormCard.FormDelegateSeparator {}
 
         FormCard.FormButtonDelegate {
-            text: i18n("Choose editor command…")
+            text: i18n("Choose EPUB-Editor command…")
             icon.name: "document-open"
             onClicked: editorDialog.open()
         }
@@ -531,30 +712,9 @@ FormCard.FormCardPage {
         FormCard.FormDelegateSeparator {}
 
         FormCard.FormTextFieldDelegate {
-            label: i18n("Editor command for selected text")
-            text: Config.editorStartWithTextCommand
-            placeholderText: i18n("/opt/calibre/ebook-edit")
-            onEditingFinished: {
-                Config.editorStartWithTextCommand = text.trim();
-                Config.editorPath = "";
-                Config.save();
-            }
-        }
-
-        FormCard.FormDelegateSeparator {}
-
-        FormCard.FormButtonDelegate {
-            text: i18n("Choose text editor command…")
-            icon.name: "document-open"
-            onClicked: textEditorDialog.open()
-        }
-
-        FormCard.FormDelegateSeparator {}
-
-        FormCard.FormTextFieldDelegate {
             label: i18n("PDF editor command")
             text: Config.pdfEditorCommand
-            placeholderText: i18n("okular")
+            placeholderText: i18n("okular --page default")
             onEditingFinished: {
                 Config.pdfEditorCommand = text.trim();
                 Config.save();
@@ -614,12 +774,42 @@ FormCard.FormCardPage {
         FormCard.FormButtonDelegate {
             text: i18n("Clear editor commands")
             icon.name: "edit-clear"
-            enabled: Config.editorCommand.length > 0 || Config.editorStartWithTextCommand.length > 0 || Config.pdfEditorCommand.length > 0 || Config.editorPath.length > 0
+            enabled: Config.editorCommand.length > 0 || Config.pdfEditorCommand.length > 0
             onClicked: {
                 Config.editorCommand = "";
-                Config.editorStartWithTextCommand = "";
                 Config.pdfEditorCommand = "";
-                Config.editorPath = "";
+                Config.save();
+            }
+        }
+    }
+
+    FormCard.FormHeader {
+        objectName: "safetyBackupsHeader"
+        visible: root.maintenanceSettingsVisible
+        title: i18nc("@title:group", "Create safety backups")
+    }
+
+    FormCard.FormCard {
+        visible: root.maintenanceSettingsVisible
+
+        FormCard.FormSwitchDelegate {
+            objectName: "anchoringBackupSwitch"
+            text: i18nc("@option:check", "When anchoring")
+            checked: Config.backupOnAnchoring
+            onToggled: {
+                Config.backupOnAnchoring = checked;
+                Config.save();
+            }
+        }
+
+        FormCard.FormDelegateSeparator {}
+
+        FormCard.FormSwitchDelegate {
+            objectName: "imageInversionBackupSwitch"
+            text: i18nc("@option:check", "When inverting images")
+            checked: Config.backupOnImageInversion
+            onToggled: {
+                Config.backupOnImageInversion = checked;
                 Config.save();
             }
         }
@@ -628,28 +818,12 @@ FormCard.FormCardPage {
     Dialogs.FileDialog {
         id: editorDialog
 
-        title: i18n("Choose editor command")
+        title: i18n("Choose EPUB-Editor command")
         fileMode: Dialogs.FileDialog.OpenFile
         onAccepted: {
             const selectedPath = root.localPathFromUrl(selectedFile);
             if (selectedPath.length > 0) {
                 Config.editorCommand = selectedPath;
-                Config.editorPath = "";
-                Config.save();
-            }
-        }
-    }
-
-    Dialogs.FileDialog {
-        id: textEditorDialog
-
-        title: i18n("Choose text editor command")
-        fileMode: Dialogs.FileDialog.OpenFile
-        onAccepted: {
-            const selectedPath = root.localPathFromUrl(selectedFile);
-            if (selectedPath.length > 0) {
-                Config.editorStartWithTextCommand = selectedPath;
-                Config.editorPath = "";
                 Config.save();
             }
         }

@@ -2,7 +2,9 @@
 // SPDX-FileCopyrightText: 2021 Carl Schwan <carl@carlschwan.eu>
 // SPDX-License-Identifier: BSD-3-Clause
 
+#include "maintenancefiles.h"
 #include "epubcontainer.h"
+#include "epubmath.h"
 
 #include <KArchiveDirectory>
 #include <KArchiveFile>
@@ -435,12 +437,15 @@ static bool isNavigationDocumentItem(const EpubItem &item)
 
 static QString imageReference(const QDomElement &element)
 {
-    const QString localName = element.localName().isEmpty() ? element.tagName() : element.localName();
+    const QString localName = xmlLocalName(element);
     if (localName == QStringLiteral("img")) {
         return element.attribute(QStringLiteral("src"));
     }
     if (localName == QStringLiteral("image")) {
         QString href = element.attribute(QStringLiteral("href"));
+        if (href.isEmpty()) {
+            href = element.attributeNS(QStringLiteral("http://www.w3.org/1999/xlink"), QStringLiteral("href"));
+        }
         if (href.isEmpty()) {
             href = element.attribute(QStringLiteral("xlink:href"));
         }
@@ -555,6 +560,7 @@ static QByteArray rewriteXmlResourceLinks(const QByteArray &data, const QString 
 
 struct ServerReadyCopyContext {
     ResourceMap resourceMap;
+    QString mathJaxBootstrapUrl;
     bool includeReferences = false;
     QString opfPath;
     QString referencesPath;
@@ -645,10 +651,14 @@ static QByteArray rewriteReferenceAnchorLinks(const QByteArray &data, const QStr
 
     bool changed = false;
     const QString referenceHrefPrefix = relativePathFrom(currentPath, context.referencesPath) + QLatin1Char('#');
-    const QDomNodeList anchors = doc.elementsByTagName(QStringLiteral("a"));
-    for (int i = 0; i < anchors.count(); ++i) {
-        QDomElement anchor = anchors.at(i).toElement();
-        if (anchor.attribute(QStringLiteral("data-role")) != QStringLiteral("anchor")
+    QList<QDomElement> pending{doc.documentElement()};
+    while (!pending.isEmpty()) {
+        QDomElement anchor = pending.takeLast();
+        for (auto child = anchor.firstChildElement(); !child.isNull(); child = child.nextSiblingElement()) {
+            pending.append(child);
+        }
+        if ((xmlLocalName(anchor) != QStringLiteral("a") && xmlLocalName(anchor) != QStringLiteral("span"))
+            || anchor.attribute(QStringLiteral("data-role")) != QStringLiteral("anchor")
             || anchor.attribute(QStringLiteral("data-anchor-type")) != QStringLiteral("crossref")) {
             continue;
         }
@@ -658,6 +668,8 @@ static QByteArray rewriteReferenceAnchorLinks(const QByteArray &data, const QStr
             continue;
         }
 
+        // Only the exported copy needs a native link to its included reference list.
+        anchor.setTagName(QStringLiteral("a"));
         anchor.setAttribute(QStringLiteral("href"), referenceHrefPrefix + sourceAnchorId);
         changed = true;
     }
@@ -814,6 +826,7 @@ static void copyDirectoryServerReady(KZip &outZip, const KArchiveDirectory *dir,
             data = rewriteOpfManifestLinks(data, cleanPath, context);
         } else if (isXmlLikeFile(cleanPath)) {
             data = rewriteReferenceAnchorLinks(data, cleanPath, context);
+            data = EpubMath::injectMathJax(data, context.mathJaxBootstrapUrl);
             data = rewriteXmlResourceLinks(data, cleanPath, context.resourceMap);
         } else if (isCssFile(cleanPath)) {
             data = rewriteCssResourceLinks(data, cleanPath, context.resourceMap);
@@ -1737,26 +1750,53 @@ static bool insertAnnotationBoundaryPair(QDomDocument &doc, const CfiBoundary &s
         && insertBoundaryMarkerAtBoundary(doc, start, anchorId + QStringLiteral("_begin"), QStringLiteral("annotation-begin"));
 }
 
-static QDomNode promoteRangeStartNode(QDomNode node)
+static QDomNode splitInlineElementBefore(const QDomNode &firstSuffixChild)
 {
-    while (!node.isNull()) {
+    QDomElement element = firstSuffixChild.parentNode().toElement();
+    QDomNode parent = element.parentNode();
+    if (parent.isNull() || element.attribute(QStringLiteral("data-role")) == QStringLiteral("anchor")) {
+        return {};
+    }
+
+    QDomElement suffix = element.cloneNode(false).toElement();
+    // Keep formatting, but leave each existing ID on the original, leading fragment.
+    suffix.removeAttribute(QStringLiteral("id"));
+    suffix.removeAttribute(QStringLiteral("xml:id"));
+    suffix.removeAttributeNS(QStringLiteral("http://www.w3.org/XML/1998/namespace"), QStringLiteral("id"));
+    parent.insertAfter(suffix, element);
+    QDomNode child = firstSuffixChild;
+    while (!child.isNull()) {
+        const QDomNode next = child.nextSibling();
+        suffix.appendChild(child);
+        child = next;
+    }
+    return suffix;
+}
+
+static QDomNode promoteRangeStartNode(QDomNode node, const QDomNode &commonParent)
+{
+    while (!node.isNull() && node.parentNode() != commonParent) {
         QDomNode parent = node.parentNode();
-        if (parent.isNull() || !canPromoteWholeElementIntoAnchor(parent) || !node.previousSibling().isNull()) {
-            break;
+        if (!canPromoteWholeElementIntoAnchor(parent)) {
+            return {};
         }
 
-        node = parent;
+        // A selection can start partway through an inline formatting element.
+        node = node.previousSibling().isNull() ? parent : splitInlineElementBefore(node);
     }
 
     return node;
 }
 
-static QDomNode promoteRangeEndNode(QDomNode node)
+static QDomNode promoteRangeEndNode(QDomNode node, const QDomNode &commonParent)
 {
-    while (!node.isNull()) {
+    while (!node.isNull() && node.parentNode() != commonParent) {
         QDomNode parent = node.parentNode();
-        if (parent.isNull() || !canPromoteWholeElementIntoAnchor(parent) || !node.nextSibling().isNull()) {
-            break;
+        if (!canPromoteWholeElementIntoAnchor(parent)) {
+            return {};
+        }
+        if (!node.nextSibling().isNull() && splitInlineElementBefore(node.nextSibling()).isNull()) {
+            return {};
         }
 
         node = parent;
@@ -1787,20 +1827,39 @@ static bool wrapSiblingRange(QDomDocument &doc,
                              const QString &anchorType,
                              QString *selectedText,
                              const QString &href = QString(),
-                             const QString &title = QString())
+                             const QString &title = QString(),
+                             const QString &tagName = QStringLiteral("a"))
 {
     if (!isValidBoundary(start) || !isValidBoundary(end) || start.node == end.node) {
         return false;
     }
 
-    QDomNode startNode = promoteRangeStartNode(rangeStartNodeFromBoundary(doc, start));
-    QDomNode endNode = promoteRangeEndNode(rangeEndNodeFromBoundary(doc, end));
+    QDomNode startNode = rangeStartNodeFromBoundary(doc, start);
+    QDomNode endNode = rangeEndNodeFromBoundary(doc, end);
     if (startNode.isNull() || endNode.isNull()) {
         return false;
     }
+    if (startNode != endNode && (containsNode(startNode, endNode) || containsNode(endNode, startNode))) {
+        return false;
+    }
 
+    // Stop at the lowest common parent, even when it is itself an inline element.
     QDomNode parent = startNode.parentNode();
-    if (parent.isNull() || parent != endNode.parentNode()) {
+    while (!parent.isNull() && !containsNode(parent, endNode)) {
+        parent = parent.parentNode();
+    }
+    if (parent.isNull()) {
+        return false;
+    }
+    for (QDomNode ancestor = parent; !ancestor.isNull(); ancestor = ancestor.parentNode()) {
+        if (ancestor.isElement() && anchorRangeElementName(ancestor.toElement()) == QStringLiteral("a")) {
+            return false;
+        }
+    }
+
+    startNode = promoteRangeStartNode(startNode, parent);
+    endNode = promoteRangeEndNode(endNode, parent);
+    if (startNode.isNull() || endNode.isNull()) {
         return false;
     }
 
@@ -1821,7 +1880,7 @@ static bool wrapSiblingRange(QDomDocument &doc,
         return false;
     }
 
-    QDomElement anchor = createAnchorElement(doc, QStringLiteral("a"), anchorId, anchorType, href, title);
+    QDomElement anchor = createAnchorElement(doc, tagName, anchorId, anchorType, href, title);
     parent.insertBefore(anchor, startNode);
 
     for (const QDomNode &node : std::as_const(nodesToWrap)) {
@@ -1835,102 +1894,76 @@ static bool wrapSiblingRange(QDomDocument &doc,
     return true;
 }
 
-static void copyDirectoryReplacingFiles(KZip &outZip,
+static bool copyDirectoryReplacingFiles(KZip &outZip,
                                         const KArchiveDirectory *dir,
                                         const QString &prefix,
-                                        const QHash<QString, QByteArray> &replacementDataByPath,
+                                        const QHash<QString, QByteArray> &replacements,
                                         QSet<QString> &replacedPaths)
 {
-    if (!dir) {
-        return;
-    }
-
-    const QStringList entries = dir->entries();
-    for (const QString &entryName : entries) {
+    if (!dir) return false;
+    for (const QString &entryName : dir->entries()) {
         const KArchiveEntry *entry = dir->entry(entryName);
-        if (!entry) {
-            continue;
-        }
-
-        const QString fullPath = prefix.isEmpty() ? entryName : prefix + QStringLiteral("/") + entryName;
-        const QString cleanPath = QDir::cleanPath(fullPath);
-
-        if (cleanPath == QStringLiteral("mimetype")) {
-            continue;
-        }
-
+        if (!entry) return false;
+        const QString path = prefix.isEmpty() ? entryName : prefix + QLatin1Char('/') + entryName;
+        if (path == QStringLiteral("mimetype")) continue;
         if (entry->isDirectory()) {
-            const auto *subdir = dynamic_cast<const KArchiveDirectory *>(entry);
-            if (subdir) {
-                copyDirectoryReplacingFiles(outZip, subdir, cleanPath, replacementDataByPath, replacedPaths);
+            const auto *child = dynamic_cast<const KArchiveDirectory *>(entry);
+            if (!copyDirectoryReplacingFiles(outZip, child, path, replacements, replacedPaths)) return false;
+        } else {
+            const auto *file = dynamic_cast<const KArchiveFile *>(entry);
+            if (!file) return false;
+            QByteArray data;
+            if (replacements.contains(path)) {
+                data = replacements.value(path);
+                replacedPaths.insert(path);
+            } else {
+                QScopedPointer<QIODevice> device(file->createDevice());
+                if (!device) return false;
+                data = device->readAll();
+                if (data.size() != file->size()) return false;
             }
-            continue;
+            if (!outZip.writeFile(path, data)) return false;
         }
-
-        const auto *file = dynamic_cast<const KArchiveFile *>(entry);
-        if (!file) {
-            continue;
-        }
-
-        if (replacementDataByPath.contains(cleanPath)) {
-            outZip.writeFile(cleanPath, replacementDataByPath.value(cleanPath));
-            replacedPaths.insert(cleanPath);
-            continue;
-        }
-
-        QScopedPointer<QIODevice> dev(file->createDevice());
-        if (!dev) {
-            continue;
-        }
-
-        outZip.writeFile(cleanPath, dev->readAll());
     }
+    return true;
 }
 
-static QByteArray createEpubReplacingFiles(const KArchiveDirectory *rootFolder, const QHash<QString, QByteArray> &replacementDataByPath)
+static QByteArray createEpubReplacingFiles(const KArchiveDirectory *rootFolder,
+                                            const QHash<QString, QByteArray> &replacements,
+                                            const QHash<QString, QByteArray> &additions = {})
 {
-    if (!rootFolder) {
-        qWarning() << "No EPUB root folder available for replacement";
-        return {};
-    }
-    if (replacementDataByPath.isEmpty()) {
-        qWarning() << "No EPUB replacement files provided";
-        return {};
-    }
-
+    if (!rootFolder || (replacements.isEmpty() && additions.isEmpty())) return {};
     QByteArray result;
     QBuffer buffer(&result);
-    if (!buffer.open(QIODevice::WriteOnly)) {
-        qWarning() << "Unable to open EPUB replacement buffer";
-        return {};
-    }
-
-    KZip outZip(&buffer);
-    if (!outZip.open(QIODevice::WriteOnly)) {
-        qWarning() << "Unable to create replacement EPUB";
-        return {};
-    }
-
-    outZip.writeFile(QStringLiteral("mimetype"), QByteArrayLiteral("application/epub+zip"));
-
-    QSet<QString> replacedPaths;
-    copyDirectoryReplacingFiles(outZip, rootFolder, QString(), replacementDataByPath, replacedPaths);
-    outZip.close();
-    buffer.close();
-
-    if (replacedPaths.size() != replacementDataByPath.size()) {
-        QStringList missing;
-        for (auto it = replacementDataByPath.constBegin(); it != replacementDataByPath.constEnd(); ++it) {
-            if (!replacedPaths.contains(it.key())) {
-                missing.append(it.key());
-            }
+    if (!buffer.open(QIODevice::WriteOnly)) return {};
+    KZip zip(&buffer);
+    if (!zip.open(QIODevice::WriteOnly)) return {};
+    zip.setCompression(KZip::NoCompression);
+    bool ok = zip.writeFile(QStringLiteral("mimetype"), QByteArrayLiteral("application/epub+zip"));
+    zip.setCompression(KZip::DeflateCompression);
+    QSet<QString> replaced;
+    ok = ok && copyDirectoryReplacingFiles(zip, rootFolder, {}, replacements, replaced);
+    ok = ok && replaced.size() == replacements.size();
+    for (auto it = additions.cbegin(); ok && it != additions.cend(); ++it) {
+        const QString path = it.key();
+        if (path.isEmpty() || path.startsWith(QLatin1Char('/')) || path.contains(QLatin1Char('\\'))
+            || QDir::cleanPath(path) != path || path.startsWith(QStringLiteral("../"))
+            || rootFolder->entry(path) || replacements.contains(path)) {
+            ok = false;
+        } else {
+            ok = zip.writeFile(path, it.value());
         }
-        qWarning() << "Unable to find replacement documents in EPUB" << missing;
-        return {};
     }
-
-    return result;
+    const bool closed = zip.close();
+    return ok && closed ? result : QByteArray{};
 }
+
+QByteArray EPubContainer::createMetadataCandidate(const QHash<QString, QByteArray> &replacements,
+                                                  const QHash<QString, QByteArray> &additions) const
+{
+    return createEpubReplacingFiles(m_rootFolder, replacements, additions);
+}
+
 
 static QByteArray createEpubReplacingFile(const KArchiveDirectory *rootFolder, const QString &replacementPath, const QByteArray &replacementData)
 {
@@ -2080,6 +2113,8 @@ static bool copyAnchorSafetyBackup(const QString &sourcePath, const QString &anc
             return false;
         }
 
+        if (!MaintenanceFiles::registerBackup(sourceInfo.absoluteFilePath(), candidatePath))
+            qWarning() << "Unable to record safety backup" << candidatePath;
         if (backupPath) {
             *backupPath = candidatePath;
         }
@@ -2112,7 +2147,8 @@ static bool copyImageClassSafetyBackup(const QString &sourcePath, const QString 
 
 static bool isImageElement(const QDomElement &element)
 {
-    return !element.isNull() && xmlLocalName(element).compare(QStringLiteral("img"), Qt::CaseInsensitive) == 0;
+    const QString name = xmlLocalName(element).toLower();
+    return !element.isNull() && (name == QStringLiteral("img") || name == QStringLiteral("image") || name == QStringLiteral("svg"));
 }
 
 static QDomElement imageElementFromNode(const QDomNode &node)
@@ -2195,7 +2231,7 @@ static QDomElement firstImageBySrc(const QDomNode &node, const QString &document
     }
 
     const QDomElement element = node.toElement();
-    if (isImageElement(element) && normalizedImageSrc(element.attribute(QStringLiteral("src")), documentPath) == normalizedSrc) {
+    if (isImageElement(element) && normalizedImageSrc(imageReference(element), documentPath) == normalizedSrc) {
         return element;
     }
 
@@ -2227,13 +2263,39 @@ static bool addCssClass(QDomElement element, const QString &className)
     return true;
 }
 
+static bool markImageNotInverse(QDomElement image)
+{
+    bool changed = addCssClass(image, QStringLiteral("not_inverse"));
+    if (xmlLocalName(image) == QStringLiteral("svg")) {
+        const auto markDescendants = [&changed](const auto &self, const QDomNode &node) -> void {
+            for (QDomNode child = node.firstChild(); !child.isNull(); child = child.nextSibling()) {
+                const QDomElement element = child.toElement();
+                if (isImageElement(element)) {
+                    changed = addCssClass(element, QStringLiteral("not_inverse")) || changed;
+                }
+                self(self, child);
+            }
+        };
+        markDescendants(markDescendants, image);
+    }
+    // The filter is applied to the SVG as a whole, not just its raster <image>.
+    for (QDomNode parent = image.parentNode(); !parent.isNull(); parent = parent.parentNode()) {
+        const QDomElement element = parent.toElement();
+        if (xmlLocalName(element) == QStringLiteral("svg")) {
+            changed = addCssClass(element, QStringLiteral("not_inverse")) || changed;
+        }
+    }
+    return changed;
+}
+
 static bool isReferenceAnchorElement(const QDomElement &element, const QString &anchorId)
 {
     if (element.isNull()) {
         return false;
     }
 
-    const bool modernCrossReference = element.attribute(QStringLiteral("id")) == anchorId && xmlLocalName(element) == QStringLiteral("a")
+    const bool modernCrossReference = element.attribute(QStringLiteral("id")) == anchorId
+        && (xmlLocalName(element) == QStringLiteral("a") || xmlLocalName(element) == QStringLiteral("span"))
         && element.attribute(QStringLiteral("data-role")) == QStringLiteral("anchor")
         && element.attribute(QStringLiteral("data-anchor-type")) == QStringLiteral("crossref");
     if (modernCrossReference) {
@@ -2478,6 +2540,136 @@ bool EPubContainer::openFile(const QString &path)
     return true;
 }
 
+namespace
+{
+struct SearchTextPosition {
+    int node;
+    qsizetype offset;
+};
+
+// Preserve the original DOM offsets while normalizing text for phrase searches.
+struct SearchDocumentText {
+    QString text;
+    QStringList paths;
+    QVector<SearchTextPosition> positions;
+
+    void space()
+    {
+        if (!text.isEmpty() && !text.back().isSpace()) {
+            text += QLatin1Char(' ');
+            positions.append({-1, 0});
+        }
+    }
+
+    void append(const QDomElement &element, const QString &path, const std::function<bool()> &cancelled)
+    {
+        if (cancelled && cancelled())
+            return;
+        const QString name = localElementName(element);
+        if (name == QStringLiteral("head") || name == QStringLiteral("script") || name == QStringLiteral("style") || name == QStringLiteral("template")
+            || element.hasAttribute(QStringLiteral("hidden")))
+            return;
+        static const QSet<QString> blocks = {QStringLiteral("p"),  QStringLiteral("div"), QStringLiteral("section"), QStringLiteral("article"),
+                                             QStringLiteral("h1"), QStringLiteral("h2"),  QStringLiteral("h3"),      QStringLiteral("h4"),
+                                             QStringLiteral("h5"), QStringLiteral("h6"),  QStringLiteral("li"),      QStringLiteral("blockquote"),
+                                             QStringLiteral("br"), QStringLiteral("hr"),  QStringLiteral("tr"),      QStringLiteral("td"),
+                                             QStringLiteral("th"), QStringLiteral("dt"),  QStringLiteral("dd"),      QStringLiteral("pre")};
+        const bool block = blocks.contains(name);
+        if (block)
+            space();
+        int elements = 0;
+        qsizetype chunkOffset = 0;
+        for (auto child = element.firstChild(); !child.isNull(); child = child.nextSibling()) {
+            if (cancelled && cancelled())
+                return;
+            if (child.isElement()) {
+                ++elements;
+                chunkOffset = 0;
+                append(child.toElement(), path + QStringLiteral("/%1").arg(elements * 2), cancelled);
+            } else if (child.isText() || child.isCDATASection()) {
+                const int node = paths.size();
+                paths.append(path + QStringLiteral("/%1").arg(elements * 2 + 1));
+                const QString value = child.nodeValue();
+                for (qsizetype i = 0; i < value.size(); ++i) {
+                    if (i % 1024 == 0 && cancelled && cancelled())
+                        return;
+                    const QChar c = value.at(i);
+                    if (c.isSpace() && (text.isEmpty() || text.back().isSpace()))
+                        continue;
+                    text += c.isSpace() ? QLatin1Char(' ') : c;
+                    positions.append({node, chunkOffset + i});
+                }
+                // CFI combines text and CDATA separated only by comments into one chunk.
+                chunkOffset += value.size();
+            }
+        }
+        if (block)
+            space();
+    }
+};
+}
+
+QVector<EpubSearchMatch> EPubContainer::searchText(const QString &query, const std::function<bool()> &cancelled, QString *error)
+{
+    if (error)
+        error->clear();
+    QVector<EpubSearchMatch> matches;
+    const QString needle = query.simplified();
+    if (needle.isEmpty())
+        return matches;
+    if (!m_rootFolder) {
+        if (error)
+            *error = i18n("No EPUB is open.");
+        return matches;
+    }
+    QSet<QString> searched;
+    for (int spineIndex = 0; spineIndex < m_orderedItems.size(); ++spineIndex) {
+        if (cancelled && cancelled())
+            break;
+        const auto item = m_items.value(m_orderedItems.at(spineIndex));
+        if (searched.contains(item.path))
+            continue;
+        searched.insert(item.path);
+        if (item.mimetype != "application/xhtml+xml" && item.mimetype != "text/html")
+            continue;
+        QDomDocument document;
+        if (!document.setContent(readData(item.path), QDomDocument::ParseOption::PreserveSpacingOnlyNodes)) {
+            if (error)
+                *error = i18n("Unable to search EPUB chapter: %1", item.path);
+            continue;
+        }
+        SearchDocumentText content;
+        content.append(document.documentElement(), {}, cancelled);
+        QString section = item.path;
+        const auto titles = document.elementsByTagName(QStringLiteral("title"));
+        if (!titles.isEmpty() && !titles.at(0).toElement().text().trimmed().isEmpty())
+            section = titles.at(0).toElement().text().simplified();
+        qsizetype position = 0;
+        while (!(cancelled && cancelled()) && (position = content.text.indexOf(needle, position, Qt::CaseInsensitive)) >= 0) {
+            const auto start = content.positions.at(position);
+            const auto end = content.positions.at(position + needle.size() - 1);
+            if (start.node >= 0 && end.node >= 0) {
+                EpubSearchMatch match;
+                match.location = QStringLiteral("epubcfi(/6/%1!,%2:%3,%4:%5)")
+                                     .arg((spineIndex + 1) * 2)
+                                     .arg(content.paths.at(start.node))
+                                     .arg(start.offset)
+                                     .arg(content.paths.at(end.node))
+                                     .arg(end.offset + 1);
+                match.section = section;
+                const qsizetype excerptStart = qMax<qsizetype>(0, position - 65);
+                match.before = (excerptStart > 0 ? QStringLiteral("…") : QString()) + content.text.mid(excerptStart, position - excerptStart);
+                match.text = content.text.mid(position, needle.size());
+                match.after =
+                    content.text.mid(position + needle.size(), 65) + (position + needle.size() + 65 < content.text.size() ? QStringLiteral("…") : QString());
+                matches.append(match);
+            }
+            position += needle.size();
+        }
+    }
+    return matches;
+}
+
 const KArchiveDirectory *EPubContainer::rootDirectory() const
 {
     return m_rootFolder;
@@ -2679,6 +2871,84 @@ EpubNormalizationResult EPubContainer::normalizeForArianna(const QString &fallba
     }
 
     result.changed = true;
+    return result;
+}
+
+EpubNormalizationResult EPubContainer::replaceBookIdentifiers(const QStringList &oldIds, const QString &newId) const
+{
+    EpubNormalizationResult result;
+    result.success = false;
+    result.errorMessage = i18n("Unable to change the EPUB book identifier.");
+    if (!m_rootFolder || m_contentFilePath.isEmpty() || newId.trimmed().isEmpty())
+        return result;
+    QSet<QString> ids;
+    for (const auto &id : oldIds)
+        ids.insert(MaintenanceFiles::normalizedId(id));
+    const auto *opf = file(m_contentFilePath);
+    if (!opf)
+        return result;
+    const auto data = opf->data();
+    QDomDocument document;
+    if (!setDomContentWithNamespaces(document, data))
+        return result;
+    const auto primaryId = MaintenanceFiles::normalizedId(m_metadata.value(QStringLiteral("unique-identifier")).value(0));
+    if (file(QStringLiteral("META-INF/signatures.xml")) || (ids.contains(primaryId) && file(QStringLiteral("META-INF/encryption.xml")))) {
+        result.errorMessage = i18n("The identifier of this signed or encrypted EPUB cannot be changed safely.");
+        return result;
+    }
+    auto metadataNodes = document.elementsByTagName(QStringLiteral("metadata"));
+    if (metadataNodes.isEmpty())
+        return result;
+    bool changed = false;
+    QSet<QString> changedElementIds;
+    auto metadata = metadataNodes.at(0).toElement();
+    for (auto element = metadata.firstChildElement(); !element.isNull(); element = element.nextSiblingElement()) {
+        if (xmlLocalName(element) != QStringLiteral("identifier") || element.namespaceURI() != QStringLiteral("http://purl.org/dc/elements/1.1/")
+            || !ids.contains(MaintenanceFiles::normalizedId(element.text())))
+            continue;
+        while (element.hasChildNodes())
+            element.removeChild(element.firstChild());
+        element.appendChild(document.createTextNode(newId));
+        // The new UUID must not keep an ISBN (or other identifier type) declaration.
+        element.removeAttributeNS(QStringLiteral("http://www.idpf.org/2007/opf"), QStringLiteral("scheme"));
+        element.removeAttribute(QStringLiteral("scheme"));
+        if (!element.attribute(QStringLiteral("id")).isEmpty())
+            changedElementIds.insert(element.attribute(QStringLiteral("id")));
+        changed = true;
+    }
+    if (!changed)
+        return result;
+    for (auto element = metadata.firstChildElement(); !element.isNull();) {
+        const auto next = element.nextSiblingElement();
+        if (xmlLocalName(element) == QStringLiteral("meta") && element.attribute(QStringLiteral("property")) == QStringLiteral("identifier-type")
+            && changedElementIds.contains(element.attribute(QStringLiteral("refines")).mid(1))
+            && element.attribute(QStringLiteral("refines")).startsWith(QLatin1Char('#')))
+            metadata.removeChild(element);
+        element = next;
+    }
+    restoreRootNamespaceDeclarations(document, rootNamespaceDeclarations(data));
+    QHash<QString, QByteArray> replacements{{m_contentFilePath, document.toByteArray()}};
+    if (ids.contains(primaryId)) {
+        for (const auto &item : m_items) {
+            if (item.mimetype != QByteArrayLiteral("application/x-dtbncx+xml"))
+                continue;
+            const auto *ncxFile = file(item.path);
+            QDomDocument ncx;
+            if (!ncxFile || !setDomContentWithNamespaces(ncx, ncxFile->data()))
+                return result;
+            auto nodes = ncx.elementsByTagName(QStringLiteral("meta"));
+            for (int i = 0; i < nodes.size(); ++i) {
+                auto element = nodes.at(i).toElement();
+                if (element.attribute(QStringLiteral("name")) == QStringLiteral("dtb:uid"))
+                    element.setAttribute(QStringLiteral("content"), newId);
+            }
+            replacements.insert(item.path, ncx.toByteArray());
+        }
+    }
+    result.success = writeEpubReplacingFiles(m_filename, m_rootFolder, replacements);
+    result.changed = result.success;
+    if (result.success)
+        result.errorMessage.clear();
     return result;
 }
 
@@ -2977,6 +3247,27 @@ QByteArray EPubContainer::createServerReadyEpub(const ResourceMap &resourceMap) 
     return createServerReadyEpub(options);
 }
 
+bool EPubContainer::needsMathJax() const
+{
+    if (!m_rootFolder) {
+        return false;
+    }
+    for (const auto &item : m_items) {
+        if (item.mimetype != QByteArrayLiteral("application/xhtml+xml") && item.mimetype != QByteArrayLiteral("text/html")) {
+            continue;
+        }
+        const auto *file = m_rootFolder->file(item.path);
+        if (!file) {
+            continue;
+        }
+        QScopedPointer<QIODevice> device(file->createDevice());
+        if (device && EpubMath::needsMathJax(device->readAll())) {
+            return true;
+        }
+    }
+    return false;
+}
+
 QByteArray EPubContainer::createServerReadyEpub(const ServerReadyEpubOptions &options) const
 {
     if (!m_rootFolder) {
@@ -3003,6 +3294,7 @@ QByteArray EPubContainer::createServerReadyEpub(const ServerReadyEpubOptions &op
 
     ServerReadyCopyContext context;
     context.resourceMap = options.resourceMap;
+    context.mathJaxBootstrapUrl = options.mathJaxBootstrapUrl;
     context.includeReferences = options.includeReferences;
     context.opfPath = m_contentFilePath;
     context.references = options.references;
@@ -3036,12 +3328,16 @@ QString EPubContainer::createAnchor(const QString &cfi)
     return createRangeAnchor(cfi, QStringLiteral("crossref"), QString(), QStringLiteral("cross-reference"));
 }
 
-QString EPubContainer::createAnchor(const QString &cfi, const QString &anchorType)
+QString EPubContainer::createAnchor(const QString &cfi, const QString &anchorType, const bool createBackup)
 {
-    return createRangeAnchor(cfi, anchorType, QString(), anchorType.isEmpty() ? QStringLiteral("target") : anchorType);
+    return createRangeAnchor(cfi, anchorType, QString(), anchorType.isEmpty() ? QStringLiteral("target") : anchorType, QString(), createBackup);
 }
 
-QString EPubContainer::createBookrefAnchor(const QString &cfi, const QString &targetLocation, const bool isCrossReference, const QString &title)
+QString EPubContainer::createBookrefAnchor(const QString &cfi,
+                                         const QString &targetLocation,
+                                         const bool isCrossReference,
+                                         const QString &title,
+                                         const bool createBackup)
 {
     const QString href = isCrossReference ? QString() : targetLocation.trimmed();
     if (!isCrossReference && href.isEmpty()) {
@@ -3053,7 +3349,7 @@ QString EPubContainer::createBookrefAnchor(const QString &cfi, const QString &ta
                              isCrossReference ? QStringLiteral("crossref") : QString(),
                              href,
                              isCrossReference ? QStringLiteral("cross-reference") : QStringLiteral("intra-book reference"),
-                             title.trimmed());
+                             title.trimmed(), createBackup);
 }
 
 bool EPubContainer::updateReferenceAnchor(const QString &anchorId,
@@ -3143,6 +3439,9 @@ bool EPubContainer::updateReferenceAnchor(const QString &anchorId,
             anchor.removeAttribute(QStringLiteral("href"));
         } else {
             anchor.removeAttribute(QStringLiteral("data-anchor-type"));
+            // This DOM was parsed without namespace processing; retain any explicit prefix.
+            const QString prefix = anchor.tagName().left(anchor.tagName().lastIndexOf(QLatin1Char(':')) + 1);
+            anchor.setTagName(prefix + QStringLiteral("a"));
             anchor.setAttribute(QStringLiteral("href"), targetHref);
         }
 
@@ -3154,12 +3453,108 @@ bool EPubContainer::updateReferenceAnchor(const QString &anchorId,
         if (changed) {
             *changed = true;
         }
+        MaintenanceFiles::completeBackup(backupPath);
         qDebug() << "Updated reference anchor" << normalizedAnchorId << "in" << m_filename << "backup:" << backupPath;
         return true;
     }
 
     qWarning() << "Reference anchor absent in EPUB during update" << normalizedAnchorId << m_filename;
     return true;
+}
+
+bool EPubContainer::updateReferenceAnchorTitle(const QString &documentPath, const QString &anchorId, const QString &title)
+{
+    if (!m_rootFolder || anchorId.isEmpty()) {
+        return false;
+    }
+    const QByteArray data = readData(documentPath);
+    QDomDocument document;
+    if (!document.setContent(data, QDomDocument::ParseOption::PreserveSpacingOnlyNodes)) {
+        return false;
+    }
+    restoreRootNamespaceDeclarations(document, rootNamespaceDeclarations(data));
+    QList<QDomElement> pending{document.documentElement()};
+    QDomElement anchor;
+    while (!pending.isEmpty()) {
+        const auto element = pending.takeLast();
+        if (isReferenceAnchorElement(element, anchorId)) {
+            if (!anchor.isNull()) {
+                return false;
+            }
+            anchor = element;
+        }
+        for (auto child = element.firstChildElement(); !child.isNull(); child = child.nextSiblingElement()) {
+            pending.append(child);
+        }
+    }
+    if (anchor.isNull()) {
+        return false;
+    }
+    const QString normalizedTitle = title.trimmed();
+    if (anchor.attribute(QStringLiteral("title")) == normalizedTitle && (!normalizedTitle.isEmpty() || !anchor.hasAttribute(QStringLiteral("title")))) {
+        return true;
+    }
+    if (normalizedTitle.isEmpty()) {
+        anchor.removeAttribute(QStringLiteral("title"));
+    } else {
+        anchor.setAttribute(QStringLiteral("title"), normalizedTitle);
+    }
+    return writeEpubReplacingFile(m_filename, m_rootFolder, documentPath, document.toByteArray(-1));
+}
+
+bool EPubContainer::removeReferenceMarker(const QString &documentPath, int elementIndex, const QString &anchorId, bool source, bool retainAnchor)
+{
+    if (!m_rootFolder || elementIndex < 0 || anchorId.isEmpty())
+        return false;
+    const auto data = readData(documentPath);
+    QDomDocument document;
+    if (!document.setContent(data, QDomDocument::ParseOption::PreserveSpacingOnlyNodes))
+        return false;
+    restoreRootNamespaceDeclarations(document, rootNamespaceDeclarations(data));
+    QList<QDomElement> pending{document.documentElement()};
+    while (!pending.isEmpty()) {
+        auto element = pending.takeLast();
+        if (elementIndex-- == 0) {
+            const QString tag = xmlLocalName(element);
+            const bool valid = source ? isReferenceAnchorElement(element, anchorId)
+                                      : (tag == QStringLiteral("a") || tag == QStringLiteral("span")) && element.attribute(QStringLiteral("id")) == anchorId
+                    && element.attribute(QStringLiteral("data-role")) == QStringLiteral("anchor")
+                    && (element.attribute(QStringLiteral("data-anchor-type")).isEmpty()
+                        || element.attribute(QStringLiteral("data-anchor-type")) == QStringLiteral("target"));
+            if (!valid)
+                return false;
+            auto classes = element.attribute(QStringLiteral("class")).split(QRegularExpression(QStringLiteral("\\s+")), Qt::SkipEmptyParts);
+            classes.removeAll(QStringLiteral("bookref"));
+            if (classes.isEmpty())
+                element.removeAttribute(QStringLiteral("class"));
+            else
+                element.setAttribute(QStringLiteral("class"), classes.join(QLatin1Char(' ')));
+            element.removeAttribute(QStringLiteral("data-ref"));
+            element.removeAttribute(QStringLiteral("title"));
+            if (source)
+                element.removeAttribute(QStringLiteral("href"));
+            if (retainAnchor) {
+                if (!element.hasAttribute(QStringLiteral("id")))
+                    element.setAttribute(QStringLiteral("id"), anchorId);
+                element.setAttribute(QStringLiteral("data-role"), QStringLiteral("anchor"));
+                element.setAttribute(QStringLiteral("data-anchor-type"), QStringLiteral("target"));
+            } else {
+                for (const auto &name : {"id", "xml:id", "name", "data-role", "data-anchor-type"})
+                    element.removeAttribute(QString::fromLatin1(name));
+                bool keepWrapper = tag != QStringLiteral("a") && tag != QStringLiteral("span");
+                for (int i = 0; i < element.attributes().size(); ++i) {
+                    if (!element.attributes().item(i).nodeName().startsWith(QStringLiteral("xmlns")))
+                        keepWrapper = true;
+                }
+                if (!keepWrapper && !unwrapElement(element))
+                    return false;
+            }
+            return writeEpubReplacingFile(m_filename, m_rootFolder, documentPath, document.toByteArray(-1));
+        }
+        for (auto child = element.lastChildElement(); !child.isNull(); child = child.previousSiblingElement())
+            pending.append(child);
+    }
+    return false;
 }
 
 bool EPubContainer::deleteReferenceAnchor(const QString &anchorId)
@@ -3215,12 +3610,48 @@ bool EPubContainer::deleteReferenceAnchor(const QString &anchorId)
             return false;
         }
 
+        MaintenanceFiles::completeBackup(backupPath);
         qDebug() << "Deleted reference anchor" << normalizedAnchorId << "from" << m_filename << "backup:" << backupPath;
         return true;
     }
 
     qWarning() << "Reference anchor already absent in EPUB" << normalizedAnchorId << m_filename;
     return true;
+}
+
+bool EPubContainer::deleteOrphanReferenceAnchor(const QString &documentPath, int elementIndex, const QString &anchorId)
+{
+    if (!m_rootFolder || elementIndex < 0) {
+        return false;
+    }
+    const QByteArray data = readData(documentPath);
+    QDomDocument document;
+    if (!setDomContentPreservingMarkup(document, data)) {
+        return false;
+    }
+    restoreRootNamespaceDeclarations(document, rootNamespaceDeclarations(data));
+    QList<QDomElement> pending{document.documentElement()};
+    while (!pending.isEmpty()) {
+        const auto element = pending.takeLast();
+        if (elementIndex-- == 0) {
+            const bool legacy = element.attribute(QStringLiteral("class"))
+                                    .split(QRegularExpression(QStringLiteral("\\s+")), Qt::SkipEmptyParts)
+                                    .contains(QStringLiteral("bookref"))
+                && element.hasAttribute(QStringLiteral("data-ref"));
+            const bool crossReference = legacy
+                || ((xmlLocalName(element) == QStringLiteral("a") || xmlLocalName(element) == QStringLiteral("span"))
+                    && element.attribute(QStringLiteral("data-role")) == QStringLiteral("anchor")
+                    && element.attribute(QStringLiteral("data-anchor-type")) == QStringLiteral("crossref"));
+            if (!crossReference || element.attribute(legacy ? QStringLiteral("data-ref") : QStringLiteral("id")) != anchorId) {
+                return false;
+            }
+            return unwrapElement(element) && writeEpubReplacingFile(m_filename, m_rootFolder, documentPath, document.toByteArray());
+        }
+        for (auto child = element.lastChildElement(); !child.isNull(); child = child.previousSiblingElement()) {
+            pending.append(child);
+        }
+    }
+    return false;
 }
 
 bool EPubContainer::deleteTargetRangeAnchor(const QString &anchorId)
@@ -3276,6 +3707,7 @@ bool EPubContainer::deleteTargetRangeAnchor(const QString &anchorId)
             return false;
         }
 
+        MaintenanceFiles::completeBackup(backupPath);
         qDebug() << "Deleted target range anchor" << normalizedAnchorId << "from" << m_filename << "backup:" << backupPath;
         return true;
     }
@@ -3284,7 +3716,12 @@ bool EPubContainer::deleteTargetRangeAnchor(const QString &anchorId)
     return true;
 }
 
-QString EPubContainer::createRangeAnchor(const QString &cfi, const QString &anchorType, const QString &href, const QString &debugLabel, const QString &title)
+QString EPubContainer::createRangeAnchor(const QString &cfi,
+                                       const QString &anchorType,
+                                       const QString &href,
+                                       const QString &debugLabel,
+                                       const QString &title,
+                                       const bool createBackup)
 {
     if (!m_rootFolder) {
         qWarning() << "No EPUB root folder available";
@@ -3322,7 +3759,8 @@ QString EPubContainer::createRangeAnchor(const QString &cfi, const QString &anch
 
     const XmlNamespaceDeclarations rootNamespaces = rootNamespaceDeclarations(data);
     QDomDocument doc;
-    if (!setDomContentPreservingMarkup(doc, data)) {
+    // Spaces between inline elements are part of the selected text and CFI offsets.
+    if (!doc.setContent(data, QDomDocument::ParseOption::PreserveSpacingOnlyNodes)) {
         qWarning() << "Unable to parse EPUB document for anchor" << item.path;
         return {};
     }
@@ -3338,27 +3776,229 @@ QString EPubContainer::createRangeAnchor(const QString &cfi, const QString &anch
     }
 
     QString selectedText;
-    if (!wrapSingleTextNodeRange(doc, startBoundary, endBoundary, anchorId, anchorType, &selectedText, QStringLiteral("a"), anchorHref, title.trimmed())
-        && !wrapSiblingRange(doc, startBoundary, endBoundary, anchorId, anchorType, &selectedText, anchorHref, title.trimmed())) {
+    const QString tagName = anchorType == QStringLiteral("crossref") ? QStringLiteral("span") : QStringLiteral("a");
+    if (!wrapSingleTextNodeRange(doc, startBoundary, endBoundary, anchorId, anchorType, &selectedText, tagName, anchorHref, title.trimmed())
+        && !wrapSiblingRange(doc, startBoundary, endBoundary, anchorId, anchorType, &selectedText, anchorHref, title.trimmed(), tagName)) {
         qWarning() << "Unable to wrap CFI range with anchor" << cfi << "in" << item.path;
         return {};
     }
 
     QString backupPath;
-    if (!copyAnchorSafetyBackup(m_filename, anchorId, &backupPath)) {
+    if (createBackup && !copyAnchorSafetyBackup(m_filename, anchorId, &backupPath)) {
         return {};
     }
 
-    if (!writeEpubReplacingFile(m_filename, m_rootFolder, item.path, doc.toByteArray())) {
+    // Pretty-printing would introduce whitespace inside the new inline anchor.
+    if (!writeEpubReplacingFile(m_filename, m_rootFolder, item.path, doc.toByteArray(-1))) {
         qWarning() << "Unable to write anchor into EPUB" << m_filename;
         return {};
     }
 
+    if (!backupPath.isEmpty())
+        MaintenanceFiles::completeBackup(backupPath);
     qDebug() << "Created" << debugLabel << "anchor" << anchorId << "for" << selectedText << "in" << m_filename << "backup:" << backupPath;
     return anchorId;
 }
 
-QByteArray EPubContainer::createAnnotationAnchoredEpub(const QString &cfi, const QString &anchorId)
+// Verify the generated range before serializing it. A CFI may still resolve after
+// an edit, but to different text; recovery must never silently use that position.
+static bool verifiedAnnotationText(const QDomNode &root, const QString &id, QString &text)
+{
+    int single = 0, begin = 0, end = 0;
+    bool inside = false, ordered = true;
+    QString singleText, rangeText;
+    std::function<void(const QDomNode &)> visit = [&](const QDomNode &node) {
+        if (node.isElement()) {
+            const auto element = node.toElement();
+            const auto elementId = element.attribute(QStringLiteral("id"));
+            if (elementId == id) {
+                ++single;
+                appendPlainText(node, singleText);
+            } else if (elementId == id + QStringLiteral("_begin")) {
+                ordered &= begin == 0 && end == 0;
+                ++begin;
+                inside = true;
+            } else if (elementId == id + QStringLiteral("_end")) {
+                ordered &= begin == 1 && end == 0;
+                ++end;
+                inside = false;
+            }
+        } else if (inside && isTextLikeNode(node)) {
+            rangeText += node.nodeValue();
+        }
+        for (auto child = node.firstChild(); !child.isNull(); child = child.nextSibling())
+            visit(child);
+    };
+    visit(root);
+    if (single == 1 && begin == 0 && end == 0)
+        text = singleText;
+    else if (single == 0 && begin == 1 && end == 1 && ordered)
+        text = rangeText;
+    else
+        return false;
+    return !text.simplified().isEmpty();
+}
+
+// Search rendered body text while retaining exact DOM boundaries for the selected hit.
+// A block is searched separately so identical words in adjacent paragraphs cannot
+// accidentally become a single match. Whitespace is collapsed like a reader selection.
+struct AnnotationTextHit {
+    CfiBoundary start;
+    CfiBoundary end;
+    QString before;
+    QString after;
+};
+
+static QList<AnnotationTextHit> annotationTextHits(const QDomDocument &document, const QString &needle, int limit = 100, int *total = nullptr)
+{
+    struct Group { QList<QDomNode> nodes; };
+    QList<Group> groups;
+    const QSet<QString> blocks{QStringLiteral("body"), QStringLiteral("p"), QStringLiteral("div"), QStringLiteral("li"),
+                               QStringLiteral("blockquote"), QStringLiteral("pre"), QStringLiteral("td"), QStringLiteral("th"),
+                               QStringLiteral("h1"), QStringLiteral("h2"), QStringLiteral("h3"), QStringLiteral("h4"),
+                               QStringLiteral("h5"), QStringLiteral("h6")};
+    const QSet<QString> ignored{QStringLiteral("script"), QStringLiteral("style"), QStringLiteral("head"),
+                                QStringLiteral("svg"), QStringLiteral("math")};
+    std::function<void(const QDomNode &, int)> visit = [&](const QDomNode &node, int group) {
+        if (node.isElement()) {
+            const QString name = node.toElement().tagName().section(QLatin1Char(':'), -1).toLower();
+            if (ignored.contains(name))
+                return;
+            if (blocks.contains(name)) {
+                group = groups.size();
+                groups.append(Group{});
+            }
+        }
+        if (group >= 0 && isTextLikeNode(node))
+            groups[group].nodes.append(node);
+        for (auto child = node.firstChild(); !child.isNull(); child = child.nextSibling())
+            visit(child, group);
+    };
+    visit(document.documentElement(), -1);
+
+    QList<AnnotationTextHit> hits;
+    const QString wanted = needle.simplified();
+    if (wanted.isEmpty())
+        return hits;
+    for (const auto &group : std::as_const(groups)) {
+        QString normalized;
+        QVector<CfiBoundary> positions;
+        for (const auto &node : group.nodes) {
+            const QString value = node.nodeValue();
+            for (int offset = 0; offset < value.size(); ++offset) {
+                const QChar ch = value.at(offset);
+                if (ch.isSpace()) {
+                    if (normalized.isEmpty() || normalized.endsWith(QLatin1Char(' ')))
+                        continue;
+                    normalized.append(QLatin1Char(' '));
+                } else {
+                    normalized.append(ch);
+                }
+                positions.append({node, offset});
+            }
+        }
+        qsizetype from = 0;
+        while ((from = normalized.indexOf(wanted, from, Qt::CaseSensitive)) >= 0) {
+            if (total)
+                ++*total;
+            if (limit == 0) {
+                from += wanted.size();
+                continue;
+            }
+            const auto last = from + wanted.size() - 1;
+            AnnotationTextHit hit;
+            hit.start = positions.at(from);
+            hit.end = positions.at(last);
+            ++hit.end.offset;
+            hit.before = normalized.mid(qMax<qsizetype>(0, from - 45), qMin<qsizetype>(45, from)).trimmed();
+            hit.after = normalized.mid(last + 1, 45).trimmed();
+            if (hits.size() < limit)
+                hits.append(hit);
+            if (!total && hits.size() >= limit)
+                return hits;
+            from += wanted.size();
+        }
+    }
+    return hits;
+}
+
+QVariantList EPubContainer::findAnnotationText(const QString &text)
+{
+    QVariantList result;
+    if (!m_rootFolder || text.simplified().isEmpty())
+        return result;
+    QStringList ids = m_items.keys();
+    ids.sort();
+    for (const auto &id : std::as_const(ids)) {
+        const auto item = m_items.value(id);
+        if (!isDocumentItem(item))
+            continue;
+        const QByteArray data = readData(item.path);
+        QDomDocument document;
+        if (data.isEmpty() || !setDomContentPreservingMarkup(document, data))
+            continue;
+        const auto hits = annotationTextHits(document, text, 100 - result.size());
+        for (int index = 0; index < hits.size(); ++index) {
+            const auto &hit = hits.at(index);
+            result.append(QVariantMap{{QStringLiteral("documentPath"), item.path},
+                                      {QStringLiteral("occurrence"), index},
+                                      {QStringLiteral("before"), hit.before},
+                                      {QStringLiteral("after"), hit.after},
+                                      {QStringLiteral("text"), text.simplified()}});
+        }
+        if (result.size() >= 100)
+            break;
+    }
+    return result;
+}
+
+int EPubContainer::countAnnotationText(const QString &text)
+{
+    if (!m_rootFolder || text.simplified().isEmpty())
+        return 0;
+    int count = 0;
+    for (const auto &item : std::as_const(m_items)) {
+        if (!isDocumentItem(item))
+            continue;
+        const QByteArray data = readData(item.path);
+        QDomDocument document;
+        if (!data.isEmpty() && setDomContentPreservingMarkup(document, data))
+            annotationTextHits(document, text, 0, &count);
+    }
+    return count;
+}
+
+QByteArray EPubContainer::createAnnotationAnchoredEpubAtText(const QString &documentPath, int occurrence, const QString &text, const QString &anchorId)
+{
+    if (!m_rootFolder || occurrence < 0 || occurrence >= 100 || text.simplified().isEmpty() || anchorId.trimmed().isEmpty())
+        return {};
+    EpubItem item;
+    for (const auto &candidate : std::as_const(m_items)) {
+        if (candidate.path == documentPath && isDocumentItem(candidate)) {
+            item = candidate;
+            break;
+        }
+    }
+    if (item.path.isEmpty())
+        return {};
+    const QByteArray data = readData(item.path);
+    QDomDocument document;
+    if (data.isEmpty() || !setDomContentPreservingMarkup(document, data))
+        return {};
+    restoreRootNamespaceDeclarations(document, rootNamespaceDeclarations(data));
+    const auto hits = annotationTextHits(document, text);
+    if (occurrence >= hits.size())
+        return {};
+    const auto &hit = hits.at(occurrence);
+    QString actualText;
+    const bool anchored = wrapSingleTextNodeRange(document, hit.start, hit.end, anchorId, QStringLiteral("annotation"), &actualText, QStringLiteral("span"))
+        || insertAnnotationBoundaryPair(document, hit.start, hit.end, anchorId);
+    if (!anchored || !verifiedAnnotationText(document, anchorId, actualText) || actualText.simplified() != text.simplified())
+        return {};
+    return createEpubReplacingFile(m_rootFolder, item.path, document.toByteArray(-1));
+}
+
+QByteArray EPubContainer::createAnnotationAnchoredEpub(const QString &cfi, const QString &anchorId, const QString &expectedText)
 {
     if (!m_rootFolder) {
         qWarning() << "No EPUB root folder available";
@@ -3420,11 +4060,17 @@ QByteArray EPubContainer::createAnnotationAnchoredEpub(const QString &cfi, const
         return {};
     }
 
+    if (!verifiedAnnotationText(doc, normalizedAnchorId, selectedText)
+        || (!expectedText.isEmpty() && selectedText.simplified() != expectedText.simplified())) {
+        qWarning() << "Annotation range is ambiguous, empty, or does not match the saved text";
+        return {};
+    }
+
     qDebug() << "Prepared annotation anchor" << normalizedAnchorId << "for" << selectedText << "in" << item.path;
     return createEpubReplacingFile(m_rootFolder, item.path, doc.toByteArray());
 }
 
-bool EPubContainer::setImageNotInverse(const QString &cfi, const QString &src, bool *changed)
+bool EPubContainer::setImageNotInverse(const QString &cfi, const QString &src, bool *changed, bool createBackup)
 {
     if (changed) {
         *changed = false;
@@ -3487,16 +4133,18 @@ bool EPubContainer::setImageNotInverse(const QString &cfi, const QString &src, b
         return false;
     }
 
-    if (!addCssClass(image, QStringLiteral("not_inverse"))) {
-        qDebug() << "Image already marked not_inverse" << cfi << image.attribute(QStringLiteral("src"));
+    if (!markImageNotInverse(image)) {
+        qDebug() << "Image already marked not_inverse" << cfi << imageReference(image);
         return true;
     }
 
     QString backupPath;
-    const QString marker =
-        image.attribute(QStringLiteral("id")).trimmed().isEmpty() ? QStringLiteral("not_inverse_image") : image.attribute(QStringLiteral("id")).trimmed();
-    if (!copyImageClassSafetyBackup(m_filename, marker, &backupPath)) {
-        return false;
+    if (createBackup) {
+        const QString marker =
+            image.attribute(QStringLiteral("id")).trimmed().isEmpty() ? QStringLiteral("not_inverse_image") : image.attribute(QStringLiteral("id")).trimmed();
+        if (!copyImageClassSafetyBackup(m_filename, marker, &backupPath)) {
+            return false;
+        }
     }
 
     if (!writeEpubReplacingFile(m_filename, m_rootFolder, item.path, doc.toByteArray())) {
@@ -3507,7 +4155,10 @@ bool EPubContainer::setImageNotInverse(const QString &cfi, const QString &src, b
     if (changed) {
         *changed = true;
     }
-    qDebug() << "Marked image not_inverse" << image.attribute(QStringLiteral("src")) << "in" << m_filename << "backup:" << backupPath;
+    if (!backupPath.isEmpty()) {
+        MaintenanceFiles::completeBackup(backupPath);
+    }
+    qDebug() << "Marked image not_inverse" << imageReference(image) << "in" << m_filename << "backup:" << backupPath;
     return true;
 }
 
@@ -3761,8 +4412,8 @@ bool EPubContainer::parseContentFile(const QString &filepath)
         for (int j = 0; j < metadataChildList.count(); j++) {
             const QDomNode metadataNode = metadataChildList.at(j);
             const QDomElement metadataElement = metadataNode.toElement();
-            if (!uniqueIdentifierId.isEmpty() && metadataElement.prefix() == QStringLiteral("dc") && metadataElement.tagName() == QStringLiteral("identifier")
-                && metadataElement.attribute(QStringLiteral("id")) == uniqueIdentifierId) {
+            if (!uniqueIdentifierId.isEmpty() && metadataElement.namespaceURI() == QStringLiteral("http://purl.org/dc/elements/1.1/")
+                && metadataElement.localName() == QStringLiteral("identifier") && metadataElement.attribute(QStringLiteral("id")) == uniqueIdentifierId) {
                 uniqueIdentifier = metadataElement.text().trimmed();
             }
             parseMetadataItem(metadataNode, metadataChildList);
@@ -3886,6 +4537,11 @@ bool EPubContainer::parseMetadataItem(const QDomNode &metadataNode, const QDomNo
     QString metaName;
     QString metaValue;
 
+    if (tagName == QStringLiteral("link") && metadataElement.namespaceURI() == QStringLiteral("http://www.idpf.org/2007/opf")) {
+        // Linked records are read by their owning service, not flattened into
+        // ordinary title/author metadata.
+        return true;
+    }
     if (tagName == QStringLiteral("meta")) {
         bool foundProperty = parseMetadataPropertyItem(metadataElement, nodeList);
         if (foundProperty) {
@@ -3893,8 +4549,9 @@ bool EPubContainer::parseMetadataItem(const QDomNode &metadataNode, const QDomNo
         }
         metaName = metadataElement.attribute(QStringLiteral("name"));
         metaValue = metadataElement.attribute(QStringLiteral("content"));
-    } else if (metadataElement.prefix() != QStringLiteral("dc") && tagName != QStringLiteral("description")) {
-        qWarning() << "Unsupported metadata tag" << tagName;
+    } else if (metadataElement.namespaceURI() != QStringLiteral("http://purl.org/dc/elements/1.1/") && tagName != QStringLiteral("description")) {
+        qWarning() << "Unsupported metadata tag" << metadataElement.nodeName() << "in namespace" << metadataElement.namespaceURI()
+                   << "in EPUB" << m_filename << "package" << m_contentFilePath << "line" << metadataElement.lineNumber();
         return false;
     } else if (tagName == QStringLiteral("date")) {
         metaName = metadataElement.attribute(QStringLiteral("event"));
@@ -4285,6 +4942,7 @@ static void applyTocContext(TargetAnchorInfo &target, const TargetAnchorInfo &to
 {
     target.tocTitle = tocTarget.title;
     target.tocPath = tocTarget.tocPath;
+    target.tocIdPath = tocTarget.tocIdPath;
     target.tocDepth = tocTarget.tocDepth + 1;
 }
 
@@ -4323,7 +4981,7 @@ void EPubContainer::extractNavigationTargetsFromDocument(const QString &itemId,
     }
 
     const QString bookId = m_metadata[QStringLiteral("unique-identifier")].value(0);
-    auto appendNavigationTarget = [&](const QDomElement &link, const QStringList &tocPath, const int depth) {
+    auto appendNavigationTarget = [&](const QDomElement &link, const QStringList &tocPath, const QStringList &tocIdPath, const int depth) {
         const QString location = resolveReferenceTarget(path, link.attribute(QStringLiteral("href")));
         const QString targetItemId = itemIdForPath(location);
         if (location.isEmpty() || targetItemId.isEmpty()) {
@@ -4341,11 +4999,13 @@ void EPubContainer::extractNavigationTargetsFromDocument(const QString &itemId,
         target.type = QStringLiteral("navigation");
         target.tocTitle = label;
         target.tocPath = tocPath;
+        target.tocIdPath = tocIdPath;
         target.tocDepth = depth;
         appendReferenceableTarget(targets, seenLocations, target);
     };
 
-    std::function<void(const QDomElement &, const QStringList &, int)> collectList = [&](const QDomElement &list, const QStringList &parentPath, int depth) {
+    int nodeNumber = 0;
+    std::function<void(const QDomElement &, const QStringList &, const QStringList &, int)> collectList = [&](const QDomElement &list, const QStringList &parentPath, const QStringList &parentIds, int depth) {
         for (const QDomElement &item : directElementChildren(list, QStringLiteral("li"))) {
             QDomElement labelElement;
             for (const QDomElement &child : directElementChildren(item)) {
@@ -4358,14 +5018,16 @@ void EPubContainer::extractNavigationTargetsFromDocument(const QString &itemId,
 
             const QString label = textPreview(labelElement);
             const QString fallback = labelElement.attribute(QStringLiteral("href")).trimmed();
-            const QStringList childPath = tocPathWithLabel(parentPath, label, fallback);
+            const QStringList childPath = tocPathWithLabel(parentPath, label, fallback.isEmpty() ? QStringLiteral("…") : fallback);
+            QStringList childIds = parentIds;
+            childIds.append(path + QStringLiteral(":toc:%1").arg(++nodeNumber));
             if (!labelElement.isNull() && elementLocalName(labelElement) == QStringLiteral("a")
                 && !labelElement.attribute(QStringLiteral("href")).trimmed().isEmpty()) {
-                appendNavigationTarget(labelElement, childPath, depth);
+                appendNavigationTarget(labelElement, childPath, childIds, depth);
             }
 
             for (const QDomElement &childList : directElementChildren(item, QStringLiteral("ol"))) {
-                collectList(childList, childPath, depth + 1);
+                collectList(childList, childPath, childIds, depth + 1);
             }
         }
     };
@@ -4374,7 +5036,7 @@ void EPubContainer::extractNavigationTargetsFromDocument(const QString &itemId,
         const QDomElement element = node.toElement();
         if (!element.isNull() && elementLocalName(element) == QStringLiteral("nav") && elementHasEpubType(element, QStringLiteral("toc"))) {
             for (const QDomElement &list : directElementChildren(element, QStringLiteral("ol"))) {
-                collectList(list, {}, 0);
+                collectList(list, {}, {}, 0);
             }
             return;
         }
@@ -4417,7 +5079,7 @@ void EPubContainer::extractNcxTargetsFromDocument(const QString &itemId, const Q
     }
 
     const QString bookId = m_metadata[QStringLiteral("unique-identifier")].value(0);
-    auto appendNavigationTarget = [&](const QDomElement &content, const QString &label, const QStringList &tocPath, const int depth) {
+    auto appendNavigationTarget = [&](const QDomElement &content, const QString &label, const QStringList &tocPath, const QStringList &tocIdPath, const int depth) {
         const QString location = resolveReferenceTarget(path, content.attribute(QStringLiteral("src")));
         const QString targetItemId = itemIdForPath(location);
         if (location.isEmpty() || targetItemId.isEmpty()) {
@@ -4434,28 +5096,32 @@ void EPubContainer::extractNcxTargetsFromDocument(const QString &itemId, const Q
         target.type = QStringLiteral("navigation");
         target.tocTitle = label;
         target.tocPath = tocPath;
+        target.tocIdPath = tocIdPath;
         target.tocDepth = depth;
         appendReferenceableTarget(targets, seenLocations, target);
     };
 
-    std::function<void(const QDomElement &, const QStringList &, int)> collectNavPoint =
-        [&](const QDomElement &navPoint, const QStringList &parentPath, int depth) {
+    int nodeNumber = 0;
+    std::function<void(const QDomElement &, const QStringList &, const QStringList &, int)> collectNavPoint =
+        [&](const QDomElement &navPoint, const QStringList &parentPath, const QStringList &parentIds, int depth) {
             const QString label = ncxLabelForNavPoint(navPoint);
             const QDomElement content = firstDirectElementChild(navPoint, QStringLiteral("content"));
             const QString fallback = content.attribute(QStringLiteral("src")).trimmed();
-            const QStringList childPath = tocPathWithLabel(parentPath, label, fallback);
+            const QStringList childPath = tocPathWithLabel(parentPath, label, fallback.isEmpty() ? QStringLiteral("…") : fallback);
+            QStringList childIds = parentIds;
+            childIds.append(path + QStringLiteral(":toc:%1").arg(++nodeNumber));
             if (!content.isNull()) {
-                appendNavigationTarget(content, label, childPath, depth);
+                appendNavigationTarget(content, label, childPath, childIds, depth);
             }
 
             for (const QDomElement &childPoint : directElementChildren(navPoint, QStringLiteral("navpoint"))) {
-                collectNavPoint(childPoint, childPath, depth + 1);
+                collectNavPoint(childPoint, childPath, childIds, depth + 1);
             }
         };
 
     for (const QDomElement &navMap : directElementChildren(doc.documentElement(), QStringLiteral("navmap"))) {
         for (const QDomElement &navPoint : directElementChildren(navMap, QStringLiteral("navpoint"))) {
-            collectNavPoint(navPoint, {}, 0);
+            collectNavPoint(navPoint, {}, {}, 0);
         }
     }
 }
@@ -4571,10 +5237,46 @@ void EPubContainer::extractReferenceableTargetsFromDocument(const QString &itemI
     visit(doc.documentElement());
 }
 
-QVector<TargetAnchorInfo> EPubContainer::referenceableTargets()
+QString EPubContainer::cfiForNode(const QString &itemId, const QDomNode &node) const
 {
-    QVector<TargetAnchorInfo> targets;
-    QSet<QString> seenLocations;
+    const int index = m_orderedItems.indexOf(itemId);
+    if (index < 0 || !node.isElement()) return {};
+    const auto transparent = [](const QDomNode &n) {
+        const auto e = n.toElement();
+        return !e.isNull() && (e.attribute(QStringLiteral("data-role")) == QLatin1String("anchor")
+            || e.attribute(QStringLiteral("class")).split(QLatin1Char(' ')).contains(QStringLiteral("bookref")));
+    };
+    QStringList steps;
+    QDomNode current = node;
+    while (current.parentNode().isElement()) {
+        QDomNode parent = current.parentNode();
+        while (transparent(parent) && parent.parentNode().isElement()) parent = parent.parentNode();
+        QList<QDomNode> elements;
+        std::function<void(const QDomNode &)> collect = [&](const QDomNode &p) {
+            for (auto child = p.firstChild(); !child.isNull(); child = child.nextSibling()) {
+                if (!child.isElement()) continue;
+                if (transparent(child)) collect(child); else elements.append(child);
+            }
+        };
+        collect(parent);
+        const int position = elements.indexOf(current);
+        if (position < 0) return {};
+        QString step = QStringLiteral("/%1").arg((position + 1) * 2);
+        QString id = current.toElement().attribute(QStringLiteral("id"));
+        if (!id.isEmpty()) {
+            id.replace(QRegularExpression(QStringLiteral("([\\^\\[\\](),;=])")), QStringLiteral("^\\1"));
+            step += QLatin1Char('[') + id + QLatin1Char(']');
+        }
+        steps.prepend(step);
+        current = parent;
+    }
+    if (steps.isEmpty()) return {};
+    return QStringLiteral("epubcfi(/6/%1!%2)").arg((index + 1) * 2).arg(steps.join(QString()));
+}
+
+
+QVector<TargetAnchorInfo> EPubContainer::navigationTargets()
+{
     QVector<TargetAnchorInfo> navigationTargets;
     QSet<QString> seenNavigationLocations;
 
@@ -4586,6 +5288,15 @@ QVector<TargetAnchorInfo> EPubContainer::referenceableTargets()
             extractNcxTargetsFromDocument(it.key(), item.path, navigationTargets, seenNavigationLocations);
         }
     }
+
+    return navigationTargets;
+}
+
+QVector<TargetAnchorInfo> EPubContainer::referenceableTargets()
+{
+    QVector<TargetAnchorInfo> targets;
+    QSet<QString> seenLocations;
+    const QVector<TargetAnchorInfo> navigationTargets = this->navigationTargets();
 
     QHash<QString, TargetAnchorInfo> tocTargetsByLocation;
     for (const TargetAnchorInfo &target : std::as_const(navigationTargets)) {

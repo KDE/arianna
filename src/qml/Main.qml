@@ -18,14 +18,148 @@ Kirigami.ApplicationWindow {
     property string librarySearchText: ""
     property bool readerFullScreen: false
     property bool balooImportRunning: false
-    property bool balooImportCancelled: false
+    property bool balooImportSearched: false
     property bool calibreImportRunning: false
+    property string bookImportStatus: ""
+    property bool importRejectionsPending: false
     property var pendingWatermarkRemovalQueue: []
     property var activeWatermarkRemovalRequest: null
     readonly property bool directStartupReader: typeof startupDirectReaderMode !== "undefined" && startupDirectReaderMode === true
     readonly property string ebookFileNameFilter: i18nc("@item:inlistbox file type filter", "eBook files (*.epub *.pdf *.cb* *.fb2 *.fb2zip)")
 
     title: i18n("Arianna")
+
+    LibraryMaintenance {
+        id: libraryMaintenance
+    }
+
+    ReaderHistory {
+        id: readerHistory
+    }
+
+    Kirigami.PagePool {
+        id: maintenancePages
+    }
+
+    Kirigami.PagePool {
+        id: importPages
+    }
+
+    signal workStructureSaved(string bookId)
+    property var workStructureQueue: []
+    function showWorkStructure(bookId) {
+        if (!bookId) return;
+        if (workStructureDialog.visible) {
+            if (!workStructureQueue.includes(bookId)) workStructureQueue = workStructureQueue.concat([bookId]);
+        } else workStructureDialog.showForBook(bookId);
+    }
+    WorkStructureDialog {
+        id: workStructureDialog
+        parent: QQC2.Overlay.overlay
+        onStructureSaved: bookId => root.workStructureSaved(bookId)
+        onClosed: {
+            if (root.workStructureQueue.length) {
+                const next = root.workStructureQueue[0];
+                root.workStructureQueue = root.workStructureQueue.slice(1);
+                Qt.callLater(() => root.showWorkStructure(next));
+            }
+        }
+    }
+
+    function showImportPage(source = "") {
+        const page = importPages.loadPageWithProperties(Qt.resolvedUrl("./ImportPageView.qml"), {
+            importController: root,
+            balooModel: balooImportModel
+        });
+        if (!page) {
+            return;
+        }
+        root.readerFullScreen = false;
+        goHomeButton.checked = false;
+        if (root.pageStack.currentItem !== page) {
+            root.pageStack.replace(page);
+        }
+        if (source.length > 0) {
+            page.showSource(source);
+        }
+        if (navigationDrawer.modal) {
+            navigationDrawer.close();
+        }
+        root.updateOverviewWindowTitle();
+    }
+
+    function showMaintenancePage(category = "") {
+        const page = maintenancePages.loadPageWithProperties(Qt.resolvedUrl("./MaintaincePage.qml"), {
+            checker: libraryMaintenance
+        });
+        if (!page) {
+            return;
+        }
+        root.readerFullScreen = false;
+        goHomeButton.checked = false;
+        if (root.pageStack.currentItem !== page) {
+            root.pageStack.replace(page);
+        }
+        if (category.length > 0) {
+            page.showCheck(category);
+        } else if (libraryMaintenance.category.length === 0) {
+            page.showCheck("database");
+        }
+        if (navigationDrawer.modal) {
+            navigationDrawer.close();
+        }
+        root.updateOverviewWindowTitle();
+    }
+
+    QQC2.Dialog {
+        id: editorCacheNotice
+        objectName: "editorCacheNotice"
+        parent: QQC2.Overlay.overlay
+        anchors.centerIn: parent
+        modal: true
+        title: i18n("Editor Start Blocked")
+        standardButtons: QQC2.Dialog.Close
+        width: Math.min(Kirigami.Units.gridUnit * 40, parent ? parent.width - Kirigami.Units.gridUnit * 2 : 720)
+        property string message: ""
+        contentItem: ColumnLayout {
+            QQC2.Label {
+                Layout.fillWidth: true
+                text: editorCacheNotice.message
+                textFormat: Text.PlainText
+                wrapMode: Text.Wrap
+            }
+            QQC2.Button {
+                objectName: "reviewEditorCacheCopies"
+                text: i18nc("@action:button", "Cache and Safety Backups")
+                enabled: !libraryMaintenance.running
+                onClicked: {
+                    editorCacheNotice.close();
+                    root.showMaintenancePage("cache");
+                }
+            }
+        }
+    }
+    Connections {
+        target: root.pageStack && root.pageStack.layers.depth === 1 && root.pageStack.currentItem
+            && root.pageStack.currentItem.maintenancePage === true ? ExternalProcess : null
+        function onEditorSessionProcessStarted(sessionId, processId) {
+            EditorSessionStore.noteEditorProcessStarted(sessionId, processId);
+        }
+        function onEditorSessionFileChanged(sessionId, file) {
+            EditorSessionStore.scheduleImport(sessionId);
+        }
+        function onEditorSessionFinished(sessionId, exitCode, exitStatus) {
+            EditorSessionStore.finishSession(sessionId);
+        }
+    }
+
+    Connections {
+        target: EditorSessionStore
+        function onEditorStartBlocked(message, workingCopies) {
+            editorCacheNotice.message = message + (workingCopies.length ? "\n\n" + workingCopies.slice(0, 4).join("\n") : "");
+            editorCacheNotice.open();
+        }
+    }
 
     Component.onCompleted: root.updateOverviewWindowTitle()
 
@@ -42,7 +176,10 @@ Kirigami.ApplicationWindow {
             return;
         }
 
-        root.title = root.isOverviewLibraryPage(root.pageStack.currentItem) ? root.overviewWindowTitle() : i18n("Arianna");
+        const page = root.pageStack.currentItem;
+        root.title = page && (page.librarySearchPage === true || page.maintenancePage === true || page.importPage === true)
+            ? i18nc("@title:window", "%1 - Arianna", page.title)
+            : root.isOverviewLibraryPage(page) ? root.overviewWindowTitle() : i18n("Arianna");
     }
 
     function centerToolbarActionsFor(page) {
@@ -252,13 +389,17 @@ Kirigami.ApplicationWindow {
         }
 
         registerReadOnlyBook(fileName, identifier => {
-            if (identifier || isPdfFile(fileName)) {
-                openBookPage(fileName, "", "", readOnlyEntryForFile(fileName, identifier), true);
-            }
+            const openBook = () => {
+                if (identifier || isPdfFile(fileName)) {
+                    openBookPage(fileName, "", "", readOnlyEntryForFile(fileName, identifier), true);
+                }
 
-            if (callback) {
-                callback();
-            }
+                if (callback) {
+                    callback();
+                }
+            };
+
+            root.requestPermanentWatermarkRemoval(fileName, "open-read-only", openBook);
         });
     }
 
@@ -294,8 +435,42 @@ Kirigami.ApplicationWindow {
     }
 
     function importBookFiles(fileUrls) {
+        const paths = [];
         for (let i = 0; i < fileUrls.length; ++i) {
-            importBookEntry(fileUrls[i]);
+            paths.push(localPathFromUrl(fileUrls[i]));
+        }
+        const result = bookListModel.importBookFiles(paths, true);
+        for (const path of result.importedFiles || []) {
+            root.requestPermanentWatermarkRemoval(path, "import");
+        }
+        root.bookImportStatus = result.message || "";
+        root.showStatusMessage(result.message);
+        return result;
+    }
+
+    function showImportRejections() {
+        root.importRejectionsPending = false;
+        importRejectionDialog.open();
+    }
+
+    function reportImportRejection(rejection) {
+        if (!importRejectionDialog.visible && !root.importRejectionsPending) {
+            importRejectionDialog.rejections = [];
+        }
+        importRejectionDialog.rejections = [...importRejectionDialog.rejections, rejection];
+        root.importRejectionsPending = true;
+        Qt.callLater(root.showImportRejections);
+    }
+
+    function changeImportIdentifier(path) {
+        const result = bookListModel.changeRejectedBookIdentifier(path);
+        if (result.success) {
+            importRejectionDialog.rejections = importRejectionDialog.rejections.filter(row => row.fileName !== path);
+            if (importRejectionDialog.rejections.length === 0) importRejectionDialog.close();
+            root.showStatusMessage(result.message);
+        } else {
+            importRejectionDialog.rejections = importRejectionDialog.rejections.map(row => row.fileName === path
+                ? Object.assign({}, row, {canChangeIdentifier: result.canChangeIdentifier === true, actionMessage: result.message}) : row);
         }
     }
 
@@ -313,6 +488,9 @@ Kirigami.ApplicationWindow {
     }
 
     function startCalibreLibraryImport() {
+        if (root.calibreImportRunning) {
+            return;
+        }
         const folder = String(Config.calibreLibraryFolder || "").trim();
         if (folder.length === 0) {
             root.showStatusMessage(i18n("Set the Calibre library folder in Settings first."));
@@ -326,15 +504,17 @@ Kirigami.ApplicationWindow {
         }
 
         root.calibreImportRunning = true;
+        root.bookImportStatus = "";
         Qt.callLater(() => {
             const result = root.bookListModel.importCalibreLibrary(folder, true);
             root.calibreImportRunning = false;
-            root.showStatusMessage(result && result.message ? result.message : i18n("Calibre import failed."));
+            root.bookImportStatus = result && result.message ? result.message : i18n("Calibre import failed.");
+            root.showStatusMessage(root.bookImportStatus);
             root.ensureLibraryPageVisible();
         });
     }
 
-    function openBookPage(filename, locations, currentLocation, entry, readOnly, sourceTitle = "") {
+    function openBookPage(filename, locations, currentLocation, entry, readOnly, sourceTitle = "", initialSearch = null, noLibraryImport = false) {
         let bookEntry = entry;
         let bookLocations = locations;
         let bookCurrentLocation = currentLocation;
@@ -342,12 +522,13 @@ Kirigami.ApplicationWindow {
         let bookPageMode = bookEntry && bookEntry.pageMode ? bookEntry.pageMode : "";
         let bookPdfNotInvertedRegions = bookEntry && bookEntry.pdfNotInvertedRegions ? bookEntry.pdfNotInvertedRegions : "";
         const openReadOnly = readOnly === true;
+        const skipLibraryImport = noLibraryImport === true;
         const openedFromReference = sourceTitle !== undefined && sourceTitle !== null && String(sourceTitle).length > 0;
         let latestLocation = bookCurrentLocation;
         let latestProgress = 0;
         let lastOpenedTimeFilename = "";
 
-        if (filename && !openReadOnly && (!bookEntry || !bookEntry.filename)) {
+        if (filename && !openReadOnly && !skipLibraryImport && (!bookEntry || !bookEntry.filename)) {
             const importedEntry = importBookEntry(filename);
             if (importedEntry) {
                 bookEntry = importedEntry;
@@ -357,10 +538,12 @@ Kirigami.ApplicationWindow {
                 bookZoomLevel = importedEntry.zoomLevel > 0 ? importedEntry.zoomLevel : 1.0;
                 bookPageMode = importedEntry.pageMode || "";
                 bookPdfNotInvertedRegions = importedEntry.pdfNotInvertedRegions || "";
+            } else {
+                return null;
             }
         }
 
-        if (filename && !openReadOnly && bookEntry && bookEntry.filename && !bookEntry.uniqueIdentifier && !bookEntry.identifier) {
+        if (filename && !openReadOnly && !skipLibraryImport && bookEntry && bookEntry.filename && !bookEntry.uniqueIdentifier && !bookEntry.identifier) {
             const refreshedEntry = bookListModel.refreshBookFromFile(filename, false);
             if (refreshedEntry && refreshedEntry.filename) {
                 bookEntry = refreshedEntry;
@@ -389,17 +572,28 @@ Kirigami.ApplicationWindow {
             locations: bookLocations,
             zoomLevel: bookZoomLevel,
             pageMode: bookPageMode,
+            pageWidthDistance: bookEntry && bookEntry.pageWidthDistance >= 0 ? bookEntry.pageWidthDistance : -1,
             filename: filename,
             entry: bookEntry,
             readOnly: openReadOnly,
             referenceSourceTitle: sourceTitle
         };
+        if (!isPdf) viewerProperties.noLibraryImport = skipLibraryImport;
         if (isPdf) {
             viewerProperties.pdfNotInvertedRegions = bookPdfNotInvertedRegions;
+        }
+        if (initialSearch) {
+            viewerProperties.searchText = initialSearch.query;
+            viewerProperties.initialSearch = initialSearch;
         }
         // url change is a loading trigger so put this last
         viewerProperties.url = deferBookLoadUntilAfterLayerPush ? "" : bookUrl;
 
+        const previousLayer = root.pageStack.layers.currentItem;
+        const previousReader = previousLayer && previousLayer.item ? previousLayer.item : previousLayer;
+        if (previousReader && typeof previousReader.suspendReaderForReference === "function" && !previousReader.readerSuspended) {
+            previousReader.suspendReaderForReference("open-book-page");
+        }
         const bookViewerLayer = root.pageStack.layers.push(viewerPage, viewerProperties);
         const bookViewer = bookViewerLayer && bookViewerLayer.item ? bookViewerLayer.item : bookViewerLayer;
         let saveLocationTimer = null;
@@ -441,7 +635,7 @@ Kirigami.ApplicationWindow {
 
         function flushReadingPosition() {
             const currentFilename = currentViewerFilename();
-            if (!bookViewer || bookViewer.readOnly || !latestLocation || !currentFilename) {
+            if (!bookViewer || bookViewer.readOnly || bookViewer.noLibraryImport || !latestLocation || !currentFilename) {
                 return;
             }
 
@@ -450,7 +644,7 @@ Kirigami.ApplicationWindow {
         }
 
         function scheduleReadingPositionSave() {
-            if (!bookViewer || bookViewer.readOnly) {
+            if (!bookViewer || bookViewer.readOnly || bookViewer.noLibraryImport) {
                 return;
             }
 
@@ -469,7 +663,7 @@ Kirigami.ApplicationWindow {
 
         function updateLastOpenedTime() {
             const currentFilename = currentViewerFilename();
-            if (!bookViewer || bookViewer.readOnly || !currentFilename || lastOpenedTimeFilename === currentFilename) {
+            if (!bookViewer || bookViewer.readOnly || bookViewer.noLibraryImport || !currentFilename || lastOpenedTimeFilename === currentFilename) {
                 return;
             }
 
@@ -482,8 +676,18 @@ Kirigami.ApplicationWindow {
                 return;
             }
 
+            // A covered/suspended page remains open. ReaderHistory records only
+            // page destruction and application exit, not bookClosed/visibility.
+            function trackLibraryReader() {
+                if (!viewer.readOnly && !viewer.noLibraryImport) {
+                    readerHistory.trackReader(viewer, currentViewerFilename());
+                }
+            }
+            trackLibraryReader();
+            viewer.filenameChanged.connect(trackLibraryReader);
+
             function syncCurrentViewerPosition() {
-                if (!viewer || viewer.readOnly || !viewer.currentLocation) {
+                if (!viewer || viewer.readOnly || viewer.noLibraryImport || !viewer.currentLocation) {
                     return;
                 }
 
@@ -502,22 +706,29 @@ Kirigami.ApplicationWindow {
 
             viewer.locationsLoaded.connect(locations => {
                 const currentFilename = currentViewerFilename();
-                if (!viewer.readOnly && currentFilename) {
+                if (!viewer.readOnly && !viewer.noLibraryImport && currentFilename) {
                     bookListModel.setBookData(currentFilename, 'locations', locations);
                 }
             });
 
             viewer.zoomLevelSaved.connect(zoomLevel => {
                 const currentFilename = currentViewerFilename();
-                if (!viewer.readOnly && currentFilename) {
+                if (!viewer.readOnly && !viewer.noLibraryImport && currentFilename) {
                     bookListModel.setBookData(currentFilename, 'zoomLevel', zoomLevel);
+                }
+            });
+
+            viewer.pageWidthDistanceSaved.connect(value => {
+                const currentFilename = currentViewerFilename();
+                if (!viewer.readOnly && !viewer.noLibraryImport && currentFilename) {
+                    bookListModel.setBookData(currentFilename, 'pageWidthDistance', value);
                 }
             });
 
             if (typeof viewer.pageModeSaved !== 'undefined') {
                 viewer.pageModeSaved.connect(pageMode => {
                     const currentFilename = currentViewerFilename();
-                    if (!viewer.readOnly && currentFilename) {
+                    if (!viewer.readOnly && !viewer.noLibraryImport && currentFilename) {
                         bookListModel.setBookData(currentFilename, 'pageMode', pageMode);
                     }
                 });
@@ -526,7 +737,7 @@ Kirigami.ApplicationWindow {
             if (typeof viewer.pdfNotInvertedRegionsSaved !== 'undefined') {
                 viewer.pdfNotInvertedRegionsSaved.connect(regions => {
                     const currentFilename = currentViewerFilename();
-                    if (!viewer.readOnly && currentFilename) {
+                    if (!viewer.readOnly && !viewer.noLibraryImport && currentFilename) {
                         bookListModel.setBookData(currentFilename, 'pdfNotInvertedRegions', regions);
                     }
                 });
@@ -545,6 +756,8 @@ Kirigami.ApplicationWindow {
                 viewer.entry = importedEntry;
                 viewer.filename = importedEntry.filename || currentFilename;
                 viewer.readOnly = false;
+                if (typeof viewer.noLibraryImport !== "undefined") viewer.noLibraryImport = false;
+                trackLibraryReader();
                 viewer.locations = importedEntry.locations;
                 if (!viewer.pdfNotInvertedRegions && importedEntry.pdfNotInvertedRegions) {
                     viewer.pdfNotInvertedRegions = importedEntry.pdfNotInvertedRegions;
@@ -566,6 +779,9 @@ Kirigami.ApplicationWindow {
                 }
                 if (viewer.zoomLevel > 0) {
                     bookListModel.setBookData(viewer.filename, 'zoomLevel', viewer.zoomLevel);
+                }
+                if (viewer.pageWidthDistance >= 0) {
+                    bookListModel.setBookData(viewer.filename, 'pageWidthDistance', viewer.pageWidthDistance);
                 }
                 if (typeof viewer.currentPageMode === "function") {
                     bookListModel.setBookData(viewer.filename, 'pageMode', viewer.currentPageMode());
@@ -633,6 +849,22 @@ Kirigami.ApplicationWindow {
         openBookPage(filename, locations, currentLocation, entry, readOnly, sourceTitle);
     }
 
+    function startLibraryFullTextSearch(query) {
+        if (!root.bookListModel.cacheLoaded || libraryFullTextSearch.running || query.trim().length === 0) {
+            return;
+        }
+        libraryFullTextSearch.start(query);
+        root.showLibraryFullTextSearchResults();
+    }
+
+    function showLibraryFullTextSearchResults() {
+        goHomeButton.checked = false;
+        if (!root.pageStack.currentItem || root.pageStack.currentItem.librarySearchPage !== true) {
+            root.pageStack.replace(librarySearchResultsPage);
+        }
+        root.updateOverviewWindowTitle();
+    }
+
     function showHomeLibraryPage() {
         root.readerFullScreen = false;
         root.pageStack.replace(Qt.resolvedUrl('./LibraryPage.qml'), {
@@ -650,6 +882,18 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    BookEditor {
+        id: maintenanceEditor
+    }
+
+    function editMaintenanceFile(fileName, bookId, cfi, selectedText, completion) {
+        const entry = bookId ? ({ uniqueIdentifier: bookId }) : null;
+        const result = maintenanceEditor.openBook(fileName, entry, cfi || "", selectedText || "");
+        if (completion) {
+            completion(result);
+        }
+    }
+
     function reloadCurrentReaderPage() {
         const currentLayer = root.pageStack.layers.currentItem;
         if (currentLayer && typeof currentLayer.reloadCurrentBook === "function") {
@@ -663,29 +907,62 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    // Transient BookServer registrations have to survive an explicit restart.
+    function readerSessionFiles() {
+        const files = [];
+        for (let i = 1; i < root.pageStack.layers.depth; ++i) {
+            const layer = root.pageStack.layers.get(i);
+            const page = layer && layer.item ? layer.item : layer;
+            if (page && page.filename && (page.readOnly || page.noLibraryImport)) {
+                files.push({fileName: root.localPathFromUrl(page.filename),
+                    identifier: page.entry ? (page.entry.uniqueIdentifier || page.entry.identifier || "") : ""});
+            }
+        }
+        return JSON.stringify(files);
+    }
+
+    function refreshReaderSessions() {
+        let count = 0;
+        for (let i = 1; i < root.pageStack.layers.depth; ++i) {
+            const layer = root.pageStack.layers.get(i);
+            const page = layer && layer.item ? layer.item : layer;
+            if (!page || typeof page.reloadCurrentBook !== "function") continue;
+            if (typeof page.suspendReaderForReference === "function" && !page.activeLayerPage) {
+                // Keep covered readers suspended; their next activation reloads them.
+                page.suspendReaderForReference("refresh-reader-session");
+            } else {
+                page.reloadCurrentBook();
+            }
+            ++count;
+        }
+        console.info("Refreshed reader sessions:", count);
+        return count;
+    }
+
     function openAddBooksDialog() {
         addBooksDialog.open();
     }
 
     function startBalooImportSearch() {
+        root.showImportPage("baloo");
         if (!balooImportModel.balooAvailable) {
-            balooUnavailableDialog.open();
             return;
         }
-
-        root.balooImportCancelled = false;
+        if (root.balooImportRunning || !root.bookListModel.cacheLoaded) {
+            return;
+        }
+        root.balooImportSearched = false;
+        root.bookImportStatus = "";
         root.balooImportRunning = true;
         balooImportModel.setIgnoredFiles(root.bookListModel.knownBookFiles());
         balooImportModel.startSearch();
-        balooImportDialog.open();
     }
 
     function importBalooSearchResults() {
         const filePaths = balooImportModel.filePaths();
-        for (let i = 0; i < filePaths.length; ++i) {
-            root.importBookEntry(filePaths[i]);
-        }
+        const result = root.importBookFiles(filePaths);
         balooImportModel.setIgnoredFiles(root.bookListModel.knownBookFiles());
+        return result;
     }
 
     width: Kirigami.Units.gridUnit * 65
@@ -713,6 +990,32 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    LibrarySearchModel {
+        id: libraryFullTextSearch
+        objectName: "libraryFullTextSearchModel"
+    }
+
+    Component {
+        id: librarySearchResultsPage
+
+        LibrarySearchPage {
+            searchModel: libraryFullTextSearch
+            onTitleChanged: root.updateOverviewWindowTitle()
+            onOpenResult: (filename, location, query, indexAtLocation) => {
+                const entry = root.bookListModel.bookEntryFromFile(filename);
+                if (!entry || !entry.filename) {
+                    root.showStatusMessage(i18n("This book is no longer in the library."));
+                    return;
+                }
+                root.openBookPage(filename, entry.locations, location, entry, false, "", {
+                    query: query,
+                    location: location,
+                    indexAtLocation: indexAtLocation
+                });
+            }
+        }
+    }
+
     pageStack {
         defaultColumnWidth: Kirigami.Units.gridUnit * 30
         onCurrentItemChanged: root.updateOverviewWindowTitle()
@@ -731,10 +1034,13 @@ Kirigami.ApplicationWindow {
 
     readonly property BookListModel bookListModel: BookListModel {
         onCountChanged: root.updateOverviewWindowTitle()
+        onStructureReviewRequested: bookId => root.showWorkStructure(bookId)
+        onImportRejected: rejection => root.reportImportRejection(rejection)
     }
 
     ContentList {
         id: balooImportModel
+        objectName: "balooImportModel"
 
         autoSearch: false
         cacheResults: false
@@ -746,9 +1052,7 @@ Kirigami.ApplicationWindow {
         onSearchCompleted: {
             root.isLoading = false;
             root.balooImportRunning = false;
-            if (!root.balooImportCancelled) {
-                balooImportDialog.open();
-            }
+            root.balooImportSearched = true;
         }
 
         ContentQuery {
@@ -813,6 +1117,7 @@ Kirigami.ApplicationWindow {
 
                     PlaceItem {
                         id: goHomeButton
+                        objectName: "goHomeButton"
                         fullText: i18nc("Switch to the listing page showing the most recently read books, %1 is the number of books", "Home (%1)", root.bookListModel.count)
                         icon.name: "go-home"
                         checked: true
@@ -820,36 +1125,56 @@ Kirigami.ApplicationWindow {
                         onTriggered: Navigation.openLibrary(i18n("Library"), bookListModel, true)
                     }
 
+                    PlaceItem {
+                        objectName: "libraryFullTextSearchMenuItem"
+                        fullText: i18nc("@title:group", "Full-text Search")
+                        icon.name: "edit-find"
+                        enabled: root.bookListModel.cacheLoaded
+                        checked: root.pageStack.currentItem && root.pageStack.currentItem.librarySearchPage === true
+                        QQC2.ButtonGroup.group: placeGroup
+                        onClicked: {
+                            navigationDrawer.collapsed = false;
+                            root.showLibraryFullTextSearchResults();
+                            librarySearchPane.focusSearch();
+                        }
+                    }
+
+                    LibrarySearchPane {
+                        id: librarySearchPane
+                        objectName: "libraryFullTextSearchPane"
+                        Layout.fillWidth: true
+                        Layout.leftMargin: Kirigami.Units.smallSpacing
+                        Layout.rightMargin: Kirigami.Units.smallSpacing
+                        Layout.topMargin: Kirigami.Units.smallSpacing
+                        visible: !navigationDrawer.collapsed
+                        libraryReady: root.bookListModel.cacheLoaded
+                        searchModel: libraryFullTextSearch
+                        onSearchRequested: query => root.startLibraryFullTextSearch(query)
+                    }
+
                     DrawerSeparator {}
 
-                    DrawerSectionHeader {
-                        text: i18nc("@title:group", "Book Import")
+                    PlaceItem {
+                        id: maintenanceButton
+                        objectName: "maintenancePageButton"
+                        fullText: i18nc("@title:group", "Maintenance")
+                        icon.name: "tools"
+                        enabled: root.bookListModel.cacheLoaded
+                        checked: root.pageStack.currentItem && root.pageStack.currentItem.maintenancePage === true
+                        QQC2.ButtonGroup.group: placeGroup
+                        onClicked: root.showMaintenancePage()
                     }
 
-                    PlaceItem {
-                        fullText: i18nc("@action:button", "via File Dialog")
-                        icon.name: "document-open"
-                        onClicked: root.openAddBooksDialog()
-                        QQC2.ButtonGroup.group: null
-                        checkable: false
-                    }
+                    DrawerSeparator {}
 
                     PlaceItem {
-                        fullText: i18nc("@action:button", "via Baloo")
-                        icon.name: "edit-find"
-                        enabled: !root.balooImportRunning
-                        onClicked: root.startBalooImportSearch()
-                        QQC2.ButtonGroup.group: null
-                        checkable: false
-                    }
-
-                    PlaceItem {
-                        fullText: i18nc("@action:button", "from Calibre")
+                        objectName: "bookImportPageButton"
+                        fullText: i18nc("@title:group", "Book Import")
                         icon.name: "document-import"
-                        enabled: !root.calibreImportRunning
-                        onClicked: root.startCalibreLibraryImport()
-                        QQC2.ButtonGroup.group: null
-                        checkable: false
+                        enabled: root.bookListModel.cacheLoaded
+                        checked: root.pageStack.currentItem && root.pageStack.currentItem.importPage === true
+                        QQC2.ButtonGroup.group: placeGroup
+                        onClicked: root.showImportPage()
                     }
 
                     DrawerSeparator {}
@@ -961,8 +1286,8 @@ Kirigami.ApplicationWindow {
     Connections {
         target: Navigation
 
-        function onOpenBook(filename, locations, currentLocation, entry, readOnly) {
-            root.openBookPage(filename, locations, currentLocation, entry, readOnly);
+        function onOpenBook(filename, locations, currentLocation, entry, readOnly, noLibraryImport) {
+            root.openBookPage(filename, locations, currentLocation, entry, readOnly, "", null, noLibraryImport);
         }
 
         function onOpenLibrary(title, model, replace) {
@@ -1057,8 +1382,70 @@ Kirigami.ApplicationWindow {
         }
     }
 
+    QQC2.Dialog {
+        id: importRejectionDialog
+        objectName: "importRejectionDialog"
+        property var rejections: []
+        parent: QQC2.Overlay.overlay
+        anchors.centerIn: parent
+        modal: true
+        title: i18n("Files Not Imported")
+        standardButtons: QQC2.Dialog.Close
+        width: Math.min(root.width - Kirigami.Units.gridUnit * 2, Kirigami.Units.gridUnit * 48)
+        height: Math.min(root.height - Kirigami.Units.gridUnit * 2, Kirigami.Units.gridUnit * 32)
+        contentItem: ColumnLayout {
+            QQC2.Label {
+                Layout.fillWidth: true
+                text: i18n("%1 files were not imported. The remaining files were processed.", importRejectionDialog.rejections.length)
+                wrapMode: Text.Wrap
+            }
+            QQC2.ScrollView {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                ListView {
+                    objectName: "importRejectionDetails"
+                    clip: true
+                    model: importRejectionDialog.rejections
+                    spacing: Kirigami.Units.largeSpacing
+                    delegate: ColumnLayout {
+                        required property var modelData
+                        width: ListView.view.width
+                        QQC2.Label {
+                            Layout.fillWidth: true
+                            text: modelData.message
+                            textFormat: Text.PlainText
+                            wrapMode: Text.WrapAnywhere
+                        }
+                        QQC2.Button {
+                            objectName: "changeRejectedBookIdentifier"
+                            readonly property string fileName: modelData.fileName
+                            visible: modelData.canChangeIdentifier === true
+                            text: i18nc("@action:button", "Change Book Identifier")
+                            icon.name: "edit-rename"
+                            onClicked: root.changeImportIdentifier(fileName)
+                        }
+                        QQC2.Label {
+                            Layout.fillWidth: true
+                            visible: modelData.canChangeIdentifier === true
+                            text: i18n("Assigns a new book ID to this file and retries the import.")
+                            wrapMode: Text.Wrap
+                        }
+                        QQC2.Label {
+                            Layout.fillWidth: true
+                            visible: !!modelData.actionMessage
+                            text: modelData.actionMessage || ""
+                            textFormat: Text.PlainText
+                            wrapMode: Text.Wrap
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     FileDialog {
         id: addBooksDialog
+        objectName: "addBooksDialog"
 
         title: i18n("Add Books")
         fileMode: FileDialog.OpenFiles
@@ -1067,89 +1454,6 @@ Kirigami.ApplicationWindow {
         onAccepted: {
             const selectedBookFiles = files.length > 0 ? files : (file ? [file] : []);
             root.importBookFiles(selectedBookFiles);
-        }
-    }
-
-    QQC2.Dialog {
-        id: balooImportDialog
-
-        parent: QQC2.Overlay.overlay ? QQC2.Overlay.overlay : root
-        modal: true
-        title: i18nc("@title:dialog", "Import Books By Baloo")
-        standardButtons: root.balooImportRunning ? QQC2.Dialog.Cancel : (balooImportModel.count > 0 ? QQC2.Dialog.Ok | QQC2.Dialog.Cancel : QQC2.Dialog.Close)
-
-        onAccepted: root.importBalooSearchResults()
-        onRejected: {
-            if (root.balooImportRunning) {
-                root.balooImportCancelled = true;
-                root.balooImportRunning = false;
-                root.isLoading = false;
-            }
-        }
-
-        contentItem: ColumnLayout {
-            spacing: Kirigami.Units.largeSpacing
-            implicitWidth: Kirigami.Units.gridUnit * 32
-
-            QQC2.BusyIndicator {
-                Layout.alignment: Qt.AlignHCenter
-                visible: root.balooImportRunning
-                running: visible
-            }
-
-            QQC2.Label {
-                Layout.fillWidth: true
-                text: if (root.balooImportRunning) {
-                    return i18nc("@info", "Searching Baloo for books...");
-                } else if (balooImportModel.count > 0) {
-                    return i18nc("@info %1 is a number", "Baloo found %1 possible imports. Import them into the library?", balooImportModel.count);
-                } else {
-                    return i18nc("@info", "No new books were found by Baloo.");
-                }
-                wrapMode: Text.Wrap
-            }
-
-            QQC2.ScrollView {
-                Layout.fillWidth: true
-                Layout.preferredHeight: Math.min(balooImportResultsView.contentHeight, Kirigami.Units.gridUnit * 14)
-                visible: balooImportModel.count > 0
-                clip: true
-
-                ListView {
-                    id: balooImportResultsView
-
-                    model: balooImportModel
-                    reuseItems: true
-
-                    delegate: QQC2.ItemDelegate {
-                        required property string filename
-                        required property url filePath
-
-                        width: ListView.view.width
-                        text: filename
-                        icon.name: "application-epub+zip"
-                        QQC2.ToolTip.visible: hovered
-                        QQC2.ToolTip.text: String(filePath)
-                        QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
-                    }
-                }
-            }
-        }
-    }
-
-    QQC2.Dialog {
-        id: balooUnavailableDialog
-
-        parent: QQC2.Overlay.overlay ? QQC2.Overlay.overlay : root
-        modal: true
-        width: Math.min(root.width - Kirigami.Units.gridUnit * 2, Kirigami.Units.gridUnit * 32)
-        title: i18nc("@title:dialog", "Import Books By Baloo")
-        standardButtons: QQC2.Dialog.Close
-
-        contentItem: QQC2.Label {
-            width: balooUnavailableDialog.availableWidth
-            text: i18nc("@info", "Baloo is not available or file indexing is disabled. Books can still be added with Add Books.")
-            wrapMode: Text.Wrap
         }
     }
 

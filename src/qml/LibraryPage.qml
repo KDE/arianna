@@ -14,6 +14,12 @@ import org.kde.arianna
 Kirigami.Page {
     id: root
 
+    BookFormatDialog {
+        id: bookFormatDialog
+        parent: QQC2.Overlay.overlay
+        onBookChosen: entry => Navigation.openBook(entry.filename, entry.locations, entry.currentLocation, entry, false)
+    }
+
     property CategoryEntriesModel bookListModel
     property var addBookAction
     property string pageTitle: i18n("Library")
@@ -753,8 +759,7 @@ Kirigami.Page {
     }
 
     function editorCommand() {
-        const command = (Config.editorCommand || "").trim();
-        return command.length > 0 ? command : (Config.editorPath || "").trim();
+        return (Config.editorCommand || "").trim();
     }
 
     function pdfEditorCommand() {
@@ -773,40 +778,12 @@ Kirigami.Page {
         return root.editorCommandForFile(fileName).length > 0 && fileName && fileName.length > 0;
     }
 
-    function editBook(fileName, entry) {
-        if (!canEditBook(fileName)) {
-            return;
-        }
+    BookEditor {
+        id: bookEditor
+    }
 
-        if (root.isPdfBook(fileName)) {
-            if (!ExternalProcess.startDetached(root.pdfEditorCommand(), [fileName])) {
-                console.warn("Unable to start PDF editor for:", fileName);
-            }
-            return;
-        }
-
-        const bookId = entry ? (entry.uniqueIdentifier || entry.identifier || "") : "";
-        const session = EditorSessionStore.createOrReuseEditorSession(bookId, fileName);
-        if (!session || session.error) {
-            console.warn("Unable to create editor session:", session && session.message ? session.message : "");
-            return;
-        }
-
-        if (session.reused && ExternalProcess.isEditorSessionRunning(session.sessionId)) {
-            if (!ExternalProcess.activateWindowForFile(session.workingCopyPath)) {
-                console.warn("Unable to activate existing editor window for:", session.workingCopyPath);
-            }
-            return;
-        }
-
-        if (!ExternalProcess.startEditorSession(session.sessionId, editorCommand(), [session.workingCopyPath])) {
-            if (!session.reused) {
-                EditorSessionStore.finishSession(session.sessionId);
-            }
-            if (!ExternalProcess.activateWindowForFile(session.workingCopyPath)) {
-                console.warn("Unable to start or activate editor for:", session.workingCopyPath);
-            }
-        }
+    function editBook(fileName, entry, cfi, selectedText) {
+        return bookEditor.openBook(fileName, entry, cfi, selectedText);
     }
 
     function confirmRemoveBook(fileName) {
@@ -1090,6 +1067,16 @@ Kirigami.Page {
     Connections {
         target: EditorSessionStore
         function onEditorSessionImportFinished(sessionId, status, message, workingCopyPath, newStateId, anchorValidationIssues) {
+            if (root.refreshActive && (status === "imported" || status === "anchor-validation-failed")) {
+                const session = EditorSessionStore.sessionInfo(sessionId);
+                const currentReader = applicationWindow().pageStack.layers.currentItem;
+                const handledByReader = session && currentReader && typeof currentReader.bookServerIdentifier === "function"
+                    && currentReader.bookServerIdentifier() === session.bookId;
+                if (session && !session.error && !handledByReader) {
+                    importRepairDialog.actionStatus = status === "anchor-validation-failed" ? message : "";
+                    importRepairDialog.showForImport(session.bookId, workingCopyPath, sessionId, status === "imported");
+                }
+            }
             if (status === "imported") {
                 console.log("Editor working copy imported as state:", newStateId);
                 root.scheduleViewRefresh();
@@ -1099,6 +1086,11 @@ Kirigami.Page {
                 console.warn("Editor import failed:", status, message, "Invalid anchors:", anchorValidationIssues ? anchorValidationIssues.length : 0, "Recovery copy:", workingCopyPath);
             }
         }
+    }
+
+    EpubImportRepairDialog {
+        id: importRepairDialog
+        parent: root.QQC2.Overlay.overlay ? root.QQC2.Overlay.overlay : root
     }
 
     Kirigami.Action {
@@ -1308,7 +1300,10 @@ Kirigami.Page {
         }
 
         onAccepted: {
-            applicationWindow().bookListModel.removeBook(bookFileName, deleteFileCheckBox.checked);
+            const result = applicationWindow().bookListModel.removeBook(bookFileName, deleteFileCheckBox.checked);
+            if (!result.success) {
+                applicationWindow().showPassiveNotification(result.message);
+            }
             bookFileName = "";
             location = "";
         }
@@ -1318,7 +1313,7 @@ Kirigami.Page {
 
             QQC2.Label {
                 Layout.fillWidth: true
-                text: i18nc("@info", "Do you really want to remove the book from the library? All saved data such as progress and annotations will be lost.")
+                text: i18nc("@info", "Do you really want to remove the book from the library? Its saved progress, annotations and all cross-references to and from this book will be deleted. Unused cross-reference anchors in other books will also be removed.")
                 wrapMode: Text.Wrap
             }
 
@@ -1476,6 +1471,7 @@ Kirigami.Page {
 
         GridView {
             id: contentDirectoryView
+            objectName: "libraryBookGrid"
 
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -1535,7 +1531,8 @@ Kirigami.Page {
                 hoverEnabled: true
                 highlighted: root.pinnedSubjectBook === bookDelegate.filename
 
-                imageUrl: categoryEntriesModel === '' && thumbnail !== '' ? ('file://' + thumbnail) : ''
+                imageUrl: categoryEntriesModel === '' && thumbnail && thumbnail !== 'undefined' && thumbnail !== 'null'
+                    ? ('file://' + thumbnail) : ''
                 iconName: if (categoryEntriesModel !== '') {
                     return thumbnail;
                 } else if (thumbnail === '') {
@@ -1548,6 +1545,9 @@ Kirigami.Page {
                 secondaryText: root.bookSecondaryText(bookDelegate.mainSubject, bookDelegate.author, bookDelegate.categoryEntriesModel === "")
                 typeIconSource: root.typeIconSourceForFile(bookDelegate.filename, bookDelegate.categoryEntriesModel)
                 showPasswordBadge: bookDelegate.passwordProtected
+                passwordFileName: bookDelegate.filename
+                passwordBookId: bookDelegate.entry.uniqueIdentifier || bookDelegate.entry.identifier || ""
+                formatVariants: bookDelegate.entry.formatVariants || []
 
                 onHoveredChanged: {
                     if (bookDelegate.categoryEntriesModel !== "") {
@@ -1562,7 +1562,7 @@ Kirigami.Page {
 
                 Component.onDestruction: root.clearHoveredSubjects(bookDelegate.filename)
 
-                onClicked: {
+                onActivated: modifiers => {
                     if (root.suppressNextBookClick) {
                         root.suppressNextBookClick = false;
                         return;
@@ -1570,7 +1570,7 @@ Kirigami.Page {
                     if (categoryEntriesModel) {
                         Navigation.openLibrary(localizedTitle, categoryEntriesModel, false);
                     } else {
-                        Navigation.openBook(filename, locations, currentLocation, entry, false);
+                        bookFormatDialog.openBook(entry, modifiers);
                     }
                 }
 
@@ -1766,7 +1766,8 @@ Kirigami.Page {
                                 hoverEnabled: true
                                 highlighted: root.pinnedSubjectBook === groupedBookDelegate.filename
 
-                                imageUrl: categoryEntriesModel === "" && thumbnail !== "" ? ("file://" + thumbnail) : ""
+                                imageUrl: categoryEntriesModel === "" && thumbnail && thumbnail !== "undefined" && thumbnail !== "null"
+                                    ? ("file://" + thumbnail) : ""
                                 iconName: if (categoryEntriesModel !== "") {
                                     return thumbnail;
                                 } else if (thumbnail === "") {
@@ -1779,6 +1780,9 @@ Kirigami.Page {
                                 currentProgress: Number(book.currentProgress || 0)
                                 typeIconSource: root.typeIconSourceForFile(filename, categoryEntriesModel)
                                 showPasswordBadge: groupedBookDelegate.passwordProtected
+                                passwordFileName: groupedBookDelegate.filename
+                                passwordBookId: groupedBookDelegate.entry.uniqueIdentifier || groupedBookDelegate.entry.identifier || ""
+                                formatVariants: groupedBookDelegate.entry.formatVariants || []
 
                                 onHoveredChanged: {
                                     if (hovered) {
@@ -1790,12 +1794,12 @@ Kirigami.Page {
 
                                 Component.onDestruction: root.clearHoveredSubjects(filename)
 
-                                onClicked: {
+                                onActivated: modifiers => {
                                     if (root.suppressNextBookClick) {
                                         root.suppressNextBookClick = false;
                                         return;
                                     }
-                                    Navigation.openBook(filename, locations, currentLocation, entry, false);
+                                    bookFormatDialog.openBook(entry, modifiers);
                                 }
 
                                 TapHandler {

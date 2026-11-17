@@ -33,15 +33,31 @@ FormCard.FormCardPage {
     property bool watermarkRunning: false
     property string pdfVersionStatus: ""
     property bool pdfVersionUpdating: false
+    property var pdfEncryptionInfo: ({})
     property string pendingWatermarkReplacement: ""
     property int pendingWatermarkOccurrences: 0
     property var topicPathCandidates: []
     property var topicPathSuggestions: []
     property bool applyingTopicSuggestion: false
+    property bool topicsEdited: false
+    property string topicDraft: ""
+    onTopicDraftChanged: {
+        if (topicTreeField) topicTreeField.text = root.topicDraft;
+    }
+    property string topicSaveError: ""
+    onMetadataChanged: root.syncTopicDraft()
     property string detectedBookVersion: ""
     readonly property bool wideLayout: width >= Kirigami.Units.gridUnit * 36
     readonly property string epubTypeIconSource: "qrc:/qt/qml/org/kde/arianna/qml/icons/epub_icon.png"
     readonly property string pdfTypeIconSource: "qrc:/qt/qml/org/kde/arianna/qml/icons/pdf_icon.png"
+
+    Arianna.PdfPasswordIndicator {
+        id: passwordIndicator
+        enabled: root.visible && Boolean(root.metadata && root.metadata.passwordProtected)
+        fileName: root.metadata ? root.metadata.filename || "" : ""
+        bookId: root.metadata ? root.metadata.uniqueIdentifier || root.metadata.identifier || "" : ""
+        window: root.Window.window
+    }
 
     implicitWidth: Kirigami.Units.gridUnit * 44
 
@@ -220,15 +236,39 @@ FormCard.FormCardPage {
         return root.leafTopicList(metadata.subjects || metadata.genres).join(", ");
     }
 
+    function syncTopicDraft() {
+        if (!root.topicsEdited) {
+            root.topicDraft = root.topicsText();
+            // The delegate writes its own text property, so update it explicitly.
+            if (topicTreeField) topicTreeField.text = root.topicDraft;
+        }
+    }
+
+    function refreshMetadataFromCatalog(metadata) {
+        const model = root.catalogModel();
+        if (!root.readOnly && model && metadata && metadata.filename) {
+            const persisted = model.bookEntryFromDatabase(metadata.filename);
+            if (persisted && persisted.filename) metadata = persisted;
+        }
+        root.updateMetadata(metadata);
+    }
+
     function updateMetadata(metadata) {
         if (!metadata || !metadata.filename) {
             return;
         }
 
-        root.metadata = metadata;
+        if (root.currentMetadataFilename() !== metadata.filename) {
+            root.topicsEdited = false;
+            root.topicSaveError = "";
+        }
+        // BookEntry equality expresses file identity, not metadata equality.
+        // A plain snapshot must replace this form's value even for the same file.
+        root.metadata = Object.assign({}, metadata);
         root.detectedBookVersion = root.detectBookVersion(metadata);
+        root.refreshPdfEncryptionInfo();
         authorEditField.text = root.authorText();
-        topicTreeField.text = root.topicsText();
+        root.syncTopicDraft();
         root.updateTopicPathSuggestions();
     }
 
@@ -255,6 +295,24 @@ FormCard.FormCardPage {
 
     function isEpubBook() {
         return root.currentMetadataFilename().toLocaleLowerCase().endsWith(".epub");
+    }
+
+    function refreshPdfEncryptionInfo() {
+        if (!root.isPdfBook()) {
+            root.pdfEncryptionInfo = ({});
+            return;
+        }
+
+        root.pdfEncryptionInfo = pdfSecurityInspector.inspect(root.currentMetadataFilename());
+    }
+
+    function pdfEncryptionSummary() {
+        if (root.pdfEncryptionInfo && root.pdfEncryptionInfo.available) {
+            return String(root.pdfEncryptionInfo.summary || "");
+        }
+        return root.pdfEncryptionInfo && root.pdfEncryptionInfo.error
+            ? String(root.pdfEncryptionInfo.error)
+            : i18n("Unable to inspect PDF encryption.");
     }
 
     function bookTypeIconSource() {
@@ -321,9 +379,11 @@ FormCard.FormCardPage {
         }
 
         const filename = root.metadata.filename;
-        const topics = root.leafTopicList(topicTreeField.text).join(", ");
+        const topics = root.leafTopicList(root.topicDraft).join(", ");
         if (topics === root.topicsText()) {
-            topicTreeField.text = topics;
+            root.topicsEdited = false;
+            root.topicDraft = topics;
+            root.topicSaveError = "";
             return;
         }
 
@@ -335,11 +395,15 @@ FormCard.FormCardPage {
 
         model.setBookData(filename, "subjects", topics);
 
-        const updatedMetadata = model.bookEntryFromFile(filename);
+        const updatedMetadata = model.bookEntryFromDatabase(filename);
         if (updatedMetadata && updatedMetadata.filename && root.topicTextForMetadata(updatedMetadata) === topics) {
+            root.topicsEdited = false;
+            root.topicSaveError = "";
             root.updateMetadata(updatedMetadata);
         } else {
-            topicTreeField.text = topics;
+            root.topicsEdited = true;
+            root.topicDraft = topics;
+            root.topicSaveError = i18n("The topic tree could not be saved. Your input has been kept.");
         }
     }
 
@@ -484,7 +548,9 @@ FormCard.FormCardPage {
 
         const text = topicTreeField.text || "";
         const range = root.topicTokenRange();
-        topicTreeField.text = text.substring(0, range.start) + path + text.substring(range.end);
+        root.topicsEdited = true;
+        root.topicSaveError = "";
+        root.topicDraft = text.substring(0, range.start) + path + text.substring(range.end);
         topicTreeField.cursorPosition = range.start + path.length;
         root.topicPathSuggestions = [];
         root.applyingTopicSuggestion = false;
@@ -754,7 +820,7 @@ FormCard.FormCardPage {
 
     title: i18nc("@info:title", "Book Details")
 
-    Component.onCompleted: root.detectedBookVersion = root.detectBookVersion(root.metadata)
+    Component.onCompleted: root.refreshMetadataFromCatalog(root.metadata)
 
     Component.onDestruction: root.clearPendingWatermarkReplacement(true)
 
@@ -766,8 +832,16 @@ FormCard.FormCardPage {
                 return;
             }
 
-            root.updateMetadata(entry);
+            root.refreshMetadataFromCatalog(entry);
         }
+    }
+
+    Arianna.PdfSecurityInfo {
+        id: pdfSecurityInspector
+    }
+
+    Arianna.BookReferenceCheck {
+        id: referenceChecker
     }
 
     QQC2.Dialog {
@@ -796,6 +870,32 @@ FormCard.FormCardPage {
                 Layout.fillWidth: true
                 text: root.currentMetadataFilename()
                 elide: Text.ElideMiddle
+            }
+        }
+    }
+
+    FormCard.FormHeader {
+        visible: root.isPdfBook()
+        title: i18n("PDF Security")
+    }
+
+    FormCard.FormCard {
+        visible: root.isPdfBook()
+        Layout.fillWidth: true
+
+        FormCard.FormTextDelegate {
+            id: pdfSecurityInfoField
+
+            text: i18n("Encryption:")
+            description: root.pdfEncryptionSummary()
+            trailing: QQC2.ToolButton {
+                display: QQC2.AbstractButton.IconOnly
+                icon.name: "view-refresh"
+                text: i18nc("@action:button", "Refresh PDF Security Information")
+                QQC2.ToolTip.text: text
+                QQC2.ToolTip.visible: hovered
+                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+                onClicked: root.refreshPdfEncryptionInfo()
             }
         }
     }
@@ -876,6 +976,13 @@ FormCard.FormCardPage {
 
             Rectangle {
                 id: passwordBadge
+                objectName: "passwordBadge"
+                Accessible.description: passwordIndicator.description
+                QQC2.ToolTip.visible: badgeHover.hovered
+                QQC2.ToolTip.text: passwordIndicator.description
+                QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+
+                HoverHandler { id: badgeHover }
 
                 readonly property real iconSize: Math.max(Kirigami.Units.gridUnit * 1.2, coverFrame.coverWidth * 0.16)
 
@@ -892,9 +999,10 @@ FormCard.FormCardPage {
                 visible: Boolean(root.metadata && root.metadata.passwordProtected)
 
                 Kirigami.Icon {
+                    objectName: "passwordBadgeIcon"
                     anchors.fill: parent
                     anchors.margins: Math.max(2, Math.round(parent.width * 0.22))
-                    source: "object-locked-symbolic"
+                    source: passwordIndicator.unlocked ? "object-unlocked-symbolic" : "object-locked-symbolic"
                 }
             }
         }
@@ -1099,10 +1207,14 @@ FormCard.FormCardPage {
             id: topicTreeField
 
             label: i18n("Topic Tree String")
-            text: root.topicsText()
             placeholderText: i18n("Format: comma (,) and semicolon (;) topic separators, slash (/) level separator")
             enabled: !root.readOnly
-            onTextEdited: root.updateTopicPathSuggestions()
+            onTextEdited: {
+                root.topicsEdited = true;
+                root.topicDraft = text;
+                root.topicSaveError = "";
+                root.updateTopicPathSuggestions();
+            }
             onCursorPositionChanged: root.updateTopicPathSuggestions()
             onFieldActiveFocusChanged: {
                 if (fieldActiveFocus) {
@@ -1174,6 +1286,11 @@ FormCard.FormCardPage {
             visible: !root.readOnly
         }
 
+        FormCard.FormTextDelegate {
+            visible: root.topicSaveError.length > 0
+            text: root.topicSaveError
+        }
+
         FormCard.FormButtonDelegate {
             visible: !root.readOnly
             text: i18n("Save Topic Tree")
@@ -1222,8 +1339,41 @@ FormCard.FormCardPage {
             onClicked: root.checkPdf()
         }
 
+        FormCard.FormButtonDelegate {
+            objectName: "crossReferenceCheckButton"
+            visible: root.isEpubBook() || root.isPdfBook()
+            text: referenceChecker.running ? i18n("Checking references…") : i18nc("@action:button", "Check Cross-References")
+            icon.name: "edit-link"
+            enabled: !referenceChecker.running && root.metadata && root.metadata.filename
+            onClicked: {
+                referenceChecker.start(root.metadata.filename);
+                referenceReportDialog.open();
+            }
+        }
+
+        FormCard.FormTextDelegate {
+            visible: (root.isEpubBook() || root.isPdfBook()) && !!referenceChecker.report.message
+            text: i18n("Reference check:")
+            description: referenceChecker.report.message || ""
+        }
+
+        FormCard.FormButtonDelegate {
+            visible: (root.isEpubBook() || root.isPdfBook()) && !!referenceChecker.report.message
+            text: i18nc("@action:button", "Show Reference Report")
+            icon.name: "document-preview"
+            onClicked: referenceReportDialog.open()
+        }
+
         FormCard.FormDelegateSeparator {
             visible: watermarkFilterButton.visible || epubCheckButton.visible || pdfCheckButton.visible
+        }
+
+        FormCard.FormButtonDelegate {
+            visible: root.isEpubBook() && !root.readOnly
+            text: i18n("Review Sanskrit Work Structure")
+            icon.name: "view-list-tree"
+            enabled: !!root.metadata?.uniqueIdentifier
+            onClicked: applicationWindow().showWorkStructure(root.metadata.uniqueIdentifier)
         }
 
         FormCard.FormButtonDelegate {
@@ -1336,5 +1486,23 @@ FormCard.FormCardPage {
         id: pdfReportDialog
 
         parent: QQC2.Overlay.overlay ? QQC2.Overlay.overlay : root
+    }
+
+    ReferenceReportDialog {
+        id: referenceReportDialog
+
+        parent: root.QQC2.Overlay.overlay ? root.QQC2.Overlay.overlay : root
+        report: referenceChecker.report
+        running: referenceChecker.running
+        referenceEditor: referenceChecker
+        onRemoveOrphanRequested: removal => {
+            const result = referenceChecker.removeOrphanAnchor(removal);
+            referenceReportDialog.actionStatus = result.message || "";
+        }
+        onRecheckRequested: {
+            if (!referenceChecker.running && root.metadata && root.metadata.filename) {
+                referenceChecker.start(root.metadata.filename);
+            }
+        }
     }
 }

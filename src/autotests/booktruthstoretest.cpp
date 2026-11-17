@@ -3,6 +3,7 @@
 #include "booktruthstore.h"
 #include "bookdatabase.h"
 #include "categoryentriesmodel.h"
+#include "config.h"
 
 #include <KArchiveFile>
 #include <KZip>
@@ -14,6 +15,7 @@
 #include <QFileInfo>
 #include <QIODevice>
 #include <QScopedPointer>
+#include <QScopeGuard>
 #include <QSqlDatabase>
 #include <QStandardPaths>
 #include <QTemporaryDir>
@@ -29,12 +31,15 @@ private Q_SLOTS:
     void testOpenBookCreatesCurrentState();
     void testTextContentHashIgnoresTechnicalAnchors();
     void testVisibleTextChangeChangesBothHashes();
+    void testCreateAnchorUpdatesCurrentState_data();
     void testCreateAnchorUpdatesCurrentState();
     void testFailedAnchorDoesNotChangeStateOrEpub();
     void testAnnotationPersistenceDoesNotExposeInvalidState();
     void testReferencePersistenceHasNoInvalidColumns();
     void testActiveFileChangeRefreshesState();
     void testActiveFileChangeWithInvalidAnchorReportsIssues();
+    void testReferenceTargets_data();
+    void testReferenceTargets();
 };
 
 static QString uniqueBookId(const QString &prefix)
@@ -129,6 +134,7 @@ void BookTruthStoreTest::initTestCase()
     const QString dataHome = QDir::temp().filePath(QStringLiteral("arianna-booktruthstoretest-%1").arg(QCoreApplication::applicationPid()));
     QVERIFY(QDir().mkpath(dataHome));
     qputenv("XDG_DATA_HOME", QFile::encodeName(dataHome));
+    qputenv("XDG_CONFIG_HOME", QFile::encodeName(dataHome));
 
     QCoreApplication::setOrganizationName(QStringLiteral("KDE"));
     QCoreApplication::setApplicationName(QStringLiteral("arianna-booktruthstoretest"));
@@ -224,8 +230,19 @@ void BookTruthStoreTest::testVisibleTextChangeChangesBothHashes()
     QVERIFY(first.documentStateHash != second.documentStateHash);
 }
 
+void BookTruthStoreTest::testCreateAnchorUpdatesCurrentState_data()
+{
+    QTest::addColumn<bool>("createBackup");
+    QTest::newRow("with safety backup") << true;
+    QTest::newRow("without safety backup") << false;
+}
+
 void BookTruthStoreTest::testCreateAnchorUpdatesCurrentState()
 {
+    QFETCH(bool, createBackup);
+    const bool previous = Config::backupOnAnchoring();
+    const auto restore = qScopeGuard([previous] { Config::setBackupOnAnchoring(previous); });
+    Config::setBackupOnAnchoring(createBackup);
     QTemporaryDir dir;
     QVERIFY(dir.isValid());
 
@@ -240,7 +257,12 @@ void BookTruthStoreTest::testCreateAnchorUpdatesCurrentState()
     const BookSnapshot snapshot = store.openBook(bookId);
     QVERIFY2(snapshot.success, qPrintable(snapshot.errorMessage));
 
-    const BookCommitResult result = store.createAnchor(bookId, QStringLiteral("epubcfi(/6/2!/2/2,/1:6,/1:14)"));
+    const auto initialData = readChapter(epubPath);
+    const auto rejected = store.createAnchor(bookId, QStringLiteral("epubcfi(/6/2!/2/2,/1:6,/1:14)"), QStringLiteral("different text"));
+    QVERIFY(!rejected.success);
+    QCOMPARE(readChapter(epubPath), initialData);
+    QCOMPARE(BookDatabase::self().currentBookState(bookId)->stateId, snapshot.state->stateId);
+    const BookCommitResult result = store.createAnchor(bookId, QStringLiteral("epubcfi(/6/2!/2/2,/1:6,/1:14)"), QStringLiteral("anchored"));
     QVERIFY2(result.success, qPrintable(result.errorMessage));
     QVERIFY(result.createdAnchorId.has_value());
     QVERIFY(isUuidV7(*result.createdAnchorId));
@@ -256,8 +278,10 @@ void BookTruthStoreTest::testCreateAnchorUpdatesCurrentState()
 
     const QString anchorElementId = QStringLiteral("uuid_") + result.createdAnchorId->toString(QUuid::WithoutBraces);
     const QString backupPath = dir.filePath(QStringLiteral("anchor.before_anchoring_%1.epub").arg(anchorElementId));
-    QVERIFY(QFileInfo::exists(backupPath));
-    QVERIFY(!readChapter(backupPath).contains("data-role=\"anchor\""));
+    QCOMPARE(QFileInfo::exists(backupPath), createBackup);
+    QCOMPARE(QFileInfo::exists(backupPath + QStringLiteral(".arianna.json")), createBackup);
+    if (createBackup)
+        QVERIFY(!readChapter(backupPath).contains("data-role=\"anchor\""));
 
     const QString document = QString::fromUtf8(readChapter(epubPath));
     QVERIFY(document.contains(QStringLiteral("id=\"") + anchorElementId + QStringLiteral("\"")));
@@ -416,6 +440,90 @@ void BookTruthStoreTest::testActiveFileChangeWithInvalidAnchorReportsIssues()
     const QVariantMap loaded = annotations.constFirst().toMap();
     QVERIFY(!loaded.value(QStringLiteral("invalid")).toBool());
     QVERIFY(!loaded.contains(QStringLiteral("invalidReason")));
+}
+
+void BookTruthStoreTest::testReferenceTargets_data()
+{
+    QTest::addColumn<QString>("location");
+    QTest::newRow("root-file") << QStringLiteral("titlepage.xhtml");
+    QTest::newRow("nested-file") << QStringLiteral("Text/chapter.xhtml");
+    QTest::newRow("encoded-file") << QStringLiteral("title%20page.xhtml");
+    QTest::newRow("manifest-id") << QStringLiteral("title");
+    QTest::newRow("bare-anchor") << QStringLiteral("heading");
+    QTest::newRow("fragment-only") << QStringLiteral("#heading");
+    QTest::newRow("root-file-anchor") << QStringLiteral("titlepage.xhtml#heading");
+    QTest::newRow("nested-file-anchor") << QStringLiteral("Text/chapter.xhtml#heading");
+}
+
+void BookTruthStoreTest::testReferenceTargets()
+{
+    QFETCH(QString, location);
+    QTemporaryDir dir;
+    QVERIFY(dir.isValid());
+    const QString bookId = uniqueBookId(QStringLiteral("file-target"));
+    const QString original = dir.filePath(QStringLiteral("original.epub"));
+    const QString working = dir.filePath(QStringLiteral("working.epub"));
+    auto writeEdition = [](const QString &path, bool changed, bool removeTarget, bool moveAnchor = false) {
+        QFile::remove(path);
+        KZip zip(path);
+        if (!zip.open(QIODevice::WriteOnly))
+            return false;
+        const QByteArray opf = R"(<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="id">
+<metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="id">file-target</dc:identifier><dc:title>Test</dc:title></metadata>
+<manifest><item id="title" href="titlepage.xhtml" media-type="application/xhtml+xml"/>
+<item id="chapter" href="Text/chapter.xhtml" media-type="application/xhtml+xml"/>
+<item id="encoded" href="title%20page.xhtml" media-type="application/xhtml+xml"/></manifest>
+<spine><itemref idref="title"/><itemref idref="chapter"/></spine></package>)";
+        const QByteArray newOpf = R"(<package xmlns="http://www.idpf.org/2007/opf" version="3.0" unique-identifier="id">
+<metadata xmlns:dc="http://purl.org/dc/elements/1.1/"><dc:identifier id="id">file-target</dc:identifier><dc:title>Test</dc:title></metadata>
+<manifest><item id="renamed" href="renamed.xhtml" media-type="application/xhtml+xml"/></manifest>
+<spine><itemref idref="renamed"/></spine></package>)";
+        bool ok = zip.writeFile(QStringLiteral("mimetype"), QByteArrayLiteral("application/epub+zip"))
+            && zip.writeFile(QStringLiteral("META-INF/container.xml"),
+                             QByteArrayLiteral("<container><rootfiles><rootfile full-path=\"content.opf\" "
+                                               "media-type=\"application/oebps-package+xml\"/></rootfiles></container>"))
+            && zip.writeFile(QStringLiteral("content.opf"), removeTarget ? newOpf : opf);
+        const QByteArray body = changed ? QByteArrayLiteral("<p id=\"heading\">Edited text.</p>") : QByteArrayLiteral("<p id=\"heading\">Original text.</p>");
+        if (removeTarget) {
+            ok = ok && zip.writeFile(QStringLiteral("renamed.xhtml"), chapterWithBody(QByteArrayLiteral("<p>Target removed.</p>")));
+        } else {
+            for (const auto &file : {"titlepage.xhtml", "Text/chapter.xhtml", "title page.xhtml"}) {
+                const auto content = moveAnchor && QLatin1StringView(file) == QLatin1StringView("titlepage.xhtml")
+                    ? QByteArrayLiteral("<p>Anchor moved to another chapter.</p>") : body;
+                ok = ok && zip.writeFile(QString::fromLatin1(file), chapterWithBody(content));
+            }
+        }
+        return zip.close() && ok;
+    };
+    QVERIFY(writeEdition(original, false, false));
+    addBookEntry(bookId, original);
+    BookDatabase::self().saveReference({{QStringLiteral("sourceBookId"), uniqueBookId(QStringLiteral("external"))},
+                                        {QStringLiteral("sourceAnchorId"), QStringLiteral("source")},
+                                        {QStringLiteral("targetBookId"), bookId},
+                                        {QStringLiteral("targetLocation"), location}});
+    BookTruthStore store;
+    QVERIFY(store.openBook(bookId).success);
+    QVERIFY(writeEdition(working, true, false));
+    const auto accepted = store.commitCandidateBookFile(bookId, working);
+    QVERIFY2(accepted.success, qPrintable(accepted.errorMessage));
+    QVERIFY(accepted.anchorValidationIssues.isEmpty());
+    const auto state = store.currentState(bookId);
+
+    if (location == QStringLiteral("titlepage.xhtml#heading")) {
+        QVERIFY(writeEdition(working, true, false, true));
+        const auto moved = store.commitCandidateBookFile(bookId, working, false, true);
+        QVERIFY(!moved.success);
+        QVERIFY(moved.validationFailed);
+        QCOMPARE(store.currentState(bookId)->stateId, state->stateId);
+    }
+
+    // Removing a previously valid target still fails with the editor's policy.
+    QVERIFY(writeEdition(working, true, true));
+    const auto rejected = store.commitCandidateBookFile(bookId, working, false, true);
+    QVERIFY(!rejected.success);
+    QVERIFY(rejected.validationFailed);
+    QCOMPARE(rejected.anchorValidationIssues.size(), 1);
+    QCOMPARE(store.currentState(bookId)->stateId, state->stateId);
 }
 
 QTEST_MAIN(BookTruthStoreTest)

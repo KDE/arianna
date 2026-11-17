@@ -13,6 +13,7 @@ Item {
     property int currentPage: 0
     property real renderScale: 1
     property bool twoPageMode: false
+    property real pageSpacing: 4 * Kirigami.Units.largeSpacing
     property bool inverted: false
     property bool recolor: false
     property color foregroundColor: "black"
@@ -21,6 +22,16 @@ Item {
     property bool notInvertedRegionSelectionMode: false
     property bool ovalNotInvertedRegionSelectionMode: false
     property bool forcedInvertedRegionSelectionMode: false
+    property bool pdfLinkTargetSelectionMode: false
+    property bool allowPdfDocumentEdits: false
+    property bool allowExternalBookReferences: false
+    property bool pdfEditorPageSwitchConfigured: false
+    property bool allowPersonalAnnotations: false
+    property var personalAnnotations: []
+    // The PDF annotation itself remains invisible. The reader uses these
+    // regions to render and activate cross references stored in SQLite.
+    property var ariannaAnchors: []
+    property string hoveredAriannaAnchorId: ""
     property int notInvertedRegionsVersion: 0
     property var notInvertedRegionsForPage: null
     property var forcedInvertedRegionsForPage: null
@@ -30,6 +41,7 @@ Item {
     property var pendingViewportPosition: null
     property bool coverPageMode: false
     readonly property var searchModel: searchState
+    readonly property color searchResultOutlineColor: inverted ? "#ff4444" : recolor ? "#44cc44" : "#1a52b3"
     readonly property int spreadFirstPage: twoPageMode ? displayPage(currentPage) : clampPage(currentPage)
     readonly property int spreadSecondPage: twoPageMode ? secondPageForSpread(spreadFirstPage) : -1
     readonly property bool colorRegionSelectionMode: notInvertedRegionSelectionMode || ovalNotInvertedRegionSelectionMode || forcedInvertedRegionSelectionMode
@@ -37,8 +49,18 @@ Item {
     readonly property color readerBackgroundBaseColor: recolor ? backgroundColor : inverted ? "black" : "white"
     readonly property color readerBackgroundOverlayColor: inverted ? Qt.rgba(0, 0, 0, 0.86) : Qt.rgba(1, 1, 1, 0.86)
 
+    signal searchRequested(text: string)
     signal zoomRequested(factor: real)
+    signal pageSpacingChangeRequested(delta: int)
     signal translateSelectionRequested(selectedText: string)
+    signal speechSelectionChanged(text: string)
+    signal readSelectionRequested(text: string)
+    signal readDocumentRequested(position: var)
+    signal personalNoteRequested(selection: var)
+    signal createPdfLinkRequested(sourceSelection: var)
+    signal createExternalBookReferenceRequested(sourceSelection: var)
+    signal pdfLinkTargetSelected(targetSelection: var)
+    signal editCurrentPageRequested(page: int)
     signal notInvertedRegionSelected(page: int, rect: var)
     signal forcedInvertedRegionSelected(page: int, rect: var)
     signal preserveColorForPageRequested(page: int)
@@ -49,13 +71,141 @@ Item {
     signal clearPreservedAreasForPageRequested(page: int)
     signal clearInvertedAreasForPageRequested(page: int)
     signal sectionNavigationRequested(previous: bool)
+    signal personalAnnotationNavigationRequested(previous: bool)
     signal historyNavigationRequested(back: bool)
     signal linkActivated(location: var, sourceLocation: var)
     signal externalLinkActivated(url: string, sourceLocation: string)
+    signal ariannaAnchorActivated(anchorId: string)
 
     function hasLinkAtRootPosition(x, y) {
         return firstPageSurface.hasLinkAtRootPosition(x, y)
             || secondPageSurface.hasLinkAtRootPosition(x, y);
+    }
+
+    function hasAriannaAnchorAtRootPosition(x, y) {
+        return root.ariannaAnchorAtRootPosition(x, y) !== null;
+    }
+
+    function ariannaAnchorAtRootPosition(x, y) {
+        const firstAnchor = firstPageSurface.ariannaAnchorAtRootPosition(x, y);
+        return firstAnchor || secondPageSurface.ariannaAnchorAtRootPosition(x, y);
+    }
+
+    function activateAriannaAnchorAtRootPosition(x, y) {
+        const anchor = root.ariannaAnchorAtRootPosition(x, y);
+        const anchorId = anchor && anchor.hasReference ? String(anchor.anchorId || "") : "";
+        if (anchorId.length === 0) {
+            return false;
+        }
+
+        root.ariannaAnchorActivated(anchorId);
+        return true;
+    }
+
+    function clearAriannaAnchorHover() {
+        root.hoveredAriannaAnchorId = "";
+        ariannaAnchorTitleTimer.stop();
+        ariannaAnchorTitleTooltip.visible = false;
+    }
+
+    function updateAriannaAnchorHover(x, y) {
+        const anchor = root.ariannaAnchorAtRootPosition(x, y);
+        const anchorId = anchor ? String(anchor.anchorId || "") : "";
+        if (anchorId === root.hoveredAriannaAnchorId) {
+            return;
+        }
+
+        root.hoveredAriannaAnchorId = anchorId;
+        if (!anchorId) {
+            ariannaAnchorTitleTimer.stop();
+            ariannaAnchorTitleTooltip.visible = false;
+            return;
+        }
+
+        const title = String(anchor.sourceAnchorTitle || "").trim();
+        if (title.length === 0) {
+            ariannaAnchorTitleTooltip.visible = false;
+            return;
+        }
+
+        ariannaAnchorTitleTooltip.titleText = title;
+        ariannaAnchorTitleTooltip.x = Math.max(0, Math.min(root.width - ariannaAnchorTitleTooltip.width, anchor.tooltipX));
+        ariannaAnchorTitleTooltip.y = Math.max(0, Math.min(root.height - ariannaAnchorTitleTooltip.height,
+                                                            anchor.tooltipY + Kirigami.Units.smallSpacing));
+        ariannaAnchorTitleTooltip.visible = true;
+        ariannaAnchorTitleTimer.restart();
+    }
+
+    function ariannaAnchorRegionsForPage(page) {
+        const regions = [];
+        const anchors = root.ariannaAnchors || [];
+        for (let anchorIndex = 0; anchorIndex < anchors.length; ++anchorIndex) {
+            const anchor = anchors[anchorIndex];
+            const rects = anchor ? anchor.rects : null;
+            // QVariantList values returned from the C++ PDF backend are
+            // list-like in QML, but are not necessarily JavaScript Arrays.
+            if (!anchor || Number(anchor.page) !== page || !rects || typeof rects.length !== "number") {
+                continue;
+            }
+
+            for (let rectIndex = 0; rectIndex < rects.length; ++rectIndex) {
+                const rect = rects[rectIndex];
+                const x = Number(rect.x);
+                const y = Number(rect.y);
+                const width = Number(rect.width);
+                const height = Number(rect.height);
+                if (isFinite(x) && isFinite(y) && isFinite(width) && isFinite(height) && width > 0 && height > 0) {
+                    regions.push({
+                            anchorId: String(anchor.anchorId || ""),
+                            sourceAnchorTitle: String(anchor.sourceAnchorTitle || ""),
+                            hasReference: Boolean(anchor.hasReference),
+                            x: x,
+                            y: y,
+                            width: width,
+                            height: height
+                        });
+                }
+            }
+        }
+        return regions;
+    }
+
+    function personalAnnotationsForPage(page) {
+        const regions = [];
+        const annotations = root.personalAnnotations || [];
+        for (const annotation of annotations) {
+            if (!annotation || annotation.format !== "pdf") {
+                continue;
+            }
+
+            const location = annotation.location || {};
+            const rects = location.rects;
+            // Persisted locations contain QVariantLists, which QML exposes as
+            // sequences rather than JavaScript Arrays.
+            if (Number(location.page) !== page || !rects || typeof rects.length !== "number") {
+                continue;
+            }
+
+            for (let rectIndex = 0; rectIndex < rects.length; ++rectIndex) {
+                const rect = rects[rectIndex];
+                const x = Number(rect.x);
+                const y = Number(rect.y);
+                const width = Number(rect.width);
+                const height = Number(rect.height);
+                if (!isFinite(x) || !isFinite(y) || !isFinite(width) || !isFinite(height) || width <= 0 || height <= 0) {
+                    continue;
+                }
+
+                regions.push({
+                    x: Math.max(0, Math.min(1, x)),
+                    y: Math.max(0, Math.min(1, y)),
+                    width: Math.max(0, Math.min(1 - Math.max(0, x), width)),
+                    height: Math.max(0, Math.min(1 - Math.max(0, y), height)),
+                    color: annotation.color || "yellow"
+                });
+            }
+        }
+        return regions;
     }
 
     function clampPage(page) {
@@ -185,10 +335,60 @@ Item {
         return secondPage;
     }
 
-    function searchBack() {
+    function goToSearchResult(index, flash = false) {
+        searchResultRestoreTimer.stop();
+        searchState.hiddenResult = -1;
+        if (searchState.count === 0) {
+            return;
+        }
+        searchState.currentResult = (index + searchState.count) % searchState.count;
+        const match = searchState.matches[searchState.currentResult];
+        const rect = match.rectangles && match.rectangles.length > 0 ? match.rectangles[0] : null;
+        if (rect) {
+            root.goToPagePosition(match.page, Number(rect.x) + Number(rect.width) / 2,
+                                  Number(rect.y) + Number(rect.height) / 2, "center");
+        } else {
+            root.goToPage(match.page);
+        }
+        if (flash) {
+            searchState.hiddenResult = searchState.currentResult;
+            searchResultRestoreTimer.restart();
+        }
     }
 
-    function searchForward() {
+    function searchBack(flash = false) {
+        root.goToSearchResult(searchState.currentResult < 0 ? searchState.count - 1 : searchState.currentResult - 1, flash);
+    }
+
+    function openSearchDialog() {
+        searchDialog.open();
+    }
+
+    function searchInDocument(text) {
+        root.searchRequested(text);
+    }
+
+    function closeSearchDialog() {
+        searchDialog.close();
+    }
+
+    function searchResultText(page, excerpt) {
+        return i18n("Page %1: %2", page + 1, excerpt);
+    }
+
+    function searchRegionsForPage(page) {
+        const regions = [];
+        for (let index = 0; index < searchState.matches.length; ++index) {
+            const match = searchState.matches[index];
+            if (Number(match.page) === page) {
+                regions.push(...(match.rectangles || []).map(rect => Object.assign({}, rect, { searchResultIndex: index })));
+            }
+        }
+        return regions;
+    }
+
+    function searchForward(flash = false) {
+        root.goToSearchResult(searchState.currentResult + 1, flash);
     }
 
     function positionPage() {
@@ -266,7 +466,7 @@ Item {
         const pixelDy = Number(pixelDelta.y) || 0;
         const dx = angleDx !== 0 ? angleDx : pixelDx;
         const dy = angleDy !== 0 ? angleDy : pixelDy;
-        const horizontal = angleDx !== 0 || pixelDx !== 0;
+        const horizontal = Math.abs(dx) > Math.abs(dy);
         return {
             value: horizontal ? dx : dy,
             vertical: !horizontal
@@ -326,7 +526,59 @@ Item {
         root.translateSelectionRequested(selectedText);
     }
 
+    function searchSelectionWithGoogle() {
+        if (!document || !document.hasTextSelection) {
+            return;
+        }
+
+        const selectedText = document.selectedText.trim();
+        if (selectedText.length === 0) {
+            return;
+        }
+
+        Qt.openUrlExternally("https://www.google.com/search?q=" + encodeURIComponent(selectedText));
+    }
+
+    function textSelectionGeometry() {
+        if (!document || !document.hasTextSelection) {
+            return null;
+        }
+
+        const selection = document.textSelectionGeometry();
+        return selection && selection.rects && selection.rects.length > 0 ? selection : null;
+    }
+
+    function requestPersonalNote() {
+        const selection = textSelectionGeometry();
+        if (selection) {
+            root.personalNoteRequested(selection);
+        }
+    }
+
+    function requestPdfLinkCreation() {
+        const selection = textSelectionGeometry();
+        if (selection) {
+            root.createPdfLinkRequested(selection);
+        }
+    }
+
+    function requestExternalBookReferenceCreation() {
+        const selection = textSelectionGeometry();
+        if (selection) {
+            root.createExternalBookReferenceRequested(selection);
+        }
+    }
+
     function openSelectionMenu(x, y) {
+        if (root.pdfLinkTargetSelectionMode) {
+            const targetSelection = textSelectionGeometry();
+            if (targetSelection) {
+                root.pdfLinkTargetSelected(targetSelection);
+            }
+            return;
+        }
+
+        root.speechSelectionChanged(document ? document.selectedTextForSpeech() : "");
         selectionMenu.x = Math.max(0, Math.min(width - selectionMenu.implicitWidth, x));
         selectionMenu.y = Math.max(0, Math.min(height - selectionMenu.implicitHeight, y));
         selectionMenu.open();
@@ -353,6 +605,7 @@ Item {
         target: root.document
 
         function onOpenedChanged() {
+            searchState.refresh();
             root.goToPage(root.currentPage);
         }
 
@@ -365,9 +618,82 @@ Item {
         id: searchState
 
         property int count: 0
-        property int currentResult: 0
+        property int currentResult: -1
+        property int hiddenResult: -1
+        property var matches: []
         readonly property var currentResultLink: null
+
+        function refresh() {
+            searchResultRestoreTimer.stop();
+            hiddenResult = -1;
+            matches = root.document ? root.document.searchText(root.searchString) : [];
+            count = matches.length;
+            currentResult = -1;
+            searchResults.clear();
+            for (const match of matches) {
+                searchResults.append(match);
+            }
+            if (count > 0) {
+                root.goToSearchResult(0);
+            }
+        }
     }
+
+    Timer {
+        id: searchResultRestoreTimer
+        interval: 500
+        onTriggered: searchState.hiddenResult = -1
+    }
+
+    ListModel {
+        id: searchResults
+    }
+
+    QQC2.Dialog {
+        id: searchDialog
+        objectName: "pdfSearchDialog"
+        parent: QQC2.Overlay.overlay
+        anchors.centerIn: parent
+        width: Math.min(Kirigami.Units.gridUnit * 35, parent ? parent.width - Kirigami.Units.gridUnit * 2 : Kirigami.Units.gridUnit * 35)
+        height: Math.min(Kirigami.Units.gridUnit * 20, parent ? parent.height - Kirigami.Units.gridUnit * 2 : Kirigami.Units.gridUnit * 20)
+        modal: true
+        title: i18nc("@title:dialog, %1 is the number of matches", "Search Results(%1)", searchResults.count)
+        standardButtons: QQC2.Dialog.Close
+
+        contentItem: ListView {
+            model: searchResults
+            clip: true
+            QQC2.ScrollBar.vertical: QQC2.ScrollBar {}
+
+            Kirigami.PlaceholderMessage {
+                anchors.centerIn: parent
+                width: parent.width - Kirigami.Units.gridUnit * 2
+                visible: searchResults.count === 0
+                text: i18n("No search results")
+                icon.name: "system-search-symbolic"
+            }
+
+            delegate: QQC2.ItemDelegate {
+                required property int index
+                required property int page
+                required property string excerpt
+                width: ListView.view.width
+                text: root.searchResultText(page, excerpt)
+                background: Rectangle {
+                    radius: Kirigami.Units.smallSpacing
+                    border.width: 2
+                    border.color: root.searchResultOutlineColor
+                    color: "transparent"
+                }
+                onClicked: {
+                    root.goToSearchResult(index);
+                    root.closeSearchDialog();
+                }
+            }
+        }
+    }
+
+    onSearchStringChanged: searchState.refresh()
 
     Rectangle {
         anchors.fill: parent
@@ -403,7 +729,7 @@ Item {
         Row {
             id: pagesRow
 
-            spacing: root.twoPageMode ? 4 * Kirigami.Units.largeSpacing : 0
+            spacing: root.twoPageMode ? root.pageSpacing : 0
             x: Math.max(Kirigami.Units.gridUnit, (flickable.width - width) / 2)
             y: Math.max(Kirigami.Units.gridUnit, (flickable.height - height) / 2)
 
@@ -411,35 +737,81 @@ Item {
                 id: firstPageSurface
 
                 page: root.twoPageMode ? root.spreadFirstPage : root.currentPage
+                selectionPeerItem: secondPageSurface.pageItem
             }
 
             PageSurface {
                 id: secondPageSurface
 
                 page: root.spreadSecondPage
+                selectionPeerItem: firstPageSurface.pageItem
             }
         }
+    }
+
+    Rectangle {
+        id: ariannaAnchorTitleTooltip
+
+        property string titleText: ""
+
+        visible: false
+        z: 20
+        width: Math.min(root.width - Kirigami.Units.largeSpacing * 2, titleLabel.implicitWidth + Kirigami.Units.largeSpacing * 2)
+        height: titleLabel.implicitHeight + Kirigami.Units.smallSpacing * 2
+        radius: Kirigami.Units.smallSpacing
+        color: Kirigami.Theme.backgroundColor
+        border.color: Kirigami.Theme.disabledTextColor
+
+        QQC2.Label {
+            id: titleLabel
+
+            anchors {
+                fill: parent
+                margins: Kirigami.Units.smallSpacing
+            }
+            text: ariannaAnchorTitleTooltip.titleText
+            wrapMode: Text.WordWrap
+            maximumLineCount: 2
+            elide: Text.ElideRight
+            color: Kirigami.Theme.textColor
+        }
+    }
+
+    Timer {
+        id: ariannaAnchorTitleTimer
+
+        interval: 1000
+        repeat: false
+        onTriggered: ariannaAnchorTitleTooltip.visible = false
     }
 
     MouseArea {
         id: wheelNavigationArea
 
         property bool hoveringLink: false
+        property bool hoveringAriannaAnchor: false
 
         anchors.fill: parent
         acceptedButtons: Qt.BackButton | Qt.ForwardButton
         hoverEnabled: true
-        cursorShape: hoveringLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+        BookCursor.active: hoveringAriannaAnchor
+        BookCursor.fallbackShape: hoveringLink ? Qt.PointingHandCursor : Qt.ArrowCursor
         propagateComposedEvents: true
         z: 10
 
         function updateHoveredLink(x, y) {
             const rootPosition = wheelNavigationArea.mapToItem(root, x, y);
             hoveringLink = root.hasLinkAtRootPosition(rootPosition.x, rootPosition.y);
+            root.updateAriannaAnchorHover(rootPosition.x, rootPosition.y);
+            hoveringAriannaAnchor = root.hoveredAriannaAnchorId.length > 0;
         }
 
         onPositionChanged: mouse => updateHoveredLink(mouse.x, mouse.y)
-        onExited: hoveringLink = false
+        onExited: {
+            hoveringLink = false;
+            hoveringAriannaAnchor = false;
+            root.clearAriannaAnchorHover();
+        }
 
         onClicked: mouse => {
             if (mouse.button === Qt.BackButton) {
@@ -452,10 +824,34 @@ Item {
         }
 
         onWheel: wheel => {
+            if (wheel.modifiers === Qt.ShiftModifier) {
+                const navigation = root.wheelNavigationDelta(wheel);
+                if (Math.abs(navigation.value) < 1) {
+                    wheel.accepted = false;
+                    return;
+                }
+                if (!navigation.vertical) {
+                    root.personalAnnotationNavigationRequested(navigation.value > 0);
+                } else if (navigation.value > 0) {
+                    root.searchBack(true);
+                } else {
+                    root.searchForward(true);
+                }
+                wheel.accepted = true;
+                return;
+            }
             if (wheel.modifiers & Qt.ControlModifier) {
                 const angleDelta = wheel.angleDelta || Qt.point(0, 0);
                 const pixelDelta = wheel.pixelDelta || Qt.point(0, 0);
+                const dx = Number(angleDelta.x) || Number(pixelDelta.x) || 0;
                 const dy = Number(angleDelta.y) || Number(pixelDelta.y) || 0;
+                if (Math.abs(dx) >= 1 && Math.abs(dx) > Math.abs(dy)) {
+                    if (root.twoPageMode) {
+                        root.pageSpacingChangeRequested(dx > 0 ? 10 : -10);
+                    }
+                    wheel.accepted = true;
+                    return;
+                }
                 if (Math.abs(dy) >= 1) {
                     root.zoomRequested(dy > 0 ? root.zoomStep : 1 / root.zoomStep);
                     wheel.accepted = true;
@@ -465,6 +861,66 @@ Item {
 
             wheel.accepted = root.scrollByWheel(wheel);
         }
+    }
+
+    // Keep ordinary PDF text selection working outside a reference. A click
+    // inside a persisted anchor is consumed here and opens its SQLite-backed
+    // cross reference instead.
+    MouseArea {
+        id: ariannaAnchorClickArea
+
+        property string pressedAnchorId: ""
+        property bool hoveringLink: false
+        property bool hoveringAriannaAnchor: false
+
+        anchors.fill: parent
+        enabled: !root.colorRegionSelectionMode
+        acceptedButtons: Qt.LeftButton
+        hoverEnabled: true
+        BookCursor.active: hoveringAriannaAnchor
+        BookCursor.fallbackShape: hoveringLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+        propagateComposedEvents: true
+        z: 11
+
+        function updateHover(x, y) {
+            const position = ariannaAnchorClickArea.mapToItem(root, x, y);
+            hoveringLink = root.hasLinkAtRootPosition(position.x, position.y);
+            root.updateAriannaAnchorHover(position.x, position.y);
+            hoveringAriannaAnchor = root.hoveredAriannaAnchorId.length > 0;
+        }
+
+        onPositionChanged: mouse => updateHover(mouse.x, mouse.y)
+        onExited: {
+            hoveringLink = false;
+            hoveringAriannaAnchor = false;
+            root.clearAriannaAnchorHover();
+        }
+
+        onPressed: mouse => {
+            const position = ariannaAnchorClickArea.mapToItem(root, mouse.x, mouse.y);
+            const anchor = root.ariannaAnchorAtRootPosition(position.x, position.y);
+            const anchorId = anchor && anchor.hasReference ? String(anchor.anchorId || "") : "";
+            pressedAnchorId = anchorId;
+            mouse.accepted = anchorId.length > 0;
+        }
+
+        onReleased: mouse => {
+            if (pressedAnchorId.length === 0) {
+                mouse.accepted = false;
+                return;
+            }
+
+            const position = ariannaAnchorClickArea.mapToItem(root, mouse.x, mouse.y);
+            const anchor = root.ariannaAnchorAtRootPosition(position.x, position.y);
+            const anchorId = anchor && anchor.hasReference ? String(anchor.anchorId || "") : "";
+            if (anchorId === pressedAnchorId) {
+                root.activateAriannaAnchorAtRootPosition(position.x, position.y);
+            }
+            pressedAnchorId = "";
+            mouse.accepted = true;
+        }
+
+        onCanceled: pressedAnchorId = ""
     }
 
     MouseArea {
@@ -477,6 +933,7 @@ Item {
         property real targetContentX: 0
         property real targetContentY: 0
         property bool hoveringLink: false
+        property bool hoveringAriannaAnchor: false
         readonly property real dragDamping: 0.45
         readonly property real dragStopThreshold: 0.5
         readonly property bool canDragHorizontally: flickable.contentWidth > flickable.width + 0.5
@@ -486,7 +943,8 @@ Item {
         anchors.fill: flickable
         acceptedButtons: Qt.MiddleButton
         hoverEnabled: true
-        cursorShape: pressed && canDragContent ? Qt.ClosedHandCursor : (hoveringLink ? Qt.PointingHandCursor : Qt.ArrowCursor)
+        BookCursor.active: hoveringAriannaAnchor && !(pressed && canDragContent)
+        BookCursor.fallbackShape: pressed && canDragContent ? Qt.ClosedHandCursor : (hoveringLink ? Qt.PointingHandCursor : Qt.ArrowCursor)
         preventStealing: true
         propagateComposedEvents: true
 
@@ -494,6 +952,8 @@ Item {
             const rootPosition = contentDragArea.mapToItem(root, x, y);
             hoveringLink = firstPageSurface.hasLinkAtRootPosition(rootPosition.x, rootPosition.y)
                 || secondPageSurface.hasLinkAtRootPosition(rootPosition.x, rootPosition.y);
+            root.updateAriannaAnchorHover(rootPosition.x, rootPosition.y);
+            hoveringAriannaAnchor = root.hoveredAriannaAnchorId.length > 0;
         }
 
         function clampedContentX(value) {
@@ -580,7 +1040,11 @@ Item {
             }
         }
 
-        onExited: hoveringLink = false
+        onExited: {
+            hoveringLink = false;
+            hoveringAriannaAnchor = false;
+            root.clearAriannaAnchorHover();
+        }
 
         Timer {
             id: panDampingTimer
@@ -594,6 +1058,7 @@ Item {
 
     QQC2.Menu {
         id: selectionMenu
+        objectName: "pdfTextSelectionMenu"
 
         onClosed: root.clearSelection()
 
@@ -618,6 +1083,73 @@ Item {
             onClicked: root.translateSelection()
         }
 
+        QQC2.MenuItem {
+            objectName: "pdfReadSelectionMenuItem"
+            text: i18nc("@action:inmenu", "Read Aloud")
+            icon.source: "qrc:/qt/qml/org/kde/arianna/qml/icons/read-aloud.svg"
+            icon.color: Kirigami.Theme.textColor
+            enabled: root.document && root.document.hasTextSelection && root.document.selectedText.trim().length > 0
+            onClicked: root.readSelectionRequested(root.document.selectedTextForSpeech())
+            QQC2.ToolTip.visible: hovered
+            QQC2.ToolTip.delay: Kirigami.Units.toolTipDelay
+            QQC2.ToolTip.text: i18nc("@info:tooltip", "Ctrl+click: Read from the selection to the end of the book")
+            Keys.onPressed: event => {
+                if ((event.modifiers & Qt.ControlModifier) !== 0
+                    && (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space)) {
+                    root.readDocumentRequested(root.document.speechSelectionRange());
+                    selectionMenu.close();
+                    event.accepted = true;
+                }
+            }
+            MouseArea {
+                anchors.fill: parent
+                acceptedButtons: Qt.LeftButton
+                onPressed: mouse => mouse.accepted = (mouse.modifiers & Qt.ControlModifier) !== 0
+                onClicked: {
+                    root.readDocumentRequested(root.document.speechSelectionRange());
+                    selectionMenu.close();
+                }
+            }
+        }
+
+        QQC2.MenuItem {
+            objectName: "searchInDocument"
+            text: i18n("Search in Document")
+            icon.name: "system-search-symbolic"
+            enabled: root.document && root.document.hasTextSelection && root.document.selectedText.trim().length > 0
+            onClicked: root.searchInDocument(root.document.selectedText)
+        }
+
+        QQC2.MenuItem {
+            text: i18n("Search with Google")
+            icon.name: "internet-web-browser"
+            enabled: root.document && root.document.hasTextSelection && root.document.selectedText.trim().length > 0
+            onClicked: root.searchSelectionWithGoogle()
+        }
+
+        QQC2.MenuSeparator {}
+
+        QQC2.MenuItem {
+            text: i18nc("@action:inmenu", "Add Note")
+            icon.name: "document-edit"
+            enabled: root.allowPersonalAnnotations && root.document && root.document.hasTextSelection
+            onClicked: root.requestPersonalNote()
+        }
+
+        QQC2.MenuItem {
+            text: i18nc("@action:inmenu", "Create PDF Link")
+            icon.name: "insert-link"
+            enabled: root.allowPdfDocumentEdits && root.document && root.document.hasTextSelection
+            onClicked: root.requestPdfLinkCreation()
+        }
+
+        QQC2.MenuItem {
+            text: i18nc("@action:inmenu", "Create External Book Reference")
+            icon.name: "insert-link"
+            enabled: root.allowExternalBookReferences && root.document && root.document.hasTextSelection
+            onClicked: root.requestExternalBookReferenceCreation()
+        }
+
     }
 
     QQC2.Menu {
@@ -638,6 +1170,14 @@ Item {
             icon.name: "list-add"
             enabled: pageColorMenu.page >= 0
             onClicked: root.addPageToTableOfContentsRequested(pageColorMenu.page)
+        }
+
+        QQC2.MenuItem {
+            text: i18nc("@action:inmenu", "Edit Current Page")
+            icon.name: "document-edit"
+            visible: root.pdfEditorPageSwitchConfigured
+            enabled: pageColorMenu.page >= 0 && root.document && root.document.opened
+            onClicked: root.editCurrentPageRequested(pageColorMenu.page)
         }
 
         QQC2.MenuItem {
@@ -691,6 +1231,8 @@ Item {
         id: surface
 
         property int page: -1
+        property alias pageItem: pageItem
+        property var selectionPeerItem: null
         readonly property bool valid: root.document && root.document.opened && page >= 0 && page < root.document.pageCount
         readonly property size pagePointSize: valid ? root.document.pagePointSize(page) : Qt.size(1, 1)
         readonly property real coverScale: root.coverPageMode && page === 0 && root.document && root.document.pageCount > 1
@@ -706,6 +1248,9 @@ Item {
             root.notInvertedRegionsVersion;
             return root.forcedInvertedRegionsForPage && surface.valid ? root.forcedInvertedRegionsForPage(surface.page) : [];
         }
+        readonly property var personalAnnotationRegions: root.personalAnnotationsForPage(surface.page)
+        readonly property var searchRegions: root.searchRegionsForPage(surface.page)
+        readonly property var ariannaAnchorRegions: root.ariannaAnchorRegionsForPage(surface.page)
         readonly property color preserveRegionColor: Kirigami.Theme.highlightColor
         readonly property color forcedInvertRegionColor: "#c64600"
         readonly property color activeRegionColor: root.forcedInvertedRegionSelectionMode ? forcedInvertRegionColor : preserveRegionColor
@@ -745,6 +1290,41 @@ Item {
                 && pageItem.hasLinkAt(position.x, position.y);
         }
 
+        function ariannaAnchorAtRootPosition(x, y) {
+            if (surface.width <= 0 || surface.height <= 0) {
+                return null;
+            }
+
+            const position = surface.mapFromItem(root, x, y);
+            if (position.x < 0 || position.y < 0 || position.x > surface.width || position.y > surface.height) {
+                return null;
+            }
+
+            // A few physical pixels of tolerance makes fine text selections
+            // discoverable without changing their stored PDF geometry.
+            const marginX = Math.min(0.01, 3 / surface.width);
+            const marginY = Math.min(0.01, 3 / surface.height);
+            const normalizedX = position.x / surface.width;
+            const normalizedY = position.y / surface.height;
+            for (let index = 0; index < surface.ariannaAnchorRegions.length; ++index) {
+                const region = surface.ariannaAnchorRegions[index];
+                if (normalizedX >= region.x - marginX && normalizedX <= region.x + region.width + marginX
+                    && normalizedY >= region.y - marginY && normalizedY <= region.y + region.height + marginY) {
+                    const tooltipPosition = surface.mapToItem(root,
+                                                              region.x * surface.width,
+                                                              (region.y + region.height) * surface.height);
+                    return {
+                        anchorId: region.anchorId,
+                        sourceAnchorTitle: region.sourceAnchorTitle,
+                        hasReference: region.hasReference,
+                        tooltipX: tooltipPosition.x,
+                        tooltipY: tooltipPosition.y
+                    };
+                }
+            }
+            return null;
+        }
+
         Rectangle {
             anchors.fill: parent
             color: root.readerBackgroundBaseColor
@@ -771,6 +1351,7 @@ Item {
 
             anchors.fill: parent
             document: root.document
+            selectionPeer: surface.selectionPeerItem
             pageNumber: surface.valid ? surface.page : -1
             inverted: root.inverted && !root.recolor
             recolor: root.recolor
@@ -780,6 +1361,7 @@ Item {
             notInvertedRegions: surface.notInvertedRegions
             forcedInvertedRegions: surface.forcedInvertedRegions
 
+            onTextSelectionStarted: root.speechSelectionChanged("")
             onSelectionMenuRequested: (x, y) => {
                 const mappedPosition = pageItem.mapToItem(root, x, y);
                 root.openSelectionMenu(mappedPosition.x, mappedPosition.y);
@@ -792,6 +1374,73 @@ Item {
 
             onLinkActivated: (location, sourceLocation) => root.linkActivated(location, sourceLocation)
             onExternalLinkActivated: (url, sourceLocation) => root.externalLinkActivated(url, sourceLocation)
+        }
+
+        Repeater {
+            model: surface.personalAnnotationRegions
+
+            Rectangle {
+                x: Number(modelData.x) * surface.width
+                y: Number(modelData.y) * surface.height
+                width: Number(modelData.width) * surface.width
+                height: Number(modelData.height) * surface.height
+                color: modelData.color
+                opacity: 0.24
+                z: 0.5
+            }
+        }
+
+        Repeater {
+            model: surface.searchRegions
+
+            Rectangle {
+                readonly property int searchResultIndex: modelData.searchResultIndex
+                visible: searchResultIndex !== searchState.hiddenResult
+                x: Number(modelData.x) * surface.width
+                y: Number(modelData.y) * surface.height
+                width: Math.max(1, Number(modelData.width) * surface.width)
+                height: Math.max(1, Number(modelData.height) * surface.height)
+                color: "transparent"
+                border.color: root.searchResultOutlineColor
+                border.width: 2
+                z: 0.8
+            }
+        }
+
+        // This is an Arianna-only affordance. It deliberately does not alter
+        // the embedded annotation, which remains hidden in other PDF readers.
+        Repeater {
+            model: surface.ariannaAnchorRegions
+
+            Canvas {
+                readonly property bool hovered: root.hoveredAriannaAnchorId === modelData.anchorId
+                readonly property color underlineColor: Kirigami.Theme.highlightColor
+
+                visible: modelData.hasReference
+                x: Number(modelData.x) * surface.width
+                y: Math.min(surface.height - height, Math.round((Number(modelData.y) + Number(modelData.height)) * surface.height))
+                width: Number(modelData.width) * surface.width
+                height: 2
+                z: 0.75
+
+                onPaint: {
+                    const context = getContext("2d");
+                    context.reset();
+                    context.fillStyle = surface.canvasColor(underlineColor, 1);
+                    if (hovered) {
+                        context.fillRect(0, 0, width, height);
+                    } else {
+                        for (let offset = 0; offset < width; offset += 6) {
+                            context.fillRect(offset, 0, Math.min(4, width - offset), height);
+                        }
+                    }
+                }
+                onWidthChanged: requestPaint()
+                onHeightChanged: requestPaint()
+                onVisibleChanged: requestPaint()
+                onHoveredChanged: requestPaint()
+                onUnderlineColorChanged: requestPaint()
+            }
         }
 
         Rectangle {
@@ -936,7 +1585,13 @@ Item {
                 }
 
                 const coarseSelection = surface.normalizedSelectionRect(selection);
-                const snapDisabled = (mouse.modifiers & Qt.ShiftModifier) !== 0;
+                // Ctrl is the precise-selection modifier for areas that keep
+                // their original colors. It stores the drawn rectangle or
+                // oval exactly, without the image-based size heuristic.
+                // Keep Shift as the pre-existing generic snap bypass.
+                const preserveExactSelection = !root.forcedInvertedRegionSelectionMode
+                    && (mouse.modifiers & Qt.ControlModifier) !== 0;
+                const snapDisabled = (mouse.modifiers & Qt.ShiftModifier) !== 0 || preserveExactSelection;
                 const refinedSelection = snapDisabled ? coarseSelection : pageItem.refinedColorRegion(coarseSelection);
                 const normalizedSelection = root.ovalNotInvertedRegionSelectionMode
                     ? {
