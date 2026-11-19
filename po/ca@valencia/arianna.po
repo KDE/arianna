@@ -61,7 +61,7 @@ msgstr ""
 #: epubcontainer.cpp:208
 #, kde-format
 msgid "Table of Contents"
-msgstr "Taula de contingut"
+msgstr "Índex de continguts"
 
 #: main.cpp:44
 #, kde-format
@@ -198,7 +198,7 @@ msgstr "Busca"
 #, kde-format
 msgctxt "Book reading progress"
 msgid "%1%"
-msgstr "%1%"
+msgstr "%1 %"
 
 #: qml/EpubViewerPage.qml:289
 #, kde-format
@@ -493,22 +493,16 @@ msgstr "Quant a KDE"
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Open table of contents"
-msgstr "Obri la taula de contingut"
+msgstr "Obri l'índex de continguts"
 
 #: qml/TableOfContentDrawer.qml:25
 #, kde-format
 msgctxt "@info:tooltip"
 msgid "Close table of contents"
-msgstr "Tanca la taula de contingut"
+msgstr "Tanca l'índex de continguts"
 
 #: qml/TableOfContentDrawer.qml:46
 #, kde-format
 msgctxt "@info:title"
 msgid "Table of Contents"
-msgstr "Taula de contingut"
-
-#~ msgid "EPub Reader"
-#~ msgstr "Lector d'EPub"
-
-#~ msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
-#~ msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
+msgstr "Índex de continguts"
