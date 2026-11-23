@@ -500,9 +500,3 @@ msgstr "关闭目录"
 msgctxt "@info:title"
 msgid "Table of Contents"
 msgstr "目录"
-
-#~ msgid "EPub Reader"
-#~ msgstr "EPub 阅读器"
-
-#~ msgid "2022 Niccolò Venerandi <niccolo@venerandi.com>"
-#~ msgstr "2022 Niccolò Venerandi <niccolo@venerandi.com>"
